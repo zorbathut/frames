@@ -1,0 +1,32 @@
+
+local params = ...
+
+local function token_literal(name, data)
+  ursa.token.rule{name, "!" .. data, function () return data end}
+end
+
+token_literal("CXX", params.cxx)
+token_literal("CXXFLAGS", params.cxxflags)
+token_literal("BUILD", params.build)
+
+local headers = {}
+local srcfiles = {}
+ursa.token.rule{"files", nil, function () return ursa.system{"find . -type f | sed s*\\\\./**"} end}
+for item in ursa.token{"files"}:gmatch("([^\n]+)") do
+  print(item)
+  if item:match("frames/.*%.h") then
+    table.insert(headers, ursa.rule{params.prefix .. "/" .. item, item, ursa.util.copy{}})
+  elseif item:match("src/.*%.cpp") then
+    table.insert(srcfiles, item)
+  end
+end
+
+local objs = {}
+for k, v in ipairs(srcfiles) do
+  print(k, v)
+  table.insert(objs, ursa.rule{params.build .. "/" .. v .. ".o", v, ursa.util.system_template{"#CXX #CXXFLAGS -Iinclude -c $SOURCE -o $TARGET"}})
+end
+
+local lib = ursa.rule{params.prefix .. "/lib/libframes.a", objs, ursa.util.system_template{"ar rcs $TARGET $SOURCES"}}
+
+return {headers = headers, lib = lib}
