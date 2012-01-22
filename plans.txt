@@ -50,3 +50,6 @@ slow things, like move/size, get delayed until we're about to render - we solidi
 the signal itself contains a vector of boost functions, or something
 maybe flags for language hooks?
   
+  
+// refcount/garbagecount
+We might need two kinds of pointers - "external" and "internal". Every external pointer requires that the class continue to exist, but internal pointers sometimes don't. It's sorta strong vs. weak.

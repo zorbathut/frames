@@ -1,12 +1,12 @@
 // The Ptr adapter
 
-#ifndef FRAMES_FRAME
-#define FRAMES_FRAME
+#ifndef FRAMES_PTR
+#define FRAMES_PTR
 
 #include "frames/config.h"
 
 #ifdef FRAMES_BOOST_ENABLED
-#include <boost/intrusive_ptr.hpp>
+#include <boost/smart_ptr/intrusive_ptr.hpp>
 #endif
 
 namespace Frames {
@@ -15,7 +15,7 @@ namespace Frames {
       typedef boost::intrusive_ptr<T> Type;
     };
   #else
-    #error this isn't actually tested yet!
+    #error this isnt actually tested yet!
   #endif
   
   class Layout; typedef Ptr<Layout>::Type LayoutPtr;

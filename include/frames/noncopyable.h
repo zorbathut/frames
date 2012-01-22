@@ -11,9 +11,9 @@
 
 namespace Frames {
   #ifdef FRAMES_BOOST_ENABLED
-    typedef boost::noncopyable Noncopyable
+    typedef boost::noncopyable Noncopyable;
   #else
-    #error this isn't actually tested yet!
+    #error this isnt actually tested yet!
     class Noncopyable {
      protected:
         Noncopyable() {}

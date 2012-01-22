@@ -7,6 +7,10 @@
 
 namespace Frames {
   class Frame : public Layout {
+
+  private:
+    virtual void RenderElement();
+
     Frame();  // We'll need more here
     ~Frame();
   };

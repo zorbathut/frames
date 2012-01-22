@@ -5,20 +5,27 @@
 
 #include "frames/noncopyable.h"
 #include "frames/ptr.h"
-
-class Configuration;
+#include "frames/configuration.h"
 
 namespace Frames {
   class Environment : Noncopyable {
+  public:
     Environment();  // init to default
-    Environment(Configuration *config);
+    Environment(const Configuration *config);
     ~Environment();
     
     void Render();
     
-    LayoutPtr GetRoot();
+    const LayoutPtr &GetRoot();
     
     FramePtr CreateFrame(LayoutPtr parent);
+
+  private:
+    void Init(const Configuration *config);
+
+    Configuration m_config;
+
+    LayoutPtr m_root;
   };
 }
 

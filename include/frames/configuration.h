@@ -4,7 +4,8 @@
 #define FRAMES_CONFIGURATION
 
 namespace Frames {
-  class Configuration {
+  struct Configuration {
+  public:
     Configuration(); // init to default
   };
 }
