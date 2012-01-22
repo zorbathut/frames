@@ -13,6 +13,8 @@ namespace Frames {
     Environment();  // init to default
     Environment(const Configuration *config);
     ~Environment();
+
+    void ResizeRoot(int x, int y);
     
     void Render();
     
