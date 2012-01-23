@@ -114,6 +114,12 @@ namespace Frames {
   // implementation detail for LayoutPtr and the like, do not call directly!
   void intrusive_ptr_add_ref(Frames::Layout *layout);
   void intrusive_ptr_release(Frames::Layout *layout);
+
+  // Debug code
+  #define FRAMES_LAYOUT_ASSERT(x, errstring, args...) (__builtin_expect(!!(x), 1) ? (void)(1) : (m_env->GetConfiguration().logger->LogError(Utility::Format(errstring, ## args))))
+  #define FRAMES_LAYOUT_CHECK(x, errstring, args...) (__builtin_expect(!!(x), 1) ? (void)(1) : (m_env->GetConfiguration().logger->LogError(Utility::Format(errstring, ## args))))
+
+  #define FRAMES_DEBUG(args...) m_env->GetConfiguration().logger->LogDebug(Utility::Format(args))
 }
 
 #endif

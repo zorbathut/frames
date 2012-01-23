@@ -98,9 +98,9 @@ namespace Frames {
       m_visible(true)
   {
     if (layout && env) {
-      assert(layout->GetEnvironment() == env);
+      FRAMES_LAYOUT_CHECK(layout->GetEnvironment() == env, "Layout's explicit parent and environment do not match");
     }
-    assert(layout || env);
+    FRAMES_LAYOUT_CHECK(layout || env, "Layout not given parent or environment");
 
     if (layout) {
       m_env = layout->GetEnvironment();
@@ -310,7 +310,7 @@ namespace Frames {
     }
 
     if (m_env != layout->GetEnvironment()) {
-      assert(false);
+      FRAMES_LAYOUT_CHECK(false, ":SetParent() attempted across environment boundaries");
       return;
     }
 

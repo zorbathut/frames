@@ -1,7 +1,6 @@
 * Layout
 * Frame, plus rendering
 * Get basic GUI going
-* Asserts, logging
 * Looped point dependency error reporting
 * Invalid set dependency error reporting
 * Garbage collection/cleanup/hard+weak pointers

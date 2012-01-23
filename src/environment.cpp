@@ -5,12 +5,14 @@
 namespace Frames {
   Environment::Environment() {
     Configuration config;
-    Init(&config);
-  }
-  Environment::Environment(const Configuration *config) {
     Init(config);
   }
-  Environment::~Environment() { };
+  Environment::Environment(const Configuration &config) {
+    Init(config);
+  }
+  Environment::~Environment() {
+    delete m_config_logger_owned;
+  };
 
   void Environment::ResizeRoot(int x, int y) {
     m_root->SetWidth(x);
@@ -35,8 +37,15 @@ namespace Frames {
     m_root->Render();
   };
 
-  void Environment::Init(const Configuration *config) {
-    m_config = *config;
+  void Environment::Init(const Configuration &config) {
+    m_config_logger_owned = 0;
+
+    m_config = config;
+
+    if (!m_config.logger) {
+      m_config_logger_owned = new Configuration::Logger();
+      m_config.logger = m_config_logger_owned;
+    }
 
     m_root = new Layout(0, this);
   }
