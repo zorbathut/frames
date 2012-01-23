@@ -13,13 +13,15 @@
 namespace Frames {
   enum Axis { X, Y }; // axes
 
+  class Environment;
+
   class Layout : Noncopyable {
   public:
-    float GetAxis(Axis axis, float pt) const;
-    float GetLeft() const { return GetAxis(X, 0); }
-    float GetRight() const { return GetAxis(X, 1); }
-    float GetTop() const { return GetAxis(Y, 0); }
-    float GetBottom() const { return GetAxis(Y, 1); }
+    float GetPoint(Axis axis, float pt) const;
+    float GetLeft() const { return GetPoint(X, 0); }
+    float GetRight() const { return GetPoint(X, 1); }
+    float GetTop() const { return GetPoint(Y, 0); }
+    float GetBottom() const { return GetPoint(Y, 1); }
 
     float GetSize(Axis axis) const;
     float GetWidth() const { return GetSize(X); }
@@ -30,24 +32,27 @@ namespace Frames {
     // ClearHeight/ClearWidth/ClearPoint/etc?
     // Events?
 
-    Environment *GetEnvironment() const;
+    Environment *GetEnvironment() const { return m_env; }
 
   protected:
-    Layout(Environment *env);
-    ~Layout();
+    Layout(const LayoutPtr &layout, Environment *env = 0);
+    virtual ~Layout();
 
     // while Layout isn't mutable, things that inherit from Layout might be
-   void SetPoint(Axis axis, float mypt, LayoutPtr target, float theirpt, float offset);
+   void SetPoint(Axis axis, float mypt, const LayoutPtr &link, float theirpt, float offset);
+   void ClearPoint(Axis axis, float mypt);
+   void ClearAllPoints(Axis axis);
 
    void SetSize(Axis axis, float size);
    void SetWidth(float size) { return SetSize(X, size); }
    void SetHeight(float size) { return SetSize(Y, size); }
+   void ClearSize(Axis axis);
 
    void SetSizeDefault(Axis axis, float size);
    void SetWidthDefault(float size) { return SetSizeDefault(X, size); }
    void SetHeightDefault(float size) { return SetSizeDefault(Y, size); }
 
-   void SetParent(LayoutPtr layout);
+   void SetParent(const LayoutPtr &layout);
    LayoutPtr GetParent() const { return m_parent; }
 
    void SetLayer(float layer);
@@ -66,39 +71,42 @@ namespace Frames {
     virtual void RenderElement() { };
 
     // Layout engine
+    void Invalidate(Axis axis) const;
+    void Resolve() const;
     struct AxisData {
-      AxisData() : size_cached(Utility::NaN), size_set(Utility::NaN), size_default(40) { };
+      AxisData() : size_cached(Utility::Undefined), size_set(Utility::Undefined), size_default(40) { };
 
-      float size_cached;
+      mutable float size_cached;
 
       struct Connector {
-        Connector() : point_src(Utility::NaN), point_dst(Utility::NaN), offset(Utility::NaN), cached(Utility::NaN) { };
+        Connector() : point_mine(Utility::Undefined), point_link(Utility::Undefined), offset(Utility::Undefined), cached(Utility::Undefined) { };
 
         LayoutPtr link;
-        float point_src;
-        float point_dst;
+        float point_mine;
+        float point_link;
         float offset;
 
-        float cached;
+        mutable float cached;
       };
       Connector connections[2];
 
       float size_set;
       float size_default;
 
-      std::multiset<LayoutPtr> children;
+      typedef std::multiset<LayoutPtr> ChildrenList;
+      ChildrenList children;
     };
     AxisData m_axes[2];
-    bool m_resolved;  // whether *this* frame has its layout completely determined
-    bool m_resolved_recursively;  // whether this frame and all its children have their layouts completely determined
+    mutable bool m_resolved;  // whether *this* frame has its layout completely determined
 
     // Layer/parenting engine
+    struct Sorter { bool operator()(const LayoutPtr &lhs, const LayoutPtr &rhs) const; };
     float m_layer;
     float m_strata;
     LayoutPtr m_parent;
-    std::set<LayoutPtr> m_children;
-    std::vector<LayoutPtr> m_children_ordered;
     bool m_visible;
+    typedef std::set<LayoutPtr, Sorter> ChildrenList;
+    ChildrenList m_children;
 
     Environment *m_env;
   };

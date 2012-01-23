@@ -1,3 +1,9 @@
-* So, what is an "environment"
-* Let's call an environment a UIParent root and everything that goes after it, as well as a resource management hub
-* Different environments will never share anything
+* Layout
+* Frame, plus rendering
+* Get basic GUI going
+* Asserts, logging
+* Looped point dependency error reporting
+* Invalid set dependency error reporting
+* Garbage collection/cleanup/hard+weak pointers
+* Events
+* Frame render updating

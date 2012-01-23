@@ -12,24 +12,37 @@ namespace Frames {
   }
   Environment::~Environment() { };
 
+  void Environment::ResizeRoot(int x, int y) {
+    m_root->SetWidth(x);
+    m_root->SetHeight(y);
+  }
+
   void Environment::Render() {
-    // While root isn't resolved
-      // Resolve everything
-      // Flush events
+    // We want to batch up events if possible (todo: is this the case? which is faster - flushing as they go, or flushing all at once?) so, two nested loops
+    while (!m_invalidated.empty()) {
+      while (!m_invalidated.empty()) {
+        LayoutPtr layout = m_invalidated.front();
+        m_invalidated.pop_front();
+
+        layout->Resolve();
+      }
+
+      // send events here
+    }
+
     // GC step?
+
     m_root->Render();
   };
-  
-  const LayoutPtr &Environment::GetRoot() {
-    return m_root;
-  }
-  
-  FramePtr CreateFrame(LayoutPtr parent) {
-    return FramePtr();
-  }
 
   void Environment::Init(const Configuration *config) {
     m_config = *config;
+
+    m_root = new Layout(0, this);
+  }
+
+  void Environment::MarkInvalidated(LayoutPtr layout) {
+    m_invalidated.push_back(layout);
   }
 }
 

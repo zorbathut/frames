@@ -8,6 +8,8 @@
 namespace Frames {
   class Frame : public Layout {
   public:
+    static FramePtr Create(LayoutPtr parent);
+
     using Layout::SetPoint;
 
     using Layout::SetSize;
@@ -29,11 +31,15 @@ namespace Frames {
     void SetBackground(float r, float g, float b, float a = 1.0f);
     void GetBackground(float *r, float *g, float *b, float *a);
 
+  protected:
+    Frame(const LayoutPtr &parent);
+
   private:
+    virtual ~Frame();
+
     virtual void RenderElement();
 
-    Frame();  // We'll need more here
-    ~Frame();
+    float m_bg_r, m_bg_g, m_bg_b, m_bg_a;
   };
 }
 

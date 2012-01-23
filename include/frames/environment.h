@@ -7,6 +7,8 @@
 #include "frames/ptr.h"
 #include "frames/configuration.h"
 
+#include <deque>
+
 namespace Frames {
   class Environment : Noncopyable {
   public:
@@ -18,12 +20,15 @@ namespace Frames {
     
     void Render();
     
-    const LayoutPtr &GetRoot();
-    
-    FramePtr CreateFrame(LayoutPtr parent);
+    const LayoutPtr &GetRoot() { return m_root; }
 
   private:
+    friend class Layout;
+
     void Init(const Configuration *config);
+
+    void MarkInvalidated(LayoutPtr layout);
+    std::deque<LayoutPtr> m_invalidated;
 
     Configuration m_config;
 

@@ -3,9 +3,14 @@
 #ifndef FRAMES_UTILITY
 #define FRAMES_UTILITY
 
+#include <boost/math/special_functions/fpclassify.hpp>
+
 namespace Frames {
   namespace Utility {
-    extern const float NaN;
+    const float Undefined = 0.f/0.f;
+    static bool IsUndefined(float x) {
+      return boost::math::isnan(x);
+    }
   }
 }
 
