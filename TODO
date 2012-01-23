@@ -1,8 +1,12 @@
 * Layout
+  * Test
 * Frame, plus rendering
 * Get basic GUI going
+* Streaming vertices
 * Looped point dependency error reporting
-* Invalid set dependency error reporting
+* Invalid set point/size error reporting
 * Garbage collection/cleanup/hard+weak pointers
 * Events
-* Frame render updating
+* Texture
+* Mask
+* Text
