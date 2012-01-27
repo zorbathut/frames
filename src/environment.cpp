@@ -2,6 +2,8 @@
 #include "frames/environment.h"
 #include "frames/frame.h"
 
+#include <GL/gl.h>
+
 namespace Frames {
   Environment::Environment() {
     Configuration config;
@@ -34,7 +36,17 @@ namespace Frames {
 
     // GC step?
 
+    // TODO: save?
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glTranslatef(-1.f, 1.f, 0.f);
+    glScalef(2.f / m_root->GetWidth(), -2.f / m_root->GetHeight(), 1.f);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
     m_root->Render();
+
+    // TODO: restore?
   };
 
   void Environment::Init(const Configuration &config) {

@@ -1,5 +1,3 @@
-* Layout
-  * Test
 * Frame, plus rendering
 * Get basic GUI going
 * Streaming vertices
@@ -10,3 +8,6 @@
 * Texture
 * Mask
 * Text
+
+
+* Memory allocation

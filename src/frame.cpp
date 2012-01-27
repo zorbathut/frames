@@ -1,5 +1,6 @@
 
 #include "frames/frame.h"
+#include "frames/environment.h"
 
 #include <GL/gl.h>
 
