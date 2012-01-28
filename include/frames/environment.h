@@ -24,6 +24,9 @@ namespace Frames {
     const LayoutPtr &GetRoot() { return m_root; }
     const Configuration &GetConfiguration() { return m_config; }
 
+    // Internal only, do not call
+    void LogError(const std::string &log) { m_config.logger->LogError(log); }
+    void LogDebug(const std::string &log) { m_config.logger->LogDebug(log); }
   private:
     friend class Layout;
 

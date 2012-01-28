@@ -113,10 +113,10 @@ namespace Frames {
   };
 
   // Debug code
-  #define FRAMES_LAYOUT_ASSERT(x, errstring, args...) (__builtin_expect(!!(x), 1) ? (void)(1) : (GetEnvironment()->GetConfiguration().logger->LogError(Utility::Format(errstring, ## args))))
-  #define FRAMES_LAYOUT_CHECK(x, errstring, args...) (__builtin_expect(!!(x), 1) ? (void)(1) : (GetEnvironment()->GetConfiguration().logger->LogError(Utility::Format(errstring, ## args))))
+  #define FRAMES_LAYOUT_ASSERT(x, errstring, args...) (__builtin_expect(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, ## args))))
+  #define FRAMES_LAYOUT_CHECK(x, errstring, args...) (__builtin_expect(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, ## args))))
 
-  #define FRAMES_DEBUG(args...) GetEnvironment()->GetConfiguration().logger->LogDebug(Utility::Format(args))
+  #define FRAMES_DEBUG(args...) GetEnvironment()->LogDebug(Utility::Format(args))
 }
 
 #endif

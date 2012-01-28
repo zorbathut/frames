@@ -9,6 +9,8 @@ namespace Frames {
   typedef unsigned short GLushort;
   typedef float GLfloat;
 
+  class Environment;
+
   class Renderer {
   public:
     struct Vertex {
@@ -17,7 +19,7 @@ namespace Frames {
       GLfloat r, g, b, a;
     };
 
-    Renderer();
+    Renderer(Environment *env);
     ~Renderer();
 
     void Begin(int width, int height);
@@ -27,6 +29,8 @@ namespace Frames {
     void Return(int mode);  // also renders
 
   private:
+    Environment *m_env; // just for debug functionality
+
     GLuint m_buffer;
     GLuint m_buffer_pos;
     

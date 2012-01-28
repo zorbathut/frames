@@ -1,6 +1,9 @@
 
 #include "frames/renderer.h"
 
+#include "frames/environment.h"
+#include "frames/utility.h"
+
 #include "boost/static_assert.hpp"
 
 #include <GL/glew.h>
@@ -18,14 +21,14 @@ namespace Frames {
   const int bufferElements = 1 << 16; // fit in a ushort
   const int bufferSize = bufferElements * sizeof(Renderer::Vertex);
 
-  Renderer::Renderer() : m_buffer_pos(bufferElements) {  // set to bufferElements so we create a real buffer when we need it
+  Renderer::Renderer(Environment *env) : m_buffer_pos(bufferElements), m_env(env) {  // set to bufferElements so we create a real buffer when we need it
     glGenBuffers(1, &m_buffer);
     glGenBuffers(1, &m_elements);
 
     // init the elements buffer - later we should think more about how to make this general-purpose, but for now, we won't really have repeated vertices anyway
     {
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elements);
-      vector<GLushort> elements(1<<16);
+      vector<GLushort> elements(bufferElements);
       for (int i = 0; i < elements.size(); ++i) {
         elements[i] = i;
       }
@@ -93,7 +96,8 @@ namespace Frames {
 
   void Renderer::Return(int mode) {
     glUnmapBuffer(GL_ARRAY_BUFFER);
-    glDrawElements(mode, m_last_vertices, GL_UNSIGNED_SHORT, (void*)m_last_pos);
+
+    glDrawElements(mode, 4, GL_UNSIGNED_SHORT, (void*)(m_last_pos * sizeof(GLushort)));
   }
 }
 

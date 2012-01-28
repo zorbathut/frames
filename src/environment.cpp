@@ -6,11 +6,11 @@
 #include <GL/gl.h>
 
 namespace Frames {
-  Environment::Environment() {
+  Environment::Environment() : m_renderer(this) {
     Configuration config;
     Init(config);
   }
-  Environment::Environment(const Configuration &config) {
+  Environment::Environment(const Configuration &config) : m_renderer(this) {
     Init(config);
   }
   Environment::~Environment() {
