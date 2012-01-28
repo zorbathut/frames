@@ -1,6 +1,8 @@
 
 #include "frames/layout.h"
+
 #include "frames/environment.h"
+#include "frames/renderer.h"
 
 namespace Frames {
   float Layout::GetPoint(Axis axis, float pt) const {
@@ -368,14 +370,14 @@ namespace Frames {
     m_visible = visible;
   }
 
-  void Layout::Render() {
+  void Layout::Render(Renderer *renderer) {
     if (m_visible) {
       // TODO: render background
 
-      RenderElement();
+      RenderElement(renderer);
 
       for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
-        (*itr)->Render();
+        (*itr)->Render(renderer);
       }
     }
   }

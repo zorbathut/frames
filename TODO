@@ -1,4 +1,5 @@
 * Streaming vertices
+* Move logal to libs
 * Looped point dependency error reporting
 * Invalid set point/size error reporting
 * Garbage collection/cleanup/hard+weak pointers
@@ -7,5 +8,9 @@
 * Mask
 * Text
 
+
+* We'll need:
+  * Texture manager
+  * Renderer
 
 * Memory allocation

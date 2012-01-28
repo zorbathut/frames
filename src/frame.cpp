@@ -1,6 +1,8 @@
 
 #include "frames/frame.h"
+
 #include "frames/environment.h"
+#include "frames/renderer.h"
 
 #include <GL/gl.h>
 
@@ -25,19 +27,26 @@ namespace Frames {
     *a = m_bg_a;
   }
 
-  void Frame::RenderElement() {
+  void Frame::RenderElement(Renderer *renderer) {
     // zomg inefficient
     float u = GetTop();
     float d = GetBottom();
     float l = GetLeft();
     float r = GetRight();
-    glColor4f(m_bg_r, m_bg_g, m_bg_b, m_bg_a);
-    glBegin(GL_QUADS);
-    glVertex2f(l, u);
-    glVertex2f(r, u);
-    glVertex2f(r, d);
-    glVertex2f(l, d);
-    glEnd();
+
+    Renderer::Vertex *v = renderer->Request(4);
+
+    v[0].x = l; v[0].y = u;
+    v[1].x = r; v[1].y = u;
+    v[2].x = r; v[2].y = d;
+    v[3].x = l; v[3].y = d;
+
+    v[0].r = m_bg_r; v[0].g = m_bg_g; v[0].b = m_bg_b; v[0].a = m_bg_a;
+    v[1].r = m_bg_r; v[1].g = m_bg_g; v[1].b = m_bg_b; v[1].a = m_bg_a;
+    v[2].r = m_bg_r; v[2].g = m_bg_g; v[2].b = m_bg_b; v[2].a = m_bg_a;
+    v[3].r = m_bg_r; v[3].g = m_bg_g; v[3].b = m_bg_b; v[3].a = m_bg_a;
+
+    renderer->Return(GL_QUADS);
   }
 
   Frame::Frame(const LayoutPtr &parent) :

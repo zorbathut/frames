@@ -1,5 +1,6 @@
 
 #include "frames/environment.h"
+
 #include "frames/frame.h"
 
 #include <GL/gl.h>
@@ -21,7 +22,16 @@ namespace Frames {
     m_root->SetHeight(y);
   }
 
-  void Environment::Render() {
+  void Environment::Render(LayoutPtr root) {
+    if (!root) {
+      root = m_root;
+    }
+
+    if (root->GetEnvironment() != this) {
+      GetConfiguration().logger->LogError("Attempt to render a frame through an unrelated environment");
+      return;
+    }
+
     // We want to batch up events if possible (todo: is this the case? which is faster - flushing as they go, or flushing all at once?) so, two nested loops
     while (!m_invalidated.empty()) {
       while (!m_invalidated.empty()) {
@@ -36,20 +46,11 @@ namespace Frames {
 
     // GC step?
 
-    // TODO: save?
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    m_renderer.Begin(m_root->GetWidth(), m_root->GetHeight());
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glTranslatef(-1.f, 1.f, 0.f);
-    glScalef(2.f / m_root->GetWidth(), -2.f / m_root->GetHeight(), 1.f);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    root->Render(&m_renderer);
 
-    m_root->Render();
-
-    // TODO: restore?
+    m_renderer.End();
   };
 
   void Environment::Init(const Configuration &config) {

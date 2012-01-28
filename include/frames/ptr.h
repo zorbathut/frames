@@ -20,6 +20,11 @@ namespace Frames {
   
   class Layout; typedef Ptr<Layout>::Type LayoutPtr;
   class Frame; typedef Ptr<Frame>::Type FramePtr;
+
+  // implementation detail for LayoutPtr and the like, do not call directly!
+  // Implemented in layout.cpp
+  void intrusive_ptr_add_ref(Frames::Layout *layout);
+  void intrusive_ptr_release(Frames::Layout *layout);
 }
 
 #endif

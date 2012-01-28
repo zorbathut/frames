@@ -14,6 +14,7 @@ namespace Frames {
   enum Axis { X, Y }; // axes
 
   class Environment;
+  class Renderer;
 
   class Layout : Noncopyable {
   public:
@@ -67,8 +68,8 @@ namespace Frames {
   private:
     friend class Environment;
 
-    void Render();
-    virtual void RenderElement() { };
+    void Render(Renderer *renderer);
+    virtual void RenderElement(Renderer *renderer) { };
 
     // Layout engine
     void Invalidate(Axis axis) const;
@@ -110,10 +111,6 @@ namespace Frames {
 
     Environment *m_env;
   };
-
-  // implementation detail for LayoutPtr and the like, do not call directly!
-  void intrusive_ptr_add_ref(Frames::Layout *layout);
-  void intrusive_ptr_release(Frames::Layout *layout);
 
   // Debug code
   #define FRAMES_LAYOUT_ASSERT(x, errstring, args...) (__builtin_expect(!!(x), 1) ? (void)(1) : (GetEnvironment()->GetConfiguration().logger->LogError(Utility::Format(errstring, ## args))))

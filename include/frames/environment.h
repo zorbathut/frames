@@ -3,9 +3,10 @@
 #ifndef FRAMES_ENVIRONMENT
 #define FRAMES_ENVIRONMENT
 
+#include "frames/configuration.h"
 #include "frames/noncopyable.h"
 #include "frames/ptr.h"
-#include "frames/configuration.h"
+#include "frames/renderer.h"
 
 #include <deque>
 
@@ -18,7 +19,7 @@ namespace Frames {
 
     void ResizeRoot(int x, int y);
     
-    void Render();
+    void Render(LayoutPtr root = 0);
     
     const LayoutPtr &GetRoot() { return m_root; }
     const Configuration &GetConfiguration() { return m_config; }
@@ -26,14 +27,20 @@ namespace Frames {
   private:
     friend class Layout;
 
+    // Utility functions and parameters
     void Init(const Configuration &config);
 
     void MarkInvalidated(LayoutPtr layout);
     std::deque<LayoutPtr> m_invalidated;
 
+    // Configuration
     Configuration m_config;
     Configuration::Logger *m_config_logger_owned;
 
+    // Managers
+    Renderer m_renderer;
+
+    // Root
     LayoutPtr m_root;
   };
 }

@@ -37,7 +37,7 @@ namespace Frames {
   private:
     virtual ~Frame();
 
-    virtual void RenderElement();
+    virtual void RenderElement(Renderer *renderer);
 
     float m_bg_r, m_bg_g, m_bg_b, m_bg_a;
   };
