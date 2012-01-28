@@ -37,6 +37,9 @@ namespace Frames {
     // GC step?
 
     // TODO: save?
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glTranslatef(-1.f, 1.f, 0.f);
