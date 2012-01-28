@@ -7,8 +7,10 @@
 #include "frames/noncopyable.h"
 #include "frames/ptr.h"
 #include "frames/renderer.h"
+#include "frames/utility.h"
 
 #include <deque>
+#include <vector>
 
 namespace Frames {
   class Environment : Noncopyable {
@@ -35,6 +37,18 @@ namespace Frames {
 
     void MarkInvalidated(LayoutPtr layout);
     std::deque<LayoutPtr> m_invalidated;
+
+    // Layout sanity
+    void LayoutStack_Push(const Layout *layout, Axis axis, float pt);
+    void LayoutStack_Push(const Layout *layout, Axis axis);
+    void LayoutStack_Pop();
+    void LayoutStack_Error();
+    struct LayoutStack_Entry {
+      const Layout *layout;
+      Axis axis;
+      float point;
+    };
+    std::vector<LayoutStack_Entry> m_layoutStack;
 
     // Configuration
     Configuration m_config;

@@ -1,9 +1,14 @@
 
 #include "frames/utility.h"
 
+#include "boost/static_assert.hpp"
+
 #include <vector>
 #include <cstdio>
 #include <cstdarg>
+
+// for the undefined types
+BOOST_STATIC_ASSERT(sizeof(float) == sizeof(int));
 
 namespace Frames {
   namespace Utility {

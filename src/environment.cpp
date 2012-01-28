@@ -69,5 +69,45 @@ namespace Frames {
   void Environment::MarkInvalidated(LayoutPtr layout) {
     m_invalidated.push_back(layout);
   }
+
+  void Environment::LayoutStack_Push(const Layout *layout, Axis axis, float pt) {
+    LayoutStack_Entry entry = {layout, axis, pt};
+    m_layoutStack.push_back(entry);
+  }
+
+  void Environment::LayoutStack_Push(const Layout *layout, Axis axis) {
+    LayoutStack_Entry entry = {layout, axis, Utility::Undefined};
+    m_layoutStack.push_back(entry);
+  }
+
+  void Environment::LayoutStack_Pop() {
+    m_layoutStack.pop_back();
+  }
+
+  void Environment::LayoutStack_Error() {
+    if (m_layoutStack.empty()) {
+      LogError("Layout loop dependency message received, but stack is empty. This should never happen.");
+      return;
+    }
+
+    LogError(Utility::Format("Layout loop dependency detected, axis %c:", (m_layoutStack[0].axis == X) ? 'X' : 'Y'));
+    for (int i = m_layoutStack.size(); i > 0; --i) {
+      LayoutStack_Entry entry = m_layoutStack[i - 1];
+      if (Utility::IsUndefined(entry.point))
+        LogError(Utility::Format("  %s: size", entry.layout->GetDebugName().c_str()));
+      else if (entry.point == 0 && entry.axis == X)
+        LogError(Utility::Format("  %s: LEFT", entry.layout->GetDebugName().c_str()));
+      else if (entry.point == 0 && entry.axis == Y)
+        LogError(Utility::Format("  %s: TOP", entry.layout->GetDebugName().c_str()));
+      else if (entry.point == 0.5)
+        LogError(Utility::Format("  %s: CENTER", entry.layout->GetDebugName().c_str()));
+      else if (entry.point == 1 && entry.axis == X)
+        LogError(Utility::Format("  %s: RIGHT", entry.layout->GetDebugName().c_str()));
+      else if (entry.point == 1 && entry.axis == Y)
+        LogError(Utility::Format("  %s: BOTTOM", entry.layout->GetDebugName().c_str()));
+      else
+        LogError(Utility::Format("  %s: %f", entry.layout->GetDebugName().c_str(), entry.point));
+    }
+  }
 }
 

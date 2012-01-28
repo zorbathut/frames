@@ -11,8 +11,6 @@
 #include <set>
 
 namespace Frames {
-  enum Axis { X, Y }; // axes
-
   class Environment;
   class Renderer;
 
@@ -34,6 +32,9 @@ namespace Frames {
     // Events?
 
     Environment *GetEnvironment() const { return m_env; }
+
+    // THIS MIGHT BE VERY, VERY SLOW
+    std::string GetDebugName() const;
 
   protected:
     Layout(const LayoutPtr &layout, Environment *env = 0);

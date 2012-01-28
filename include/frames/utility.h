@@ -3,15 +3,28 @@
 #ifndef FRAMES_UTILITY
 #define FRAMES_UTILITY
 
-#include <boost/math/special_functions/fpclassify.hpp>
-
 #include <string>
 
 namespace Frames {
+  enum Axis { X, Y }; // axes
+
   namespace Utility {
-    const float Undefined = 0.f/0.f;
+    template<typename T, typename U> T Reinterpret(U u) {
+      union { T t; U u; } uni;
+      uni.u = u;
+      return uni.t;
+    }
+
+    const unsigned int Undefined_bitmask = 0xFFDEADFF;
+    const float Undefined = Reinterpret<float>(Undefined_bitmask);
     inline bool IsUndefined(float x) {
-      return boost::math::isnan(x);
+      return Reinterpret<unsigned int>(x) == Undefined_bitmask;
+    }
+
+    const unsigned int Processing_bitmask = 0xFFCAFEFF;
+    const float Processing = Reinterpret<float>(Processing_bitmask);
+    inline bool IsProcessing(float x) {
+      return Reinterpret<unsigned int>(x) == Processing_bitmask;
     }
 
     std::string Format(const char *bort, ...) __attribute__((format(printf,1,2)));

@@ -12,10 +12,19 @@ namespace Frames {
     const AxisData::Connector &axa = ax.connections[0];
     if (axa.point_mine == pt) {
       if (!Utility::IsUndefined(axa.cached)) {
+        if (Utility::IsProcessing(axa.cached)) {
+          m_env->LayoutStack_Push(this, axis, pt);
+          m_env->LayoutStack_Error();
+          m_env->LayoutStack_Pop();
+          axa.cached = 0./0.; // generate a real NaN
+        }
         return axa.cached;
       }
       if (axa.link) {
+        m_env->LayoutStack_Push(this, axis, pt);
+        axa.cached = Utility::Processing; // seed it with processing so we'll exit if this turns out to be an infinite loop
         axa.cached = axa.link->GetPoint(axis, axa.point_link) + axa.offset;
+        m_env->LayoutStack_Pop();
         return axa.cached;
       }
       axa.cached = axa.offset;
@@ -25,10 +34,19 @@ namespace Frames {
     const AxisData::Connector &axb = ax.connections[1];
     if (axb.point_mine == pt) {
       if (!Utility::IsUndefined(axb.cached)) {
+        if (Utility::IsProcessing(axa.cached)) {
+          m_env->LayoutStack_Push(this, axis, pt);
+          m_env->LayoutStack_Error();
+          m_env->LayoutStack_Pop();
+          axb.cached = 0./0.; // generate a real NaN
+        }
         return axb.cached;
       }
       if (axb.link) {
+        m_env->LayoutStack_Push(this, axis, pt);
+        axb.cached = Utility::Processing; // seed it with processing so we'll exit if this turns out to be an infinite loop
         axb.cached = axb.link->GetPoint(axis, axb.point_link) + axb.offset;
+        m_env->LayoutStack_Pop();
         return axb.cached;
       }
       axb.cached = axb.offset;
@@ -55,11 +73,17 @@ namespace Frames {
 
     // 0 vertices, size
     if (Utility::IsUndefined(connect->point_mine)) {
-      return pt * GetSize(axis);
+      m_env->LayoutStack_Push(this, axis, pt);
+      float rv = pt * GetSize(axis);
+      m_env->LayoutStack_Pop();
+      return rv;
     }
 
     // 1 vertex, size
-    return GetPoint(axis, connect->point_mine) + (pt - connect->point_mine) * GetSize(axis);
+    m_env->LayoutStack_Push(this, axis, pt);
+    float rv = GetPoint(axis, connect->point_mine) + (pt - connect->point_mine) * GetSize(axis);
+    m_env->LayoutStack_Pop();
+    return rv;
   }
 
   float Layout::GetSize(Axis axis) const {
@@ -67,6 +91,12 @@ namespace Frames {
 
     // Check our cache
     if (!Utility::IsUndefined(ax.size_cached)) {
+      if (Utility::IsProcessing(ax.size_cached)) {
+        m_env->LayoutStack_Push(this, axis);
+        m_env->LayoutStack_Error();
+        m_env->LayoutStack_Pop();
+        ax.size_cached = 0./0.; // generate a real NaN
+      }
       return ax.size_cached;
     }
 
@@ -81,8 +111,11 @@ namespace Frames {
     const AxisData::Connector &axb = ax.connections[1];
     if (!Utility::IsUndefined(axa.point_mine) && !Utility::IsUndefined(axb.point_mine)) {
       // Woo! We can calculate from here
+      m_env->LayoutStack_Push(this, axis);
+      ax.size_cached = Utility::Processing; // seed it with processing so we'll exit if this turns out to be an infinite loop
       float a = GetPoint(axis, axa.point_mine);
       float b = GetPoint(axis, axb.point_mine);
+      m_env->LayoutStack_Pop();
 
       ax.size_cached = (a - b) / (axa.point_mine - axb.point_mine);
       return ax.size_cached;
@@ -91,6 +124,17 @@ namespace Frames {
     // Default size it is
     ax.size_cached = ax.size_default;
     return ax.size_default;
+  }
+
+  std::string Layout::GetDebugName() const {
+    std::string name;
+    if (m_parent) {
+      name = m_parent->GetDebugName() + ".";
+    }
+
+    name += Utility::Format("%08x", this);
+
+    return name;
   }
 
   Layout::Layout(const LayoutPtr &layout, Environment *env) :
