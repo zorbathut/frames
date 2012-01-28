@@ -4,7 +4,7 @@
 #include <cstdio>
 
 namespace Frames {
-  Configuration::Configuration() { };
+  Configuration::Configuration() : logger(0) { };
 
   Configuration::Logger::~Logger() {
   }
