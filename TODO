@@ -1,6 +1,3 @@
-* Invalid set point/size error reporting
-* Frame names and IDs
-  * file/line/descriptor
 * Garbage collection/cleanup/hard+weak pointers
 * Events
 * Texture

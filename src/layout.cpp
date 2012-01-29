@@ -126,13 +126,41 @@ namespace Frames {
     return ax.size_default;
   }
 
-  std::string Layout::GetDebugName() const {
+  std::string Layout::GetNameDebug() const {
     std::string name;
     if (m_parent) {
-      name = m_parent->GetDebugName() + ".";
+      name = m_parent->GetNameDebug() + ".";
     }
 
-    name += Utility::Format("%08x", this);
+    bool delimiter = false;
+
+    name += "(";
+
+    if (!m_name_dynamic.empty()) {
+      if (delimiter) name += ":";
+      name += m_name_dynamic;
+      delimiter = true;
+    }
+
+    if (m_name_static) {
+      if (delimiter) name += ":";
+      name += m_name_static;
+      delimiter = true;
+    }
+
+    if (m_name_id != -1) {
+      if (delimiter) name += ":";
+      name += Utility::Format("%d", m_name_id);
+      delimiter = true;
+    }
+
+    if (!delimiter) {
+      // well okay then
+      name += Utility::Format("%08x", this);
+      delimiter = true;
+    }
+
+    name += ")";
 
     return name;
   }
@@ -141,7 +169,9 @@ namespace Frames {
       m_resolved(false),
       m_layer(0),
       m_strata(0),
-      m_visible(true)
+      m_visible(true),
+      m_name_static(0),
+      m_name_id(-1)
   {
     if (layout && env) {
       FRAMES_LAYOUT_CHECK(layout->GetEnvironment() == env, "Layout's explicit parent and environment do not match");
@@ -228,12 +258,12 @@ namespace Frames {
     bool axbu = Utility::IsUndefined(axb.point_mine);
 
     if (!Utility::IsUndefined(ax.size_set) && (!axau || !axbu)) {
-      FRAMES_DEBUG("%s: Cannot SetPoint on %c/%f with a size and another point already set", GetDebugName().c_str(), axis ? 'Y' : 'X', mypt);
+      FRAMES_DEBUG("%s: Cannot SetPoint on %c/%f with a size and another point already set", GetNameDebug().c_str(), axis ? 'Y' : 'X', mypt);
       return;
     }
 
     if (!axau && !axbu) {
-      FRAMES_DEBUG("%s: Cannot SetPoint on %c/%f with two points already set", GetDebugName().c_str(), axis ? 'Y' : 'X', mypt);
+      FRAMES_DEBUG("%s: Cannot SetPoint on %c/%f with two points already set", GetNameDebug().c_str(), axis ? 'Y' : 'X', mypt);
       return;
     }
 
@@ -314,7 +344,7 @@ namespace Frames {
     AxisData &ax = m_axes[axis];
 
     if (!Utility::IsUndefined(ax.connections[0].point_mine) && !Utility::IsUndefined(ax.connections[1].point_mine)) {
-      FRAMES_DEBUG("%s: Cannot SetSize on %c with two points already set", GetDebugName().c_str(), axis ? 'Y' : 'X');
+      FRAMES_DEBUG("%s: Cannot SetSize on %c with two points already set", GetNameDebug().c_str(), axis ? 'Y' : 'X');
       return;
     }
 

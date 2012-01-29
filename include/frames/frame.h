@@ -8,7 +8,8 @@
 namespace Frames {
   class Frame : public Layout {
   public:
-    static FramePtr Create(LayoutPtr parent);
+    static FramePtr CreateBare(LayoutPtr parent);
+    static FramePtr CreateTagged_imp(const char *filename, int line, LayoutPtr parent);
 
     using Layout::SetPoint;
 
@@ -33,10 +34,9 @@ namespace Frames {
 
   protected:
     Frame(const LayoutPtr &parent);
-
-  private:
     virtual ~Frame();
 
+  private:
     virtual void RenderElement(Renderer *renderer);
 
     float m_bg_r, m_bg_g, m_bg_b, m_bg_a;

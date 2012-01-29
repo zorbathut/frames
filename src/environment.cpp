@@ -64,6 +64,7 @@ namespace Frames {
     }
 
     m_root = new Layout(0, this);
+    m_root->SetNameStatic("Root");
   }
 
   void Environment::MarkInvalidated(LayoutPtr layout) {
@@ -94,19 +95,19 @@ namespace Frames {
     for (int i = m_layoutStack.size(); i > 0; --i) {
       LayoutStack_Entry entry = m_layoutStack[i - 1];
       if (Utility::IsUndefined(entry.point))
-        LogError(Utility::Format("  %s: size", entry.layout->GetDebugName().c_str()));
+        LogError(Utility::Format("  %s: size", entry.layout->GetNameDebug().c_str()));
       else if (entry.point == 0 && entry.axis == X)
-        LogError(Utility::Format("  %s: LEFT", entry.layout->GetDebugName().c_str()));
+        LogError(Utility::Format("  %s: LEFT", entry.layout->GetNameDebug().c_str()));
       else if (entry.point == 0 && entry.axis == Y)
-        LogError(Utility::Format("  %s: TOP", entry.layout->GetDebugName().c_str()));
+        LogError(Utility::Format("  %s: TOP", entry.layout->GetNameDebug().c_str()));
       else if (entry.point == 0.5)
-        LogError(Utility::Format("  %s: CENTER", entry.layout->GetDebugName().c_str()));
+        LogError(Utility::Format("  %s: CENTER", entry.layout->GetNameDebug().c_str()));
       else if (entry.point == 1 && entry.axis == X)
-        LogError(Utility::Format("  %s: RIGHT", entry.layout->GetDebugName().c_str()));
+        LogError(Utility::Format("  %s: RIGHT", entry.layout->GetNameDebug().c_str()));
       else if (entry.point == 1 && entry.axis == Y)
-        LogError(Utility::Format("  %s: BOTTOM", entry.layout->GetDebugName().c_str()));
+        LogError(Utility::Format("  %s: BOTTOM", entry.layout->GetNameDebug().c_str()));
       else
-        LogError(Utility::Format("  %s: %f", entry.layout->GetDebugName().c_str(), entry.point));
+        LogError(Utility::Format("  %s: %f", entry.layout->GetNameDebug().c_str(), entry.point));
     }
   }
 }

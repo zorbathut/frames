@@ -31,10 +31,19 @@ namespace Frames {
     // ClearHeight/ClearWidth/ClearPoint/etc?
     // Events?
 
+    const char *GetNameStatic() const { return m_name_static; }
+    void SetNameStatic(const char *name) { m_name_static = name; }  // WARNING: This does not make a copy! The const char* must have a lifetime longer than this frame.
+
+    int GetNameId() const { return m_name_id; }
+    void SetNameId(int id) { m_name_id = id; }
+
+    const std::string &GetNameDynamic() const { return m_name_dynamic; }
+    void SetNameStatic(const std::string &name) { m_name_dynamic = name; }
+
     Environment *GetEnvironment() const { return m_env; }
 
     // THIS MIGHT BE VERY, VERY SLOW
-    std::string GetDebugName() const;
+    std::string GetNameDebug() const;
 
   protected:
     Layout(const LayoutPtr &layout, Environment *env = 0);
@@ -110,6 +119,11 @@ namespace Frames {
     typedef std::set<LayoutPtr, Sorter> ChildrenList;
     ChildrenList m_children;
 
+    // Naming system
+    const char *m_name_static;
+    int m_name_id;
+    std::string m_name_dynamic;
+
     Environment *m_env;
   };
 
@@ -118,6 +132,8 @@ namespace Frames {
   #define FRAMES_LAYOUT_CHECK(x, errstring, args...) (__builtin_expect(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, ## args))))
 
   #define FRAMES_DEBUG(args...) GetEnvironment()->LogDebug(Utility::Format(args))
+
+  #define CreateTagged(args...) CreateTagged_imp(__FILE__, __LINE__, ## args)
 }
 
 #endif

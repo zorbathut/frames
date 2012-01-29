@@ -7,8 +7,14 @@
 #include <GL/gl.h>
 
 namespace Frames {
-  FramePtr Frame::Create(LayoutPtr parent) {
+  FramePtr Frame::CreateBare(LayoutPtr parent) {
     return new Frame(parent);
+  }
+  FramePtr Frame::CreateTagged_imp(const char *filename, int line, LayoutPtr parent) {
+    FramePtr rv = new Frame(parent);
+    rv->SetNameStatic(filename);
+    rv->SetNameId(line);
+    return rv;
   }
 
   void Frame::SetBackground(float r, float g, float b, float a) {
