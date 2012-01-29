@@ -228,12 +228,12 @@ namespace Frames {
     bool axbu = Utility::IsUndefined(axb.point_mine);
 
     if (!Utility::IsUndefined(ax.size_set) && (!axau || !axbu)) {
-      // TODO: error, too many things set
+      FRAMES_DEBUG("%s: Cannot SetPoint on %c/%f with a size and another point already set", GetDebugName().c_str(), axis ? 'Y' : 'X', mypt);
       return;
     }
 
     if (!axau && !axbu) {
-      // TODO: error, too many things set
+      FRAMES_DEBUG("%s: Cannot SetPoint on %c/%f with two points already set", GetDebugName().c_str(), axis ? 'Y' : 'X', mypt);
       return;
     }
 
@@ -312,6 +312,11 @@ namespace Frames {
 
   void Layout::SetSize(Axis axis, float size) {
     AxisData &ax = m_axes[axis];
+
+    if (!Utility::IsUndefined(ax.connections[0].point_mine) && !Utility::IsUndefined(ax.connections[1].point_mine)) {
+      FRAMES_DEBUG("%s: Cannot SetSize on %c with two points already set", GetDebugName().c_str(), axis ? 'Y' : 'X');
+      return;
+    }
 
     // We don't care if we haven't changed
     if (ax.size_set != size) {
