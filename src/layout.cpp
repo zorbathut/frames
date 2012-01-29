@@ -164,25 +164,31 @@ namespace Frames {
 
     return name;
   }
-
-  Layout::Layout(const LayoutPtr &layout, Environment *env) :
+}
+#include <windows.h>
+namespace Frames {
+  Layout::Layout(Layout *layout, Environment *env) :
       m_resolved(false),
       m_layer(0),
       m_strata(0),
       m_visible(true),
       m_name_static(0),
-      m_name_id(-1)
+      m_name_id(-1),
+      m_env(0),
+      m_obliterating(false),
+      m_parent(0)
   {
-    if (layout && env) {
-      FRAMES_LAYOUT_CHECK(layout->GetEnvironment() == env, "Layout's explicit parent and environment do not match");
-    }
-    FRAMES_LAYOUT_CHECK(layout || env, "Layout not given parent or environment");
-
     if (layout) {
       m_env = layout->GetEnvironment();
     } else {
       m_env = env;
     }
+
+    if (layout && env) {
+      FRAMES_LAYOUT_CHECK(layout->GetEnvironment() == env, "Layout's explicit parent and environment do not match");
+    }
+    // TODO: come up with a better panic button for this? if we have no parent or environment then we have no way to do debug loggin
+    FRAMES_LAYOUT_CHECK(layout || env, "Layout not given parent or environment");
 
     m_env->MarkInvalidated(this); // We'll need to resolve this before we go
 
@@ -192,10 +198,16 @@ namespace Frames {
   }
 
   Layout::~Layout() {
-    // Right now, we're just not doing anything - things will be cleaned up as appropriate. Later, we'll want to clean up everything not marked for delete, and invalidate/scream bloody murder if that occurs
+    // We shouldn't reach this point until all references to us have vanished, so, kapow!
+    FRAMES_LAYOUT_CHECK(Utility::IsUndefined(m_axes[X].connections[0].point_mine), "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(Utility::IsUndefined(m_axes[X].connections[1].point_mine), "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(Utility::IsUndefined(m_axes[Y].connections[0].point_mine), "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(Utility::IsUndefined(m_axes[Y].connections[1].point_mine), "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(!m_parent, "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(m_children.empty(), "Layout destroyed while still connected");
   }
 
-  void Layout::SetPoint(Axis axis, float mypt, const LayoutPtr &link, float linkpt, float offset) {
+  void Layout::SetPoint(Axis axis, float mypt, const Layout *link, float linkpt, float offset) {
     AxisData &ax = m_axes[axis];
 
     AxisData::Connector &axa = ax.connections[0];
@@ -258,12 +270,10 @@ namespace Frames {
     bool axbu = Utility::IsUndefined(axb.point_mine);
 
     if (!Utility::IsUndefined(ax.size_set) && (!axau || !axbu)) {
-      FRAMES_DEBUG("%s: Cannot SetPoint on %c/%f with a size and another point already set", GetNameDebug().c_str(), axis ? 'Y' : 'X', mypt);
       return;
     }
 
     if (!axau && !axbu) {
-      FRAMES_DEBUG("%s: Cannot SetPoint on %c/%f with two points already set", GetNameDebug().c_str(), axis ? 'Y' : 'X', mypt);
       return;
     }
 
@@ -344,7 +354,6 @@ namespace Frames {
     AxisData &ax = m_axes[axis];
 
     if (!Utility::IsUndefined(ax.connections[0].point_mine) && !Utility::IsUndefined(ax.connections[1].point_mine)) {
-      FRAMES_DEBUG("%s: Cannot SetSize on %c with two points already set", GetNameDebug().c_str(), axis ? 'Y' : 'X');
       return;
     }
 
@@ -371,6 +380,14 @@ namespace Frames {
     }
   }
 
+  void Layout::ClearLayout() {
+    ClearSize(X);
+    ClearSize(Y);
+
+    ClearAllPoints(X);
+    ClearAllPoints(Y);
+  }
+
   void Layout::SetSizeDefault(Axis axis, float size) {
     AxisData &ax = m_axes[axis];
 
@@ -385,12 +402,17 @@ namespace Frames {
     }
   }
 
-  void Layout::SetParent(const LayoutPtr &layout) {
+  void Layout::SetParent(Layout *layout) {
     if (m_parent == layout) {
       return;
     }
 
-    if (m_env != layout->GetEnvironment()) {
+    if (!layout) {
+      FRAMES_LAYOUT_CHECK(false, ":SetParent() attempted with null parent");
+      return;
+    }
+
+    if (layout && m_env != layout->GetEnvironment()) {
       FRAMES_LAYOUT_CHECK(false, ":SetParent() attempted across environment boundaries");
       return;
     }
@@ -402,9 +424,7 @@ namespace Frames {
 
     m_parent = layout;
 
-    if (m_parent) {
-      m_parent->m_children.insert(this);
-    }
+    m_parent->m_children.insert(this);
   }
 
   void Layout::SetLayer(float layer) {
@@ -449,10 +469,13 @@ namespace Frames {
     m_visible = visible;
   }
 
-  void Layout::Render(Renderer *renderer) {
-    if (m_visible) {
-      // TODO: render background
+  void Layout::Obliterate() {
+    Obliterate_Detach();
+    Obliterate_Extract();
+  }
 
+  void Layout::Render(Renderer *renderer) const {
+    if (m_visible) {
       RenderElement(renderer);
 
       for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
@@ -480,12 +503,76 @@ namespace Frames {
 
       if (m_resolved) {
         m_resolved = false;
-        m_env->MarkInvalidated(const_cast<Layout*>(this));  // strip the constness, mostly because I'm not interested in making a ConstLayoutPtr
+        m_env->MarkInvalidated(this);
       }
     }
   }
 
+  void Layout::Obliterate_Detach() {
+    ClearLayout();  // kill my layout
+
+    // OBLITERATE ALL CHILDREN.
+    for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
+      (*itr)->Obliterate_Detach();
+    }
+  }
+
+  void Layout::Obliterate_Extract() {
+    // at this point, nobody should be referring to me, in theory
+    Obliterate_Extract_Axis(X);
+    Obliterate_Extract_Axis(Y);
+
+    // OBLITERATE ALL CHILDREN.
+    for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ) {
+      // little dance here 'cause our children are going to be fucking around with our structure
+      ChildrenList::const_iterator next = itr;
+      ++next;
+      (*itr)->Obliterate_Extract();
+      itr = next;
+    }
+
+    // Detach ourselves from our parent
+    if (m_parent) {
+      m_parent->m_children.erase(this);
+    }
+    m_parent = 0;
+
+    // And now we're safe to delete ourselves
+    if (m_resolved) {
+      delete this;
+    } else {
+      m_obliterating = true;  // mark ourselves for obliterate - it's this or do something gnarly with the invalidation system
+    }
+  }
+
+  void Layout::Obliterate_Extract_Axis(Axis axis) {
+    const AxisData &ax = m_axes[axis];
+    while (!ax.children.empty()) {
+      Layout *layout = *ax.children.begin();
+      layout->Obliterate_Extract_From(axis, this);
+    }
+  }
+
+  void Layout::Obliterate_Extract_From(Axis axis, const Layout *layout) {
+    const AxisData &ax = m_axes[axis];
+
+    if (ax.connections[0].link == layout) {
+      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->GetNameDebug().c_str(), GetNameDebug().c_str(), axis ? 'Y' : 'X', ax.connections[0].point_mine);
+      ClearPoint(axis, ax.connections[0].point_mine);
+    }
+
+    if (ax.connections[1].link == layout) {
+      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->GetNameDebug().c_str(), GetNameDebug().c_str(), axis ? 'Y' : 'X', ax.connections[1].point_mine);
+      ClearPoint(axis, ax.connections[1].point_mine);
+    }
+  }
+
   void Layout::Resolve() const {
+    if (m_obliterating) {
+      delete this; // that was the last reference needed, we're set
+      return;
+    }
+
     GetLeft();
     GetRight();
     GetTop();
@@ -499,16 +586,13 @@ namespace Frames {
     // Todo: queue up movement events
   }
 
-  bool Layout::Sorter::operator()(const LayoutPtr &lhs, const LayoutPtr &rhs) const {
+  bool Layout::Sorter::operator()(const Layout *lhs, const Layout *rhs) const {
     if (lhs->GetStrata() != rhs->GetStrata())
       return lhs->GetStrata() < rhs->GetStrata();
     if (lhs->GetLayer() != rhs->GetLayer())
       return lhs->GetLayer() < rhs->GetLayer();
     // they're the same, but we want a consistent sort that won't result in Z-fighting
-    return lhs.get() < rhs.get();
+    return lhs < rhs;
   }
-
-  void intrusive_ptr_add_ref(Frames::Layout *layout) { }
-  void intrusive_ptr_release(Frames::Layout *layout) { }
 }
 

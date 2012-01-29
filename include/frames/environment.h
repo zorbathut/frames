@@ -5,7 +5,6 @@
 
 #include "frames/configuration.h"
 #include "frames/noncopyable.h"
-#include "frames/ptr.h"
 #include "frames/renderer.h"
 #include "frames/utility.h"
 
@@ -13,6 +12,8 @@
 #include <vector>
 
 namespace Frames {
+  class Layout;
+
   class Environment : Noncopyable {
   public:
     Environment();  // init to default
@@ -21,22 +22,22 @@ namespace Frames {
 
     void ResizeRoot(int x, int y);
     
-    void Render(LayoutPtr root = 0);
+    void Render(const Layout *root = 0);
     
-    const LayoutPtr &GetRoot() { return m_root; }
+    Layout *GetRoot() { return m_root; }
     const Configuration &GetConfiguration() { return m_config; }
 
     // Internal only, do not call
-    void LogError(const std::string &log) { m_config.logger->LogError(log); }
-    void LogDebug(const std::string &log) { m_config.logger->LogDebug(log); }
+    void LogError(const std::string &log) { if (m_config.logger) m_config.logger->LogError(log); }
+    void LogDebug(const std::string &log) { if (m_config.logger) m_config.logger->LogDebug(log); }
   private:
     friend class Layout;
 
     // Utility functions and parameters
     void Init(const Configuration &config);
 
-    void MarkInvalidated(LayoutPtr layout);
-    std::deque<LayoutPtr> m_invalidated;
+    void MarkInvalidated(const Layout *layout);
+    std::deque<const Layout *> m_invalidated;
 
     // Layout sanity
     void LayoutStack_Push(const Layout *layout, Axis axis, float pt);
@@ -58,7 +59,7 @@ namespace Frames {
     Renderer m_renderer;
 
     // Root
-    LayoutPtr m_root;
+    Layout *m_root;
   };
 }
 

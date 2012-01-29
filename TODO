@@ -1,13 +1,49 @@
 * Garbage collection/cleanup/hard+weak pointers
+  * Hard pointers are handed out to the user
+  * Weak pointers are kept internally
+  * The two can be converted between each other trivially
+  
+  * GC algorithm:
+    * Right now we're doing a single instant GC pass *every frame*, we'll make it generational later
+  
+  * ugh, I don't like this.
+    * Alright, let's think about this more deeply.
+    * In order to clean up frames . . . no, we need to start earlier
+    * One of the things I like is a setup that lets me GC frames properly
+    * In order to do that, I need to be able to GC frames *with events*
+    * If it's in a scripting language, that presents major problems, though
+    * argh this is not going to be as easy as I thought
+    * So, here's what might happen. Within Lua, I attach an event to a frame. Also within Lua, I lose all references to the frame and detach the frame.
+    * Now, let's say that event handler is still pointing at the frame. If it were fully within Lua, it could detect a circular reference right now
+    * But it isn't - Lua doesn't know whether or not an external source is still using that frame.
+    * I *could* rig it up to cleanup entirely if the Lua world loses track of it, but that's an awful solution.
+    * Really, what I need is for it to go away iff all C++ and Lua and Javascript references vanish simultaneously, looped in on themselves
+    * but I don't have enough introspection into Lua, at the very least, to do that.
+      * Example:
+        * Luaframe -> event
+        * Event -> luaframe
+        * We can't kill that cycle unless we can verify that nobody else is using the frame
+        * Wait, maybe this is okay?
+        * Leave the frame around until we *would* deallocate it in C++
+        * Then drop it in the scripting languages
+        * Rule: Frames are only usable in one scripting language at a time
+    * It may be that ->Obliterate() is still needed for teardown.
+    * But if so, all this GC stuff starts looking a bit irrelevant.
+    * Even with that, we'd need to do something fancy in order to verify that I didn't have accidental cross-contamination.
+    * This is starting to feel painful.
+    * Common uses:
+      * Kill a single dialog
+      * Kill the whole damn tree
+        * If I'm supporting this, and I'm using ->Obliterate(), I need to *not* support :Detach()
 * Events
 * Texture
 * Mask
 * Text
 * Flesh out frame events
+* Memory allocation
+* Build process for cygwin/linux/windows
 
 
 * We'll need:
   * Texture manager
   * Renderer
-
-* Memory allocation

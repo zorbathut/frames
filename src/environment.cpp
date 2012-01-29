@@ -14,6 +14,16 @@ namespace Frames {
     Init(config);
   }
   Environment::~Environment() {
+    m_root->Obliterate();
+
+    // this flushes everything out of memory
+    while (!m_invalidated.empty()) {
+      const Layout *layout = m_invalidated.front();
+      m_invalidated.pop_front();
+
+      layout->Resolve();
+    }
+
     delete m_config_logger_owned;
   };
 
@@ -22,7 +32,7 @@ namespace Frames {
     m_root->SetHeight(y);
   }
 
-  void Environment::Render(LayoutPtr root) {
+  void Environment::Render(const Layout *root) {
     if (!root) {
       root = m_root;
     }
@@ -35,7 +45,7 @@ namespace Frames {
     // We want to batch up events if possible (todo: is this the case? which is faster - flushing as they go, or flushing all at once?) so, two nested loops
     while (!m_invalidated.empty()) {
       while (!m_invalidated.empty()) {
-        LayoutPtr layout = m_invalidated.front();
+        const Layout *layout = m_invalidated.front();
         m_invalidated.pop_front();
 
         layout->Resolve();
@@ -43,8 +53,6 @@ namespace Frames {
 
       // send events here
     }
-
-    // GC step?
 
     m_renderer.Begin(m_root->GetWidth(), m_root->GetHeight());
 
@@ -67,7 +75,7 @@ namespace Frames {
     m_root->SetNameStatic("Root");
   }
 
-  void Environment::MarkInvalidated(LayoutPtr layout) {
+  void Environment::MarkInvalidated(const Layout *layout) {
     m_invalidated.push_back(layout);
   }
 

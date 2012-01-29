@@ -4,7 +4,6 @@
 #define FRAMES_LAYOUT
 
 #include "frames/noncopyable.h"
-#include "frames/ptr.h"
 #include "frames/utility.h"
 
 #include <vector>
@@ -46,11 +45,11 @@ namespace Frames {
     std::string GetNameDebug() const;
 
   protected:
-    Layout(const LayoutPtr &layout, Environment *env = 0);
+    Layout(Layout *parent, Environment *env = 0);
     virtual ~Layout();
 
     // while Layout isn't mutable, things that inherit from Layout might be
-   void SetPoint(Axis axis, float mypt, const LayoutPtr &link, float theirpt, float offset);
+   void SetPoint(Axis axis, float mypt, const Layout *link, float theirpt, float offset);
    void ClearPoint(Axis axis, float mypt);
    void ClearAllPoints(Axis axis);
 
@@ -59,12 +58,14 @@ namespace Frames {
    void SetHeight(float size) { return SetSize(Y, size); }
    void ClearSize(Axis axis);
 
+   void ClearLayout();
+
    void SetSizeDefault(Axis axis, float size);
    void SetWidthDefault(float size) { return SetSizeDefault(X, size); }
    void SetHeightDefault(float size) { return SetSizeDefault(Y, size); }
 
-   void SetParent(const LayoutPtr &layout);
-   LayoutPtr GetParent() const { return m_parent; }
+   void SetParent(Layout *layout);
+   Layout *GetParent() const { return m_parent; }
 
    void SetLayer(float layer);
    float GetLayer() const { return m_layer; }
@@ -75,14 +76,20 @@ namespace Frames {
    void SetVisible(bool visible);
    bool GetVisible() const { return m_visible; }
 
+   void Obliterate(); // prep for destruction along with all children
+
   private:
     friend class Environment;
 
-    void Render(Renderer *renderer);
-    virtual void RenderElement(Renderer *renderer) { };
+    void Render(Renderer *renderer) const;
+    virtual void RenderElement(Renderer *renderer) const { };
 
     // Layout engine
     void Invalidate(Axis axis) const;
+    void Obliterate_Detach(); // Detach this layout from all layouts
+    void Obliterate_Extract();  // Detach everything that refers to this layout
+    void Obliterate_Extract_Axis(Axis axis);  // Detach everything that refers to this axis
+    void Obliterate_Extract_From(Axis axis, const Layout *layout);
     void Resolve() const;
     struct AxisData {
       AxisData() : size_cached(Utility::Undefined), size_set(Utility::Undefined), size_default(40) { };
@@ -90,9 +97,9 @@ namespace Frames {
       mutable float size_cached;
 
       struct Connector {
-        Connector() : point_mine(Utility::Undefined), point_link(Utility::Undefined), offset(Utility::Undefined), cached(Utility::Undefined) { };
+        Connector() : link(0), point_mine(Utility::Undefined), point_link(Utility::Undefined), offset(Utility::Undefined), cached(Utility::Undefined) { };
 
-        LayoutPtr link;
+        const Layout *link;
         float point_mine;
         float point_link;
         float offset;
@@ -104,19 +111,20 @@ namespace Frames {
       float size_set;
       float size_default;
 
-      typedef std::multiset<LayoutPtr> ChildrenList;
-      ChildrenList children;
+      typedef std::multiset<Layout *> ChildrenList;
+      mutable ChildrenList children;
     };
     AxisData m_axes[2];
     mutable bool m_resolved;  // whether *this* frame has its layout completely determined
+    bool m_obliterating;
 
     // Layer/parenting engine
-    struct Sorter { bool operator()(const LayoutPtr &lhs, const LayoutPtr &rhs) const; };
+    struct Sorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
     float m_layer;
     float m_strata;
-    LayoutPtr m_parent;
+    Layout *m_parent;
     bool m_visible;
-    typedef std::set<LayoutPtr, Sorter> ChildrenList;
+    typedef std::set<Layout *, Sorter> ChildrenList;
     ChildrenList m_children;
 
     // Naming system

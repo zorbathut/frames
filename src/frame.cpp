@@ -7,11 +7,11 @@
 #include <GL/gl.h>
 
 namespace Frames {
-  FramePtr Frame::CreateBare(LayoutPtr parent) {
+  Frame *Frame::CreateBare(Layout *parent) {
     return new Frame(parent);
   }
-  FramePtr Frame::CreateTagged_imp(const char *filename, int line, LayoutPtr parent) {
-    FramePtr rv = new Frame(parent);
+  Frame *Frame::CreateTagged_imp(const char *filename, int line, Layout *parent) {
+    Frame *rv = new Frame(parent);
     rv->SetNameStatic(filename);
     rv->SetNameId(line);
     return rv;
@@ -33,7 +33,7 @@ namespace Frames {
     *a = m_bg_a;
   }
 
-  void Frame::RenderElement(Renderer *renderer) {
+  void Frame::RenderElement(Renderer *renderer) const {
     // zomg inefficient
     float u = GetTop();
     float d = GetBottom();
@@ -55,7 +55,7 @@ namespace Frames {
     renderer->Return(GL_QUADS);
   }
 
-  Frame::Frame(const LayoutPtr &parent) :
+  Frame::Frame(Layout *parent) :
       Layout(parent),
       m_bg_r(0),
       m_bg_g(0),
