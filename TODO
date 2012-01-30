@@ -1,9 +1,60 @@
 * Events
+  * so what do we need out of events
+  * We need some concept of event unique IDs? Where do these come from? How are they managed? How are they extendable?
+    * maybe just a global that talks to another global
+  * Then we need some way to accept handlers
+    * Add handler (order, handler)
+    * Remove handler (handler)
+  * How should this look?
+  frame->EventAttach(e_Move, func, priority);
+  frame->EventDetach(e_Move, func);
+  
+  Sooo . . .
+    * Each frame type contains a static function that fills an event DB customized for that frame type
+    * This can be generated the first time that frame type is created
+    * This is what's used by the event system to tag events
+    * Event is looked up by name if scripted, then fired by ID
+    * Event is fired by ID
+    
+    * this presents problems firing events with parameters
+    * soooo . . . let's not have parameters?
+    
+    * function is EventAttach
+    * EventDetach
+    * Templatized by type
+    * Do type verification inside func (how?)
+    
+  * rrrgh
+    * So here's what I want
+    * I want typesafety, so you can't pass in a functor of the wrong type (that would just be a nightmare)
+    * I want no extra overhead - no pointer per event
+    
+  * let's just Make It Work
+    * We'll use boost::signal
+    * We can create minidelegates for Lua events - this'll simplify some things
+    * orrrr we can just wrap it into the signals lib?
+ 
+  * thinking it over more . . .
+    * use delegates, they're kind of sexy
+    * maybe add boost::bind as an option someday
+    * okay, so we have an idea of a GeneralCallback, which contains:
+      * enum id
+      * delegate
+      * luafunc
+      * jsfunc
+      * etc
+    * generalcallback is noncopyable
+    * and we can use macros to define new event types
+    
+    * GeneralCallback is templated and inherited from a GeneralCallbackBase, which is guaranteed to be the same size
+    * 
+  
 * Texture
 * Mask
 * Text
 * Flesh out frame events
 * Memory allocation
+* Events that get passed down - the Bubble phase?
 * Build process for cygwin/linux/windows
 
 

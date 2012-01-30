@@ -4,6 +4,8 @@
 #include "frames/environment.h"
 #include "frames/renderer.h"
 
+#include "boost/static_assert.hpp"
+
 namespace Frames {
   float Layout::GetPoint(Axis axis, float pt) const {
     const AxisData &ax = m_axes[axis];
@@ -583,6 +585,8 @@ namespace Frames {
 
     m_resolved = true;
 
+    EventMoveTrigger();
+
     // Todo: queue up movement events
   }
 
@@ -594,5 +598,74 @@ namespace Frames {
     // they're the same, but we want a consistent sort that won't result in Z-fighting
     return lhs < rhs;
   }
+
+
+  class Layout::EventHandler {
+  public:
+    // NOTE: this works because delegate is POD
+    EventHandler() { };
+    EventHandler(Delegate<void ()> din) {
+      typedef Delegate<void ()> dintype;
+      BOOST_STATIC_ASSERT(sizeof(dintype) == sizeof(Delegate<void ()>));
+
+      *reinterpret_cast<dintype *>(c.delegate) = din;
+    };
+    ~EventHandler() { };
+
+    void Call() const {
+      (*reinterpret_cast<const Delegate<void ()> *>(c.delegate))();
+    };
+
+  private:
+    union {
+      char delegate[sizeof(Delegate<void ()>)];
+    } c;
+    
+    friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);
+  };
+
+  bool operator==(const Layout::EventHandler &lhs, const Layout::EventHandler &rhs) { return memcmp(&lhs.c, &rhs.c, sizeof(lhs.c)) == 0; }
+
+  // eventery
+  #define FRAMES_LAYOUT_EVENT_DEFINE(frametype, eventname, paramlist, params) \
+    void frametype::Event##eventname##Attach(Delegate<void paramlist> delegate, float order) { \
+      EventAttach((unsigned int)&s_event_##eventname##_id, EventHandler(delegate), order); \
+    } \
+    void frametype::Event##eventname##Detach(Delegate<void paramlist> delegate) { \
+      EventDetach((unsigned int)&s_event_##eventname##_id, EventHandler(delegate)); \
+    } \
+    void frametype::Event##eventname##Trigger paramlist const { \
+      std::map<unsigned int, std::multimap<float, EventHandler> >::const_iterator itr = m_events.find((unsigned int)&s_event_##eventname##_id); \
+      if (itr == m_events.end()) { return; } \
+      const std::multimap<float, EventHandler> &tab = itr->second; \
+      for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
+        ev->second.Call params; \
+      } \
+    } \
+    char frametype::s_event_##eventname##_id = 0;
+
+  FRAMES_LAYOUT_EVENT_DEFINE(Layout, Move, (), ());
+  FRAMES_LAYOUT_EVENT_DEFINE(Layout, Size, (), ());
+
+  void Layout::EventAttach(unsigned int id, const EventHandler &handler, float order) {
+    m_events[id].insert(std::make_pair(order, handler)); // kapowza!
+  }
+  void Layout::EventDetach(unsigned int id, const EventHandler &handler) {
+    // somewhat more complex, we need to actually find the handler
+    std::map<unsigned int, std::multimap<float, EventHandler> >::iterator itr = m_events.find(id);
+    if (itr == m_events.end()) {
+      return;
+    }
+
+    std::multimap<float, EventHandler> &tab = itr->second;
+
+    for (std::multimap<float, EventHandler>::iterator ev = tab.begin(); ev != tab.end(); ++ev) {
+      if (ev->second == handler) {
+        tab.erase(ev);
+        break;
+      }
+    }
+  }
+
 }
 

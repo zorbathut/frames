@@ -3,17 +3,29 @@
 #ifndef FRAMES_LAYOUT
 #define FRAMES_LAYOUT
 
+#include "frames/delegate.h"
 #include "frames/noncopyable.h"
 #include "frames/utility.h"
 
 #include <vector>
 #include <set>
+#include <map>
 
 namespace Frames {
   class Environment;
   class Renderer;
 
+  // we'll add more internal utility functions if/when needed
+  #define FRAMES_LAYOUT_EVENT_DECLARE(eventname, paramlist) \
+    void Event##eventname##Attach(Delegate<void paramlist> delegate, float order = 0.f); \
+    void Event##eventname##Detach(Delegate<void paramlist> delegate); \
+    private: \
+    void Event##eventname##Trigger paramlist const; \
+    static char s_event_##eventname##_id; /* the char itself isn't the ID, the address of the char is */ \
+    public:
+
   class Layout : Noncopyable {
+    class EventHandler; // defined in layout.cpp
   public:
     float GetPoint(Axis axis, float pt) const;
     float GetLeft() const { return GetPoint(X, 0); }
@@ -29,6 +41,9 @@ namespace Frames {
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
     // ClearHeight/ClearWidth/ClearPoint/etc?
     // Events?
+
+    FRAMES_LAYOUT_EVENT_DECLARE(Move, ());
+    FRAMES_LAYOUT_EVENT_DECLARE(Size, ());
 
     const char *GetNameStatic() const { return m_name_static; }
     void SetNameStatic(const char *name) { m_name_static = name; }  // WARNING: This does not make a copy! The const char* must have a lifetime longer than this frame.
@@ -49,37 +64,42 @@ namespace Frames {
     virtual ~Layout();
 
     // while Layout isn't mutable, things that inherit from Layout might be
-   void SetPoint(Axis axis, float mypt, const Layout *link, float theirpt, float offset);
-   void ClearPoint(Axis axis, float mypt);
-   void ClearAllPoints(Axis axis);
+    void SetPoint(Axis axis, float mypt, const Layout *link, float theirpt, float offset);
+    void ClearPoint(Axis axis, float mypt);
+    void ClearAllPoints(Axis axis);
 
-   void SetSize(Axis axis, float size);
-   void SetWidth(float size) { return SetSize(X, size); }
-   void SetHeight(float size) { return SetSize(Y, size); }
-   void ClearSize(Axis axis);
+    void SetSize(Axis axis, float size);
+    void SetWidth(float size) { return SetSize(X, size); }
+    void SetHeight(float size) { return SetSize(Y, size); }
+    void ClearSize(Axis axis);
 
-   void ClearLayout();
+    void ClearLayout();
 
-   void SetSizeDefault(Axis axis, float size);
-   void SetWidthDefault(float size) { return SetSizeDefault(X, size); }
-   void SetHeightDefault(float size) { return SetSizeDefault(Y, size); }
+    void SetSizeDefault(Axis axis, float size);
+    void SetWidthDefault(float size) { return SetSizeDefault(X, size); }
+    void SetHeightDefault(float size) { return SetSizeDefault(Y, size); }
 
-   void SetParent(Layout *layout);
-   Layout *GetParent() const { return m_parent; }
+    void SetParent(Layout *layout);
+    Layout *GetParent() const { return m_parent; }
 
-   void SetLayer(float layer);
-   float GetLayer() const { return m_layer; }
+    void SetLayer(float layer);
+    float GetLayer() const { return m_layer; }
 
-   void SetStrata(float strata);
-   float GetStrata() const { return m_strata; }
+    void SetStrata(float strata);
+    float GetStrata() const { return m_strata; }
 
-   void SetVisible(bool visible);
-   bool GetVisible() const { return m_visible; }
+    void SetVisible(bool visible);
+    bool GetVisible() const { return m_visible; }
 
-   void Obliterate(); // prep for destruction along with all children
+    // This should be called only by the general-purpose macros
+    void EventAttach(unsigned int id, const EventHandler &handler, float order);
+    void EventDetach(unsigned int id, const EventHandler &handler);
+
+    void Obliterate(); // prep for destruction along with all children
 
   private:
     friend class Environment;
+    friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);
 
     void Render(Renderer *renderer) const;
     virtual void RenderElement(Renderer *renderer) const { };
@@ -132,6 +152,10 @@ namespace Frames {
     int m_name_id;
     std::string m_name_dynamic;
 
+    // Event system
+    std::map<unsigned int, std::multimap<float, EventHandler> > m_events;
+
+    // Global environment
     Environment *m_env;
   };
 
