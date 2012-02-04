@@ -49,6 +49,9 @@ namespace Frames {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    glMatrixMode(GL_TEXTURE);
+    glLoadIdentity();
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glTranslatef(-1.f, 1.f, 0.f);
@@ -65,7 +68,11 @@ namespace Frames {
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
-    // toggle texture on and off as necessary
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    m_currentTexture = 0;
   }
 
   void Renderer::End() {
@@ -98,6 +105,13 @@ namespace Frames {
     glUnmapBuffer(GL_ARRAY_BUFFER);
 
     glDrawElements(mode, 4, GL_UNSIGNED_SHORT, (void*)(m_last_pos * sizeof(GLushort)));
+  }
+
+  void Renderer::SetTexture(GLuint tex) {
+    if (m_currentTexture != tex) {
+      m_currentTexture = tex;
+      glBindTexture(GL_TEXTURE_2D, tex);
+    }
   }
 }
 

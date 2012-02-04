@@ -34,7 +34,8 @@ namespace Frames {
   }
 
   void Frame::RenderElement(Renderer *renderer) const {
-    // zomg inefficient
+    renderer->SetTexture(0);
+
     float u = GetTop();
     float d = GetBottom();
     float l = GetLeft();

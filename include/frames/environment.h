@@ -5,7 +5,6 @@
 
 #include "frames/configuration.h"
 #include "frames/noncopyable.h"
-#include "frames/renderer.h"
 #include "frames/utility.h"
 
 #include <deque>
@@ -13,6 +12,8 @@
 
 namespace Frames {
   class Layout;
+  class Renderer;
+  class TextureManager;
 
   class Environment : Noncopyable {
   public:
@@ -26,6 +27,8 @@ namespace Frames {
     
     Layout *GetRoot() { return m_root; }
     const Configuration &GetConfiguration() { return m_config; }
+
+    TextureManager *GetTextureManager() { return m_texture_manager; }
 
     // Internal only, do not call
     void LogError(const std::string &log) { if (m_config.logger) m_config.logger->LogError(log); }
@@ -54,9 +57,14 @@ namespace Frames {
     // Configuration
     Configuration m_config;
     Configuration::Logger *m_config_logger_owned;
+    Configuration::TextureFromId *m_config_tfi_owned;
+    Configuration::StreamFromId *m_config_sfi_owned;
+    Configuration::PathFromId *m_config_pfi_owned;
+    Configuration::TextureFromStream *m_config_tfs_owned;
 
     // Managers
-    Renderer m_renderer;
+    Renderer *m_renderer;
+    TextureManager *m_texture_manager;
 
     // Root
     Layout *m_root;

@@ -28,6 +28,8 @@ namespace Frames {
     Vertex *Request(int vertices);
     void Return(int mode);  // also renders
 
+    void SetTexture(GLuint tex);
+
   private:
     Environment *m_env; // just for debug functionality
 
@@ -38,6 +40,8 @@ namespace Frames {
     GLuint m_last_vertices;
 
     GLuint m_elements;
+
+    GLuint m_currentTexture;
   };
 };
 

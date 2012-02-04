@@ -38,9 +38,9 @@ namespace Frames {
     Frame(Layout *parent);
     virtual ~Frame();
 
-  private:
     virtual void RenderElement(Renderer *renderer) const;
 
+  private:
     float m_bg_r, m_bg_g, m_bg_b, m_bg_a;
   };
 }

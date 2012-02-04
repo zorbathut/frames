@@ -2,15 +2,17 @@
 #include "frames/environment.h"
 
 #include "frames/frame.h"
+#include "frames/renderer.h"
+#include "frames/texture_manager.h"
 
 #include <GL/gl.h>
 
 namespace Frames {
-  Environment::Environment() : m_renderer(this) {
+  Environment::Environment() : m_renderer(new Renderer(this)), m_texture_manager(new TextureManager(this)) {
     Configuration config;
     Init(config);
   }
-  Environment::Environment(const Configuration &config) : m_renderer(this) {
+  Environment::Environment(const Configuration &config) : m_renderer(new Renderer(this)), m_texture_manager(new TextureManager(this)) {
     Init(config);
   }
   Environment::~Environment() {
@@ -25,6 +27,8 @@ namespace Frames {
     }
 
     delete m_config_logger_owned;
+    delete m_renderer;
+    delete m_texture_manager;
   };
 
   void Environment::ResizeRoot(int x, int y) {
@@ -54,11 +58,11 @@ namespace Frames {
       // send events here
     }
 
-    m_renderer.Begin(m_root->GetWidth(), m_root->GetHeight());
+    m_renderer->Begin(m_root->GetWidth(), m_root->GetHeight());
 
-    root->Render(&m_renderer);
+    root->Render(m_renderer);
 
-    m_renderer.End();
+    m_renderer->End();
   };
 
   void Environment::Init(const Configuration &config) {
@@ -69,6 +73,26 @@ namespace Frames {
     if (!m_config.logger) {
       m_config_logger_owned = new Configuration::Logger();
       m_config.logger = m_config_logger_owned;
+    }
+
+    if (!m_config.textureFromId) {
+      m_config_tfi_owned = new Configuration::TextureFromId();
+      m_config.textureFromId = m_config_tfi_owned;
+    }
+
+    if (!m_config.streamFromId) {
+      m_config_sfi_owned = new Configuration::StreamFromId();
+      m_config.streamFromId = m_config_sfi_owned;
+    }
+
+    if (!m_config.pathFromId) {
+      m_config_pfi_owned = new Configuration::PathFromId();
+      m_config.pathFromId = m_config_pfi_owned;
+    }
+
+    if (!m_config.textureFromStream) {
+      m_config_tfs_owned = new Configuration::TextureFromStream();
+      m_config.textureFromStream = m_config_tfs_owned;
     }
 
     m_root = new Layout(0, this);
