@@ -1,29 +1,17 @@
 
 * find little prizes on amazon or whatever
 
-* texture loading
-  * create TextureInfo
-    * texture handle, renderer-specific (ogl)
-    * size, texsize
-    * more things later:
-      * support for raw image for crossplatformability
-      * usage flags (MUTABLE, DONT_TAKE_OWNERSHIP, maybe later OPAQUE or TRANSPARENT)
-  
-  * critical path:
-    * get settexture() rigged up via texture manager
-    * refcount textures
-  
-* Texture
 * Mask
 * Text
 * Flesh out frame events
-* Memory allocation
-* Events that get passed down - the Bubble phase?
+  * Events that get passed down - the Bubble phase?
+  * If any event does not return true, then stop, otherwise propogate the click upwards (does not occur for other events, just clicks)
+* Figure out 9-slice
+
 * Build process for cygwin/linux/windows
-
-
 * texture deallocation
-* background loading for textures someday
+* async loading for textures someday
 * figure out how to make config cleaner
 * deal with allocation properly
+  * remember image loading
 * crunch down on header includes

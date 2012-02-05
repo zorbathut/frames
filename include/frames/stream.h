@@ -15,7 +15,7 @@ namespace Frames {
     Stream() { };
     virtual ~Stream() { };
 
-    virtual int Read(char *target, int bytes) = 0;  // returns number of bytes, 0 indicates EOF
+    virtual int Read(unsigned char *target, int bytes) = 0;  // returns number of bytes, 0 indicates EOF
     virtual bool Seek(int offset) = 0;  // true if successful
     virtual bool Seekable() const = 0; // true if Seek is supported
   };
@@ -24,7 +24,7 @@ namespace Frames {
   public:
     static StreamFile *Create(const std::string &fname);
 
-    virtual int Read(char *target, int bytes);
+    virtual int Read(unsigned char *target, int bytes);
     virtual bool Seek(int offset);
     virtual bool Seekable() const;
 

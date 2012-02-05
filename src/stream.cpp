@@ -8,7 +8,7 @@ namespace Frames {
     return new StreamFile(fil);
   }
 
-  int StreamFile::Read(char *target, int bytes) { return fread(target, 1, bytes, m_file); }
+  int StreamFile::Read(unsigned char *target, int bytes) { return fread(target, 1, bytes, m_file); }
   bool StreamFile::Seek(int offset) { return !fseek(m_file, offset, SEEK_SET); }
   bool StreamFile::Seekable() const { return true; }
 

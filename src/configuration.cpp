@@ -2,12 +2,43 @@
 #include "frames/configuration.h"
 
 #include "frames/environment.h"
+#include "frames/loader.h"
 #include "frames/stream.h"
 #include "frames/texture_manager.h"
 
 #include <cstdio>
+#include <cstring>
 
 namespace Frames {
+  TextureInfo::TextureInfo() {
+     std::memset(this, 0, sizeof(*this));
+  }
+
+  void TextureInfo::InfoRaw::Allocate(Environment *m_env, int width, int height, Type newtype) {
+    Deallocate(m_env);
+
+    owned = true;
+    type = newtype;
+    stride = width * GetBPP(newtype);
+    data = new unsigned char[width * stride];
+  }
+  void TextureInfo::InfoRaw::Deallocate(Environment *m_env) {
+    delete [] data;
+  }
+
+  int TextureInfo::InfoRaw::GetBPP(Type type) {
+    if (type == RAW_RGBA) {
+      return 4;
+    } else if (type == RAW_RGB) {
+      return 3;
+    } else if (type == RAW_L || type == RAW_A) {
+      return 1;
+    } else {
+      // throw error here?
+      return 4;
+    }
+  }
+
   Configuration::Configuration() : logger(0), textureFromId(0), streamFromId(0), pathFromId(0), textureFromStream(0) { };
 
   void Configuration::Logger::LogError(const std::string &log) {
@@ -20,7 +51,6 @@ namespace Frames {
   TextureInfo Configuration::TextureFromId::Create(Environment *env, const std::string &id) {
     std::pair<Stream *, ImageType::T> data = env->GetConfiguration().streamFromId->Create(env, id);
 
-    env->LogDebug(Utility::Format("TFID create %08x", data.first));
     if (data.first) {
       TextureInfo rv = env->GetConfiguration().textureFromStream->Create(env, data.first, data.second);
       delete data.first;
@@ -42,39 +72,25 @@ namespace Frames {
   }
 
   TextureInfo Configuration::TextureFromStream::Create(Environment *env, Stream *stream, ImageType::T typeHint) {
-    glEnable(GL_TEXTURE_2D);
-
-    TextureInfo tex;
-    glGenTextures(1, &tex.gl_id);
-    glBindTexture(GL_TEXTURE_2D, tex.gl_id);
-
-    env->LogDebug(Utility::Format("Ldebug %d", tex.gl_id));
-
-    std::vector<unsigned long> data(256*256);
-
-    for (int i = 0; i < 256 * 256; ++i) {
-      int x = i % 256;
-      int y = i / 256;
-      x /= 16;
-      y /= 16;
-      if (x % 2 == y % 2)
-        data[i] = 0xffffffff;
+    if (typeHint == ImageType::UNKNOWN) {
+      if (Loader::PNG::Is(stream))
+        typeHint = ImageType::PNG;
+      else if (Loader::JPG::Is(stream))
+        typeHint = ImageType::JPG;
+      /*else if (Loader::DDS::Is(stream))
+        typeHint = ImageType::DDS;*/
       else
-        data[i] = 0x00000000;
+        return TextureInfo(); // give up
     }
 
-    tex.surface_width = 256;
-    tex.surface_height = 256;
-    tex.texture_width = 256;
-    tex.texture_height = 256;
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
-    return tex;
+    if (typeHint == ImageType::PNG) {
+      return Loader::PNG::Load(env, stream);
+    } else if (typeHint == ImageType::JPG) {
+      return Loader::JPG::Load(env, stream);
+    /*} else if (typeHint == ImageType::DDS) {
+      return Loader::DDS::Load(env, stream);*/
+    } else {
+      return TextureInfo(); // give up
+    }
   }
 }

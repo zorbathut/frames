@@ -35,7 +35,17 @@ namespace Frames {
       std::string rv = std::string(buf.begin(), buf.begin() + done);
 
       return rv;
-    };
+    }
+
+    int ClampToPowerOf2(int input) {
+      input--;
+      input = (input >> 1) | input;
+      input = (input >> 2) | input;
+      input = (input >> 4) | input;
+      input = (input >> 8) | input;
+      input = (input >> 16) | input;
+      return input + 1;
+    }
   }
 }
 

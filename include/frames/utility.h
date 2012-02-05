@@ -28,6 +28,8 @@ namespace Frames {
     }
 
     std::string Format(const char *bort, ...) __attribute__((format(printf,1,2)));
+
+    int ClampToPowerOf2(int input);
   }
 }
 
