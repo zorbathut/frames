@@ -34,26 +34,28 @@ namespace Frames {
   }
 
   void Frame::RenderElement(Renderer *renderer) const {
-    renderer->SetTexture(0);
+    if (m_bg_a > 0) {
+      renderer->SetTexture(0);
 
-    float u = GetTop();
-    float d = GetBottom();
-    float l = GetLeft();
-    float r = GetRight();
+      float u = GetTop();
+      float d = GetBottom();
+      float l = GetLeft();
+      float r = GetRight();
 
-    Renderer::Vertex *v = renderer->Request(4);
+      Renderer::Vertex *v = renderer->Request(4);
 
-    v[0].x = l; v[0].y = u;
-    v[1].x = r; v[1].y = u;
-    v[2].x = r; v[2].y = d;
-    v[3].x = l; v[3].y = d;
+      v[0].x = l; v[0].y = u;
+      v[1].x = r; v[1].y = u;
+      v[2].x = r; v[2].y = d;
+      v[3].x = l; v[3].y = d;
 
-    v[0].r = m_bg_r; v[0].g = m_bg_g; v[0].b = m_bg_b; v[0].a = m_bg_a;
-    v[1].r = m_bg_r; v[1].g = m_bg_g; v[1].b = m_bg_b; v[1].a = m_bg_a;
-    v[2].r = m_bg_r; v[2].g = m_bg_g; v[2].b = m_bg_b; v[2].a = m_bg_a;
-    v[3].r = m_bg_r; v[3].g = m_bg_g; v[3].b = m_bg_b; v[3].a = m_bg_a;
+      v[0].r = m_bg_r; v[0].g = m_bg_g; v[0].b = m_bg_b; v[0].a = m_bg_a;
+      v[1].r = m_bg_r; v[1].g = m_bg_g; v[1].b = m_bg_b; v[1].a = m_bg_a;
+      v[2].r = m_bg_r; v[2].g = m_bg_g; v[2].b = m_bg_b; v[2].a = m_bg_a;
+      v[3].r = m_bg_r; v[3].g = m_bg_g; v[3].b = m_bg_b; v[3].a = m_bg_a;
 
-    renderer->Return(GL_QUADS);
+      renderer->Return(GL_QUADS);
+    }
   }
 
   Frame::Frame(Layout *parent) :
