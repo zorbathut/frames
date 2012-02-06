@@ -2,6 +2,7 @@
 #include "frames/layout.h"
 
 #include "frames/environment.h"
+#include "frames/rect.h"
 #include "frames/renderer.h"
 
 #include "boost/static_assert.hpp"
@@ -86,6 +87,10 @@ namespace Frames {
     float rv = GetPoint(axis, connect->point_mine) + (pt - connect->point_mine) * GetSize(axis);
     m_env->LayoutStack_Pop();
     return rv;
+  }
+
+  Rect Layout::GetBounds() const {
+    return Rect(GetLeft(), GetTop(), GetRight(), GetBottom());
   }
 
   float Layout::GetSize(Axis axis) const {
@@ -483,6 +488,8 @@ namespace Frames {
       for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
         (*itr)->Render(renderer);
       }
+      
+      RenderElementPost(renderer);
     }
   }
 

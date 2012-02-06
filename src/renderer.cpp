@@ -2,6 +2,7 @@
 #include "frames/renderer.h"
 
 #include "frames/environment.h"
+#include "frames/rect.h"
 #include "frames/utility.h"
 
 #include "boost/static_assert.hpp"
@@ -21,7 +22,17 @@ namespace Frames {
   const int bufferElements = 1 << 16; // fit in a ushort
   const int bufferSize = bufferElements * sizeof(Renderer::Vertex);
 
-  Renderer::Renderer(Environment *env) : m_buffer_pos(bufferElements), m_env(env) {  // set to bufferElements so we create a real buffer when we need it
+  Renderer::Renderer(Environment *env) :
+      m_env(env),
+      m_width(0),
+      m_height(0),
+      m_buffer(0),
+      m_buffer_pos(bufferElements),
+      m_last_pos(0),
+      m_last_vertices(0),
+      m_elements(0),
+      m_currentTexture(0)
+  {  // set to bufferElements so we create a real buffer when we need it
     glGenBuffers(1, &m_buffer);
     glGenBuffers(1, &m_elements);
 
@@ -43,6 +54,9 @@ namespace Frames {
   }
 
   void Renderer::Begin(int width, int height) {
+    m_width = width;
+    m_height = height;
+
     glPushAttrib(~0);
     glPushClientAttrib(~0);
 
@@ -112,6 +126,30 @@ namespace Frames {
       m_currentTexture = tex;
       glBindTexture(GL_TEXTURE_2D, tex);
     }
+  }
+
+  void Renderer::PushScissor(const Rect &rect) {
+    if (m_scissor.empty()) {
+      glEnable(GL_SCISSOR_TEST);
+    }
+
+    m_scissor.push(rect);
+
+    SetScissor(rect);
+  }
+
+  void Renderer::PopScissor() {
+    m_scissor.pop();
+
+    if (m_scissor.empty()) {
+      glDisable(GL_SCISSOR_TEST);
+    } else {
+      SetScissor(m_scissor.back());
+    }
+  }
+
+  void Renderer::SetScissor(const Rect &rect) {
+    glScissor(rect.s.x, m_height - rect.e.y, rect.e.x - rect.s.x, rect.e.y - rect.s.y);
   }
 }
 

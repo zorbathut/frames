@@ -3,6 +3,8 @@
 #ifndef FRAMES_RENDERER
 #define FRAMES_RENDERER
 
+#include <queue>
+
 namespace Frames {
   // fake opengl typedefs, used so we don't pull the entire header in
   typedef unsigned int GLuint;
@@ -10,6 +12,7 @@ namespace Frames {
   typedef float GLfloat;
 
   class Environment;
+  class Rect;
 
   class Renderer {
   public:
@@ -30,8 +33,14 @@ namespace Frames {
 
     void SetTexture(GLuint tex);
 
+    void PushScissor(const Rect &rect);
+    void PopScissor();
+
   private:
     Environment *m_env; // just for debug functionality
+
+    int m_width;
+    int m_height;
 
     GLuint m_buffer;
     GLuint m_buffer_pos;
@@ -42,6 +51,9 @@ namespace Frames {
     GLuint m_elements;
 
     GLuint m_currentTexture;
+
+    void SetScissor(const Rect &rect);
+    std::queue<Rect> m_scissor;
   };
 };
 

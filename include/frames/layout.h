@@ -13,6 +13,7 @@
 
 namespace Frames {
   class Environment;
+  class Rect;
   class Renderer;
 
   // we'll add more internal utility functions if/when needed
@@ -32,6 +33,7 @@ namespace Frames {
     float GetRight() const { return GetPoint(X, 1); }
     float GetTop() const { return GetPoint(Y, 0); }
     float GetBottom() const { return GetPoint(Y, 1); }
+    Rect GetBounds() const;
 
     float GetSize(Axis axis) const;
     float GetWidth() const { return GetSize(X); }
@@ -97,12 +99,14 @@ namespace Frames {
 
     void Obliterate(); // prep for destruction along with all children
 
+    virtual void RenderElement(Renderer *renderer) const { };
+    virtual void RenderElementPost(Renderer *renderer) const { };
+
   private:
     friend class Environment;
     friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);
 
     void Render(Renderer *renderer) const;
-    virtual void RenderElement(Renderer *renderer) const { };
 
     // Layout engine
     void Invalidate(Axis axis) const;

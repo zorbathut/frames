@@ -1,8 +1,9 @@
 
 * find little prizes on amazon or whatever
 
-* Mask
+* Don't render bg on no alpha
 * Text
+* Raw
 * Flesh out frame events
   * Events that get passed down - the Bubble phase?
   * If any event does not return true, then stop, otherwise propogate the click upwards (does not occur for other events, just clicks)

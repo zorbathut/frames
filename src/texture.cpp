@@ -5,7 +5,7 @@
 #include "frames/renderer.h"
 #include "frames/texture_manager.h"
 
-#include <GL/gl.h>
+#include <GL/GLew.h>
 
 namespace Frames {
   Texture *Texture::CreateBare(Layout *parent) {
