@@ -9,7 +9,7 @@ namespace Frames {
     typedef Ptr<T> this_type;
 
     Ptr() : p(0) { }
-    Ptr(T *p) : p(p) { p->Ref_Add(); }
+    Ptr(T *p) : p(p) { if (p) p->Ref_Add(); }
     Ptr(const Ptr &rhs) : p(rhs.p) { if (p) p->Ref_Add(); }
     ~Ptr() { if (p) p->Ref_Release(); }
 

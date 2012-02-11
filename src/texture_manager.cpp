@@ -73,6 +73,20 @@ namespace Frames {
 
     TextureConfig conf = m_env->GetConfiguration().textureFromId->Create(m_env, id);
 
+    TextureChunkPtr rv = TextureFromConfig(conf);
+
+    if (!rv) {
+      m_env->LogError(Utility::Format("Failed to load texture %s", id.c_str()));
+      return rv; // something went wrong
+    }
+
+    m_texture[id] = rv.get();
+    m_texture_reverse[rv.get()] = id;
+
+    return rv;
+  }
+
+  TextureChunkPtr TextureManager::TextureFromConfig(const TextureConfig &conf, TextureBackingPtr in_backing /*= 0*/) {
     if (conf.GetMode() == TextureConfig::RAW) {
       // time to GL-ize it
       // for now we're just putting it into its own po2 texture
@@ -83,17 +97,24 @@ namespace Frames {
       glGenTextures(1, &tex);
       if (!tex) {
         // whoops
-        m_env->LogError(Utility::Format("Failure to allocate room for texture %s", id.c_str()));
+        m_env->LogError(Utility::Format("Failure to allocate room for texture"));
         return 0;
       }
 
-      TextureBacking *backing = new TextureBacking();
-      backing->m_env = m_env;
-      backing->m_surface_width = Utility::ClampToPowerOf2(conf.GetWidth());
-      backing->m_surface_height = Utility::ClampToPowerOf2(conf.GetHeight());
-      backing->m_id = tex;
-      
-      m_backing.insert(backing);
+      TextureBacking *backing = 0;
+
+      if (in_backing) {
+        backing = in_backing.get();
+      } else {
+        backing = new TextureBacking;
+
+        backing->m_env = m_env;
+        backing->m_surface_width = Utility::ClampToPowerOf2(conf.GetWidth());
+        backing->m_surface_height = Utility::ClampToPowerOf2(conf.GetHeight());
+        backing->m_id = tex;
+
+        m_backing.insert(backing);
+      }
 
       TextureChunk *chunk = new TextureChunk();
       chunk->m_backing = backing;
@@ -103,9 +124,6 @@ namespace Frames {
       chunk->m_sy = 0;
       chunk->m_ex = (float)chunk->m_texture_width / backing->m_surface_width;
       chunk->m_ey = (float)chunk->m_texture_height / backing->m_surface_height;
-
-      m_texture[id] = chunk;
-      m_texture_reverse[chunk] = id;
 
       glBindTexture(GL_TEXTURE_2D, tex);
 
@@ -125,7 +143,7 @@ namespace Frames {
         gl_tex_mode = GL_ALPHA;
         input_tex_mode = GL_ALPHA;
       } else {
-        m_env->LogError(Utility::Format("Unrecognized raw type %d in texture %s", conf.Raw_GetType(), id.c_str()));
+        m_env->LogError(Utility::Format("Unrecognized raw type %d in texture", conf.Raw_GetType()));
         return chunk;
       }
 
@@ -157,8 +175,10 @@ namespace Frames {
     m_backing.erase(backing); // easy peasy
   }
   void TextureManager::Internal_Shutdown_Chunk(TextureChunk *chunk) {
-    m_texture.erase(m_texture_reverse[chunk]);
-    m_texture_reverse.erase(chunk);
+    if (m_texture_reverse.count(chunk)) {
+      m_texture.erase(m_texture_reverse[chunk]);
+      m_texture_reverse.erase(chunk);
+    }
   }
 }
 
