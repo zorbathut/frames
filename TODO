@@ -1,15 +1,22 @@
 
-* find little prizes on amazon or whatever
-
+* Texmanager - need some way to explicitly create a backing, tie things to a given backing, etc
 * Text
+  * text manager
+    * generate individual characters
+    * texture manager - corpuses
+    * layout engine, laying out
+    * word wrap
 * Raw
 * Flesh out frame events
   * Events that get passed down - the Bubble phase?
   * If any event does not return true, then stop, otherwise propogate the click upwards (does not occur for other events, just clicks)
 * Figure out 9-slice
 
+* Internal-prefix every internal function
+* Convert layout engine to ints
 * Build process for cygwin/linux/windows
 * texture deallocation
+  * split texture into its own thing
 * async loading for textures someday
 * figure out how to make config cleaner
 * deal with allocation properly

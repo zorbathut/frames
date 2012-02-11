@@ -3,6 +3,7 @@
 
 #include "frames/environment.h"
 #include "frames/rect.h"
+#include "frames/texture_manager.h"
 #include "frames/utility.h"
 
 #include "boost/static_assert.hpp"
@@ -121,10 +122,13 @@ namespace Frames {
     glDrawElements(mode, 4, GL_UNSIGNED_SHORT, (void*)(m_last_pos * sizeof(GLushort)));
   }
 
-  void Renderer::SetTexture(GLuint tex) {
-    if (m_currentTexture != tex) {
-      m_currentTexture = tex;
-      glBindTexture(GL_TEXTURE_2D, tex);
+  void Renderer::SetTexture(TextureChunk *tex) {
+    GLuint dest = 0;
+    if (tex) dest = tex->GetGLID();
+
+    if (m_currentTexture != dest) {
+      m_currentTexture = dest;
+      glBindTexture(GL_TEXTURE_2D, dest);
     }
   }
 

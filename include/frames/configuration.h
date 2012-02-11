@@ -10,7 +10,7 @@
 namespace Frames {
   class Environment;
   class Stream;
-  class TextureInfo;
+  class TextureConfig;
 
   namespace ImageType {
     enum T {
@@ -26,48 +26,6 @@ namespace Frames {
 
       INVALID=0xffffffff
     };
-  };
-
-  // This is what's returned from the configuration to the internal systems
-  struct TextureInfo {
-    TextureInfo();
-
-    enum { GL, RAW };
-    int mode;
-
-    enum Type {
-      RAW_RGBA, // 8bpc, 32bpp, laid out as RGBA
-      RAW_RGB, // 8bpc, 24bpp, laid out as RGB. Packed. Will be converted to RGBA for actual textures. Probably slower than RAW_RGBA if conversion happens often.
-      RAW_L, // 8bpc, 8bpp, laid out as L.
-      RAW_A, // 8bpc, 8bpp, laid out as A.
-    }; 
-
-    struct InfoGL {
-      GLuint id;
-
-      int surface_width;
-      int surface_height;
-    };
-    struct InfoRaw {
-
-      void Allocate(Environment *m_env, int width, int height, Type type);
-      void Deallocate(Environment *m_env);
-
-      static int GetBPP(Type type);
-
-      unsigned char *data;
-      bool owned;
-      int stride;
-      Type type;
-    };
-
-    union {
-      InfoGL gl;
-      InfoRaw raw;
-    };
-
-    int texture_width;
-    int texture_height;
   };
 
   struct Configuration {
@@ -87,7 +45,7 @@ namespace Frames {
     public:
       virtual ~TextureFromId() { }
 
-      virtual TextureInfo Create(Environment *env, const std::string &id);
+      virtual TextureConfig Create(Environment *env, const std::string &id);
     };
     TextureFromId *textureFromId;
 
@@ -111,7 +69,7 @@ namespace Frames {
     public:
       virtual ~TextureFromStream() { }
 
-      virtual TextureInfo Create(Environment *env, Stream *stream, ImageType::T typeHint);
+      virtual TextureConfig Create(Environment *env, Stream *stream, ImageType::T typeHint);
     };
     TextureFromStream *textureFromStream;
   };

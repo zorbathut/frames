@@ -3,77 +3,141 @@
 
 #include "frames/configuration.h"
 #include "frames/environment.h"
+#include "frames/texture_config.h"
 
 namespace Frames {
-  TextureManager::TextureManager(Environment *env) : m_env(env) { };
-  TextureManager::~TextureManager() { };
+  TextureBacking::TextureBacking() :
+      m_env(0),
+      m_id(0),
+      m_surface_width(0),
+      m_surface_height(0),
+      m_refs(0)
+  {
+  }
 
-  TextureManager::Texture::Texture() : id(0), texture_width(0), texture_height(0), surface_width(0), surface_height(0), sx(0), sy(0), ex(0), ey(0) { };
-  TextureManager::Texture::~Texture() { glDeleteTextures(1, &id); }
+  TextureBacking::~TextureBacking() {
+    m_env->GetTextureManager()->Internal_Shutdown_Backing(this);
+    if (m_refs) {
+      m_env->LogError("Leak in texture backing");
+    }
 
-  TextureManager::Texture *TextureManager::TextureFromId(const std::string &id) {
-    if (m_textures.count(id)) {
-      return &m_textures[id];
+    glDeleteTextures(1, &m_id);
+  }
+
+  TextureChunk::TextureChunk() :
+      m_texture_width(0),
+      m_texture_height(0),
+      m_sx(0),
+      m_sy(0),
+      m_ex(0),
+      m_ey(0),
+      m_refs(0)
+  {
+  }
+
+  TextureChunk::~TextureChunk() {
+    m_backing->m_env->GetTextureManager()->Internal_Shutdown_Chunk(this);
+    if (m_refs) {
+      m_backing->m_env->LogError("Leak in texture chunks");
+    }
+  }
+
+  TextureManager::TextureManager(Environment *env) : m_env(env) {
+  }
+  TextureManager::~TextureManager() {
+    // First, nuke chunks
+    for (std::map<std::string, TextureChunk *>::iterator itr = m_texture.begin(); itr != m_texture.end(); ) {
+      std::map<std::string, TextureChunk *>::iterator t = itr;
+      ++itr;
+
+      // now we can go
+      delete t->second; // will clean itself up
+    }
+
+    // Then, nuke backings
+    for (std::set<TextureBacking *>::iterator itr = m_backing.begin(); itr != m_backing.end(); ) {
+      std::set<TextureBacking *>::iterator t = itr;
+      ++itr;
+
+      // now we can go
+      delete *t; // will clean itself up
+    }
+  }
+
+  TextureChunkPtr TextureManager::TextureFromId(const std::string &id) {
+    if (m_texture.count(id)) {
+      return m_texture[id];
     }
 
     m_env->LogDebug(Utility::Format("Attempting to load texture %s", id.c_str()));
 
-    TextureInfo tinfo = m_env->GetConfiguration().textureFromId->Create(m_env, id);
+    TextureConfig conf = m_env->GetConfiguration().textureFromId->Create(m_env, id);
 
-    if (tinfo.mode == TextureInfo::RAW) {
+    if (conf.GetMode() == TextureConfig::RAW) {
       // time to GL-ize it
       // for now we're just putting it into its own po2 texture
 
-      TextureInfo glt;
-      glt.mode = TextureInfo::GL;
-      glt.texture_width = tinfo.texture_width;
-      glt.texture_height = tinfo.texture_height;
-
-      glt.gl.surface_width = Utility::ClampToPowerOf2(glt.texture_width);
-      glt.gl.surface_height = Utility::ClampToPowerOf2(glt.texture_height);
-
       glEnable(GL_TEXTURE_2D);
 
-      glGenTextures(1, &glt.gl.id);
-      if (!glt.gl.id) {
+      GLuint tex;
+      glGenTextures(1, &tex);
+      if (!tex) {
         // whoops
         m_env->LogError(Utility::Format("Failure to allocate room for texture %s", id.c_str()));
-        tinfo.raw.Deallocate(m_env);
         return 0;
       }
 
-      glBindTexture(GL_TEXTURE_2D, glt.gl.id);
+      TextureBacking *backing = new TextureBacking();
+      backing->m_env = m_env;
+      backing->m_surface_width = Utility::ClampToPowerOf2(conf.GetWidth());
+      backing->m_surface_height = Utility::ClampToPowerOf2(conf.GetHeight());
+      backing->m_id = tex;
+      
+      m_backing.insert(backing);
+
+      TextureChunk *chunk = new TextureChunk();
+      chunk->m_backing = backing;
+      chunk->m_texture_width = conf.GetWidth();
+      chunk->m_texture_height = conf.GetHeight();
+      chunk->m_sx = 0;
+      chunk->m_sy = 0;
+      chunk->m_ex = (float)chunk->m_texture_width / backing->m_surface_width;
+      chunk->m_ey = (float)chunk->m_texture_height / backing->m_surface_height;
+
+      m_texture[id] = chunk;
+      m_texture_reverse[chunk] = id;
+
+      glBindTexture(GL_TEXTURE_2D, tex);
 
       int gl_tex_mode = GL_RGBA;
       int input_tex_mode = GL_RGBA;
 
-      if (tinfo.raw.type == TextureInfo::RAW_RGBA) {
+      if (conf.Raw_GetType() == TextureConfig::MODE_RGBA) {
         gl_tex_mode = GL_RGBA;
         input_tex_mode = GL_RGBA;
-      } else if (tinfo.raw.type == TextureInfo::RAW_RGB) {
+      } else if (conf.Raw_GetType() == TextureConfig::MODE_RGB) {
         gl_tex_mode = GL_RGBA;
         input_tex_mode = GL_RGB;
-      } else if (tinfo.raw.type == TextureInfo::RAW_L) {
+      } else if (conf.Raw_GetType() == TextureConfig::MODE_L) {
         gl_tex_mode = GL_LUMINANCE;
         input_tex_mode = GL_LUMINANCE;
-      } else if (tinfo.raw.type == TextureInfo::RAW_A) {
+      } else if (conf.Raw_GetType() == TextureConfig::MODE_A) {
         gl_tex_mode = GL_ALPHA;
         input_tex_mode = GL_ALPHA;
       } else {
-        m_env->LogError(Utility::Format("Unrecognized raw type %d in texture %s", tinfo.raw.type, id.c_str()));
-        tinfo.raw.Deallocate(m_env);
-        return 0;
+        m_env->LogError(Utility::Format("Unrecognized raw type %d in texture %s", conf.Raw_GetType(), id.c_str()));
+        return chunk;
       }
 
-      int bpp = TextureInfo::InfoRaw::GetBPP(tinfo.raw.type);
+      int bpp = TextureConfig::GetBPP(conf.Raw_GetType());
 
-      glTexImage2D(GL_TEXTURE_2D, 0, gl_tex_mode, glt.gl.surface_width, glt.gl.surface_height, 0, input_tex_mode, GL_UNSIGNED_BYTE, 0);
+      glTexImage2D(GL_TEXTURE_2D, 0, gl_tex_mode, backing->m_surface_width, backing->m_surface_height, 0, input_tex_mode, GL_UNSIGNED_BYTE, 0);
 
-      if (tinfo.raw.stride == bpp * tinfo.texture_width && false) {
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, glt.texture_width, glt.texture_height, input_tex_mode, GL_UNSIGNED_BYTE, tinfo.raw.data);
+      if (conf.Raw_GetStride() == bpp * conf.GetWidth()) {
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, chunk->m_texture_width, chunk->m_texture_height, input_tex_mode, GL_UNSIGNED_BYTE, conf.Raw_GetData());
       } else {
-        for (int y = 0; y < tinfo.texture_height; ++y) {
-          glTexSubImage2D(GL_TEXTURE_2D, 0, 0, y, glt.texture_width, 1, input_tex_mode, GL_UNSIGNED_BYTE, (unsigned char *)tinfo.raw.data + y * tinfo.raw.stride);
+        for (int y = 0; y < conf.GetHeight(); ++y) {
+          glTexSubImage2D(GL_TEXTURE_2D, 0, 0, y, chunk->m_texture_width, 1, input_tex_mode, GL_UNSIGNED_BYTE, conf.Raw_GetData() + y * conf.Raw_GetStride());
         }
       }
 
@@ -82,34 +146,19 @@ namespace Frames {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-      tinfo.raw.Deallocate(m_env);
-
-      tinfo = glt;
-    }
-
-    if (tinfo.mode != TextureInfo::GL) {
-      // whoops
-      m_env->LogError(Utility::Format("Received texture with type %d, expected type %d", tinfo.mode, TextureInfo::GL));
+      return chunk;
+    } else {
+      m_env->LogError("Unknown texture config type");
       return 0;
     }
+  }
 
-    if (!tinfo.gl.id) {
-      m_env->LogDebug(Utility::Format("Failed to load texture %s", id.c_str()));
-      return 0;
-    }
-
-    m_textures[id].id = tinfo.gl.id;
-    m_textures[id].texture_width = tinfo.texture_width;
-    m_textures[id].texture_height = tinfo.texture_height;
-    m_textures[id].surface_width = tinfo.gl.surface_width;
-    m_textures[id].surface_height = tinfo.gl.surface_height;
-
-    m_textures[id].sx = 0;
-    m_textures[id].sy = 0;
-    m_textures[id].ex = (float)tinfo.texture_width / tinfo.gl.surface_width;
-    m_textures[id].ey = (float)tinfo.texture_height / tinfo.gl.surface_height;
-
-    return &m_textures[id];
+  void TextureManager::Internal_Shutdown_Backing(TextureBacking *backing) {
+    m_backing.erase(backing); // easy peasy
+  }
+  void TextureManager::Internal_Shutdown_Chunk(TextureChunk *chunk) {
+    m_texture.erase(m_texture_reverse[chunk]);
+    m_texture_reverse.erase(chunk);
   }
 }
 

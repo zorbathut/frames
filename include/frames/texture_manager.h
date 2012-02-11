@@ -5,39 +5,94 @@
 
 #include <string>
 #include <map>
+#include <set>
 
 #include <GL/glew.h>
 
+#include "frames/ptr.h"
+
 namespace Frames {
   class Environment;
+
+  class TextureBacking {
+  public:
+
+    int GetGLID() const { return m_id; }
+
+  private:
+    TextureBacking();
+    ~TextureBacking();
+
+    friend class TextureManager;
+    friend class TextureChunk;
+
+    Environment *m_env;
+
+    GLuint m_id;
+
+    int m_surface_width;
+    int m_surface_height;
+
+    friend class Ptr<TextureBacking>;
+    int m_refs;
+    void Ref_Add() { ++m_refs; }
+    void Ref_Release() { --m_refs; if (!m_refs) delete this; }
+  };
+  typedef Ptr<TextureBacking> TextureBackingPtr;
+
+  class TextureChunk {
+  public:
+    int GetWidth() const { return m_texture_width; }
+    int GetHeight() const { return m_texture_height; }
+
+    float GetSX() const { return m_sx; }
+    float GetSY() const { return m_sy; }
+    float GetEX() const { return m_ex; }
+    float GetEY() const { return m_ey; }
+
+    GLuint GetGLID() const { return m_backing->GetGLID(); }
+
+  private:
+    TextureChunk();
+    ~TextureChunk();
+
+    friend class TextureManager;
+
+    TextureBackingPtr m_backing;
+
+    int m_texture_width;
+    int m_texture_height;
+
+    float m_sx, m_sy, m_ex, m_ey;
+
+    friend class Ptr<TextureChunk>;
+    int m_refs;
+    void Ref_Add() { ++m_refs; }
+    void Ref_Release() { --m_refs; if (!m_refs) delete this; }
+  };
+  typedef Ptr<TextureChunk> TextureChunkPtr;
 
   class TextureManager {
   public:
     TextureManager(Environment *env);
     ~TextureManager();
 
-    class Texture {
-    public:
-      Texture();
-      ~Texture();
-
-      GLuint id;
-
-      int texture_width;
-      int texture_height;
-
-      int surface_width;
-      int surface_height;
-
-      float sx, sy, ex, ey;
-    };
-
-    Texture *TextureFromId(const std::string &id);
+    TextureChunkPtr TextureFromId(const std::string &id);
 
   private:
-    std::map<std::string, Texture> m_textures;
+    // Allows for accessor function calls
+    friend class TextureBacking;
+    friend class TextureChunk;
+
+    std::map<std::string, TextureChunk *> m_texture; // not refcounted, the refcounting needs to deallocate
+    std::map<TextureChunk *, std::string> m_texture_reverse;
+
+    std::set<TextureBacking *> m_backing; // again, not refcounted
 
     Environment *m_env;
+
+    void Internal_Shutdown_Backing(TextureBacking *backing);
+    void Internal_Shutdown_Chunk(TextureChunk *chunk);
   };
 };
 

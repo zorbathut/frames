@@ -22,15 +22,15 @@ namespace Frames {
     // work work work
     m_texture = GetEnvironment()->GetTextureManager()->TextureFromId(id);
     
-    SetWidthDefault(m_texture->texture_width);
-    SetHeightDefault(m_texture->texture_height);
+    SetWidthDefault(m_texture->GetWidth());
+    SetHeightDefault(m_texture->GetHeight());
   }
 
   void Texture::RenderElement(Renderer *renderer) const {
     Frame::RenderElement(renderer);
 
     if (m_texture) {
-      renderer->SetTexture(m_texture->id);
+      renderer->SetTexture(m_texture.get());
 
       float u = GetTop();
       float d = GetBottom();
@@ -44,10 +44,10 @@ namespace Frames {
       v[2].x = r; v[2].y = d;
       v[3].x = l; v[3].y = d;
 
-      v[0].t = m_texture->sx; v[0].u = m_texture->sy;
-      v[1].t = m_texture->ex; v[1].u = m_texture->sy;
-      v[2].t = m_texture->ex; v[2].u = m_texture->ey;
-      v[3].t = m_texture->sx; v[3].u = m_texture->ey;
+      v[0].t = m_texture->GetSX(); v[0].u = m_texture->GetSY();
+      v[1].t = m_texture->GetEX(); v[1].u = m_texture->GetSY();
+      v[2].t = m_texture->GetEX(); v[2].u = m_texture->GetEY();
+      v[3].t = m_texture->GetSX(); v[3].u = m_texture->GetEY();
 
       v[0].r = 1; v[0].g = 1; v[0].b = 1; v[0].a = 1;
       v[1].r = 1; v[1].g = 1; v[1].b = 1; v[1].a = 1;

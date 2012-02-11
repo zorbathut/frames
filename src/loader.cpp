@@ -11,6 +11,7 @@ extern "C" {
 #include "frames/configuration.h"
 #include "frames/environment.h"
 #include "frames/stream.h"
+#include "frames/texture_config.h"
 
 #include <vector>
 
@@ -34,25 +35,24 @@ namespace Frames {
       png_error(png_ptr, "unexpected EOF");
   }
 
-  TextureInfo Loader::PNG::Load(Environment *env, Stream *stream) {
+  TextureConfig Loader::PNG::Load(Environment *env, Stream *stream) {
     png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     if (!png_ptr) {
-      return TextureInfo();
+      return TextureConfig();
     }
 
     png_infop info_ptr = png_create_info_struct(png_ptr);
     if (!info_ptr) {
       png_destroy_read_struct(&png_ptr, NULL, NULL);
-      return TextureInfo();
+      return TextureConfig();
     }
 
-    TextureInfo tinfo;
+    TextureConfig tinfo;  // tinfo created here so its destructor will trigger if the longjmp is hit
     std::vector<unsigned char *> ul;
     
     if(setjmp(png_jmpbuf(png_ptr))) {
       png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-      tinfo.raw.Deallocate(env);
-      return TextureInfo();
+      return TextureConfig();
     }
     
     png_set_read_fn(png_ptr, stream, PngReader);
@@ -84,17 +84,13 @@ namespace Frames {
         !(png_get_channels(png_ptr, info_ptr) == 4 || png_get_channels(png_ptr, info_ptr) == 3) ||
         !(png_get_color_type(png_ptr, info_ptr) == PNG_COLOR_TYPE_RGBA || png_get_color_type(png_ptr, info_ptr) == PNG_COLOR_TYPE_RGB)) {
       png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-      tinfo.raw.Deallocate(env);
-      return TextureInfo();
+      return TextureConfig();
     }
 
-    tinfo.texture_width = png_get_image_width(png_ptr, info_ptr);
-    tinfo.texture_height = png_get_image_height(png_ptr, info_ptr);
-    tinfo.mode = TextureInfo::RAW;
-    tinfo.raw.Allocate(env, tinfo.texture_width, tinfo.texture_height, TextureInfo::RAW_RGBA);
+    tinfo = TextureConfig::CreateManagedRaw(env, png_get_image_width(png_ptr, info_ptr), png_get_image_height(png_ptr, info_ptr), TextureConfig::MODE_RGBA);
     
     for(int i = 0; i < png_get_image_height(png_ptr, info_ptr); i++)
-      ul.push_back(tinfo.raw.data + i * tinfo.texture_width * 4);
+      ul.push_back(tinfo.Raw_GetData() + i * tinfo.GetWidth() * 4);
     png_read_image(png_ptr, (png_byte**)&ul[0]);
         
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
@@ -178,8 +174,8 @@ namespace Frames {
 
   void JpegMemorySource(j_decompress_ptr info, const unsigned char *buffer, int buffer_size) {}
 
-  TextureInfo Loader::JPG::Load(Environment *env, Stream *stream) {
-    TextureInfo rv;
+  TextureConfig Loader::JPG::Load(Environment *env, Stream *stream) {
+    TextureConfig rv; // rv created here to deallocate if we hit the setjmp
     jpeg_decompress_struct info;
 
     // Set up the error handler. If jpeglib runs into an error at any future point, it will
@@ -190,9 +186,8 @@ namespace Frames {
     jerr.pub.output_message = JpegMessage;
     jerr.env = env;
     if (setjmp(jerr.setjmp_buffer)) {
-      rv.raw.Deallocate(env);
       jpeg_destroy_decompress(&info);
-      return TextureInfo();
+      return TextureConfig();
     }
     
     // Set up the memory source
@@ -214,17 +209,13 @@ namespace Frames {
   	jpeg_read_header(&info, true);
     jpeg_start_decompress(&info);
 
-    rv.mode = TextureInfo::RAW;
-    rv.texture_width = info.image_width;
-    rv.texture_height = info.image_height;
-    rv.raw.Allocate(env, info.image_width, info.image_height, (info.num_components == 3 ? TextureInfo::RAW_RGB : TextureInfo::RAW_L));
+    rv = TextureConfig::CreateManagedRaw(env, info.image_width, info.image_height, (info.num_components == 3 ? TextureConfig::MODE_RGB : TextureConfig::MODE_L));
 
     for (int y = 0; y < info.image_height; y++) {
-      unsigned char *row = rv.raw.data + y * rv.raw.stride;
+      unsigned char *row = rv.Raw_GetData() + y * rv.Raw_GetStride();
       if (jpeg_read_scanlines(&info, &row, 1) != 1) {
-        rv.raw.Deallocate(env);
         jpeg_destroy_decompress(&info);
-        return TextureInfo();
+        return TextureConfig();
       }
     }
     

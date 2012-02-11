@@ -13,6 +13,7 @@ namespace Frames {
 
   class Environment;
   class Rect;
+  class TextureChunk;
 
   class Renderer {
   public:
@@ -31,7 +32,7 @@ namespace Frames {
     Vertex *Request(int vertices);
     void Return(int mode);  // also renders
 
-    void SetTexture(GLuint tex);
+    void SetTexture(TextureChunk *tex);
 
     void PushScissor(const Rect &rect);
     void PopScissor();

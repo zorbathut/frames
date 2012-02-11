@@ -6,20 +6,20 @@
 namespace Frames {
   class Environment;
   class Stream;
-  class TextureInfo;
+  class TextureConfig;
 
   namespace Loader {
     namespace PNG {
       bool Is(Stream *stream);
-      TextureInfo Load(Environment *env, Stream *stream);
+      TextureConfig Load(Environment *env, Stream *stream);
     }
     namespace JPG {
       bool Is(Stream *stream);
-      TextureInfo Load(Environment *env, Stream *stream);
+      TextureConfig Load(Environment *env, Stream *stream);
     }
     namespace DDS {
       bool Is(Stream *stream);
-      TextureInfo Load(Environment *env, Stream *stream);
+      TextureConfig Load(Environment *env, Stream *stream);
     }
   }
 };

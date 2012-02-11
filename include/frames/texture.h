@@ -22,7 +22,7 @@ namespace Frames {
 
     virtual void RenderElement(Renderer *renderer) const;
 
-    TextureManager::Texture *m_texture;
+    TextureChunkPtr m_texture;
   };
 }
 
