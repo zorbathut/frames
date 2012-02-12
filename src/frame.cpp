@@ -26,7 +26,7 @@ namespace Frames {
     }
   }
 
-  void Frame::GetBackground(float *r, float *g, float *b, float *a) {
+  void Frame::GetBackground(float *r, float *g, float *b, float *a) const {
     *r = m_bg_r;
     *g = m_bg_g;
     *b = m_bg_b;

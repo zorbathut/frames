@@ -6,8 +6,6 @@
 #include "frames/frame.h"
 #include "frames/texture_manager.h"
 
-#include <GL/glew.h>
-
 namespace Frames {
   class Texture : public Frame {
   public:
@@ -22,6 +20,7 @@ namespace Frames {
 
     virtual void RenderElement(Renderer *renderer) const;
 
+    std::string m_text;
     TextureChunkPtr m_texture;
   };
 }
