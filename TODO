@@ -1,6 +1,8 @@
 
 * Texmanager - need some way to explicitly create a backing, tie things to a given backing, etc
 * Text
+  * let's build the backend for Text, with the interface for TextManager
+  * Stubbed out TM functions that do silly things
   * text manager
     * generate individual characters
     * texture manager - corpuses
