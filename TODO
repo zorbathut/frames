@@ -1,6 +1,6 @@
 
-* Backing - error on overflow
 * Text
+  * Pixel hinting
   * Wordwrap support
   * Kerning
   * Cropping to bounds
@@ -17,6 +17,8 @@
 * Figure out 9-slice
 * Text entry
 * Look over rift docs, verify that I have all the things
+
+* Unit testing
 
 * Autocorpusing
 * More text stuff
@@ -35,6 +37,7 @@
 * figure out how to make config cleaner
 * deal with allocation properly
   * remember image loading
+  * thorough testing
 * crunch down on header includes
 * Multithreaded rendering
   * all sorts of queueing needed for things

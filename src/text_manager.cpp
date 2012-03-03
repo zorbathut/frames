@@ -154,7 +154,7 @@ namespace Frames {
     if (FT_Get_Glyph(face->glyph, &glyph))
       return;
 
-    m_advance = face->glyph->advance.x / 64.f;
+    m_advance = (int)std::floor(face->glyph->advance.x / 64.f + 0.5f);
 
     if (FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 0))
       return;
@@ -201,7 +201,12 @@ namespace Frames {
   }
 
   void TextLayout::Render(Renderer *renderer, float r, float g, float b, float a, Rect bounds) {
-    // Current hack implementation: we require that all characters share a texture, we allocate as much space as we might possibly need including spaces
+    // clamp the bounds to the pixel grid to avoid text blurring
+    bounds.s.x = (int)std::floor(bounds.s.x + 0.5f);
+    bounds.s.y = (int)std::floor(bounds.s.y + 0.5f);
+    bounds.e.x = (int)std::floor(bounds.e.x + 0.5f);
+    bounds.e.y = (int)std::floor(bounds.e.y + 0.5f);
+
     // todo: maybe precache this stuff so it becomes a memcpy?
     renderer->SetTexture(m_parent->GetTexture().get());
 
