@@ -46,6 +46,10 @@ namespace Frames {
     int tx = m_alloc_next_x;
     m_alloc_next_x += width;
 
+    if (m_alloc_cur_y + height > m_surface_height || width > m_surface_width) {
+      m_env->LogError("Out of space for allocating subtexture");
+    }
+
     return std::make_pair(tx, m_alloc_cur_y);
   }
 
