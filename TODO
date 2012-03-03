@@ -1,37 +1,30 @@
 
-* Texmanager - need some way to explicitly create a backing, tie things to a given backing, etc
+* Backing - error on overflow
 * Text
+  * Wordwrap support
+  * Kerning
+  * Cropping to bounds
+  * Font color
   * re-update if the width changes
   * font config stuff
     * default font
     * FontFromId?
     * TextureStreamFromId?
-  * let's build the backend for Text, with the interface for TextManager
-  * Stubbed out TM functions that do silly things
-  * text manager
-    * generate individual characters
-    * texture manager - corpuses
-    * layout engine, laying out
-    * word wrap
-  * truncation marker
-  * truncation marker whitespace return
-  
-  * okay this is my current short-term TODO list
-    X Create texture backing
-    * Do text layout
-    * Do glyph generation
-    * Do extremely basic texture corpus generation
-  * Kerning
-  * lazier text resolving, setting text then size shouldn't result in an extra
-  * glPixelStorei should be saved?
-  * font color
-  * font color mappings?
 * Raw
 * Flesh out frame events
   * Events that get passed down - the Bubble phase?
   * If any event does not return true, then stop, otherwise propogate the click upwards (does not occur for other events, just clicks)
 * Figure out 9-slice
+* Text entry
+* Look over rift docs, verify that I have all the things
 
+* Autocorpusing
+* More text stuff
+  * lazier text resolving, setting text then size shouldn't result in an extra
+  * truncation marker
+  * truncation marker whitespace return
+  * glPixelStorei should be saved?
+  * font color mappings
 * Internal-prefix every internal function
   * Privatize more
 * Convert layout engine to ints
