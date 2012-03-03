@@ -3,6 +3,8 @@
 #ifndef FRAMES_PTR
 #define FRAMES_PTR
 
+#include "frames/noncopyable.h"
+
 namespace Frames {
   template <typename T> class Ptr {
   public:
@@ -28,11 +30,23 @@ namespace Frames {
     typedef T *this_type::*unspecified_bool_type;
 
     operator unspecified_bool_type() const { return !p ? 0 : &this_type::p; }
-    bool operator!() const { return p; }
+    bool operator!() const { return !p; }
 
   private:
 
     T *p;
+  };
+
+  template <typename T> class Refcountable : Noncopyable {
+  public:
+    Refcountable() : m_refs(0) { }
+    ~Refcountable() { };
+
+  private:
+    friend class Ptr<T>;
+    int m_refs;
+    void Ref_Add() { ++m_refs; }
+    void Ref_Release() { --m_refs; if (!m_refs) delete (T*)this; }
   };
 };
 

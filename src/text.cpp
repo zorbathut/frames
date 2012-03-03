@@ -2,6 +2,7 @@
 #include "frames/text.h"
 
 #include "frames/environment.h"
+#include "frames/rect.h"
 #include "frames/renderer.h"
 #include "frames/texture_manager.h"
 
@@ -22,55 +23,62 @@ namespace Frames {
     if (m_text != text) {
       m_text = text;
       
-      // cache new glyphs
-      UpdateDefaultSize();
+      UpdateLayout();
     }
+  }
+
+  void Text::SetFont(const std::string &id) {
+    if (m_font != id) {
+      m_font = id;
+
+      UpdateLayout();
+    }
+  }
+
+  void Text::SetSize(float size) {
+    if (m_size != size) {
+      m_size = size;
+
+      UpdateLayout();
+    }
+  }
+
+  void Text::SetWordwrap(bool wordwrap) {
+    if (m_wordwrap != wordwrap) {
+      m_wordwrap = wordwrap;
+
+      UpdateLayout();
+    }
+  }
+
+  Text::Text(Layout *parent) :
+      Frame(parent),
+      m_size(12),
+      m_font("ParmaPetit-Normal.ttf"),  // hurf durf replace this
+      m_wordwrap(false)
+  {
+    // default font
+    UpdateLayout();
+  };
+
+  Text::~Text() { };
+  
+  void Text::UpdateLayout() {
+    TextInfoPtr tinfo = GetEnvironment()->GetTextManager()->GetTextInfo(m_font, m_size, m_text);
+    SetWidthDefault(tinfo->GetFullWidth());
+
+    m_layout = tinfo->GetLayout(GetWidth(), m_wordwrap);
+    SetHeightDefault(m_layout->GetFullHeight());
   }
 
   void Text::RenderElement(Renderer *renderer) const {
     Frame::RenderElement(renderer);
 
     // we'll fix this up further later
-    if (m_texture) {
-      renderer->SetTexture(m_texture.get());
-
-      float u = GetTop();
-      float d = GetBottom();
-      float l = GetLeft();
-      float r = GetRight();
-
-      Renderer::Vertex *v = renderer->Request(4);
-
-      v[0].x = l; v[0].y = u;
-      v[1].x = r; v[1].y = u;
-      v[2].x = r; v[2].y = d;
-      v[3].x = l; v[3].y = d;
-
-      v[0].t = m_texture->GetSX(); v[0].u = m_texture->GetSY();
-      v[1].t = m_texture->GetEX(); v[1].u = m_texture->GetSY();
-      v[2].t = m_texture->GetEX(); v[2].u = m_texture->GetEY();
-      v[3].t = m_texture->GetSX(); v[3].u = m_texture->GetEY();
-
-      v[0].r = 1; v[0].g = 1; v[0].b = 1; v[0].a = 1;
-      v[1].r = 1; v[1].g = 1; v[1].b = 1; v[1].a = 1;
-      v[2].r = 1; v[2].g = 1; v[2].b = 1; v[2].a = 1;
-      v[3].r = 1; v[3].g = 1; v[3].b = 1; v[3].a = 1;
-
-      renderer->Return(GL_QUADS);
+    if (m_layout) {
+      // do stuf
+      m_layout->Render(renderer, 1, 1, 1, 1, GetBounds());
     }
-  }
-
-  Text::Text(Layout *parent) :
-      Frame(parent)
-  {
-    UpdateDefaultSize();
-  };
-  Text::~Text() { };
-  
-  void Text::UpdateDefaultSize() {
-    // actually calculate
-    SetWidthDefault(10 * m_text.size());
-    SetHeightDefault(20);
   }
 }
 

@@ -35,7 +35,7 @@ namespace Frames {
 
   void Frame::RenderElement(Renderer *renderer) const {
     if (m_bg_a > 0) {
-      renderer->SetTexture(0);
+      renderer->SetTexture();
 
       float u = GetTop();
       float d = GetBottom();

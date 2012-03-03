@@ -13,13 +13,14 @@ namespace Frames {
 
   class Environment;
   class Rect;
+  class TextureBacking;
   class TextureChunk;
 
   class Renderer {
   public:
     struct Vertex {
       GLfloat x, y;
-      GLfloat t, u;
+      GLfloat u, v;
       GLfloat r, g, b, a;
     };
 
@@ -30,9 +31,11 @@ namespace Frames {
     void End();
 
     Vertex *Request(int vertices);
-    void Return(int mode);  // also renders
+    void Return(int mode, int count = -1);  // also renders, count lets you optionally specify the number of vertices
 
+    void SetTexture();
     void SetTexture(TextureChunk *tex);
+    void SetTexture(TextureBacking *tex);
 
     void PushScissor(const Rect &rect);
     void PopScissor();
@@ -51,6 +54,7 @@ namespace Frames {
 
     GLuint m_elements;
 
+    void Internal_SetTexture(GLuint tex);
     GLuint m_currentTexture;
 
     void SetScissor(const Rect &rect);

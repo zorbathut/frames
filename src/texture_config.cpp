@@ -18,7 +18,7 @@ namespace Frames {
     }
   }
 
-   TextureConfig TextureConfig::CreateManagedRaw(Environment *env, int width, int height, Type mode) {
+  /*static*/ TextureConfig TextureConfig::CreateManagedRaw(Environment *env, int width, int height, Type mode) {
     TextureConfig rv;
     rv.m_mode = RAW;
     rv.m_width = width;
@@ -28,6 +28,19 @@ namespace Frames {
     rv.m_raw_stride = width * GetBPP(mode);
     rv.m_raw_data = new unsigned char[rv.m_raw_stride * rv.m_height];
     rv.m_raw_refcount = new int(1);
+    return rv;
+  }
+
+  /*static*/ TextureConfig TextureConfig::CreateUnmanagedRaw(Environment *env, int width, int height, Type mode, unsigned char *data, int stride) {
+    TextureConfig rv;
+    rv.m_mode = RAW;
+    rv.m_width = width;
+    rv.m_height = height;
+    rv.m_env = env;
+    rv.m_raw_type = mode;
+    rv.m_raw_stride = stride;
+    rv.m_raw_data = data;
+    rv.m_raw_refcount = 0;
     return rv;
   }
 
@@ -59,10 +72,12 @@ namespace Frames {
   TextureConfig::~TextureConfig() {
     if (m_mode == NIL) {
     } else if (m_mode == RAW) {
-      --*m_raw_refcount;
-      if (!*m_raw_refcount) {
-        delete m_raw_refcount;
-        delete [] m_raw_data;
+      if (m_raw_refcount) {
+        --*m_raw_refcount;
+        if (!*m_raw_refcount) {
+          delete m_raw_refcount;
+          delete [] m_raw_data;
+        }
       }
     } else {
       if (m_env) {

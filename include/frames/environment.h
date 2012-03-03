@@ -13,6 +13,7 @@
 namespace Frames {
   class Layout;
   class Renderer;
+  class TextManager;
   class TextureManager;
 
   class Environment : Noncopyable {
@@ -28,9 +29,10 @@ namespace Frames {
     Layout *GetRoot() { return m_root; }
     const Configuration &GetConfiguration() { return m_config; }
 
+    // Internal only, do not call below this line
+    TextManager *GetTextManager() { return m_text_manager; }
     TextureManager *GetTextureManager() { return m_texture_manager; }
 
-    // Internal only, do not call
     void LogError(const std::string &log) { if (m_config.logger) m_config.logger->LogError(log); }
     void LogDebug(const std::string &log) { if (m_config.logger) m_config.logger->LogDebug(log); }
   private:
@@ -64,6 +66,7 @@ namespace Frames {
 
     // Managers
     Renderer *m_renderer;
+    TextManager *m_text_manager;
     TextureManager *m_texture_manager;
 
     // Root

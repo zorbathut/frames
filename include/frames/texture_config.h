@@ -19,6 +19,7 @@ namespace Frames {
     enum Mode { NIL, RAW };
 
     static TextureConfig CreateManagedRaw(Environment *env, int width, int height, Type mode);
+    static TextureConfig CreateUnmanagedRaw(Environment *env, int width, int height, Type mode, unsigned char *data, int stride);
 
     TextureConfig();
     TextureConfig(const TextureConfig &rhs);

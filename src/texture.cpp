@@ -44,10 +44,10 @@ namespace Frames {
       v[2].x = r; v[2].y = d;
       v[3].x = l; v[3].y = d;
 
-      v[0].t = m_texture->GetSX(); v[0].u = m_texture->GetSY();
-      v[1].t = m_texture->GetEX(); v[1].u = m_texture->GetSY();
-      v[2].t = m_texture->GetEX(); v[2].u = m_texture->GetEY();
-      v[3].t = m_texture->GetSX(); v[3].u = m_texture->GetEY();
+      v[0].u = m_texture->GetSX(); v[0].v = m_texture->GetSY();
+      v[1].u = m_texture->GetEX(); v[1].v = m_texture->GetSY();
+      v[2].u = m_texture->GetEX(); v[2].v = m_texture->GetEY();
+      v[3].u = m_texture->GetSX(); v[3].v = m_texture->GetEY();
 
       v[0].r = 1; v[0].g = 1; v[0].b = 1; v[0].a = 1;
       v[1].r = 1; v[1].g = 1; v[1].b = 1; v[1].a = 1;

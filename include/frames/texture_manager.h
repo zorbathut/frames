@@ -9,19 +9,27 @@
 
 #include <GL/glew.h>
 
+#include <boost/bimap.hpp>
+
+#include "frames/noncopyable.h"
 #include "frames/ptr.h"
 
 namespace Frames {
   class Environment;
   class TextureConfig;
 
-  class TextureBacking {
+  class TextureBacking : public Refcountable<TextureBacking> {
+    friend class Refcountable<TextureBacking>;
   public:
 
     int GetGLID() const { return m_id; }
 
+    void Allocate(int width, int height, int gltype);
+
+    std::pair<int, int> AllocateSubtexture(int width, int height);
+
   private:
-    TextureBacking();
+    TextureBacking(Environment *env);
     ~TextureBacking();
 
     friend class TextureManager;
@@ -34,14 +42,14 @@ namespace Frames {
     int m_surface_width;
     int m_surface_height;
 
-    friend class Ptr<TextureBacking>;
-    int m_refs;
-    void Ref_Add() { ++m_refs; }
-    void Ref_Release() { --m_refs; if (!m_refs) delete this; }
+    int m_alloc_next_x;
+    int m_alloc_cur_y;
+    int m_alloc_next_y;
   };
   typedef Ptr<TextureBacking> TextureBackingPtr;
 
-  class TextureChunk {
+  class TextureChunk : public Refcountable<TextureChunk> {
+    friend class Refcountable<TextureChunk>;
   public:
     int GetWidth() const { return m_texture_width; }
     int GetHeight() const { return m_texture_height; }
@@ -65,15 +73,10 @@ namespace Frames {
     int m_texture_height;
 
     float m_sx, m_sy, m_ex, m_ey;
-
-    friend class Ptr<TextureChunk>;
-    int m_refs;
-    void Ref_Add() { ++m_refs; }
-    void Ref_Release() { --m_refs; if (!m_refs) delete this; }
   };
   typedef Ptr<TextureChunk> TextureChunkPtr;
 
-  class TextureManager {
+  class TextureManager : Noncopyable {
   public:
     TextureManager(Environment *env);
     ~TextureManager();
@@ -89,8 +92,7 @@ namespace Frames {
     friend class TextureBacking;
     friend class TextureChunk;
 
-    std::map<std::string, TextureChunk *> m_texture; // not refcounted, the refcounting needs to deallocate
-    std::map<TextureChunk *, std::string> m_texture_reverse;
+    boost::bimap<std::string, TextureChunk *> m_texture; // not refcounted, the refcounting needs to deallocate
 
     std::set<TextureBacking *> m_backing; // again, not refcounted
 

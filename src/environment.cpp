@@ -3,16 +3,17 @@
 
 #include "frames/frame.h"
 #include "frames/renderer.h"
+#include "frames/text_manager.h"
 #include "frames/texture_manager.h"
 
 #include <GL/gl.h>
 
 namespace Frames {
-  Environment::Environment() : m_renderer(new Renderer(this)), m_texture_manager(new TextureManager(this)) {
+  Environment::Environment() {
     Configuration config;
     Init(config);
   }
-  Environment::Environment(const Configuration &config) : m_renderer(new Renderer(this)), m_texture_manager(new TextureManager(this)) {
+  Environment::Environment(const Configuration &config) {
     Init(config);
   }
   Environment::~Environment() {
@@ -26,9 +27,10 @@ namespace Frames {
       layout->Resolve();
     }
 
-    delete m_config_logger_owned;
+    delete m_text_manager;
     delete m_renderer;
     delete m_texture_manager;
+    delete m_config_logger_owned;
   };
 
   void Environment::ResizeRoot(int x, int y) {
@@ -97,6 +99,10 @@ namespace Frames {
 
     m_root = new Layout(0, this);
     m_root->SetNameStatic("Root");
+
+    m_renderer = new Renderer(this);
+    m_text_manager = new TextManager(this);
+    m_texture_manager = new TextureManager(this);
   }
 
   void Environment::MarkInvalidated(const Layout *layout) {

@@ -78,7 +78,7 @@ namespace Frames {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elements);
 
     glVertexPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, x));
-    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, t));
+    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, u));
     glColorPointer(4, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, r));
 
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -116,19 +116,30 @@ namespace Frames {
     return rv;
   }
 
-  void Renderer::Return(int mode) {
+  void Renderer::Return(int mode, int count /*= -1*/) {
     glUnmapBuffer(GL_ARRAY_BUFFER);
 
-    glDrawElements(mode, 4, GL_UNSIGNED_SHORT, (void*)(m_last_pos * sizeof(GLushort)));
+    if (count == -1) count = m_last_vertices;
+
+    glDrawElements(mode, count, GL_UNSIGNED_SHORT, (void*)(m_last_pos * sizeof(GLushort)));
+  }
+
+  void Renderer::SetTexture() {
+    Internal_SetTexture(0);
+  }
+
+  void Renderer::SetTexture(TextureBacking *tex) {
+    Internal_SetTexture(tex ? tex->GetGLID() : 0);
   }
 
   void Renderer::SetTexture(TextureChunk *tex) {
-    GLuint dest = 0;
-    if (tex) dest = tex->GetGLID();
+    Internal_SetTexture(tex ? tex->GetGLID() : 0);
+  }
 
-    if (m_currentTexture != dest) {
-      m_currentTexture = dest;
-      glBindTexture(GL_TEXTURE_2D, dest);
+  void Renderer::Internal_SetTexture(GLuint tex) {
+    if (m_currentTexture != tex) {
+      m_currentTexture = tex;
+      glBindTexture(GL_TEXTURE_2D, tex);
     }
   }
 

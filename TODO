@@ -1,6 +1,11 @@
 
 * Texmanager - need some way to explicitly create a backing, tie things to a given backing, etc
 * Text
+  * re-update if the width changes
+  * font config stuff
+    * default font
+    * FontFromId?
+    * TextureStreamFromId?
   * let's build the backend for Text, with the interface for TextManager
   * Stubbed out TM functions that do silly things
   * text manager
@@ -8,6 +13,19 @@
     * texture manager - corpuses
     * layout engine, laying out
     * word wrap
+  * truncation marker
+  * truncation marker whitespace return
+  
+  * okay this is my current short-term TODO list
+    X Create texture backing
+    * Do text layout
+    * Do glyph generation
+    * Do extremely basic texture corpus generation
+  * Kerning
+  * lazier text resolving, setting text then size shouldn't result in an extra
+  * glPixelStorei should be saved?
+  * font color
+  * font color mappings?
 * Raw
 * Flesh out frame events
   * Events that get passed down - the Bubble phase?
@@ -15,6 +33,7 @@
 * Figure out 9-slice
 
 * Internal-prefix every internal function
+  * Privatize more
 * Convert layout engine to ints
 * Build process for cygwin/linux/windows
 * texture deallocation
@@ -24,3 +43,5 @@
 * deal with allocation properly
   * remember image loading
 * crunch down on header includes
+* Multithreaded rendering
+  * all sorts of queueing needed for things
