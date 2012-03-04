@@ -139,9 +139,11 @@ namespace Frames {
   // =======================================
   // CHARACTERINFO
 
-  std::vector<TextureChunkPtr> wut;
-  CharacterInfo::CharacterInfo(FontInfoPtr parent, float size, int character) : m_parent(parent), m_offset_x(0), m_offset_y(0), m_advance(0) {
+  CharacterInfo::CharacterInfo(FontInfoPtr parent, float size, int character) : m_parent(parent), m_offset_x(0), m_offset_y(0), m_advance(0), m_is_newline(false), m_is_wordbreak(false) {
     // LET'S DO THIS THING
+    m_is_newline = (character == '\n');
+    m_is_wordbreak = std::isspace(character);
+
     FT_Face face = parent->GetFace(size);
 
     FT_UInt glyph_index = FT_Get_Char_Index(face, character);
@@ -155,6 +157,9 @@ namespace Frames {
       return;
 
     m_advance = (int)std::floor(face->glyph->advance.x / 64.f + 0.5f);
+
+    if (std::isspace(character))
+      return; // we don't need bitmaps for whitespace characters
 
     if (FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 0))
       return;
@@ -183,17 +188,87 @@ namespace Frames {
 
   TextLayout::TextLayout(TextInfoPtr parent, float width, bool wordwrap) : m_parent(parent) {
     // we're not doing word wrapping quite yet, soooo
+    
+    // Word wrapping algorithm:
+    // Make a list of characters representing the current word, along with the prefix starting the word (if appropriate)
+    // Once we're done with a word, try adding it to this line
+    // If we fail, chop off the line and add it to the next line
+    
+    float currentWordStartX = 0;
+    int currentWordStartIndex = 0;
+
     float tx = 0;
     float ty = 0;
+
     for (int i = 0; i < m_parent->GetCharacterCount(); ++i) {
       CharacterInfo *chr = m_parent->GetCharacter(i).get();
 
-      m_coordinates.push_back(Point(tx + chr->GetOffsetX(), ty + chr->GetOffsetY()));
+      if (chr->IsNewline()) {
+        // This line is resolved, kill it and move on
+        currentWordStartX = 0;
+        currentWordStartIndex = i + 1;
+
+        tx = 0;
+        ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
+        ty = (int)std::floor(ty + 0.5f);
+
+        m_coordinates.push_back(Point(tx, ty));
+        continue;
+      }
+
+      // Push the character, update our X position
+      m_coordinates.push_back(Point(tx, ty));
 
       tx += chr->GetAdvance();
+
+      if (wordwrap && tx > width) {
+        // We have a line break, wordwrap as appropriate
+        if (currentWordStartX == 0) {
+          // This is a bit of a problem - this word is too long.
+          if (currentWordStartIndex == i) {
+            // In fact it's even worse - this is the first letter.
+            // If it's the first letter, we just keep it and artificially move on - it will be too large for the text field, but fuck it, you've given us a half-character-wide textfield, we can't exactly do better.
+          } else {
+            // Word is too long, but this is the middle of the word.
+            // Do a forced line break, take this character, drop it at the beginning of the next word.
+            // If the word is too long and this character is too long, then we just plop it down anyway because we don't have a realistic choice.
+            tx = 0;
+            ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
+            ty = (int)std::floor(ty + 0.5f);
+            m_coordinates.back() = Point(tx, ty);
+            tx += chr->GetAdvance();
+
+            currentWordStartX = 0;
+            currentWordStartIndex = i;
+          }
+        } else {
+          // This word isn't too long, so we'll transplant the entire word to the next line. We know this will work without linewrapping because it was long enough to fit on this line.
+          currentWordStartX = 0;
+          tx = 0;
+          ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
+          ty = (int)std::floor(ty + 0.5f);
+
+          for (int i = currentWordStartIndex; i <= m_coordinates.size(); ++i) {
+            m_coordinates[i] = Point(tx, ty);
+            tx += m_parent->GetCharacter(i)->GetAdvance();
+          }
+        }
+      }
+
+      if (chr->IsWordbreak()) {
+        // This word is resolved
+        currentWordStartX = tx;
+        currentWordStartIndex = i + 1;
+      }
     }
 
-    m_fullHeight = m_parent->GetParent()->GetLineHeightFirst(m_parent->GetSize());
+    // Go through and add our character offsets
+    for (int i = 0; i < m_coordinates.size(); ++i) {
+      m_coordinates[i].x += m_parent->GetCharacter(i)->GetOffsetX();
+      m_coordinates[i].y += m_parent->GetCharacter(i)->GetOffsetY();
+    }
+
+    m_fullHeight = ty + m_parent->GetParent()->GetLineHeightFirst(m_parent->GetSize());
   }
 
   TextLayout::~TextLayout() {

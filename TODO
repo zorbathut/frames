@@ -1,8 +1,8 @@
 
+* lal is being rebuilt also
 * Text
-  * Pixel hinting
-  * Wordwrap support
   * Kerning
+  * Word wrap based on letter bounds, not advance
   * Cropping to bounds
   * Font color
   * re-update if the width changes
@@ -20,6 +20,7 @@
 
 * Unit testing
 
+* Subpixel rendering
 * Autocorpusing
 * More text stuff
   * lazier text resolving, setting text then size shouldn't result in an extra
@@ -41,3 +42,4 @@
 * crunch down on header includes
 * Multithreaded rendering
   * all sorts of queueing needed for things
+* De-float everything

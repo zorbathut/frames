@@ -131,6 +131,9 @@ namespace Frames {
 
     float GetAdvance() const { return m_advance; }
 
+    bool IsNewline() const { return m_is_newline; }
+    bool IsWordbreak() const { return m_is_wordbreak; }
+
   private:
     ~CharacterInfo();
 
@@ -142,6 +145,9 @@ namespace Frames {
     float m_offset_y;
 
     float m_advance;
+
+    bool m_is_newline;
+    bool m_is_wordbreak;
   };
 
   // Includes info on a given (font, size, text, width, wordwrap) quartet
