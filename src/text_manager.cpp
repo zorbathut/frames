@@ -62,8 +62,16 @@ namespace Frames {
 
   FT_Face FontInfo::GetFace(float size) {
     if (m_face_size != size) {
-      FT_Set_Char_Size(m_face, 0, (int)(size * 64), 0, 0);
+      FT_Size_RequestRec rec;
+      rec.type = FT_SIZE_REQUEST_TYPE_REAL_DIM;
+      rec.width = (int)(size * 64 + 0.5f) - 64;
+      rec.height = rec.width;
+      rec.horiResolution = 0;
+      rec.vertResolution = 0;
+      FT_Request_Size(m_face, &rec);
       m_face_size = size;
+
+      //m_env->LogDebug(Utility::Format("Generated size %f, requested %d/%d, lineheight is %f, calculated from %d/%d", size, rec.width, rec.height, GetLineHeightFirst(size), m_face->size->metrics.ascender, m_face->size->metrics.descender));
     }
 
     return m_face;

@@ -1,6 +1,5 @@
 
 * Text
-  * Do a better job of calculating size (pixel height?)
   * Font color
   * re-update if the width changes
   * font config stuff
@@ -18,6 +17,8 @@
 * Lua API
 
 * Unit testing
+
+* Derive font size adjustment more precisely - binsearch, or dig into the code and see wtf is going on
 
 * Subpixel text rendering
 * Autocorpusing

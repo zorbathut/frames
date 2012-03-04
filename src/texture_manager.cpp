@@ -151,7 +151,7 @@ namespace Frames {
 
       std::pair<int, int> origin = backing->AllocateSubtexture(conf.GetWidth(), conf.GetHeight());
 
-      m_env->LogDebug(Utility::Format("Allocating %d/%d to %d/%d", conf.GetWidth(), conf.GetHeight(), origin.first, origin.second));
+      //m_env->LogDebug(Utility::Format("Allocating %d/%d to %d/%d", conf.GetWidth(), conf.GetHeight(), origin.first, origin.second));
 
       TextureChunk *chunk = new TextureChunk();
       chunk->m_backing = backing;

@@ -53,7 +53,7 @@ namespace Frames {
 
   Text::Text(Layout *parent) :
       Frame(parent),
-      m_size(12),
+      m_size(16),
       m_font("ParmaPetit-Normal.ttf"),  // hurf durf replace this
       m_wordwrap(false)
   {
