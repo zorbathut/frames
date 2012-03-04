@@ -1,10 +1,11 @@
 
 * Text
-  * re-update height if the width changes
   * font config stuff
     * default font
     * FontFromId?
     * TextureStreamFromId?
+* Update license with the Delegate stuff
+* Deal with move/size events better
 * Raw
 * Flesh out frame events
   * Events that get passed down - the Bubble phase?
@@ -14,6 +15,7 @@
 * Look over rift docs, verify that I have all the things
 
 * Lua API
+  * Test re-update height if the width changes and wordwrap
 
 * Unit testing
 

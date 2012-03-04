@@ -593,6 +593,7 @@ namespace Frames {
     m_resolved = true;
 
     EventMoveTrigger();
+    EventSizeTrigger();
 
     // Todo: queue up movement events
   }

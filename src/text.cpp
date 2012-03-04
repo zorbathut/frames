@@ -75,6 +75,15 @@ namespace Frames {
   {
     // default font
     UpdateLayout();
+
+    // TODO: We really only need to update fullheight, and that only if wordwrap is enabled. Worry about this later.
+    // There's a bit of a potential performance issue here - imagine we have a wordwrapped text field of the wrong (too small) size, with the width set and the height unset.
+    // We clear the width.
+    // This function triggers.
+    // The function will change the default width and height. Now the size has changed again! So we trigger this function again!
+    // Now, luckily, all the stuff it does is highly cached - each lookup is essentially two bimap lookups and a little muckery with smart pointers. So this isn't a catastrophe. But still it's not really ideal.
+    // Maybe we should cache the TextInfoPtr?
+    EventSizeAttach(Delegate<void ()>(this, &Text::UpdateLayout));
   };
 
   Text::~Text() { };
