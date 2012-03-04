@@ -415,7 +415,7 @@ namespace Frames {
 
   TextInfoPtr TextManager::GetTextInfo(const std::string &font, float size, const std::string &text) {
     if (!m_fonts.left.count(font)) {
-      Stream *stream = m_env->GetConfiguration().streamFromId->Create(m_env, font).first;
+      Stream *stream = m_env->GetConfiguration().streamFromId->Create(m_env, font);
       if (!stream) {
         return 0;
       }

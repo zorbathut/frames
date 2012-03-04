@@ -53,7 +53,7 @@ namespace Frames {
     public:
       virtual ~StreamFromId() { }
 
-      virtual std::pair<Stream *, ImageType::T> Create(Environment *env, const std::string &id);
+      virtual Stream *Create(Environment *env, const std::string &id);
     };
     StreamFromId *streamFromId;
 
@@ -61,7 +61,7 @@ namespace Frames {
     public:
       virtual ~PathFromId() { }
 
-      virtual std::pair<std::string, ImageType::T> Process(Environment *env, const std::string &id);
+      virtual std::string Process(Environment *env, const std::string &id);
     };
     PathFromId *pathFromId;
 
@@ -69,7 +69,7 @@ namespace Frames {
     public:
       virtual ~TextureFromStream() { }
 
-      virtual TextureConfig Create(Environment *env, Stream *stream, ImageType::T typeHint);
+      virtual TextureConfig Create(Environment *env, Stream *stream);
     };
     TextureFromStream *textureFromStream;
   };
