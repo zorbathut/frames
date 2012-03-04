@@ -118,30 +118,28 @@ namespace Frames {
         float kerning = std::floor(delta.x / 64.f + 0.5f);
 
         m_kerning.push_back(kerning);
-        linewidth += kerning;
+
+        if (linewidth > 0) {
+          linewidth += kerning;
+        }
       }
 
       if (text[i] == '\n') {
         m_fullWidth = std::max(m_fullWidth, linewidth + lastadjust);
         linewidth = 0;
         lastadjust = 0;
-      }
-      else if (m_characters.back())
-      {
+      } else {
         linewidth += m_characters.back()->GetAdvance();
-        if (m_characters.back()->GetTexture())
-        {
+        if (m_characters.back()->GetTexture()) {
           lastadjust = m_characters.back()->GetTexture()->GetWidth() - m_characters.back()->GetAdvance();
-        }
-        else
-        {
+        } else {
           lastadjust = -m_characters.back()->GetAdvance();
         }
       }
 
       m_quads += !!m_characters.back()->GetTexture();
     }
-    m_fullWidth = std::max(m_fullWidth, linewidth);
+    m_fullWidth = std::max(m_fullWidth, linewidth + lastadjust);
   }
 
   TextInfo::~TextInfo() {
