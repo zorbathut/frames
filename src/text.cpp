@@ -69,10 +69,14 @@ namespace Frames {
   Text::Text(Layout *parent) :
       Frame(parent),
       m_size(16),
-      m_font("ParmaPetit-Normal.ttf"),  // hurf durf replace this
       m_wordwrap(false),
       m_text_r(1), m_text_g(1), m_text_b(1), m_text_a(1)
   {
+    m_font = GetEnvironment()->GetConfiguration().fontDefaultId;
+
+    SetWidthDefault(0);
+    SetHeightDefault(20);
+
     // default font
     UpdateLayout();
 
@@ -89,11 +93,17 @@ namespace Frames {
   Text::~Text() { };
   
   void Text::UpdateLayout() {
-    TextInfoPtr tinfo = GetEnvironment()->GetTextManager()->GetTextInfo(m_font, m_size, m_text);
-    SetWidthDefault(tinfo->GetFullWidth());
+    if (m_font.empty() && m_text.empty()) {
+    } else if (m_font.empty()) {
+      // PROBLEM
+      GetEnvironment()->LogError("Error - attempting to render text without a valid font");
+    } else {
+      TextInfoPtr tinfo = GetEnvironment()->GetTextManager()->GetTextInfo(m_font, m_size, m_text);
+      SetWidthDefault(tinfo->GetFullWidth());
 
-    m_layout = tinfo->GetLayout(GetWidth(), m_wordwrap);
-    SetHeightDefault(m_layout->GetFullHeight());
+      m_layout = tinfo->GetLayout(GetWidth(), m_wordwrap);
+      SetHeightDefault(m_layout->GetFullHeight());
+    }
   }
 
   void Text::RenderElement(Renderer *renderer) const {

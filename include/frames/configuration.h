@@ -72,6 +72,8 @@ namespace Frames {
       virtual TextureConfig Create(Environment *env, Stream *stream);
     };
     TextureFromStream *textureFromStream;
+
+    std::string fontDefaultId;
   };
 }
 
