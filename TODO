@@ -1,7 +1,6 @@
 
 * lal is being rebuilt also
 * Text
-  * Kerning
   * Word wrap based on letter bounds, not advance
   * Cropping to bounds
   * Font color
