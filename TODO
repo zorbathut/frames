@@ -2,8 +2,6 @@
 * Text
   * font config stuff
     * default font
-    * FontFromId?
-    * TextureStreamFromId?
 * Update license with the Delegate stuff
 * Deal with move/size events better
 * Raw
