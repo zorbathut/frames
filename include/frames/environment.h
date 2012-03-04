@@ -10,6 +10,8 @@
 #include <deque>
 #include <vector>
 
+struct lua_State;
+
 namespace Frames {
   class Layout;
   class Renderer;
@@ -28,6 +30,8 @@ namespace Frames {
     
     Layout *GetRoot() { return m_root; }
     const Configuration &GetConfiguration() { return m_config; }
+
+    void RegisterLua(lua_State *L);
 
     // Internal only, do not call below this line
     TextManager *GetTextManager() { return m_text_manager; }

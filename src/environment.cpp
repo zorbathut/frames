@@ -13,9 +13,11 @@ namespace Frames {
     Configuration config;
     Init(config);
   }
+
   Environment::Environment(const Configuration &config) {
     Init(config);
   }
+
   Environment::~Environment() {
     m_root->Obliterate();
 
@@ -31,7 +33,7 @@ namespace Frames {
     delete m_renderer;
     delete m_texture_manager;
     delete m_config_logger_owned;
-  };
+  }
 
   void Environment::ResizeRoot(int x, int y) {
     m_root->SetWidth(x);
@@ -65,7 +67,10 @@ namespace Frames {
     root->Render(m_renderer);
 
     m_renderer->End();
-  };
+  }
+
+  void Environment::RegisterLua(lua_State *L) {
+  }
 
   void Environment::Init(const Configuration &config) {
     m_config_logger_owned = 0;

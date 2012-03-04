@@ -27,6 +27,8 @@ namespace Frames {
 
   class Layout : Noncopyable {
     class EventHandler; // defined in layout.cpp
+    struct Sorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
+
   public:
     float GetPoint(Axis axis, float pt) const;
     float GetLeft() const { return GetPoint(X, 0); }
@@ -55,6 +57,9 @@ namespace Frames {
 
     const std::string &GetNameDynamic() const { return m_name_dynamic; }
     void SetNameStatic(const std::string &name) { m_name_dynamic = name; }
+
+    typedef std::set<Layout *, Sorter> ChildrenList;
+    const ChildrenList &GetChildren() { return m_children; }
 
     Environment *GetEnvironment() const { return m_env; }
 
@@ -147,12 +152,10 @@ namespace Frames {
     mutable float m_last_x, m_last_y;
 
     // Layer/parenting engine
-    struct Sorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
     float m_layer;
     float m_strata;
     Layout *m_parent;
     bool m_visible;
-    typedef std::set<Layout *, Sorter> ChildrenList;
     ChildrenList m_children;
 
     // Naming system

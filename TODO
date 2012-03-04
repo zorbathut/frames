@@ -1,4 +1,7 @@
 
+* Lua API
+  * Test re-update height if the width changes and wordwrap
+
 * Crop to bounds in a way that won't look amazingly awful for barely-on-the-fringe lines
 * Raw
 * Flesh out frame events
@@ -7,9 +10,6 @@
 * Figure out 9-slice
 * Text entry
 * Look over rift docs, verify that I have all the things
-
-* Lua API
-  * Test re-update height if the width changes and wordwrap
 
 * Unit testing
 
