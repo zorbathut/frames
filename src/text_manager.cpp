@@ -368,13 +368,19 @@ namespace Frames {
         vertex[3].b = b;
         vertex[3].a = a;
 
-        cquad++;
+        // If we're not in bounds, don't show this character
+        // TODO: crop more smoothly and exactly?
+
+        // Slack space is because freetype is a little inaccurate with its vertical span info
+        if (vertex[2].x <= bounds.e.x && vertex[2].y <= bounds.e.y + 1) {
+          cquad++;
+        }
       }
 
       // todo, crop to bounds
     }
 
-    renderer->Return(GL_QUADS);
+    renderer->Return(GL_QUADS, cquad * 4);
   }
 
   // =======================================

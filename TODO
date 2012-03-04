@@ -1,6 +1,5 @@
 
 * Text
-  * Cropping to bounds
   * Do a better job of calculating size (pixel height?)
   * Font color
   * re-update if the width changes
@@ -16,9 +15,11 @@
 * Text entry
 * Look over rift docs, verify that I have all the things
 
+* Lua API
+
 * Unit testing
 
-* Subpixel rendering
+* Subpixel text rendering
 * Autocorpusing
 * More text stuff
   * lazier text resolving, setting text then size shouldn't result in an extra
