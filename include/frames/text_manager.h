@@ -98,6 +98,7 @@ namespace Frames {
 
     int GetCharacterCount() const { return m_characters.size(); }
     const CharacterInfoPtr &GetCharacter(int index) const { return m_characters[index]; }
+    float GetKerning(int index) const { return m_kerning[index]; }
     int GetQuads() const { return m_quads; }
 
     float GetSize() const { return m_size; }
@@ -111,6 +112,7 @@ namespace Frames {
     boost::bimap<std::pair<float, bool>, TextLayout *> m_layout;
 
     std::vector<CharacterInfoPtr> m_characters;
+    std::vector<float> m_kerning; // difference between character x and character x-1, m_kerning[0] = 0
     float m_fullWidth;
     int m_quads;
 

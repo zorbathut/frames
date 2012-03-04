@@ -95,6 +95,21 @@ namespace Frames {
     float lastadjust = 0;
     for (int i = 0; i < text.size(); ++i) {
       m_characters.push_back(m_parent->GetCharacterInfo(size, text[i]));
+
+      if (!i) {
+        m_kerning.push_back(0.f);
+      } else {
+        FT_Face face = m_parent->GetFace(size);
+
+        FT_UInt index_prev = FT_Get_Char_Index(face, text[i - 1]);
+        FT_UInt index_current = FT_Get_Char_Index(face, text[i]);
+
+        FT_Vector delta;
+        FT_Get_Kerning(face, index_prev, index_current, FT_KERNING_DEFAULT, &delta);
+
+        m_kerning.push_back(std::floor(delta.x / 64.f + 0.5f));
+      }
+
       if (text[i] == '\n') {
         m_fullWidth = std::max(m_fullWidth, linewidth + lastadjust);
         linewidth = 0;
@@ -215,6 +230,8 @@ namespace Frames {
         m_coordinates.push_back(Point(tx, ty));
         continue;
       }
+
+      tx += m_parent->GetKerning(i);
 
       // Push the character, update our X position
       m_coordinates.push_back(Point(tx, ty));
