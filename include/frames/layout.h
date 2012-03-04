@@ -142,6 +142,10 @@ namespace Frames {
     mutable bool m_resolved;  // whether *this* frame has its layout completely determined
     bool m_obliterating;
 
+    // Layout events
+    mutable float m_last_width, m_last_height;
+    mutable float m_last_x, m_last_y;
+
     // Layer/parenting engine
     struct Sorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
     float m_layer;

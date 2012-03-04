@@ -183,7 +183,11 @@ namespace Frames {
       m_name_id(-1),
       m_env(0),
       m_obliterating(false),
-      m_parent(0)
+      m_parent(0),
+      m_last_width(-1),
+      m_last_height(-1),
+      m_last_x(-1),
+      m_last_y(-1)
   {
     if (layout) {
       m_env = layout->GetEnvironment();
@@ -582,18 +586,31 @@ namespace Frames {
       return;
     }
 
-    GetLeft();
+    float nx = GetLeft();
     GetRight();
-    GetTop();
+    float ny = GetTop();
     GetBottom();
     
-    GetWidth();
-    GetHeight();
+    float nw = GetWidth();
+    float nh = GetHeight();
 
     m_resolved = true;
 
-    EventMoveTrigger();
-    EventSizeTrigger();
+    bool sizechange = (nw != m_last_width || nh != m_last_height);
+    bool movechange = (nx != m_last_x || ny != m_last_y);
+
+    m_last_width = nw;
+    m_last_height = nh;
+    m_last_x = nx;
+    m_last_y = ny;
+
+    if (sizechange) {
+      EventSizeTrigger();
+    }
+
+    if (sizechange || movechange) {
+      EventMoveTrigger();
+    }
 
     // Todo: queue up movement events
   }
