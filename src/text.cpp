@@ -51,11 +51,27 @@ namespace Frames {
     }
   }
 
+  void Text::SetColor(float r, float g, float b, float a /*= 1.0f*/) {
+    m_text_r = r;
+    m_text_g = g;
+    m_text_b = b;
+    m_text_a = a;
+    // no need to update layout, this hasn't changed the layout at all
+  }
+
+  void Text::GetColor(float *r, float *g, float *b, float *a /*= 0*/) {
+    *r = m_text_r;
+    *g = m_text_g;
+    *b = m_text_b;
+    if (a) *a = m_text_a;
+  }
+
   Text::Text(Layout *parent) :
       Frame(parent),
       m_size(16),
       m_font("ParmaPetit-Normal.ttf"),  // hurf durf replace this
-      m_wordwrap(false)
+      m_wordwrap(false),
+      m_text_r(1), m_text_g(1), m_text_b(1), m_text_a(1)
   {
     // default font
     UpdateLayout();
@@ -77,7 +93,7 @@ namespace Frames {
     // we'll fix this up further later
     if (m_layout) {
       // do stuf
-      m_layout->Render(renderer, 1, 1, 1, 1, GetBounds());
+      m_layout->Render(renderer, m_text_r, m_text_g, m_text_b, m_text_a, GetBounds());
     }
   }
 }

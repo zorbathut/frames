@@ -30,7 +30,7 @@ namespace Frames {
     *r = m_bg_r;
     *g = m_bg_g;
     *b = m_bg_b;
-    *a = m_bg_a;
+    if (a) *a = m_bg_a;
   }
 
   void Frame::RenderElement(Renderer *renderer) const {

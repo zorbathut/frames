@@ -25,6 +25,9 @@ namespace Frames {
     void SetWordwrap(bool wordwrap);
     bool GetWordwrap() const { return m_wordwrap; }
 
+    void SetColor(float r, float g, float b, float a = 1.0f);
+    void GetColor(float *r, float *g, float *b, float *a = 0);
+
   private:
     Text(Layout *parent);
     virtual ~Text();
@@ -38,6 +41,8 @@ namespace Frames {
     float m_size;
     bool m_wordwrap;
     TextLayoutPtr m_layout;
+
+    float m_text_r, m_text_g, m_text_b, m_text_a;
   };
 }
 

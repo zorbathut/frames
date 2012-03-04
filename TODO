@@ -1,7 +1,6 @@
 
 * Text
-  * Font color
-  * re-update if the width changes
+  * re-update height if the width changes
   * font config stuff
     * default font
     * FontFromId?
