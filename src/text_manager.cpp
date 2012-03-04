@@ -241,7 +241,7 @@ namespace Frames {
         charbound += chr->GetTexture()->GetWidth();
       }
 
-      if (wordwrap && tx > charbound) {
+      if (wordwrap && charbound > width) {
         // We have a line break, wordwrap as appropriate
         if (currentWordStartX == 0) {
           // This is a bit of a problem - this word is too long.
