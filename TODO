@@ -1,5 +1,5 @@
 
-* Update license with the Delegate stuff
+* Crop to bounds in a way that won't look amazingly awful for barely-on-the-fringe lines
 * Deal with move/size events better
 * Raw
 * Flesh out frame events
