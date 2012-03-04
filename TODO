@@ -1,6 +1,7 @@
 
 * Text
   * Cropping to bounds
+  * Do a better job of calculating size (pixel height?)
   * Font color
   * re-update if the width changes
   * font config stuff

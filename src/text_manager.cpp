@@ -234,8 +234,12 @@ namespace Frames {
         continue;
       }
 
-      tx += m_parent->GetKerning(i);
+      if (currentWordStartIndex != i) {
+        // don't kern if we're the first letter in the sentence
+        tx += m_parent->GetKerning(i);
+      }
 
+      // calculate the distance this character will go
       float charbound = tx;
       if (chr->GetTexture()) {
         charbound += chr->GetTexture()->GetWidth();
@@ -272,13 +276,13 @@ namespace Frames {
           ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
           ty = (int)std::floor(ty + 0.5f);
 
-          for (int j = currentWordStartIndex; j <= m_coordinates.size(); ++j) {
-            tx += m_parent->GetKerning(j);
+          for (int j = currentWordStartIndex; j < m_coordinates.size(); ++j) {
             m_coordinates[j] = Point(tx, ty);
             tx += m_parent->GetCharacter(j)->GetAdvance();
+            tx += m_parent->GetKerning(j + 1);  // no kerning on the first character
           }
 
-          tx += m_parent->GetKerning(i);
+          // don't need to kern here, we just did it
           m_coordinates.push_back(Point(tx, ty));
           tx += chr->GetAdvance();
         }
