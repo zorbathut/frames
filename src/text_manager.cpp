@@ -107,7 +107,10 @@ namespace Frames {
         FT_Vector delta;
         FT_Get_Kerning(face, index_prev, index_current, FT_KERNING_DEFAULT, &delta);
 
-        m_kerning.push_back(std::floor(delta.x / 64.f + 0.5f));
+        float kerning = std::floor(delta.x / 64.f + 0.5f);
+
+        m_kerning.push_back(kerning);
+        linewidth += kerning;
       }
 
       if (text[i] == '\n') {
@@ -233,18 +236,21 @@ namespace Frames {
 
       tx += m_parent->GetKerning(i);
 
-      // Push the character, update our X position
-      m_coordinates.push_back(Point(tx, ty));
+      float charbound = tx;
+      if (chr->GetTexture()) {
+        charbound += chr->GetTexture()->GetWidth();
+      }
 
-      tx += chr->GetAdvance();
-
-      if (wordwrap && tx > width) {
+      if (wordwrap && tx > charbound) {
         // We have a line break, wordwrap as appropriate
         if (currentWordStartX == 0) {
           // This is a bit of a problem - this word is too long.
           if (currentWordStartIndex == i) {
             // In fact it's even worse - this is the first letter.
-            // If it's the first letter, we just keep it and artificially move on - it will be too large for the text field, but fuck it, you've given us a half-character-wide textfield, we can't exactly do better.
+            // If it's the first letter, we just keep it and move on anyway - it will be too large for the text field, but fuck it, you've given us a half-character-wide textfield, we can't exactly do better.
+            // We'll wordwrap on the next character.
+            m_coordinates.push_back(Point(tx, ty));
+            tx += chr->GetAdvance();
           } else {
             // Word is too long, but this is the middle of the word.
             // Do a forced line break, take this character, drop it at the beginning of the next word.
@@ -252,7 +258,8 @@ namespace Frames {
             tx = 0;
             ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
             ty = (int)std::floor(ty + 0.5f);
-            m_coordinates.back() = Point(tx, ty);
+
+            m_coordinates.push_back(Point(tx, ty));
             tx += chr->GetAdvance();
 
             currentWordStartX = 0;
@@ -265,11 +272,20 @@ namespace Frames {
           ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
           ty = (int)std::floor(ty + 0.5f);
 
-          for (int i = currentWordStartIndex; i <= m_coordinates.size(); ++i) {
-            m_coordinates[i] = Point(tx, ty);
-            tx += m_parent->GetCharacter(i)->GetAdvance();
+          for (int j = currentWordStartIndex; j <= m_coordinates.size(); ++j) {
+            tx += m_parent->GetKerning(j);
+            m_coordinates[j] = Point(tx, ty);
+            tx += m_parent->GetCharacter(j)->GetAdvance();
           }
+
+          tx += m_parent->GetKerning(i);
+          m_coordinates.push_back(Point(tx, ty));
+          tx += chr->GetAdvance();
         }
+      } else {
+        // Push the character, update our X position
+        m_coordinates.push_back(Point(tx, ty));
+        tx += chr->GetAdvance();
       }
 
       if (chr->IsWordbreak()) {
