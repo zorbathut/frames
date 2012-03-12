@@ -11,6 +11,8 @@
 #include <set>
 #include <map>
 
+struct lua_State;
+
 namespace Frames {
   class Environment;
   class Rect;
@@ -31,6 +33,7 @@ namespace Frames {
 
   public:
     static const char *GetStaticType();
+    virtual const char *GetType() const { return GetStaticType(); }
 
     float GetPoint(Axis axis, float pt) const;
     float GetLeft() const { return GetPoint(X, 0); }
@@ -43,7 +46,6 @@ namespace Frames {
     float GetWidth() const { return GetSize(X); }
     float GetHeight() const { return GetSize(Y); }
 
-    // GetType?
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
     // ClearHeight/ClearWidth/ClearPoint/etc?
     // Events?
@@ -64,6 +66,9 @@ namespace Frames {
     const ChildrenList &GetChildren() { return m_children; }
 
     Environment *GetEnvironment() const { return m_env; }
+
+    // Lua-specific
+    void l_push(lua_State *L) const;
 
     // THIS MIGHT BE VERY, VERY SLOW
     std::string GetNameDebug() const;
@@ -108,6 +113,10 @@ namespace Frames {
 
     virtual void RenderElement(Renderer *renderer) const { };
     virtual void RenderElementPost(Renderer *renderer) const { };
+
+    // Lua
+    void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); } // see Layout::l_Register for what yours should look like
+    void l_RegisterWorker(lua_State *L, const char *name) const;
 
   private:
     friend class Environment;
@@ -176,6 +185,7 @@ namespace Frames {
   #define FRAMES_LAYOUT_ASSERT(x, errstring, args...) (__builtin_expect(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, ## args))))
   #define FRAMES_LAYOUT_CHECK(x, errstring, args...) (__builtin_expect(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, ## args))))
 
+  #define FRAMES_ERROR(args...) GetEnvironment()->LogError(Utility::Format(args))
   #define FRAMES_DEBUG(args...) GetEnvironment()->LogDebug(Utility::Format(args))
 
   #define CreateTagged(args...) CreateTagged_imp(__FILE__, __LINE__, ## args)

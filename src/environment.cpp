@@ -76,6 +76,8 @@ namespace Frames {
   }
 
   void Environment::RegisterLua(lua_State *L) {
+    LuaStackChecker(L, this);
+
     // insert our framespec metatable table
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_mt");
     if (lua_isnil(L, -1)) {
@@ -84,7 +86,7 @@ namespace Frames {
     }
     lua_pop(L, 1);
 
-    // insert our registry table - luatable to lightuserdata
+    // insert our registry table - luatable to lightuserdata. Split up by type, so we can do type checking and handle MI pointer conversion. Maybe make this optional? I think MI can be handled differently.
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
@@ -92,7 +94,7 @@ namespace Frames {
     }
     lua_pop(L, 1);
 
-    // insert our reverse registry table - lightuserdata to luatable
+    // insert our reverse registry table - lightuserdata to luatable. Does not need to be split up by type, we'll always be pushing it as a Layout*.
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
@@ -107,14 +109,24 @@ namespace Frames {
       lua_setfield(L, LUA_GLOBALSINDEX, "Frames");
     }
     lua_pop(L, 1);
+
+    // we'll need this for Root
+    RegisterLuaFrame<Layout>(L);
+
+    // And insert the Root member into the frames
+    lua_getglobal(L, "Frames");
+
+    m_root->l_push(L);
+    lua_setfield(L, -2, "Root");
+
+    lua_pop(L, 1);
   }
 
   void Environment::RegisterLuaFramesBuiltin(lua_State *L) {
-    RegisterLuaFrame<Layout>(L);
-    RegisterLuaFrame<Frame>(L);
-    RegisterLuaFrame<Text>(L);
-    RegisterLuaFrame<Texture>(L);
-    RegisterLuaFrame<Mask>(L);
+    RegisterLuaFrameCreation<Frame>(L);
+    RegisterLuaFrameCreation<Text>(L);
+    RegisterLuaFrameCreation<Texture>(L);
+    RegisterLuaFrameCreation<Mask>(L);
   }
 
   void Environment::Init(const Configuration &config) {

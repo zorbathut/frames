@@ -35,6 +35,7 @@ namespace Frames {
     void RegisterLua(lua_State *L);
     void RegisterLuaFramesBuiltin(lua_State *L);
     template<typename T> void RegisterLuaFrame(lua_State *L);
+    template<typename T> void RegisterLuaFrameCreation(lua_State *L); // Calls RegisterLuaFrame implicitly
 
     // Internal only, do not call below this line
     TextManager *GetTextManager() { return m_text_manager; }
@@ -79,7 +80,7 @@ namespace Frames {
     // Root
     Layout *m_root;
 
-    // Lua debugging
+    // Lua
     class LuaStackChecker {
     public:
       LuaStackChecker(lua_State *L, Environment *env);

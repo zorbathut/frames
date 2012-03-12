@@ -12,6 +12,7 @@ namespace Frames {
     static Frame *CreateTagged_imp(const char *filename, int line, Layout *parent);
 
     static const char *GetStaticType();
+    virtual const char *GetType() const { return GetStaticType(); }
 
     using Layout::SetPoint;
 
@@ -41,6 +42,8 @@ namespace Frames {
     virtual ~Frame();
 
     virtual void RenderElement(Renderer *renderer) const;
+
+    void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); Layout::l_Register(L); }
 
   private:
     float m_bg_r, m_bg_g, m_bg_b, m_bg_a;

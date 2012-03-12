@@ -14,6 +14,7 @@ namespace Frames {
     static Text *CreateTagged_imp(const char *filename, int line, Layout *parent);
 
     static const char *GetStaticType();
+    virtual const char *GetType() const { return GetStaticType(); }
 
     void SetText(const std::string &text);
     const std::string &GetText() const { return m_text; }
@@ -29,6 +30,9 @@ namespace Frames {
 
     void SetColor(float r, float g, float b, float a = 1.0f);
     void GetColor(float *r, float *g, float *b, float *a = 0);
+
+  protected:
+    virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); Frame::l_Register(L); }
 
   private:
     Text(Layout *parent);

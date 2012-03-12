@@ -12,6 +12,10 @@ namespace Frames {
     static Mask *CreateTagged_imp(const char *filename, int line, Layout *parent);
 
     static const char *GetStaticType();
+    virtual const char *GetType() const { return GetStaticType(); }
+
+  protected:
+    virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); Frame::l_Register(L); }
 
   private:
     Mask(Layout *parent);

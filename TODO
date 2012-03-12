@@ -2,10 +2,10 @@
 * Lua API
   * Rig up fundamentals
     X Structure
-    * Createframe code
-    * Insert frame to environment
+    X Createframe code
+    X Insert frame to environment
     * Handle cleanup on destruction
-    * Handle Lua environment shutdown
+    
   * Functions
     * Frame
     * Text
@@ -16,6 +16,11 @@
   * Test re-update height if the width changes and wordwrap
 
 * NaCl
+
+* Lua API advanced
+  * Optionally tag frames with filename, line number
+  * Optional inline documentation
+  * Handle Lua environment shutdown before Frames
 
 * Crop to bounds in a way that won't look amazingly awful for barely-on-the-fringe lines
 * Raw

@@ -7,6 +7,8 @@
 
 #include "boost/static_assert.hpp"
 
+#include <lua.hpp>
+
 namespace Frames {
   /*static*/ const char *Layout::GetStaticType() {
     return "Layout";
@@ -135,6 +137,86 @@ namespace Frames {
     // Default size it is
     ax.size_cached = ax.size_default;
     return ax.size_default;
+  }
+
+  void Layout::l_push(lua_State *L) const {
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
+
+    if (lua_isnil(L, -1)) {
+      FRAMES_ERROR("Attempting to push frame into environment without Frames registered");
+      return; // sure, it's nil, we'll just leave the nil in there
+    }
+
+    lua_pushlightuserdata(L, (void*)this);
+    lua_rawget(L, -2);
+
+    if (!lua_isnil(L, -1)) {
+      // we found it! strip out the item we don't want to push
+      lua_remove(L, -2);
+      // and we're done!
+      // nice fast execution path.
+    } else {
+      // we didn't find it, this is far more complex
+      // we'll need to do a few things:
+      // * generate an appropriate table, with attached metatable
+      // * register that table in _rrg
+      // * register that table in all appropriate _rg's
+      
+      // first off, we'll need to kill the nil we just pulled out
+      lua_pop(L, 1);
+
+      // generate the table we'll be using to represent the whole thing
+      lua_newtable(L);
+
+      // add the key/value pair
+      lua_pushlightuserdata(L, (void*)this);
+      lua_pushvalue(L, -2);
+
+      // stack: ... Frames_rrg newtab luserdata newtab
+
+      // push the pair into the lookup table
+      lua_rawset(L, -4);
+
+      // stack: ... Frames_rrg newtab
+
+      // Now we can kill Frames_rrg
+      lua_remove(L, -2);
+
+      // stack: ... newtab
+
+      // Next, let's set the metatable to the one that's stored
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_mt");
+      lua_getfield(L, -1, GetType());
+
+      if (lua_isnil(L, -1)) {
+        // fffff
+        FRAMES_ERROR("Attempting to push unregistered frame type %s", GetType());
+      } // guess we'll just go with it, though
+
+      lua_setmetatable(L, -3);
+
+      // stack: ... newtab Frames_mt
+
+      // Pop Frames_mt
+      lua_pop(L, 1);
+      
+      // Push Frames_rg
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
+
+      // stack: ... newtab Frames_rg
+      // Now we call our deep virtual register function - this leaves the stack at the same level
+      {
+        Environment::LuaStackChecker(L, m_env);
+        l_Register(L);
+      }
+
+      // Now we're all registered in both lookup tables, yay
+
+      // Strip out the _rg
+      lua_pop(L, 1);
+
+      // And we're done!
+    }
   }
 
   std::string Layout::GetNameDebug() const {
@@ -487,6 +569,25 @@ namespace Frames {
   void Layout::Obliterate() {
     Obliterate_Detach();
     Obliterate_Extract();
+  }
+
+  void Layout::l_RegisterWorker(lua_State *L, const char *name) const {
+    Environment::LuaStackChecker(L, m_env);
+    // Incoming: ... newtab Frames_rg
+
+    lua_getfield(L, -1, name);
+
+    FRAMES_LAYOUT_ASSERT(!lua_isnil(L, -1), "Attempted to register frame as %s without that type being registered in Lua", name);
+    if (lua_isnil(L, -1)) {
+      lua_pop(L, 1);
+      return;
+    }
+
+    lua_pushvalue(L, -3);
+    lua_pushlightuserdata(L, (void*)this);
+    lua_rawset(L, -3);
+
+    lua_pop(L, 1);
   }
 
   void Layout::Render(Renderer *renderer) const {
