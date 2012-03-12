@@ -1,10 +1,16 @@
 
 #include "frames/environment.h"
+#include "frames/environment_register.h"
 
 #include "frames/frame.h"
 #include "frames/renderer.h"
 #include "frames/text_manager.h"
 #include "frames/texture_manager.h"
+
+// these exist just for the lua init
+#include "frames/text.h"
+#include "frames/texture.h"
+#include "frames/mask.h"
 
 #include <GL/gl.h>
 
@@ -70,6 +76,45 @@ namespace Frames {
   }
 
   void Environment::RegisterLua(lua_State *L) {
+    // insert our framespec metatable table
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_mt");
+    if (lua_isnil(L, -1)) {
+      lua_newtable(L);
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_mt");
+    }
+    lua_pop(L, 1);
+
+    // insert our registry table - luatable to lightuserdata
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
+    if (lua_isnil(L, -1)) {
+      lua_newtable(L);
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_rg");
+    }
+    lua_pop(L, 1);
+
+    // insert our reverse registry table - lightuserdata to luatable
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
+    if (lua_isnil(L, -1)) {
+      lua_newtable(L);
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
+    }
+    lua_pop(L, 1);
+
+    // insert our global table
+    lua_getfield(L, LUA_GLOBALSINDEX, "Frames");
+    if (lua_isnil(L, -1)) {
+      lua_newtable(L);
+      lua_setfield(L, LUA_GLOBALSINDEX, "Frames");
+    }
+    lua_pop(L, 1);
+  }
+
+  void Environment::RegisterLuaFramesBuiltin(lua_State *L) {
+    RegisterLuaFrame<Layout>(L);
+    RegisterLuaFrame<Frame>(L);
+    RegisterLuaFrame<Text>(L);
+    RegisterLuaFrame<Texture>(L);
+    RegisterLuaFrame<Mask>(L);
   }
 
   void Environment::Init(const Configuration &config) {
@@ -151,6 +196,14 @@ namespace Frames {
         LogError(Utility::Format("  %s: BOTTOM", entry.layout->GetNameDebug().c_str()));
       else
         LogError(Utility::Format("  %s: %f", entry.layout->GetNameDebug().c_str(), entry.point));
+    }
+  }
+
+  Environment::LuaStackChecker::LuaStackChecker(lua_State *L, Environment *env) : m_depth(lua_gettop(L)), m_L(L), m_env(env) {
+  }
+  Environment::LuaStackChecker::~LuaStackChecker() {
+    if (m_depth != lua_gettop(m_L)) {
+      m_env->LogError(Utility::Format("Lua stack size mismatch (%d -> %d)", m_depth, lua_gettop(m_L)));
     }
   }
 }

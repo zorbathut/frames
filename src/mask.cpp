@@ -17,6 +17,10 @@ namespace Frames {
     return rv;
   }
 
+  /*static*/ const char *Mask::GetStaticType() {
+    return "Mask";
+  }
+
   void Mask::RenderElement(Renderer *renderer) const {
     Frame::RenderElement(renderer);
 

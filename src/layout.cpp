@@ -8,6 +8,10 @@
 #include "boost/static_assert.hpp"
 
 namespace Frames {
+  /*static*/ const char *Layout::GetStaticType() {
+    return "Layout";
+  }
+
   float Layout::GetPoint(Axis axis, float pt) const {
     const AxisData &ax = m_axes[axis];
 

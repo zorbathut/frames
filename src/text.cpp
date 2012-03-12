@@ -19,6 +19,10 @@ namespace Frames {
     return rv;
   }
 
+  /*static*/ const char *Text::GetStaticType() {
+    return "Text";
+  }
+
   void Text::SetText(const std::string &text) {
     if (m_text != text) {
       m_text = text;

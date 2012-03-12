@@ -30,6 +30,8 @@ namespace Frames {
     struct Sorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
 
   public:
+    static const char *GetStaticType();
+
     float GetPoint(Axis axis, float pt) const;
     float GetLeft() const { return GetPoint(X, 0); }
     float GetRight() const { return GetPoint(X, 1); }

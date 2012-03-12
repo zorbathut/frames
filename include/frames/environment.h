@@ -13,6 +13,7 @@
 struct lua_State;
 
 namespace Frames {
+  class Frame;
   class Layout;
   class Renderer;
   class TextManager;
@@ -32,6 +33,8 @@ namespace Frames {
     const Configuration &GetConfiguration() { return m_config; }
 
     void RegisterLua(lua_State *L);
+    void RegisterLuaFramesBuiltin(lua_State *L);
+    template<typename T> void RegisterLuaFrame(lua_State *L);
 
     // Internal only, do not call below this line
     TextManager *GetTextManager() { return m_text_manager; }
@@ -75,6 +78,18 @@ namespace Frames {
 
     // Root
     Layout *m_root;
+
+    // Lua debugging
+    class LuaStackChecker {
+    public:
+      LuaStackChecker(lua_State *L, Environment *env);
+      ~LuaStackChecker();
+
+    private:
+      int m_depth;
+      lua_State *m_L;
+      Environment *m_env;
+    };
   };
 }
 

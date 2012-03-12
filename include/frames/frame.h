@@ -11,6 +11,8 @@ namespace Frames {
     static Frame *CreateBare(Layout *parent);
     static Frame *CreateTagged_imp(const char *filename, int line, Layout *parent);
 
+    static const char *GetStaticType();
+
     using Layout::SetPoint;
 
     using Layout::SetSize;

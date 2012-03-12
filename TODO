@@ -1,6 +1,21 @@
 
 * Lua API
+  * Rig up fundamentals
+    X Structure
+    * Createframe code
+    * Insert frame to environment
+    * Handle cleanup on destruction
+    * Handle Lua environment shutdown
+  * Functions
+    * Frame
+    * Text
+    * Texture
+    X Mask
+  * Events
+    * Figure out how the API will work
   * Test re-update height if the width changes and wordwrap
+
+* NaCl
 
 * Crop to bounds in a way that won't look amazingly awful for barely-on-the-fringe lines
 * Raw
@@ -15,6 +30,7 @@
 
 * Derive font size adjustment more precisely - binsearch, or dig into the code and see wtf is going on
 
+* Event queueing/buffering
 * Subpixel text rendering
 * Autocorpusing
 * More text stuff

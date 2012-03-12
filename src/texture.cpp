@@ -18,6 +18,10 @@ namespace Frames {
     return rv;
   }
 
+  /*static*/ const char *Texture::GetStaticType() {
+    return "Texture";
+  }
+
   void Texture::SetTexture(const std::string &id) {
     // work work work
     m_texture = GetEnvironment()->GetTextureManager()->TextureFromId(id);

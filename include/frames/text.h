@@ -13,6 +13,8 @@ namespace Frames {
     static Text *CreateBare(Layout *parent);
     static Text *CreateTagged_imp(const char *filename, int line, Layout *parent);
 
+    static const char *GetStaticType();
+
     void SetText(const std::string &text);
     const std::string &GetText() const { return m_text; }
 

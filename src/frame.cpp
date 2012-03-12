@@ -17,6 +17,10 @@ namespace Frames {
     return rv;
   }
 
+  /*static*/ const char *Frame::GetStaticType() {
+    return "Frame";
+  }
+
   void Frame::SetBackground(float r, float g, float b, float a) {
     if (r != m_bg_r || g != m_bg_g || b != m_bg_b || a != m_bg_a) {
       m_bg_r = r;
