@@ -6,14 +6,18 @@
     X Insert frame to environment
     * Handle cleanup on destruction
     
-  * Functions
-    * Frame
-    * Text
-    * Texture
+  X Functions
+    X Frame
+    X Text
+    X Texture
     X Mask
   * Events
     * Figure out how the API will work
   * Test re-update height if the width changes and wordwrap
+
+* Rename GetNameDebug, split into GetName/GetNameFull
+* where is my warning
+* may need to improve error output
 
 * NaCl
 
@@ -57,5 +61,6 @@
   * thorough testing
 * crunch down on header includes
 * Multithreaded rendering
+  * double buffering, triple buffering
   * all sorts of queueing needed for things
 * De-float everything

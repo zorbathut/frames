@@ -2,6 +2,7 @@
 #include "frames/texture.h"
 
 #include "frames/environment.h"
+#include "frames/lua.h"
 #include "frames/renderer.h"
 #include "frames/texture_manager.h"
 
@@ -24,10 +25,18 @@ namespace Frames {
 
   void Texture::SetTexture(const std::string &id) {
     // work work work
+    m_texture_id = id;
     m_texture = GetEnvironment()->GetTextureManager()->TextureFromId(id);
     
     SetWidthDefault(m_texture->GetWidth());
     SetHeightDefault(m_texture->GetHeight());
+  }
+
+  /*static*/ void Texture::l_RegisterFunctions(lua_State *L) {
+    Frame::l_RegisterFunctions(L);
+
+    l_RegisterFunction(L, GetStaticType(), "SetTexture", l_SetTexture);
+    l_RegisterFunction(L, GetStaticType(), "GetTexture", l_GetTexture);
   }
 
   void Texture::RenderElement(Renderer *renderer) const {
@@ -66,5 +75,23 @@ namespace Frames {
       Frame(parent)
   { };
   Texture::~Texture() { };
+
+  /*static*/ int Texture::l_SetTexture(lua_State *L) {
+    l_checkparams(L, 2);
+    Texture *self = l_checkframe<Texture>(L, 1);
+
+    self->SetTexture(luaL_checkstring(L, 2));
+
+    return 0;
+  }
+
+  /*static*/ int Texture::l_GetTexture(lua_State *L) {
+    l_checkparams(L, 1);
+    Texture *self = l_checkframe<Texture>(L, 1);
+
+    lua_pushstring(L, self->GetTexture().c_str());
+
+    return 1;
+  }
 }
 

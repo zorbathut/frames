@@ -9,6 +9,8 @@
 
 namespace Frames {
   class Text : public Frame {
+    friend class Environment;
+
   public:
     static Text *CreateBare(Layout *parent);
     static Text *CreateTagged_imp(const char *filename, int line, Layout *parent);
@@ -34,6 +36,8 @@ namespace Frames {
   protected:
     virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); Frame::l_Register(L); }
 
+    static void l_RegisterFunctions(lua_State *L);
+
   private:
     Text(Layout *parent);
     virtual ~Text();
@@ -49,6 +53,22 @@ namespace Frames {
     TextLayoutPtr m_layout;
 
     float m_text_r, m_text_g, m_text_b, m_text_a;
+
+    // Lua bindings
+    static int l_SetText(lua_State *L);
+    static int l_GetText(lua_State *L);
+
+    static int l_SetFont(lua_State *L);
+    static int l_GetFont(lua_State *L);
+
+    static int l_SetSize(lua_State *L);
+    static int l_GetSize(lua_State *L);
+
+    static int l_SetWordwrap(lua_State *L);
+    static int l_GetWordwrap(lua_State *L);
+
+    static int l_SetColor(lua_State *L);
+    static int l_GetColor(lua_State *L);
   };
 }
 

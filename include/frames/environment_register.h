@@ -79,6 +79,11 @@ namespace Frames {
       lua_pop(L, 1);
 
       lua_newtable(L);
+
+      // TODO: don't include this if we're in release mode
+      lua_pushstring(L, T::GetStaticType());
+      lua_setfield(L, -2, "id");
+
       lua_setfield(L, -2, T::GetStaticType());
     } else {
       LogError("Registry table already exists? This should not happen ever");
@@ -93,7 +98,9 @@ namespace Frames {
     // This will be our function lookup
     lua_newtable(L);
 
-    // Insert functions here
+    // Stack: ... Frames_mt Frames_rg metatable indexes
+    // This goes back to Layout::l_RegisterFunction - if this layout is changed, that function may need to be changed
+    T::l_RegisterFunctions(L);
 
     // Attach it as the index accessor
     lua_setfield(L, -2, "__index");

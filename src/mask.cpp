@@ -21,6 +21,10 @@ namespace Frames {
     return "Mask";
   }
 
+  /*static*/ void Mask::l_RegisterFunctions(lua_State *L) {
+    Frame::l_RegisterFunctions(L);
+  }
+
   void Mask::RenderElement(Renderer *renderer) const {
     Frame::RenderElement(renderer);
 

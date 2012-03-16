@@ -28,6 +28,8 @@ namespace Frames {
     public:
 
   class Layout : Noncopyable {
+    friend class Environment;
+
     class EventHandler; // defined in layout.cpp
     struct Sorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
 
@@ -47,7 +49,6 @@ namespace Frames {
     float GetHeight() const { return GetSize(Y); }
 
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
-    // ClearHeight/ClearWidth/ClearPoint/etc?
     // Events?
 
     FRAMES_LAYOUT_EVENT_DECLARE(Move, ());
@@ -70,8 +71,8 @@ namespace Frames {
     // Lua-specific
     void l_push(lua_State *L) const;
 
-    // THIS MIGHT BE VERY, VERY SLOW
-    std::string GetNameDebug() const;
+    std::string GetName() const;
+    std::string GetNameFull() const;    // THIS MIGHT BE VERY, VERY SLOW
 
   protected:
     Layout(Layout *parent, Environment *env = 0);
@@ -115,11 +116,14 @@ namespace Frames {
     virtual void RenderElementPost(Renderer *renderer) const { };
 
     // Lua
-    void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); } // see Layout::l_Register for what yours should look like
+    virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); } // see Layout::l_Register for what yours should look like
     void l_RegisterWorker(lua_State *L, const char *name) const;
 
+    static void l_RegisterFunctions(lua_State *L);
+
+    static void l_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *));
+
   private:
-    friend class Environment;
     friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);
 
     void Render(Renderer *renderer) const;
@@ -179,6 +183,22 @@ namespace Frames {
 
     // Global environment
     Environment *m_env;
+
+    // Lua bindings
+    static int l_GetLeft(lua_State *L);
+    static int l_GetRight(lua_State *L);
+    static int l_GetTop(lua_State *L);
+    static int l_GetBottom(lua_State *L);
+    static int l_GetBounds(lua_State *L);
+
+    static int l_GetWidth(lua_State *L);
+    static int l_GetHeight(lua_State *L);
+
+    static int l_GetChildren(lua_State *L);
+
+    static int l_GetName(lua_State *L);
+    static int l_GetNameFull(lua_State *L);
+    static int l_GetType(lua_State *L);
   };
 
   // Debug code

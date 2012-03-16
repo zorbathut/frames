@@ -2,12 +2,11 @@
 #include "frames/layout.h"
 
 #include "frames/environment.h"
+#include "frames/lua.h"
 #include "frames/rect.h"
 #include "frames/renderer.h"
 
 #include "boost/static_assert.hpp"
-
-#include <lua.hpp>
 
 namespace Frames {
   /*static*/ const char *Layout::GetStaticType() {
@@ -219,15 +218,9 @@ namespace Frames {
     }
   }
 
-  std::string Layout::GetNameDebug() const {
+  std::string Layout::GetName() const {
     std::string name;
-    if (m_parent) {
-      name = m_parent->GetNameDebug() + ".";
-    }
-
     bool delimiter = false;
-
-    name += "(";
 
     if (!m_name_dynamic.empty()) {
       if (delimiter) name += ":";
@@ -253,9 +246,16 @@ namespace Frames {
       delimiter = true;
     }
 
-    name += ")";
-
     return name;
+  }
+
+  std::string Layout::GetNameFull() const {
+    std::string name;
+    if (m_parent) {
+      name = m_parent->GetNameFull() + ".";
+    }
+
+    return name + "(" + GetName() + ")";
   }
 }
 #include <windows.h>
@@ -590,6 +590,31 @@ namespace Frames {
     lua_pop(L, 1);
   }
 
+  /*static*/ void Layout::l_RegisterFunctions(lua_State *L) {
+    l_RegisterFunction(L, GetStaticType(), "GetLeft", l_GetLeft);
+    l_RegisterFunction(L, GetStaticType(), "GetRight", l_GetRight);
+    l_RegisterFunction(L, GetStaticType(), "GetTop", l_GetTop);
+    l_RegisterFunction(L, GetStaticType(), "GetBottom", l_GetBottom);
+    l_RegisterFunction(L, GetStaticType(), "GetBounds", l_GetBounds);
+
+    l_RegisterFunction(L, GetStaticType(), "GetWidth", l_GetWidth);
+    l_RegisterFunction(L, GetStaticType(), "GetHeight", l_GetHeight);
+
+    l_RegisterFunction(L, GetStaticType(), "GetChildren", l_GetChildren);
+
+    l_RegisterFunction(L, GetStaticType(), "GetName", l_GetName);
+    l_RegisterFunction(L, GetStaticType(), "GetNameFull", l_GetNameFull);
+    l_RegisterFunction(L, GetStaticType(), "GetType", l_GetType);
+  }
+
+  /*static*/ void Layout::l_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *)) {
+    // From Environment::RegisterLuaFrame
+    // Stack: ... Frames_mt Frames_rg metatable indexes
+    lua_getfield(L, -3, owner);
+    lua_pushcclosure(L, func, 1);
+    lua_setfield(L, -2, name);
+  }
+
   void Layout::Render(Renderer *renderer) const {
     if (m_visible) {
       RenderElement(renderer);
@@ -675,12 +700,12 @@ namespace Frames {
     const AxisData &ax = m_axes[axis];
 
     if (ax.connections[0].link == layout) {
-      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->GetNameDebug().c_str(), GetNameDebug().c_str(), axis ? 'Y' : 'X', ax.connections[0].point_mine);
+      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->GetNameFull().c_str(), GetNameFull().c_str(), axis ? 'Y' : 'X', ax.connections[0].point_mine);
       ClearPoint(axis, ax.connections[0].point_mine);
     }
 
     if (ax.connections[1].link == layout) {
-      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->GetNameDebug().c_str(), GetNameDebug().c_str(), axis ? 'Y' : 'X', ax.connections[1].point_mine);
+      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->GetNameFull().c_str(), GetNameFull().c_str(), axis ? 'Y' : 'X', ax.connections[1].point_mine);
       ClearPoint(axis, ax.connections[1].point_mine);
     }
   }
@@ -797,5 +822,112 @@ namespace Frames {
     }
   }
 
+  /*static*/ int Layout::l_GetLeft(lua_State *L) {
+    l_checkparams(L, 1);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    lua_pushnumber(L, self->GetLeft());
+
+    return 1;
+  }
+
+  /*static*/ int Layout::l_GetRight(lua_State *L) {
+    l_checkparams(L, 1);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    lua_pushnumber(L, self->GetRight());
+
+    return 1;
+  }
+
+  /*static*/ int Layout::l_GetTop(lua_State *L) {
+    l_checkparams(L, 1);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    lua_pushnumber(L, self->GetTop());
+
+    return 1;
+  }
+
+  /*static*/ int Layout::l_GetBottom(lua_State *L) {
+    l_checkparams(L, 1);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    lua_pushnumber(L, self->GetBottom());
+
+    return 1;
+  }
+
+  /*static*/ int Layout::l_GetBounds(lua_State *L) {
+    l_checkparams(L, 1);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    lua_pushnumber(L, self->GetLeft());
+    lua_pushnumber(L, self->GetTop());
+    lua_pushnumber(L, self->GetRight());
+    lua_pushnumber(L, self->GetBottom());
+
+    return 4;
+  }
+
+  /*static*/ int Layout::l_GetWidth(lua_State *L) {
+    l_checkparams(L, 1);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    lua_pushnumber(L, self->GetWidth());
+
+    return 1;
+  }
+
+  /*static*/ int Layout::l_GetHeight(lua_State *L) {
+    l_checkparams(L, 1);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    lua_pushnumber(L, self->GetHeight());
+
+    return 1;
+  }
+
+  /*static*/ int Layout::l_GetChildren(lua_State *L) {
+    l_checkparams(L, 1);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    lua_newtable(L);
+
+    const ChildrenList &children = self->GetChildren();
+    for (ChildrenList::const_iterator itr = children.begin(); itr != children.end(); ++itr) {
+      (*itr)->l_push(L);
+      lua_rawseti(L, -2, lua_objlen(L, -2));
+    }
+
+    return 1;
+  }
+
+  /*static*/ int Layout::l_GetName(lua_State *L) {
+    l_checkparams(L, 1);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    lua_pushstring(L, self->GetName().c_str());
+
+    return 1;
+  }
+
+  /*static*/ int Layout::l_GetNameFull(lua_State *L) {
+    l_checkparams(L, 1);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    lua_pushstring(L, self->GetNameFull().c_str());
+
+    return 1;
+  }
+
+  /*static*/ int Layout::l_GetType(lua_State *L)  {
+    l_checkparams(L, 1);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    lua_pushstring(L, self->GetType());
+
+    return 1;
+  }
 }
 

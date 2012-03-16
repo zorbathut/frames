@@ -8,6 +8,8 @@
 
 namespace Frames {
   class Texture : public Frame {
+    friend class Environment;
+
   public:
     static Texture *CreateBare(Layout *parent);
     static Texture *CreateTagged_imp(const char *filename, int line, Layout *parent);
@@ -16,9 +18,12 @@ namespace Frames {
     virtual const char *GetType() const { return GetStaticType(); }
 
     void SetTexture(const std::string &id);
+    const std::string &GetTexture() const { return m_texture_id; }
 
   protected:
     virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); Frame::l_Register(L); }
+
+    static void l_RegisterFunctions(lua_State *L);
 
   private:
     Texture(Layout *parent);
@@ -26,8 +31,12 @@ namespace Frames {
 
     virtual void RenderElement(Renderer *renderer) const;
 
-    std::string m_text;
+    std::string m_texture_id;
     TextureChunkPtr m_texture;
+
+    // Lua bindings
+    static int l_SetTexture(lua_State *L);
+    static int l_GetTexture(lua_State *L);
   };
 }
 

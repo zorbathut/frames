@@ -2,6 +2,7 @@
 #include "frames/text.h"
 
 #include "frames/environment.h"
+#include "frames/lua.h"
 #include "frames/rect.h"
 #include "frames/renderer.h"
 #include "frames/texture_manager.h"
@@ -70,6 +71,25 @@ namespace Frames {
     if (a) *a = m_text_a;
   }
 
+  /*static*/ void Text::l_RegisterFunctions(lua_State *L) {
+    Frame::l_RegisterFunctions(L);
+
+    l_RegisterFunction(L, GetStaticType(), "SetText", l_SetText);
+    l_RegisterFunction(L, GetStaticType(), "GetText", l_GetText);
+
+    l_RegisterFunction(L, GetStaticType(), "SetFont", l_SetFont);
+    l_RegisterFunction(L, GetStaticType(), "GetFont", l_GetFont);
+
+    l_RegisterFunction(L, GetStaticType(), "SetSize", l_SetSize);
+    l_RegisterFunction(L, GetStaticType(), "GetSize", l_GetSize);
+
+    l_RegisterFunction(L, GetStaticType(), "SetWordwrap", l_SetWordwrap);
+    l_RegisterFunction(L, GetStaticType(), "GetWordwrap", l_GetWordwrap);
+
+    l_RegisterFunction(L, GetStaticType(), "SetColor", l_SetColor);
+    l_RegisterFunction(L, GetStaticType(), "GetColor", l_GetColor);
+  }
+
   Text::Text(Layout *parent) :
       Frame(parent),
       m_size(16),
@@ -118,6 +138,108 @@ namespace Frames {
       // do stuf
       m_layout->Render(renderer, m_text_r, m_text_g, m_text_b, m_text_a, GetBounds());
     }
+  }
+
+  /*static*/ int Text::l_SetText(lua_State *L) {
+    l_checkparams(L, 2);
+    Text *self = l_checkframe<Text>(L, 1);
+
+    self->SetText(luaL_checkstring(L, 2));
+
+    return 0;
+  }
+
+  /*static*/ int Text::l_GetText(lua_State *L) {
+    l_checkparams(L, 1);
+    Text *self = l_checkframe<Text>(L, 1);
+
+    lua_pushstring(L, self->GetText().c_str());
+
+    return 1;
+  }
+
+  /*static*/ int Text::l_SetFont(lua_State *L) {
+    l_checkparams(L, 2);
+    Text *self = l_checkframe<Text>(L, 1);
+
+    self->SetFont(luaL_checkstring(L, 2));
+
+    return 0;
+  }
+
+  /*static*/ int Text::l_GetFont(lua_State *L) {
+    l_checkparams(L, 1);
+    Text *self = l_checkframe<Text>(L, 1);
+
+    lua_pushstring(L, self->GetFont().c_str());
+
+    return 1;
+  }
+
+  /*static*/ int Text::l_SetSize(lua_State *L) {
+    l_checkparams(L, 2);
+    Text *self = l_checkframe<Text>(L, 1);
+
+    self->SetSize(luaL_checknumber(L, 2));
+
+    return 0;
+  }
+
+  /*static*/ int Text::l_GetSize(lua_State *L) {
+    l_checkparams(L, 1);
+    Text *self = l_checkframe<Text>(L, 1);
+
+    lua_pushnumber(L, self->GetSize());
+
+    return 1;
+  }
+
+  /*static*/ int Text::l_SetWordwrap(lua_State *L) {
+    l_checkparams(L, 2);
+    Text *self = l_checkframe<Text>(L, 1);
+
+    luaL_checktype(L, 2, LUA_TBOOLEAN); // sigh
+    self->SetWordwrap(lua_toboolean(L, 2));
+
+    return 0;
+  }
+
+  /*static*/ int Text::l_GetWordwrap(lua_State *L) {
+    l_checkparams(L, 1);
+    Text *self = l_checkframe<Text>(L, 1);
+
+    lua_pushboolean(L, self->GetWordwrap());
+
+    return 1;
+  }
+
+  /*static*/ int Text::l_SetColor(lua_State *L) {
+    l_checkparams(L, 4, 5);
+    Text *self = l_checkframe<Text>(L, 1);
+
+    float r = luaL_checknumber(L, 2);
+    float g = luaL_checknumber(L, 3);
+    float b = luaL_checknumber(L, 4);
+    float a = luaL_optnumber(L, 5, 1.f);
+
+    self->SetColor(r, g, b, a);
+
+    return 0;
+  }
+
+  /*static*/ int Text::l_GetColor(lua_State *L) {
+    l_checkparams(L, 1);
+    Text *self = l_checkframe<Text>(L, 1);
+
+    float r, g, b, a;
+    self->GetColor(&r, &g, &b, &a);
+
+    lua_pushnumber(L, r);
+    lua_pushnumber(L, g);
+    lua_pushnumber(L, b);
+    lua_pushnumber(L, a);
+
+    return 4;
   }
 }
 
