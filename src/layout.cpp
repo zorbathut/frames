@@ -317,6 +317,42 @@ namespace Frames {
     FRAMES_LAYOUT_CHECK(Utility::IsUndefined(m_axes[Y].connections[1].point_mine), "Layout destroyed while still connected");
     FRAMES_LAYOUT_CHECK(!m_parent, "Layout destroyed while still connected");
     FRAMES_LAYOUT_CHECK(m_children.empty(), "Layout destroyed while still connected");
+
+    // Clean up all appropriate lua environments
+    for (std::set<lua_State *>::const_iterator itr = m_env->m_lua_environments.begin(); itr != m_env->m_lua_environments.end(); ++itr) {
+      lua_State *L = *itr;
+
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
+
+      lua_pushlightuserdata(L, this);
+      lua_pushlightuserdata(L, this);
+
+      lua_rawget(L, -4);
+
+      // Stack: ... Frames_rrg Frames_rg userdata table
+
+      lua_pushnil(L);
+      // Stack: ... Frames_rrg Frames_rg userdata table key
+      while (lua_next(L, -4) != 0) {
+        // we're just blowing through all types, it's easier and this is likely not a speed issue
+        // Stack: ... Frames_rrg Frames_rg userdata table key value
+        lua_pushvalue(L, -3);
+        lua_pushnil(L);
+        lua_rawset(L, -3);
+
+        lua_pop(L, 1);
+        // Stack: ... Frames_rrg Frames_rg userdata table key
+      }
+
+      // Stack: ... Frames_rrg Frames_rg userdata table
+      lua_pop(L, 1);
+      lua_pushnil(L);
+      lua_rawset(L, -4);
+
+      // Stack: ... Frames_rrg Frames_rg
+      lua_pop(L, 2);
+    }
   }
 
   void Layout::SetPoint(Axis axis, float mypt, const Layout *link, float linkpt, float offset) {

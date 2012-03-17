@@ -1,34 +1,11 @@
 
 * Lua API
-  * Rig up fundamentals
-    X Structure
-    X Createframe code
-    X Insert frame to environment
-    * Handle cleanup on destruction
-      * Lifespan:
-      * Register Env to Lua
-      * Unregister Env from Lua
-      * Shutting down an Env automatically unregisters from all remaining Lua's
-      
-      * This all means that an Env has a list of valid Lua environments
-      
-      * Need a way to know if an env is registered
-      
-      * Frames_env, map from Environment* to true
-      * Include this in the Create function
-      
-      
-    
-  X Functions
-    X Frame
-    X Text
-    X Texture
-    X Mask
   * Events
     * Figure out how the API will work
     .AddEventMove
     .RemoveEventMove
   * Test re-update height if the width changes and wordwrap
+  * Test Obliterate
 
 * Rename GetNameDebug, split into GetName/GetNameFull
 * where is my warning

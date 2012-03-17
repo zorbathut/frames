@@ -85,6 +85,8 @@ namespace Frames {
 
     l_RegisterFunction(L, GetStaticType(), "SetBackground", l_SetBackground);
     l_RegisterFunction(L, GetStaticType(), "GetBackground", l_GetBackground);
+
+    l_RegisterFunction(L, GetStaticType(), "Obliterate", l_Obliterate);
   }
 
   Frame::Frame(Layout *parent) :
@@ -343,6 +345,15 @@ namespace Frames {
     lua_pushnumber(L, a);
 
     return 4;
+  }
+
+  /*static*/ int Frame::l_Obliterate(lua_State *L) {
+    l_checkparams(L, 1);
+    Frame *self = l_checkframe<Frame>(L, 1);
+
+    self->Obliterate();
+
+    return 0;
   }
 }
 

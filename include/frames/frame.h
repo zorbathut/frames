@@ -72,6 +72,8 @@ namespace Frames {
 
     static int l_SetBackground(lua_State *L);
     static int l_GetBackground(lua_State *L);
+
+    static int l_Obliterate(lua_State *L);
   };
 }
 
