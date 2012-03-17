@@ -25,6 +25,11 @@ namespace Frames {
   }
 
   Environment::~Environment() {
+    // Unwrap all our Lua hooks, while we're still stable
+    while (!m_lua_environments.empty()) {
+      LuaUnregister(*m_lua_environments.begin());
+    }
+
     m_root->Obliterate();
 
     // this flushes everything out of memory
@@ -75,7 +80,7 @@ namespace Frames {
     m_renderer->End();
   }
 
-  void Environment::RegisterLua(lua_State *L) {
+  void Environment::LuaRegister(lua_State *L) {
     LuaStackChecker(L, this);
 
     // insert our framespec metatable table
@@ -102,6 +107,22 @@ namespace Frames {
     }
     lua_pop(L, 1);
 
+    // insert our environment registry table - lightuserdata to bool.
+    // TODO remove in release, maybe
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_env");
+    if (lua_isnil(L, -1)) {
+      lua_newtable(L);
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_env");
+    }
+    lua_pop(L, 1);
+
+    // and now insert *us* into the env table
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_env");
+    lua_pushlightuserdata(L, this);
+    lua_pushboolean(L, true);
+    lua_rawset(L, -3);
+    lua_pop(L, 1);  // toot
+
     // insert our global table
     lua_getfield(L, LUA_GLOBALSINDEX, "Frames");
     if (lua_isnil(L, -1)) {
@@ -116,13 +137,181 @@ namespace Frames {
     // And insert the Root member into the frames
     lua_getglobal(L, "Frames");
 
-    m_root->l_push(L);
-    lua_setfield(L, -2, "Root");
+    // Don't overwrite the old one (this is important - our error compensation for trying to push a frame into Lua from an unregistered Frames environment will register it, and swapping out Frames.Root without warning is really really bad!)
+    lua_getfield(L, -1, "Root");
+    if (lua_isnil(L, -1)) {
+      m_root->l_push(L);
+      lua_setfield(L, -3, "Root");
+    }
 
-    lua_pop(L, 1);
+    lua_pop(L, 2);  // both the nil/root still on the stack, and the Frames global
+
+    m_lua_environments.insert(L);
   }
 
-  void Environment::RegisterLuaFramesBuiltin(lua_State *L) {
+  void Environment::LuaUnregister(lua_State *L) {
+    LuaStackChecker(L, this);
+
+    // It's somewhat unclear if this should be O(n) in the number of frames in the frames environment, or O(n) in the number of frames in the lua environment
+    // We're doing lua environment for now, partially just because it's easier.
+
+    // This bit is a little finicky. We want to do it without triggering allocations (if there's one thing that is a nightmare, it's allocations during shutdown)
+    // However, lua tables aren't guaranteed to keep their ordering if the contents change.
+    // So do we a little extra work, and use some extra CPU cycles, here to prevent changes.
+
+    // Grab the lightuserdata to luatable lookup
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
+
+    // Grab the luatable to lightuserdata lookup
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
+
+    if (lua_isnil(L, -1) || lua_isnil(L, -2)) {
+      lua_pop(L, 2);
+      LogError("Attempting to unregister an environment that was never registered");
+      return;
+    }
+
+    int ct = 0; // number of frames we're deallocating
+
+    // We're going to iterate through the reverse lookup. For each frame that shares this environment, we're going to first mark it with a "false" value instead of a "true" value
+    // We're also going to iterate through the forward lookup and remove it from every forward element. This could probably be done more quickly.
+    // If you somehow find that unregistering is a bottleneck let me know and we'll fix it.
+
+    lua_pushnil(L); // first key
+    // for this loop, the stack is ... Frames_rrg Frames_rg key/frameuserdata 
+    while (lua_next(L, -3) != 0) {
+      // stack: ... Frames_rrg Frames_rg key/frameuserdata frametable
+      // See if this is our environment. If it's possible for things to not be Layouts, we may need to tweak this later.
+      Layout *layout = (Layout *)lua_touserdata(L, -2);
+      if (layout->GetEnvironment() == this) {
+        // This one is getting killed
+        // First, we want to plow through the forward registry and strip it as necessary
+
+        lua_pushnil(L);
+        // for this loop, the stack is ... Frames_rrg Frames_rg key/frameuserdata frametable forwardkey
+        while (lua_next(L, -4) != 0) {
+          // stack: ... Frames_rrg Frames_rg key/frameuserdata frametable forwardkey lookuptable
+
+          // just straight-up set it to nil
+          lua_pushvalue(L, -3);
+          lua_pushnil(L);
+          lua_rawset(L, -3);
+
+          // throw away the lookuptable
+
+          lua_pop(L, 1);
+        }
+
+        // current stack:
+        // stack: ... Frames_rrg Frames_rg key/frameuserdata frametable
+
+        // set the reverse registry to false
+        lua_pushvalue(L, -2);
+        lua_pushboolean(L, false);
+        // stack: ... Frames_rrg Frames_rg key/frameuserdata frametable frameuserdata false
+        lua_rawset(L, -6);
+
+        // stack: ... Frames_rrg Frames_rg key/frameuserdata frametable
+        // Finally, increment our count
+        ct++;
+      }
+
+      // Throw away the value, get ready for the next iteration
+      lua_pop(L, 1);
+    }
+
+    // stack: ... Frames_rrg Frames_rg
+    lua_pop(L, 1);
+    // stack: ... Frames_rrg
+
+    int passes = 0;
+
+    // Now we need to clean up the reverse registry table
+    while (ct) {
+      passes++;
+
+      int ct_last = ct;
+
+      lua_pushnil(L);
+      if (!lua_next(L, -2)) {
+        break;  // no elements, this shouldn't happen, but we'll pop an error later
+      }
+
+      // this is a weird loop
+      while (true) {
+        // stack: ... Frames_rrg key/frameuserdata frametable
+
+        if (lua_isboolean(L, -1)) {
+          // this should be removed, but first, we need to reserve the next element. but we don't need the boolean anymore!
+          // stack: ... Frames_rrg key/frameuserdata true
+          lua_pop(L, 1);
+
+          // stack: ... Frames_rrg key/frameuserdata
+          lua_pushvalue(L, -1);
+
+          // stack: ... Frames_rrg key/frameuserdata key/frameuserdata
+          if (lua_next(L, -3) == 0) {
+            // push two nils in place instead, just to preserve the ordering
+            lua_pushnil(L);
+            lua_pushnil(L);
+          }
+
+          // stack: ... Frames_rrg key/frameuserdata nextkey nextvalue
+          lua_pushvalue(L, -3);
+
+          // stack: ... Frames_rrg key/frameuserdata nextkey nextvalue key/frameuserdata
+          lua_remove(L, -4);
+
+          // stack: ... Frames_rrg nextkey nextvalue key/frameuserdata
+          
+          // now zero it out in rrg
+          lua_pushnil(L);
+          // stack: ... Frames_rrg nextkey nextvalue key/frameuserdata nil
+          lua_rawset(L, -5);
+
+          // decrement ct
+          ct--;
+
+          // now we just have nextkey/nextvalue hanging around, almost done
+          if (lua_isnil(L, -1) || !ct) {
+            // we're actually done
+            // stack: ... Frames_rrg key/frameuserdata frametable
+            lua_pop(L, 2);
+            // stack: ... Frames_rrg
+            break;
+          }
+        } else {
+          // this shouldn't be removed
+          // incrementing is easy
+          lua_pop(L, 1);
+          // stack: ... Frames_rrg key/frameuserdata
+          if (!lua_next(L, -2)) {
+            // stack: ... Frames_rrg key/frameuserdata frametable
+            break;
+          }
+        }
+      }
+
+      if (ct_last == ct) {
+        // we somehow got through that loop without stripping anything, stop
+        break;
+      }
+    }
+    
+    if (ct) {
+      LogError(Utility::Format("Failed to clean up when doing a full unregister, %d remaining", ct));
+    }
+
+    if (passes > 1) {
+      LogError(Utility::Format("Failed to clean up in a single pass, took %d"));
+    }
+
+    lua_pop(L, 1);
+
+    m_lua_environments.erase(L); // and we're done!
+  }
+
+  void Environment::LuaRegisterFramesBuiltin(lua_State *L) {
     RegisterLuaFrameCreation<Frame>(L);
     RegisterLuaFrameCreation<Text>(L);
     RegisterLuaFrameCreation<Texture>(L);

@@ -157,12 +157,27 @@ namespace Frames {
     } else {
       // we didn't find it, this is far more complex
       // we'll need to do a few things:
+      // * verify that this environment has been pushed
       // * generate an appropriate table, with attached metatable
       // * register that table in _rrg
       // * register that table in all appropriate _rg's
       
       // first off, we'll need to kill the nil we just pulled out
       lua_pop(L, 1);
+
+      // let's verify that our environment has been registered properly
+      // maybe in the future we should just automatically register?
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_env");
+      lua_pushlightuserdata(L, m_env);
+      lua_rawget(L, -2);
+      if (lua_isnil(L, -1)) {
+        // fffff
+        FRAMES_ERROR("Frames environment not registered with this lua environment");
+
+        // Let's try to register it - this is probably the best recovery we can hope for, otherwise we're opening up some security holes
+        m_env->LuaRegister(L);
+      }
+      lua_pop(L, 2);  // clean up
 
       // generate the table we'll be using to represent the whole thing
       lua_newtable(L);

@@ -5,6 +5,19 @@
     X Createframe code
     X Insert frame to environment
     * Handle cleanup on destruction
+      * Lifespan:
+      * Register Env to Lua
+      * Unregister Env from Lua
+      * Shutting down an Env automatically unregisters from all remaining Lua's
+      
+      * This all means that an Env has a list of valid Lua environments
+      
+      * Need a way to know if an env is registered
+      
+      * Frames_env, map from Environment* to true
+      * Include this in the Create function
+      
+      
     
   X Functions
     X Frame
@@ -13,6 +26,8 @@
     X Mask
   * Events
     * Figure out how the API will work
+    .AddEventMove
+    .RemoveEventMove
   * Test re-update height if the width changes and wordwrap
 
 * Rename GetNameDebug, split into GetName/GetNameFull
@@ -25,6 +40,7 @@
   * Optionally tag frames with filename, line number
   * Optional inline documentation
   * Handle Lua environment shutdown before Frames
+  * At some point we should set up something to notify Frames if Lua shuts down first
 
 * Crop to bounds in a way that won't look amazingly awful for barely-on-the-fringe lines
 * Raw

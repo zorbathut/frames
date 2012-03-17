@@ -9,6 +9,7 @@
 
 #include <deque>
 #include <vector>
+#include <set>
 
 struct lua_State;
 
@@ -32,8 +33,9 @@ namespace Frames {
     Layout *GetRoot() { return m_root; }
     const Configuration &GetConfiguration() { return m_config; }
 
-    void RegisterLua(lua_State *L);
-    void RegisterLuaFramesBuiltin(lua_State *L);
+    void LuaRegister(lua_State *L);
+    void LuaUnregister(lua_State *L);
+    void LuaRegisterFramesBuiltin(lua_State *L);
     template<typename T> void RegisterLuaFrame(lua_State *L);
     template<typename T> void RegisterLuaFrameCreation(lua_State *L); // Calls RegisterLuaFrame implicitly
 
@@ -91,6 +93,7 @@ namespace Frames {
       lua_State *m_L;
       Environment *m_env;
     };
+    std::set<lua_State *> m_lua_environments;
   };
 }
 
