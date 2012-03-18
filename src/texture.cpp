@@ -39,6 +39,7 @@ namespace Frames {
     l_RegisterFunction(L, GetStaticType(), "GetTexture", l_GetTexture);
   }
 
+  static const Color white = Color(1, 1, 1, 1);
   void Texture::RenderElement(Renderer *renderer) const {
     Frame::RenderElement(renderer);
 
@@ -62,10 +63,10 @@ namespace Frames {
       v[2].u = m_texture->GetEX(); v[2].v = m_texture->GetEY();
       v[3].u = m_texture->GetSX(); v[3].v = m_texture->GetEY();
 
-      v[0].r = 1; v[0].g = 1; v[0].b = 1; v[0].a = 1;
-      v[1].r = 1; v[1].g = 1; v[1].b = 1; v[1].a = 1;
-      v[2].r = 1; v[2].g = 1; v[2].b = 1; v[2].a = 1;
-      v[3].r = 1; v[3].g = 1; v[3].b = 1; v[3].a = 1;
+      v[0].c = white;
+      v[1].c = white;
+      v[2].c = white;
+      v[3].c = white;
 
       renderer->Return(GL_QUADS);
     }

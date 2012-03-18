@@ -3,6 +3,7 @@
 #ifndef FRAMES_FRAME
 #define FRAMES_FRAME
 
+#include "frames/color.h"
 #include "frames/layout.h"
 
 namespace Frames {
@@ -34,8 +35,8 @@ namespace Frames {
     using Layout::SetVisible;
     using Layout::GetVisible;
 
-    void SetBackground(float r, float g, float b, float a = 1.0f);
-    void GetBackground(float *r, float *g, float *b, float *a) const;
+    void SetBackground(const Color &color);
+    const Color &GetBackground() const { return m_bg; }
 
     using Layout::Obliterate;
 
@@ -50,7 +51,7 @@ namespace Frames {
     static void l_RegisterFunctions(lua_State *L);
 
   private:
-    float m_bg_r, m_bg_g, m_bg_b, m_bg_a;
+    Color m_bg;
 
     // Lua bindings
     static int l_SetPoint(lua_State *L);

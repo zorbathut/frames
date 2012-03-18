@@ -5,6 +5,8 @@
 
 #include <queue>
 
+#include "frames/color.h"
+
 namespace Frames {
   // fake opengl typedefs, used so we don't pull the entire header in
   typedef unsigned int GLuint;
@@ -21,7 +23,7 @@ namespace Frames {
     struct Vertex {
       GLfloat x, y;
       GLfloat u, v;
-      GLfloat r, g, b, a;
+      Color c;
     };
 
     Renderer(Environment *env);

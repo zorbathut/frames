@@ -30,8 +30,8 @@ namespace Frames {
     void SetWordwrap(bool wordwrap);
     bool GetWordwrap() const { return m_wordwrap; }
 
-    void SetColor(float r, float g, float b, float a = 1.0f);
-    void GetColor(float *r, float *g, float *b, float *a = 0);
+    void SetColor(const Color &color);
+    const Color &GetColor() const { return m_color_text; }
 
   protected:
     virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); Frame::l_Register(L); }
@@ -52,7 +52,9 @@ namespace Frames {
     bool m_wordwrap;
     TextLayoutPtr m_layout;
 
-    float m_text_r, m_text_g, m_text_b, m_text_a;
+    Color m_color_text;
+    Color m_color_selection;
+    Color m_color_selected;
 
     // Lua bindings
     static int l_SetText(lua_State *L);

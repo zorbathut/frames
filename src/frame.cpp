@@ -22,24 +22,14 @@ namespace Frames {
     return "Frame";
   }
 
-  void Frame::SetBackground(float r, float g, float b, float a) {
-    if (r != m_bg_r || g != m_bg_g || b != m_bg_b || a != m_bg_a) {
-      m_bg_r = r;
-      m_bg_g = g;
-      m_bg_b = b;
-      m_bg_a = a;
+  void Frame::SetBackground(const Color &color) {
+    if (color != m_bg) {
+      m_bg = color;
     }
   }
 
-  void Frame::GetBackground(float *r, float *g, float *b, float *a) const {
-    *r = m_bg_r;
-    *g = m_bg_g;
-    *b = m_bg_b;
-    if (a) *a = m_bg_a;
-  }
-
   void Frame::RenderElement(Renderer *renderer) const {
-    if (m_bg_a > 0) {
+    if (m_bg.a > 0) {
       renderer->SetTexture();
 
       float u = GetTop();
@@ -54,10 +44,10 @@ namespace Frames {
       v[2].x = r; v[2].y = d;
       v[3].x = l; v[3].y = d;
 
-      v[0].r = m_bg_r; v[0].g = m_bg_g; v[0].b = m_bg_b; v[0].a = m_bg_a;
-      v[1].r = m_bg_r; v[1].g = m_bg_g; v[1].b = m_bg_b; v[1].a = m_bg_a;
-      v[2].r = m_bg_r; v[2].g = m_bg_g; v[2].b = m_bg_b; v[2].a = m_bg_a;
-      v[3].r = m_bg_r; v[3].g = m_bg_g; v[3].b = m_bg_b; v[3].a = m_bg_a;
+      v[0].c = m_bg;
+      v[1].c = m_bg;
+      v[2].c = m_bg;
+      v[3].c = m_bg;
 
       renderer->Return(GL_QUADS);
     }
@@ -91,10 +81,7 @@ namespace Frames {
 
   Frame::Frame(Layout *parent) :
       Layout(parent),
-      m_bg_r(0),
-      m_bg_g(0),
-      m_bg_b(0),
-      m_bg_a(0)
+      m_bg(0, 0, 0, 1)
   { };
   Frame::~Frame() { };
 
@@ -322,12 +309,7 @@ namespace Frames {
     l_checkparams(L, 4, 5);
     Frame *self = l_checkframe<Frame>(L, 1);
 
-    float r = luaL_checknumber(L, 2);
-    float g = luaL_checknumber(L, 3);
-    float b = luaL_checknumber(L, 4);
-    float a = luaL_optnumber(L, 5, 1.f);
-
-    self->SetBackground(r, g, b, a);
+    self->SetBackground(Color(luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_optnumber(L, 5, 1.f)));
 
     return 0;
   }
@@ -336,13 +318,12 @@ namespace Frames {
     l_checkparams(L, 1);
     Frame *self = l_checkframe<Frame>(L, 1);
 
-    float r, g, b, a;
-    self->GetBackground(&r, &g, &b, &a);
+    const Color &col = self->GetBackground();
 
-    lua_pushnumber(L, r);
-    lua_pushnumber(L, g);
-    lua_pushnumber(L, b);
-    lua_pushnumber(L, a);
+    lua_pushnumber(L, col.r);
+    lua_pushnumber(L, col.g);
+    lua_pushnumber(L, col.b);
+    lua_pushnumber(L, col.a);
 
     return 4;
   }

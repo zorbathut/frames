@@ -12,6 +12,7 @@
 
 #include <boost/bimap.hpp>
 
+#include "frames/color.h"
 #include "frames/noncopyable.h"
 #include "frames/ptr.h"
 #include "frames/rect.h"
@@ -162,7 +163,7 @@ namespace Frames {
 
     float GetFullHeight() const { return m_fullHeight; }
 
-    void Render(Renderer *renderer, float r, float g, float b, float a, Rect bounds); // bounds.s.x and bounds.s.y interpreted as starting coordinates, text clamped to stay within bounds
+    void Render(Renderer *renderer, const Color &color, Rect bounds); // bounds.s.x and bounds.s.y interpreted as starting coordinates, text clamped to stay within bounds
 
   private:
     ~TextLayout();

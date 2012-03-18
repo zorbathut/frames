@@ -318,7 +318,7 @@ namespace Frames {
     m_parent->ShutdownLayout(this);
   }
 
-  void TextLayout::Render(Renderer *renderer, float r, float g, float b, float a, Rect bounds) {
+  void TextLayout::Render(Renderer *renderer, const Color &color, Rect bounds) {
     // clamp the bounds to the pixel grid to avoid text blurring
     bounds.s.x = (int)std::floor(bounds.s.x + 0.5f);
     bounds.s.y = (int)std::floor(bounds.s.y + 0.5f);
@@ -340,10 +340,7 @@ namespace Frames {
         vertex[0].y = bounds.s.y + m_coordinates[i].y;
         vertex[0].u = character->GetTexture()->GetSX();
         vertex[0].v = character->GetTexture()->GetSY();
-        vertex[0].r = r;
-        vertex[0].g = g;
-        vertex[0].b = b;
-        vertex[0].a = a;
+        vertex[0].c = color;
 
         //m_parent->GetParent()->GetEnvironment()->LogDebug(Utility::Format("Placing element at %f/%f", vertex[0].x, vertex[0].y));
 
@@ -351,28 +348,19 @@ namespace Frames {
         vertex[1].y = vertex[0].y;
         vertex[1].u = character->GetTexture()->GetEX();
         vertex[1].v = character->GetTexture()->GetSY();
-        vertex[1].r = r;
-        vertex[1].g = g;
-        vertex[1].b = b;
-        vertex[1].a = a;
+        vertex[1].c = color;
 
         vertex[2].x = vertex[0].x + character->GetTexture()->GetWidth();
         vertex[2].y = vertex[0].y + character->GetTexture()->GetHeight();
         vertex[2].u = character->GetTexture()->GetEX();
         vertex[2].v = character->GetTexture()->GetEY();
-        vertex[2].r = r;
-        vertex[2].g = g;
-        vertex[2].b = b;
-        vertex[2].a = a;
+        vertex[2].c = color;
 
         vertex[3].x = vertex[0].x;
         vertex[3].y = vertex[0].y + character->GetTexture()->GetHeight();
         vertex[3].u = character->GetTexture()->GetSX();
         vertex[3].v = character->GetTexture()->GetEY();
-        vertex[3].r = r;
-        vertex[3].g = g;
-        vertex[3].b = b;
-        vertex[3].a = a;
+        vertex[3].c = color;
 
         // If we're not in bounds, don't show this character
         // TODO: crop more smoothly and exactly?

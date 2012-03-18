@@ -18,6 +18,7 @@ using namespace std;
 BOOST_STATIC_ASSERT(sizeof(Frames::GLfloat) == sizeof(GLfloat));
 BOOST_STATIC_ASSERT(sizeof(Frames::GLushort) == sizeof(GLushort));
 BOOST_STATIC_ASSERT(sizeof(Frames::GLuint) == sizeof(GLuint));
+BOOST_STATIC_ASSERT(sizeof(Frames::Color) == sizeof(GLfloat) * 4);
 
 namespace Frames {
   const int bufferElements = 1 << 16; // fit in a ushort
@@ -79,7 +80,7 @@ namespace Frames {
 
     glVertexPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, x));
     glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, u));
-    glColorPointer(4, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, r));
+    glColorPointer(4, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, c));
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);

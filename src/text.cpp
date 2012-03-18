@@ -56,19 +56,9 @@ namespace Frames {
     }
   }
 
-  void Text::SetColor(float r, float g, float b, float a /*= 1.0f*/) {
-    m_text_r = r;
-    m_text_g = g;
-    m_text_b = b;
-    m_text_a = a;
+  void Text::SetColor(const Color &color) {
+    m_color_text = color;
     // no need to update layout, this hasn't changed the layout at all
-  }
-
-  void Text::GetColor(float *r, float *g, float *b, float *a /*= 0*/) {
-    *r = m_text_r;
-    *g = m_text_g;
-    *b = m_text_b;
-    if (a) *a = m_text_a;
   }
 
   /*static*/ void Text::l_RegisterFunctions(lua_State *L) {
@@ -94,7 +84,7 @@ namespace Frames {
       Frame(parent),
       m_size(16),
       m_wordwrap(false),
-      m_text_r(1), m_text_g(1), m_text_b(1), m_text_a(1)
+      m_color_text(1, 1, 1)
   {
     m_font = GetEnvironment()->GetConfiguration().fontDefaultId;
 
@@ -136,7 +126,7 @@ namespace Frames {
     // we'll fix this up further later
     if (m_layout) {
       // do stuf
-      m_layout->Render(renderer, m_text_r, m_text_g, m_text_b, m_text_a, GetBounds());
+      m_layout->Render(renderer, m_color_text, GetBounds());
     }
   }
 
@@ -217,12 +207,7 @@ namespace Frames {
     l_checkparams(L, 4, 5);
     Text *self = l_checkframe<Text>(L, 1);
 
-    float r = luaL_checknumber(L, 2);
-    float g = luaL_checknumber(L, 3);
-    float b = luaL_checknumber(L, 4);
-    float a = luaL_optnumber(L, 5, 1.f);
-
-    self->SetColor(r, g, b, a);
+    self->SetColor(Color(luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_optnumber(L, 5, 1.f)));
 
     return 0;
   }
@@ -231,13 +216,12 @@ namespace Frames {
     l_checkparams(L, 1);
     Text *self = l_checkframe<Text>(L, 1);
 
-    float r, g, b, a;
-    self->GetColor(&r, &g, &b, &a);
+    const Color &col = self->GetColor();
 
-    lua_pushnumber(L, r);
-    lua_pushnumber(L, g);
-    lua_pushnumber(L, b);
-    lua_pushnumber(L, a);
+    lua_pushnumber(L, col.r);
+    lua_pushnumber(L, col.g);
+    lua_pushnumber(L, col.b);
+    lua_pushnumber(L, col.a);
 
     return 4;
   }
