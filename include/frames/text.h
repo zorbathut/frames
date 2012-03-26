@@ -12,6 +12,8 @@ namespace Frames {
     friend class Environment;
 
   public:
+    enum InteractivityMode { INTERACTIVE_NONE, INTERACTIVE_SELECT, INTERACTIVE_EDIT };
+
     static Text *CreateBare(Layout *parent);
     static Text *CreateTagged_imp(const char *filename, int line, Layout *parent);
 
@@ -33,6 +35,27 @@ namespace Frames {
     void SetColor(const Color &color);
     const Color &GetColor() const { return m_color_text; }
 
+    void SetInteractive(InteractivityMode interactive);
+    InteractivityMode GetInteractive() const { return m_interactive; }
+
+    void SetCursor(int position);
+    int GetCursor() const { return m_select; }
+
+    void SetSelection();  // clear
+    void SetSelection(int start, int end);
+    bool GetSelection(int *start, int *end) const;
+
+    void SetScroll(const Point &scroll);
+    const Point &GetScroll() const { return m_scroll; }
+
+    void SetColorSelection(const Color &color);
+    const Color &GetColorSelection() const { return m_color_selection; }
+
+    void SetColorSelected(const Color &color);
+    const Color &GetColorSelected() const { return m_color_selected; }
+
+    Point GetCharacterPosition(int character) const;
+
   protected:
     virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); Frame::l_Register(L); }
 
@@ -43,6 +66,7 @@ namespace Frames {
     virtual ~Text();
   
     void UpdateLayout();
+    void ScrollToCursor();
 
     virtual void RenderElement(Renderer *renderer) const;
 
@@ -55,6 +79,13 @@ namespace Frames {
     Color m_color_text;
     Color m_color_selection;
     Color m_color_selected;
+
+    InteractivityMode m_interactive;
+
+    Point m_scroll;
+
+    int m_select;
+    int m_cursor;
 
     // Lua bindings
     static int l_SetText(lua_State *L);
@@ -71,6 +102,24 @@ namespace Frames {
 
     static int l_SetColor(lua_State *L);
     static int l_GetColor(lua_State *L);
+
+    static int l_SetInteractive(lua_State *L);
+    static int l_GetInteractive(lua_State *L);
+
+    static int l_SetCursor(lua_State *L);
+    static int l_GetCursor(lua_State *L);
+
+    static int l_SetSelection(lua_State *L);
+    static int l_GetSelection(lua_State *L);
+
+    static int l_SetScroll(lua_State *L);
+    static int l_GetScroll(lua_State *L);
+
+    static int l_SetColorSelection(lua_State *L);
+    static int l_GetColorSelection(lua_State *L);
+
+    static int l_SetColorSelected(lua_State *L);
+    static int l_GetColorSelected(lua_State *L);
   };
 }
 

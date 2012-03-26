@@ -29,6 +29,12 @@ namespace Frames {
 
     std::string Format(const char *bort, ...) __attribute__((format(printf,1,2)));
 
+    inline float Clamp(float current, float min, float max) {
+      if (current < min) return min;
+      if (current > max) return max;
+      return current;
+    }
+
     int ClampToPowerOf2(int input);
   }
 }

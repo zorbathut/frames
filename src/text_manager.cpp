@@ -232,11 +232,13 @@ namespace Frames {
         currentWordStartX = 0;
         currentWordStartIndex = i + 1;
 
+        // important that this happpens here so that the editfield works as intended
+        m_coordinates.push_back(Point(tx, ty));
+
         tx = 0;
         ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
         ty = (int)std::floor(ty + 0.5f);
-
-        m_coordinates.push_back(Point(tx, ty));
+        
         continue;
       }
 
@@ -311,6 +313,8 @@ namespace Frames {
       m_coordinates[i].y += m_parent->GetCharacter(i)->GetOffsetY();
     }
 
+    m_coordinates.push_back(Point(tx, ty)); // TODO: remove, generate when generating cursor positions? Or use an entirely separate lookup?
+
     m_fullHeight = ty + m_parent->GetParent()->GetLineHeightFirst(m_parent->GetSize());
   }
 
@@ -318,12 +322,14 @@ namespace Frames {
     m_parent->ShutdownLayout(this);
   }
 
-  void TextLayout::Render(Renderer *renderer, const Color &color, Rect bounds) {
+  void TextLayout::Render(Renderer *renderer, const Color &color, Rect bounds, Point offset) {
     // clamp the bounds to the pixel grid to avoid text blurring
     bounds.s.x = (int)std::floor(bounds.s.x + 0.5f);
     bounds.s.y = (int)std::floor(bounds.s.y + 0.5f);
     bounds.e.x = (int)std::floor(bounds.e.x + 0.5f);
     bounds.e.y = (int)std::floor(bounds.e.y + 0.5f);
+    offset.x = (int)std::floor(offset.x + 0.5f);
+    offset.y = (int)std::floor(offset.y + 0.5f);
 
     // todo: maybe precache this stuff so it becomes a memcpy?
     renderer->SetTexture(m_parent->GetTexture().get());
@@ -331,13 +337,13 @@ namespace Frames {
     Renderer::Vertex *vertexes = renderer->Request(m_parent->GetQuads() * 4);
 
     int cquad = 0;
-    for (int i = 0; i < m_coordinates.size(); ++i) {
+    for (int i = 0; i < m_coordinates.size() - 1; ++i) {
       Renderer::Vertex *vertex = vertexes + cquad * 4;
       const CharacterInfoPtr &character = m_parent->GetCharacter(i);
 
       if (character->GetTexture()) {
-        vertex[0].x = bounds.s.x + m_coordinates[i].x;
-        vertex[0].y = bounds.s.y + m_coordinates[i].y;
+        vertex[0].x = bounds.s.x + m_coordinates[i].x - offset.x;
+        vertex[0].y = bounds.s.y + m_coordinates[i].y - offset.y;
         vertex[0].u = character->GetTexture()->GetSX();
         vertex[0].v = character->GetTexture()->GetSY();
         vertex[0].c = color;
@@ -363,10 +369,10 @@ namespace Frames {
         vertex[3].c = color;
 
         // If we're not in bounds, don't show this character
-        // TODO: crop more smoothly and exactly?
+        // TODO: crop more smoothly and exactly
 
         // Slack space is because freetype is a little inaccurate with its vertical span info
-        if (vertex[2].x <= bounds.e.x && vertex[2].y <= bounds.e.y + 1) {
+        if (vertex[0].x >= bounds.s.x && vertex[0].y >= bounds.s.y && vertex[2].x <= bounds.e.x && vertex[2].y <= bounds.e.y + 1) {
           cquad++;
         }
       }
@@ -375,6 +381,10 @@ namespace Frames {
     }
 
     renderer->Return(GL_QUADS, cquad * 4);
+  }
+
+  const Point &TextLayout::GetCoordinate(int character) const {
+    return m_coordinates[character];
   }
 
   // =======================================

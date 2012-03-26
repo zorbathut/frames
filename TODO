@@ -1,4 +1,24 @@
 
+* Immediate todo:
+  X Test rendering again
+  X Test moving offset
+  * Make the text cropping work better
+    * also with cursor
+  * Render cursor
+    X Render
+    * Test movement
+  * Render selection
+  * Start worrying about mouse input
+  * Cursor placement
+  * Selection
+  * Start worrying about keyboard input
+    * Focus:
+      * Make cursor go away
+      * Remove ScrollToCursor
+  * Editing
+  * Editing modifiers
+
+
 * SetEditable
 * SetCursor -- obliterates selection
 * SetSelection
@@ -6,6 +26,12 @@
 
 * SelectionColor?
 * SelectedColor?
+
+* Verify consistency at all points
+* Rendering
+
+* May need to figure out how internal character positioning should work
+
 
 * Need to figure out key events, text input
 * text edit field
@@ -30,6 +56,7 @@
 * NaCl
 
 * SetAlpha
+* pushstring -> pushliteral
 
 * Lua API advanced
   * Optionally tag frames with filename, line number

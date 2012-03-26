@@ -161,9 +161,14 @@ namespace Frames {
   public:
     TextLayout(TextInfoPtr parent, float width, bool wordwrap);
 
+    TextInfo *GetParent() const { return m_parent.get(); }
+
     float GetFullHeight() const { return m_fullHeight; }
 
-    void Render(Renderer *renderer, const Color &color, Rect bounds); // bounds.s.x and bounds.s.y interpreted as starting coordinates, text clamped to stay within bounds
+    void Render(Renderer *renderer, const Color &color, Rect bounds, Point offset); // bounds.s.x and bounds.s.y interpreted as starting coordinates, text clamped to stay within bounds. offset is text's skew within those bounds
+    // passed by value because we modify them
+
+    const Point &GetCoordinate(int character) const;
 
   private:
     ~TextLayout();
