@@ -372,7 +372,7 @@ namespace Frames {
         // TODO: crop more smoothly and exactly
 
         // Slack space is because freetype is a little inaccurate with its vertical span info
-        if (vertex[0].x >= bounds.s.x && vertex[0].y >= bounds.s.y && vertex[2].x <= bounds.e.x && vertex[2].y <= bounds.e.y + 1) {
+        if (vertex[0].x >= bounds.s.x - 1 && vertex[0].y >= bounds.s.y - 1 && vertex[2].x <= bounds.e.x && vertex[2].y <= bounds.e.y + 1) {
           cquad++;
         }
       }
