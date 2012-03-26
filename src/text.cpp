@@ -211,15 +211,19 @@ namespace Frames {
   }
 
   void Text::ScrollToCursor() {
-    if (!false) {  // TODO: focus
+    /*if (!false) {  // TODO: focus
       return;
-    }
+    }*/
 
     Point tpos = GetCharacterPosition(m_cursor);
     Point cscroll = GetScroll();
 
     // First, do the X axis
-    cscroll.x = Utility::Clamp(Utility::Clamp(cscroll.x, tpos.x - GetWidth() / 4, tpos.x + GetWidth() / 4), 0, m_layout->GetParent()->GetFullWidth() - GetWidth());
+    if (!m_wordwrap) {
+      cscroll.x = Utility::Clamp(Utility::Clamp(cscroll.x, tpos.x - GetWidth() * 3 / 4, tpos.x - GetWidth() / 4), 0, m_layout->GetParent()->GetFullWidth() - GetWidth());
+    } else {
+      cscroll.x = 0;
+    }
 
     // Next, do the Y axis
     float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
