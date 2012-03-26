@@ -2,11 +2,14 @@
 * Immediate todo:
   X Test rendering again
   X Test moving offset
-  * Make the text cropping work better
-    * also with cursor
+  X Make the text cropping work better
+    X also with cursor
   X Render cursor
     X Render
     X Test movement
+  * Cursor relative to top of line, not top of character
+    * GetCharacterPosition is sort of doing the wrong thing
+    * Both in cursor placement and in scrolltocursor
   * Render selection
   * Start worrying about mouse input
   * Cursor placement
@@ -17,9 +20,7 @@
       * Remove ScrollToCursor
   * Editing
   * Editing modifiers
-  * Cursor relative to top of line, not top of character
-    * GetCharacterPosition is sort of doing the wrong thing
-    * Both in cursor placement and in scrolltocursor
+  
 
 
 * SetEditable

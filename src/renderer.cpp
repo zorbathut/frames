@@ -78,8 +78,8 @@ namespace Frames {
     glBindBuffer(GL_ARRAY_BUFFER, m_buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elements);
 
-    glVertexPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, x));
-    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, u));
+    glVertexPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, p));
+    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, t));
     glColorPointer(4, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, c));
 
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -162,6 +162,59 @@ namespace Frames {
     } else {
       SetScissor(m_scissor.back());
     }
+  }
+  
+  bool Renderer::WriteCroppedRect(Vertex *vertex, const Rect &screen, const Rect &tex, const Color &color, const Rect &bounds) {
+    if (screen.s.x > bounds.e.x || screen.e.x < bounds.s.x || screen.s.y > bounds.e.y || screen.e.y < bounds.s.y) {
+      return false;
+    }
+    
+    // generate [0] and [2], derive the others from that
+    if (screen.s.x >= bounds.s.x && screen.e.x <= bounds.e.x && screen.s.y >= bounds.s.y && screen.e.y <= bounds.e.y) {
+      // easy solution, we're fully within bounds
+      vertex[0].p = screen.s;
+      vertex[0].t = tex.s;
+    
+      vertex[2].p = screen.e;
+      vertex[2].t = tex.e;
+    } else {
+      // we intersect, so we need to do all the work
+      vertex[0].p.x = std::max(screen.s.x, bounds.s.x);
+      vertex[0].p.y = std::max(screen.s.y, bounds.s.y);
+      
+      vertex[2].p.x = std::min(screen.e.x, bounds.e.x);
+      vertex[2].p.y = std::min(screen.e.y, bounds.e.y);
+      
+      float xs = (tex.e.x - tex.s.x) / (screen.e.x - screen.s.x);
+      float ys = (tex.e.y - tex.s.y) / (screen.e.y - screen.s.y);
+      
+      vertex[0].t.x = (vertex[0].p.x - screen.s.x) * xs + tex.s.x;
+      vertex[0].t.y = (vertex[0].p.y - screen.s.y) * xs + tex.s.y;
+      
+      vertex[2].t.x = (vertex[2].p.x - screen.s.x) * xs + tex.s.x;
+      vertex[2].t.y = (vertex[2].p.y - screen.s.y) * xs + tex.s.y;
+    }
+    
+    // now we've got a valid [0] and [2], make textures
+    vertex[1].p.x = vertex[2].p.x;
+    vertex[1].p.y = vertex[0].p.y;
+    
+    vertex[3].p.x = vertex[0].p.x;
+    vertex[3].p.y = vertex[2].p.y;
+    
+    vertex[1].t.x = vertex[2].t.x;
+    vertex[1].t.y = vertex[0].t.y;
+    
+    vertex[3].t.x = vertex[0].t.x;
+    vertex[3].t.y = vertex[2].t.y;
+    
+    // copy all colors over
+    vertex[0].c = color;
+    vertex[1].c = color;
+    vertex[2].c = color;
+    vertex[3].c = color;
+    
+    return 2;
   }
 
   void Renderer::SetScissor(const Rect &rect) {

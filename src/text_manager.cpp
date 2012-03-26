@@ -324,6 +324,7 @@ namespace Frames {
 
   void TextLayout::Render(Renderer *renderer, const Color &color, Rect bounds, Point offset) {
     // clamp the bounds to the pixel grid to avoid text blurring
+    // probably shouldn't do this if we're using distance field rendering
     bounds.s.x = (int)std::floor(bounds.s.x + 0.5f);
     bounds.s.y = (int)std::floor(bounds.s.y + 0.5f);
     bounds.e.x = (int)std::floor(bounds.e.x + 0.5f);
@@ -342,37 +343,10 @@ namespace Frames {
       const CharacterInfoPtr &character = m_parent->GetCharacter(i);
 
       if (character->GetTexture()) {
-        vertex[0].x = bounds.s.x + m_coordinates[i].x - offset.x;
-        vertex[0].y = bounds.s.y + m_coordinates[i].y - offset.y;
-        vertex[0].u = character->GetTexture()->GetSX();
-        vertex[0].v = character->GetTexture()->GetSY();
-        vertex[0].c = color;
-
-        //m_parent->GetParent()->GetEnvironment()->LogDebug(Utility::Format("Placing element at %f/%f", vertex[0].x, vertex[0].y));
-
-        vertex[1].x = vertex[0].x + character->GetTexture()->GetWidth();
-        vertex[1].y = vertex[0].y;
-        vertex[1].u = character->GetTexture()->GetEX();
-        vertex[1].v = character->GetTexture()->GetSY();
-        vertex[1].c = color;
-
-        vertex[2].x = vertex[0].x + character->GetTexture()->GetWidth();
-        vertex[2].y = vertex[0].y + character->GetTexture()->GetHeight();
-        vertex[2].u = character->GetTexture()->GetEX();
-        vertex[2].v = character->GetTexture()->GetEY();
-        vertex[2].c = color;
-
-        vertex[3].x = vertex[0].x;
-        vertex[3].y = vertex[0].y + character->GetTexture()->GetHeight();
-        vertex[3].u = character->GetTexture()->GetSX();
-        vertex[3].v = character->GetTexture()->GetEY();
-        vertex[3].c = color;
-
-        // If we're not in bounds, don't show this character
-        // TODO: crop more smoothly and exactly
-
+        Point origin = Point(bounds.s.x + m_coordinates[i].x - offset.x, bounds.s.y + m_coordinates[i].y - offset.y);
+        
         // Slack space is because freetype is a little inaccurate with its vertical span info
-        if (vertex[0].x >= bounds.s.x - 1 && vertex[0].y >= bounds.s.y - 1 && vertex[2].x <= bounds.e.x && vertex[2].y <= bounds.e.y + 1) {
+        if (Renderer::WriteCroppedRect(vertex, Rect(origin, origin + Point(character->GetTexture()->GetWidth(), character->GetTexture()->GetHeight())), character->GetTexture()->GetBounds(), color, bounds)) {
           cquad++;
         }
       }

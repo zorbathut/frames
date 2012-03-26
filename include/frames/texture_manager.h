@@ -13,6 +13,7 @@
 
 #include "frames/noncopyable.h"
 #include "frames/ptr.h"
+#include "frames/rect.h"
 
 namespace Frames {
   class Environment;
@@ -54,10 +55,7 @@ namespace Frames {
     int GetWidth() const { return m_texture_width; }
     int GetHeight() const { return m_texture_height; }
 
-    float GetSX() const { return m_sx; }
-    float GetSY() const { return m_sy; }
-    float GetEX() const { return m_ex; }
-    float GetEY() const { return m_ey; }
+    const Rect &GetBounds() { return m_bounds; }
 
     GLuint GetGLID() const { return m_backing->GetGLID(); }
 
@@ -72,7 +70,7 @@ namespace Frames {
     int m_texture_width;
     int m_texture_height;
 
-    float m_sx, m_sy, m_ex, m_ey;
+    Rect m_bounds;
   };
   typedef Ptr<TextureChunk> TextureChunkPtr;
 

@@ -39,10 +39,10 @@ namespace Frames {
 
       Renderer::Vertex *v = renderer->Request(4);
 
-      v[0].x = l; v[0].y = u;
-      v[1].x = r; v[1].y = u;
-      v[2].x = r; v[2].y = d;
-      v[3].x = l; v[3].y = d;
+      v[0].p.x = l; v[0].p.y = u;
+      v[1].p.x = r; v[1].p.y = u;
+      v[2].p.x = r; v[2].p.y = d;
+      v[3].p.x = l; v[3].p.y = d;
 
       v[0].c = m_bg;
       v[1].c = m_bg;

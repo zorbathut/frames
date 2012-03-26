@@ -53,15 +53,19 @@ namespace Frames {
 
       Renderer::Vertex *v = renderer->Request(4);
 
-      v[0].x = l; v[0].y = u;
-      v[1].x = r; v[1].y = u;
-      v[2].x = r; v[2].y = d;
-      v[3].x = l; v[3].y = d;
+      v[0].p.x = l; v[0].p.y = u;
+      v[1].p.x = r; v[1].p.y = u;
+      v[2].p.x = r; v[2].p.y = d;
+      v[3].p.x = l; v[3].p.y = d;
 
-      v[0].u = m_texture->GetSX(); v[0].v = m_texture->GetSY();
-      v[1].u = m_texture->GetEX(); v[1].v = m_texture->GetSY();
-      v[2].u = m_texture->GetEX(); v[2].v = m_texture->GetEY();
-      v[3].u = m_texture->GetSX(); v[3].v = m_texture->GetEY();
+      v[0].t = m_texture->GetBounds().s;
+      v[2].t = m_texture->GetBounds().e;
+      
+      v[1].t.x = v[2].t.x;
+      v[1].t.y = v[0].t.y;
+      
+      v[3].t.x = v[0].t.x;
+      v[3].t.y = v[2].t.y;
 
       v[0].c = white;
       v[1].c = white;

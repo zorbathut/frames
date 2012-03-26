@@ -56,10 +56,7 @@ namespace Frames {
   TextureChunk::TextureChunk() :
       m_texture_width(0),
       m_texture_height(0),
-      m_sx(0),
-      m_sy(0),
-      m_ex(0),
-      m_ey(0)
+      m_bounds(0, 0, 0, 0)
   {
   }
 
@@ -157,10 +154,10 @@ namespace Frames {
       chunk->m_backing = backing;
       chunk->m_texture_width = conf.GetWidth();
       chunk->m_texture_height = conf.GetHeight();
-      chunk->m_sx = (float)origin.first / backing->m_surface_width;
-      chunk->m_sy = (float)origin.second / backing->m_surface_width;
-      chunk->m_ex = chunk->m_sx + (float)chunk->m_texture_width / backing->m_surface_width;
-      chunk->m_ey = chunk->m_sy + (float)chunk->m_texture_height / backing->m_surface_height;
+      chunk->m_bounds.s.x = (float)origin.first / backing->m_surface_width;
+      chunk->m_bounds.s.y = (float)origin.second / backing->m_surface_width;
+      chunk->m_bounds.e.x = chunk->m_bounds.s.x + (float)chunk->m_texture_width / backing->m_surface_width;
+      chunk->m_bounds.e.y = chunk->m_bounds.s.y + (float)chunk->m_texture_height / backing->m_surface_height;
 
       glBindTexture(GL_TEXTURE_2D, backing->GetGLID());
       glPixelStorei(GL_PACK_ALIGNMENT, 1);

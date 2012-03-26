@@ -6,6 +6,7 @@
 #include <queue>
 
 #include "frames/color.h"
+#include "frames/rect.h"
 
 namespace Frames {
   // fake opengl typedefs, used so we don't pull the entire header in
@@ -21,8 +22,8 @@ namespace Frames {
   class Renderer {
   public:
     struct Vertex {
-      GLfloat x, y;
-      GLfloat u, v;
+      Point p;
+      Point t;
       Color c;
     };
 
@@ -41,6 +42,8 @@ namespace Frames {
 
     void PushScissor(const Rect &rect);
     void PopScissor();
+    
+    static bool WriteCroppedRect(Vertex *vertex, const Rect &screen, const Rect &tex, const Color &color, const Rect &bounds);
 
   private:
     Environment *m_env; // just for debug functionality

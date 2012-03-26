@@ -249,22 +249,12 @@ namespace Frames {
         // TODO: cull properly when too small
         renderer->SetTexture();
         Renderer::Vertex *vert = renderer->Request(4);
-
-        vert[0].x = m_layout->GetCoordinate(m_cursor).x + GetLeft() - m_scroll.x;
-        vert[0].y = m_layout->GetCoordinate(m_cursor).y + GetTop() - m_scroll.y;
-        vert[0].c = Color(1, 1, 1);
-
-        vert[1].x = vert[0].x + 1;
-        vert[1].y = vert[0].y;
-        vert[1].c = Color(1, 1, 1);
-
-        vert[2].x = vert[1].x;
-        vert[2].y = vert[0].y + m_layout->GetParent()->GetParent()->GetLineHeightFirst(m_size);  // Technically the GetLineHeight call isn't the fastest thing around. But since this will occur only when in focus, it's not a practical issue.
-        vert[2].c = Color(1, 1, 1);
-
-        vert[3].x = vert[0].x;
-        vert[3].y = vert[2].y;
-        vert[3].c = Color(1, 1, 1);
+        
+        Point origin = m_layout->GetCoordinate(m_cursor) - m_scroll;
+        origin.x += GetLeft();
+        origin.y += GetTop();
+        
+        Renderer::WriteCroppedRect(vert, Rect(origin, origin + Point(1, m_layout->GetParent()->GetParent()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1), GetBounds());
 
         renderer->Return(GL_QUADS);
       }

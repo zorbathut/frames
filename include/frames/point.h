@@ -10,6 +10,13 @@ namespace Frames {
 
     float x, y;
   };
+  
+  inline Point operator+(const Point &lhs, const Point &rhs) {
+    return Point(lhs.x + rhs.x, lhs.y + rhs.y);
+  }
+  inline Point operator-(const Point &lhs, const Point &rhs) {
+    return Point(lhs.x - rhs.x, lhs.y - rhs.y);
+  }
 };
 
 #endif
