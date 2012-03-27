@@ -43,7 +43,8 @@ namespace Frames {
     void PushScissor(const Rect &rect);
     void PopScissor();
     
-    static bool WriteCroppedRect(Vertex *vertex, const Rect &screen, const Rect &tex, const Color &color, const Rect &bounds);
+    static bool WriteCroppedRect(Vertex *vertex, const Rect &screen, const Color &color, const Rect &bounds); // no fancy lerping
+    static bool WriteCroppedTexRect(Vertex *vertex, const Rect &screen, const Rect &tex, const Color &color, const Rect &bounds);  // fancy lerping
 
   private:
     Environment *m_env; // just for debug functionality

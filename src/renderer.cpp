@@ -164,7 +164,31 @@ namespace Frames {
     }
   }
   
-  bool Renderer::WriteCroppedRect(Vertex *vertex, const Rect &screen, const Rect &tex, const Color &color, const Rect &bounds) {
+  bool Renderer::WriteCroppedRect(Vertex *verts, const Rect &screen, const Color &color, const Rect &bounds) {
+    if (screen.s.x > bounds.e.x || screen.e.x < bounds.s.x || screen.s.y > bounds.e.y || screen.e.y < bounds.s.y) {
+      return false;
+    }
+
+    // set up boundaries
+    verts[0].p = Utility::Clamp(screen.s, bounds.s, bounds.e);
+    verts[2].p = Utility::Clamp(screen.e, bounds.s, bounds.e);
+
+    // spread it out
+    verts[1].p.x = verts[2].p.x;
+    verts[1].p.y = verts[0].p.y;
+    verts[3].p.x = verts[0].p.x;
+    verts[3].p.y = verts[2].p.y;
+
+    // colorize
+    verts[0].c = color;
+    verts[1].c = color;
+    verts[2].c = color;
+    verts[3].c = color;
+
+    return true;
+  }
+
+  bool Renderer::WriteCroppedTexRect(Vertex *vertex, const Rect &screen, const Rect &tex, const Color &color, const Rect &bounds) {
     if (screen.s.x > bounds.e.x || screen.e.x < bounds.s.x || screen.s.y > bounds.e.y || screen.e.y < bounds.s.y) {
       return false;
     }

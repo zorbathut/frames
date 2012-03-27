@@ -3,6 +3,8 @@
 #ifndef FRAMES_POINT
 #define FRAMES_POINT
 
+#include <frames/utility.h>
+
 namespace Frames {
   struct Point {
     Point() { };
@@ -16,6 +18,12 @@ namespace Frames {
   }
   inline Point operator-(const Point &lhs, const Point &rhs) {
     return Point(lhs.x - rhs.x, lhs.y - rhs.y);
+  }
+
+  namespace Utility {
+    inline Point Clamp(const Point &current, const Point &min, const Point &max) {
+      return Point(Clamp(current.x, min.x, max.x), Clamp(current.y, min.y, max.y));
+    }
   }
 };
 

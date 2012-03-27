@@ -10,7 +10,9 @@
   X Cursor relative to top of line, not top of character
     X GetCharacterPosition is sort of doing the wrong thing
     X Both in cursor placement and in scrolltocursor
-  * Render selection
+  X Render selection
+  X Selection color
+  * Remove GetLocalCharacterPosition, clean up code that used it
   * Start worrying about mouse input
   * Cursor placement
   * Selection

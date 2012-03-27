@@ -79,6 +79,8 @@ namespace Frames {
       m_select = m_cursor = position;
     }
 
+    m_cursor = Utility::Clamp(m_cursor, 0, m_text.size());
+
     ScrollToCursor();
   }
 
@@ -121,14 +123,8 @@ namespace Frames {
     m_color_selected = color;
   }
 
-  Point Text::GetCharacterPosition(int character) const {
-    Point coord = m_layout->GetCoordinate(character);
-    if (character != m_text.size()) {
-      CharacterInfo *chr = m_layout->GetParent()->GetCharacter(character).get();
-      coord.x -= chr->GetOffsetX();
-      coord.y -= chr->GetOffsetY();
-    }
-    return coord;
+  Point Text::GetLocalCharacterPosition(int character) const {
+    return m_layout->GetCoordinate(character);
   }
 
   /*static*/ void Text::l_RegisterFunctions(lua_State *L) {
@@ -173,7 +169,7 @@ namespace Frames {
       m_size(16),
       m_wordwrap(false),
       m_color_text(1, 1, 1),
-      m_color_selection(0.1, 0.1, 1, 0.3),
+      m_color_selection(0.3, 0.3, 0.5, 0.5),
       m_color_selected(1, 1, 1),
       m_interactive(INTERACTIVE_NONE),
       m_scroll(0, 0),
@@ -221,7 +217,7 @@ namespace Frames {
       return;
     }*/
 
-    Point tpos = GetCharacterPosition(m_cursor);
+    Point tpos = GetLocalCharacterPosition(m_cursor);
     Point cscroll = GetScroll();
 
     // First, do the X axis
@@ -247,7 +243,43 @@ namespace Frames {
 
     // we'll fix this up further later
     if (m_layout) {
-      // do stuf
+      Rect bounds = GetBounds();
+
+      // render selection
+      if (m_cursor != m_select) {
+        renderer->SetTexture();
+
+        int s = m_cursor;
+        int e = m_select;
+        if (s > e) std::swap(s, e);
+
+        int sl = m_layout->GetLineFromCharacter(s);
+        int el = m_layout->GetLineFromCharacter(e);
+
+        renderer->SetTexture();
+        Renderer::Vertex *verts = renderer->Request((el - sl + 1) * 4);
+        int idx = 0;
+        for (int i = sl; i <= el; ++i) {
+          int ts = std::max(s, i ? (m_layout->GetEOLFromLine(i - 1) + 1) : 0);
+          int te = std::min(m_layout->GetEOLFromLine(i), e);
+
+          Point startpoint = GetLocalCharacterPosition(ts) - m_scroll;
+          startpoint.x += GetLeft();
+          startpoint.y += GetTop();
+
+          Point endpoint = GetLocalCharacterPosition(te) - m_scroll;
+          endpoint.x += GetLeft();
+          endpoint.y += GetTop();
+          endpoint.y += m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
+
+          if (Renderer::WriteCroppedRect(verts + idx, Rect(startpoint, endpoint), m_color_selection, bounds)) {
+            idx += 4;
+          }
+        }
+        renderer->Return(GL_QUADS, idx);
+      }
+
+      // render the actual text
       m_layout->Render(renderer, m_color_text, GetBounds(), GetScroll());
 
       // render cursor, if there is one
@@ -256,11 +288,11 @@ namespace Frames {
         renderer->SetTexture();
         Renderer::Vertex *vert = renderer->Request(4);
         
-        Point origin = GetCharacterPosition(m_cursor) - m_scroll;
+        Point origin = GetLocalCharacterPosition(m_cursor) - m_scroll;
         origin.x += GetLeft();
         origin.y += GetTop();
         
-        Renderer::WriteCroppedRect(vert, Rect(origin, origin + Point(1, m_layout->GetParent()->GetParent()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1), GetBounds());
+        Renderer::WriteCroppedTexRect(vert, Rect(origin, origin + Point(1, m_layout->GetParent()->GetParent()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1), bounds);
 
         renderer->Return(GL_QUADS);
       }

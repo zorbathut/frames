@@ -231,6 +231,7 @@ namespace Frames {
         // This line is resolved, kill it and move on
         currentWordStartX = 0;
         currentWordStartIndex = i + 1;
+        m_lines.push_back(i + 1);
 
         // important that this happpens here so that the editfield works as intended
         m_coordinates.push_back(Point(tx, ty));
@@ -276,6 +277,7 @@ namespace Frames {
 
             currentWordStartX = 0;
             currentWordStartIndex = i;
+            m_lines.push_back(i);
           }
         } else {
           // This word isn't too long, so we'll transplant the entire word to the next line. We know this will work without linewrapping because it was long enough to fit on this line.
@@ -283,6 +285,7 @@ namespace Frames {
           tx = 0;
           ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
           ty = (int)std::floor(ty + 0.5f);
+          m_lines.push_back(currentWordStartIndex);
 
           for (int j = currentWordStartIndex; j < m_coordinates.size(); ++j) {
             m_coordinates[j] = Point(tx, ty);
@@ -345,8 +348,7 @@ namespace Frames {
       if (character->GetTexture()) {
         Point origin = Point(bounds.s.x + m_coordinates[i].x - offset.x, bounds.s.y + m_coordinates[i].y - offset.y);
         
-        // Slack space is because freetype is a little inaccurate with its vertical span info
-        if (Renderer::WriteCroppedRect(vertex, Rect(origin, origin + Point(character->GetTexture()->GetWidth(), character->GetTexture()->GetHeight())), character->GetTexture()->GetBounds(), color, bounds)) {
+        if (Renderer::WriteCroppedTexRect(vertex, Rect(origin, origin + Point(character->GetTexture()->GetWidth(), character->GetTexture()->GetHeight())), character->GetTexture()->GetBounds(), color, bounds)) {
           cquad++;
         }
       }
@@ -357,8 +359,24 @@ namespace Frames {
     renderer->Return(GL_QUADS, cquad * 4);
   }
 
-  const Point &TextLayout::GetCoordinate(int character) const {
-    return m_coordinates[character];
+  Point TextLayout::GetCoordinate(int character) const {
+    Point coord = m_coordinates[character];
+    if (character + 1 != m_coordinates.size()) {
+      CharacterInfo *chr = GetParent()->GetCharacter(character).get();
+      coord.x -= chr->GetOffsetX();
+      coord.y -= chr->GetOffsetY();
+    }
+    return coord;
+  }
+
+  int TextLayout::GetLineFromCharacter(int character) const {
+    int line = 0;
+    while (line < m_lines.size() && character > m_lines[line]) ++line;
+    return line;
+  }
+  int TextLayout::GetEOLFromLine(int line) const {
+    if (line == m_lines.size()) return m_coordinates.size() - 1;
+    return m_lines[line] - 1;
   }
 
   // =======================================
