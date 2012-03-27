@@ -7,9 +7,9 @@
   X Render cursor
     X Render
     X Test movement
-  * Cursor relative to top of line, not top of character
-    * GetCharacterPosition is sort of doing the wrong thing
-    * Both in cursor placement and in scrolltocursor
+  X Cursor relative to top of line, not top of character
+    X GetCharacterPosition is sort of doing the wrong thing
+    X Both in cursor placement and in scrolltocursor
   * Render selection
   * Start worrying about mouse input
   * Cursor placement

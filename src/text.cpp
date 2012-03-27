@@ -122,7 +122,13 @@ namespace Frames {
   }
 
   Point Text::GetCharacterPosition(int character) const {
-    return m_layout->GetCoordinate(character);
+    Point coord = m_layout->GetCoordinate(character);
+    if (character != m_text.size()) {
+      CharacterInfo *chr = m_layout->GetParent()->GetCharacter(character).get();
+      coord.x -= chr->GetOffsetX();
+      coord.y -= chr->GetOffsetY();
+    }
+    return coord;
   }
 
   /*static*/ void Text::l_RegisterFunctions(lua_State *L) {
@@ -250,7 +256,7 @@ namespace Frames {
         renderer->SetTexture();
         Renderer::Vertex *vert = renderer->Request(4);
         
-        Point origin = m_layout->GetCoordinate(m_cursor) - m_scroll;
+        Point origin = GetCharacterPosition(m_cursor) - m_scroll;
         origin.x += GetLeft();
         origin.y += GetTop();
         
