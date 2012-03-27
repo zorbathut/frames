@@ -123,10 +123,6 @@ namespace Frames {
     m_color_selected = color;
   }
 
-  Point Text::GetLocalCharacterPosition(int character) const {
-    return m_layout->GetCoordinate(character);
-  }
-
   /*static*/ void Text::l_RegisterFunctions(lua_State *L) {
     Frame::l_RegisterFunctions(L);
 
@@ -217,7 +213,7 @@ namespace Frames {
       return;
     }*/
 
-    Point tpos = GetLocalCharacterPosition(m_cursor);
+    Point tpos = m_layout->GetCoordinate(m_cursor);
     Point cscroll = GetScroll();
 
     // First, do the X axis
@@ -263,16 +259,22 @@ namespace Frames {
           int ts = std::max(s, i ? (m_layout->GetEOLFromLine(i - 1) + 1) : 0);
           int te = std::min(m_layout->GetEOLFromLine(i), e);
 
-          Point startpoint = GetLocalCharacterPosition(ts) - m_scroll;
-          startpoint.x += GetLeft();
-          startpoint.y += GetTop();
+          Rect rect;
+          rect.s = m_layout->GetCoordinate(ts);
+          rect.e = m_layout->GetCoordinate(te);
 
-          Point endpoint = GetLocalCharacterPosition(te) - m_scroll;
-          endpoint.x += GetLeft();
-          endpoint.y += GetTop();
-          endpoint.y += m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
+          rect.s -= m_scroll;
+          rect.e -= m_scroll;
 
-          if (Renderer::WriteCroppedRect(verts + idx, Rect(startpoint, endpoint), m_color_selection, bounds)) {
+          rect.s.x += GetLeft();
+          rect.e.x += GetLeft();
+
+          rect.s.y += GetTop();
+          rect.e.y += GetTop();
+
+          rect.e.y += m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
+
+          if (Renderer::WriteCroppedRect(verts + idx, rect, m_color_selection, bounds)) {
             idx += 4;
           }
         }
@@ -288,7 +290,7 @@ namespace Frames {
         renderer->SetTexture();
         Renderer::Vertex *vert = renderer->Request(4);
         
-        Point origin = GetLocalCharacterPosition(m_cursor) - m_scroll;
+        Point origin = m_layout->GetCoordinate(m_cursor) - m_scroll;
         origin.x += GetLeft();
         origin.y += GetTop();
         

@@ -12,7 +12,7 @@
     X Both in cursor placement and in scrolltocursor
   X Render selection
   X Selection color
-  * Remove GetLocalCharacterPosition, clean up code that used it
+  X Remove GetLocalCharacterPosition, clean up code that used it
   * Start worrying about mouse input
   * Cursor placement
   * Selection

@@ -54,8 +54,6 @@ namespace Frames {
     void SetColorSelected(const Color &color);
     const Color &GetColorSelected() const { return m_color_selected; }
 
-    Point GetLocalCharacterPosition(int character) const;
-
   protected:
     virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); Frame::l_Register(L); }
 
