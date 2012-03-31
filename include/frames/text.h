@@ -63,6 +63,7 @@ namespace Frames {
     Text(Layout *parent);
     virtual ~Text();
   
+    void SizeChanged(EventHandle *handle);
     void UpdateLayout();
     void ScrollToCursor();
 

@@ -138,6 +138,21 @@ namespace Frames {
     return ax.size_default;
   }
 
+  Layout *Layout::GetFrameUnder(int x, int y) {
+    if (!GetVisible()) return 0; // nope
+
+    for (ChildrenList::const_reverse_iterator itr = m_children.rbegin(); itr != m_children.rend(); ++itr) {
+      Layout *prv = (*itr)->GetFrameUnder(x, y);
+      if (prv) return prv;
+    }
+
+    if (x >= GetLeft() && y >= GetTop() && x < GetRight() && y < GetBottom()) {
+      return this;
+    }
+
+    return 0;
+  }
+
   void Layout::l_push(lua_State *L) const {
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
 
@@ -809,18 +824,34 @@ namespace Frames {
   class Layout::EventHandler {
   public:
     // NOTE: this works because delegate is POD
-    EventHandler() { };
-    EventHandler(Delegate<void ()> din) {
-      typedef Delegate<void ()> dintype;
+    EventHandler() { }
+    template<typename T> EventHandler(Delegate<T> din) {
+      typedef Delegate<T> dintype;
       BOOST_STATIC_ASSERT(sizeof(dintype) == sizeof(Delegate<void ()>));
 
       *reinterpret_cast<dintype *>(c.delegate) = din;
-    };
-    ~EventHandler() { };
+    }
+    ~EventHandler() { }
 
     void Call() const {
       (*reinterpret_cast<const Delegate<void ()> *>(c.delegate))();
-    };
+    }
+
+    template<typename T1> void Call(T1 t1) const {
+      (*reinterpret_cast<const Delegate<void (T1)> *>(c.delegate))(t1);
+    }
+
+    template<typename T1, typename T2> void Call(T1 t1, T2 t2) const {
+      (*reinterpret_cast<const Delegate<void (T1, T2)> *>(c.delegate))(t1, t2);
+    }
+
+    template<typename T1, typename T2, typename T3> void Call(T1 t1, T2 t2, T3 t3) const {
+      (*reinterpret_cast<const Delegate<void (T1, T2, T3)> *>(c.delegate))(t1, t2, t3);
+    }
+
+    template<typename T1, typename T2, typename T3, typename T4> void Call(T1 t1, T2 t2, T3 t3, T4 t4) const {
+      (*reinterpret_cast<const Delegate<void (T1, T2, T3, T4)> *>(c.delegate))(t1, t2, t3, t4);
+    }
 
   private:
     union {
@@ -833,32 +864,90 @@ namespace Frames {
   bool operator==(const Layout::EventHandler &lhs, const Layout::EventHandler &rhs) { return memcmp(&lhs.c, &rhs.c, sizeof(lhs.c)) == 0; }
 
   // eventery
-  #define FRAMES_LAYOUT_EVENT_DEFINE(frametype, eventname, paramlist, params) \
-    void frametype::Event##eventname##Attach(Delegate<void paramlist> delegate, float order) { \
-      EventAttach((unsigned int)&s_event_##eventname##_id, EventHandler(delegate), order); \
+  #define FRAMES_LAYOUT_EVENT_DEFINE_INFRA(frametype, eventname, paramlist, paramlistcomplete, params) \
+    void frametype::Event##eventname##Attach(Delegate<void paramlistcomplete> delegate, float order) { \
+      EventAttach(Event##eventname##Id(), EventHandler(delegate), order); \
     } \
-    void frametype::Event##eventname##Detach(Delegate<void paramlist> delegate) { \
-      EventDetach((unsigned int)&s_event_##eventname##_id, EventHandler(delegate)); \
+    void frametype::Event##eventname##Detach(Delegate<void paramlistcomplete> delegate) { \
+      EventDetach(Event##eventname##Id(), EventHandler(delegate)); \
     } \
-    void frametype::Event##eventname##Trigger paramlist const { \
-      std::map<unsigned int, std::multimap<float, EventHandler> >::const_iterator itr = m_events.find((unsigned int)&s_event_##eventname##_id); \
-      if (itr == m_events.end()) { return; } \
-      const std::multimap<float, EventHandler> &tab = itr->second; \
-      for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
-        ev->second.Call params; \
-      } \
+    /*static*/ intptr_t frametype::Event##eventname##Id() { \
+      return (intptr_t)&s_event_##eventname##_id; \
     } \
     char frametype::s_event_##eventname##_id = 0;
 
-  FRAMES_LAYOUT_EVENT_DEFINE(Layout, Move, (), ());
-  FRAMES_LAYOUT_EVENT_DEFINE(Layout, Size, (), ());
+  #define FRAMES_LAYOUT_EVENT_DEFINE(frametype, eventname, paramlist, paramlistcomplete, params) \
+    FRAMES_LAYOUT_EVENT_DEFINE_INFRA(frametype, eventname, paramlist, paramlistcomplete, params) \
+    void frametype::Event##eventname##Trigger paramlist const { \
+      std::map<intptr_t, std::multimap<float, EventHandler> >::const_iterator itr = m_events.find(Event##eventname##Id()); \
+      if (itr != m_events.end()) { \
+        EventHandle handle; \
+        const std::multimap<float, EventHandler> &tab = itr->second; \
+        for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
+          ev->second.Call params; \
+        } \
+      } \
+    }
+
+  #define FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(frametype, eventname, paramlist, paramlistcomplete, params) \
+    FRAMES_LAYOUT_EVENT_DEFINE_INFRA(frametype, eventname, paramlist, paramlistcomplete, params) \
+    FRAMES_LAYOUT_EVENT_DEFINE_INFRA(frametype, eventname##Sink, paramlist, paramlistcomplete, params) \
+    FRAMES_LAYOUT_EVENT_DEFINE_INFRA(frametype, eventname##Bubble, paramlist, paramlistcomplete, params) \
+    void frametype::Event##eventname##Trigger paramlist const { \
+      std::vector<Layout *> layouts; \
+      Layout *parent = GetParent(); \
+      while (parent) { \
+        layouts.push_back(parent); \
+        parent = parent->GetParent(); \
+      } \
+      EventHandle handle; \
+      for (int i = layouts.size() - 1; i >= 0; --i) { \
+        std::map<intptr_t, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i]->m_events.find(Event##eventname##Sink##Id()); \
+        if (itr != layouts[i]->m_events.end()) { \
+          const std::multimap<float, EventHandler> &tab = itr->second; \
+          for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
+            ev->second.Call params; \
+          } \
+        } \
+      } \
+      { \
+        std::map<intptr_t, std::multimap<float, EventHandler> >::const_iterator itr = m_events.find(Event##eventname##Id()); \
+        if (itr != m_events.end()) { \
+          const std::multimap<float, EventHandler> &tab = itr->second; \
+          for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
+            ev->second.Call params; \
+          } \
+        } \
+      } \
+      for (int i = 0; i < layouts.size(); --i) { \
+        std::map<intptr_t, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i]->m_events.find(Event##eventname##Bubble##Id()); \
+        if (itr != layouts[i]->m_events.end()) { \
+          const std::multimap<float, EventHandler> &tab = itr->second; \
+          for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
+            ev->second.Call params; \
+          } \
+        } \
+      } \
+    }
+
+  FRAMES_LAYOUT_EVENT_DEFINE(Layout, Move, (), (EventHandle *handle), (&handle));
+  FRAMES_LAYOUT_EVENT_DEFINE(Layout, Size, (), (EventHandle *handle), (&handle));
+
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseOver, (), (EventHandle *handle), (&handle));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseOut, (), (EventHandle *handle), (&handle));
+
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseUp, (int button), (EventHandle *handle, int button), (&handle, button));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseDown, (int button), (EventHandle *handle, int button), (&handle, button));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseClick, (int button), (EventHandle *handle, int button), (&handle, button));
+
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseWheel, (int delta), (EventHandle *handle, int delta), (&handle, delta));
 
   void Layout::EventAttach(unsigned int id, const EventHandler &handler, float order) {
     m_events[id].insert(std::make_pair(order, handler)); // kapowza!
   }
   void Layout::EventDetach(unsigned int id, const EventHandler &handler) {
     // somewhat more complex, we need to actually find the handler
-    std::map<unsigned int, std::multimap<float, EventHandler> >::iterator itr = m_events.find(id);
+    std::map<intptr_t, std::multimap<float, EventHandler> >::iterator itr = m_events.find(id);
     if (itr == m_events.end()) {
       return;
     }

@@ -187,11 +187,15 @@ namespace Frames {
     // The function will change the default width and height. Now the size has changed again! So we trigger this function again!
     // Now, luckily, all the stuff it does is highly cached - each lookup is essentially two bimap lookups and a little muckery with smart pointers. So this isn't a catastrophe. But still it's not really ideal.
     // Maybe we should cache the TextInfoPtr?
-    EventSizeAttach(Delegate<void ()>(this, &Text::UpdateLayout));
+    EventSizeAttach(Delegate<void (EventHandle *handle)>(this, &Text::SizeChanged));
   };
 
   Text::~Text() { };
   
+  void Text::SizeChanged(EventHandle *handle) {
+    UpdateLayout();
+  }
+
   void Text::UpdateLayout() {
     if (m_font.empty() && m_text.empty()) {
     } else if (m_font.empty()) {

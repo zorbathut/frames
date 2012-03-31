@@ -13,7 +13,60 @@
   X Render selection
   X Selection color
   X Remove GetLocalCharacterPosition, clean up code that used it
+  * here's our little mouse input TODO
+    X Basic traversal of GetFrameUnder
+    * Make sure Mask is supported properly
+    X MouseMove via Glorp
+    X Get MouseMove into Frames
+    X Debug output of MouseMove
+    * Event hook change notification
+      * event event hurf durf
+    * Deal with understanding valid frames
+    * Optimization:
+      * Propogate acceptance bits upstream
+      * Propogate full bounds upstream
+    * Deal with obliteration of mouseover'ed frame
   * Start worrying about mouse input
+    * concepts
+      * bubbling
+      * preventdefault
+      * stoppropogation
+      * event transparency?
+      * how does this integrate with c++
+    * Event parameters?
+    * Let's not worry about dynamic events right now
+    * generalized string-identified events?
+    * summary:
+      * so, lessee . . . do the same hook = acceptance, keymask thing that we do in rift, I really like that one
+      * on event, bubble *down*, do *target*, bubble *up*
+      * stoppropogation(internal, external)
+      * accept()
+      * I like this
+    * c++:
+      * we need some generalized implementation
+      * return values?
+      * handle?
+    * generated code
+      * if not bubbling:
+        * EventMoveAttach
+        * EventMoveAttachTrigger(params...)
+      * if bubbling:
+        * EventMoveAttachUp        
+        * EventMoveAttachDown
+        * more complex trigger code
+      * how much generation magic do we really need for this?
+      
+      * FRAMES_EVENT_DECLARE(Name, BUBBLE, ())
+      * FRAMES_EVENT_IMPLEMENTATION
+      
+      * FRAMES_EVENT_DECLARE(Name, (EventHandle event))
+      * FRAMES_EVENT_DECLARE_BUBBLE(Name, (EventHandle event))
+      
+      * FRAMES_EVENT_IMPLEMENTATION(Name, ())
+      * FRAMES_EVENT_IMPLEMENTATION_BUBBLE(Name, ())
+      
+      , public, private
+      * more generated code, to attach it to the right bubble trigger?
   * Cursor placement
   * Selection
   * Start worrying about keyboard input
@@ -23,7 +76,6 @@
   * Editing
   * Editing modifiers
   
-
 
 * SetEditable
 * SetCursor -- obliterates selection
@@ -47,13 +99,20 @@
 * Textfield - separate and editable
 * Text needs accessors for getting locations and for backtracking locations
 
+---- real stuff here
+
+* Move GetParent more into Layout
+* bubbling, need to propogate events into areas that may not have those events
+
 * Lua API
   * Events
     * Figure out how the API will work
     .AddEventMove
     .RemoveEventMove
+    * Figure out how to make lua events go away properly on shutdown
   * Test re-update height if the width changes and wordwrap
   * Test Obliterate
+  
 
 * Rename GetNameDebug, split into GetName/GetNameFull
 * where is my warning
@@ -76,14 +135,19 @@
   * Events that get passed down - the Bubble phase?
   * If any event does not return true, then stop, otherwise propogate the click upwards (does not occur for other events, just clicks)
 * Figure out 9-slice
-* Text entry
 * Look over rift docs, verify that I have all the things
+
+* Text distance field
+  * http://www.comp.nus.edu.sg/~tants/pba.html
+  * http://directtovideo.files.wordpress.com/2012/03/gdc_2012_released.pdf
+  * http://www.ronaldperry.org/PCTPres.pdf
+  * http://www.youtube.com/watch?v=CGZRHJvJYIg
 
 * Unit testing
 
 * Derive font size adjustment more precisely - binsearch, or dig into the code and see wtf is going on
 
-* Event queueing/buffering
+* Event queueing/buffering to avoid reentrancy issues
 * Subpixel text rendering
 * Autocorpusing
 * More text stuff

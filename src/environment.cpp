@@ -51,6 +51,33 @@ namespace Frames {
     m_root->SetHeight(y);
   }
 
+  void Environment::MouseMove(int x, int y) {
+    Layout *updated = GetFrameUnder(x, y);
+
+    if (updated != m_over) {
+      if (m_over) {
+        LogDebug(Utility::Format("Now moving out of %s", m_over->GetNameFull().c_str()));
+        m_over->EventMouseOutTrigger();
+      }
+
+      if (updated) {
+        LogDebug(Utility::Format("Now moving into %s", updated->GetNameFull().c_str()));
+        updated->EventMouseOverTrigger();
+      }
+
+      m_over = updated;
+    }
+  }
+
+  /*
+  void Environment::MouseDown(int button) {
+    if (m_over
+  }
+  void Environment::MouseUp(int button);
+  void Environment::MouseWheel(int delta);
+
+  void Environment::MouseClear();  // mouse no longer in the scene at all*/
+
   void Environment::Render(const Layout *root) {
     if (!root) {
       root = m_root;
@@ -78,6 +105,11 @@ namespace Frames {
     root->Render(m_renderer);
 
     m_renderer->End();
+  }
+
+  Layout *Environment::GetFrameUnder(int x, int y) {
+    // de-invalidate
+    return m_root->GetFrameUnder(x, y);
   }
 
   void Environment::LuaRegister(lua_State *L) {
@@ -350,6 +382,8 @@ namespace Frames {
 
     m_root = new Layout(0, this);
     m_root->SetNameStatic("Root");
+
+    m_over = 0;
 
     m_renderer = new Renderer(this);
     m_text_manager = new TextManager(this);

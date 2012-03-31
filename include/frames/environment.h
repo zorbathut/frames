@@ -26,13 +26,26 @@ namespace Frames {
     Environment(const Configuration &config);
     ~Environment();
 
+    // Update to the state of the world, incoming events
     void ResizeRoot(int x, int y);
+
+    void MouseMove(int x, int y);
+    void MouseDown(int button);
+    void MouseUp(int button);
+    void MouseWheel(int delta);
+
+    void MouseClear();  // mouse no longer in the scene at all
     
+    // Rendering
     void Render(const Layout *root = 0);
     
+    // Introspection
     Layout *GetRoot() { return m_root; }
+    Layout *GetFrameUnder(int x, int y);
+
     const Configuration &GetConfiguration() { return m_config; }
 
+    // Scripting languages
     void LuaRegister(lua_State *L);
     void LuaUnregister(lua_State *L);
     void LuaRegisterFramesBuiltin(lua_State *L);
@@ -81,6 +94,9 @@ namespace Frames {
 
     // Root
     Layout *m_root;
+
+    // Input state
+    Layout *m_over;
 
     // Lua
     class LuaStackChecker {

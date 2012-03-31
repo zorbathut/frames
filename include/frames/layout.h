@@ -18,13 +18,30 @@ namespace Frames {
   class Rect;
   class Renderer;
 
+  class EventHandle {
+  };
+
   // we'll add more internal utility functions if/when needed
-  #define FRAMES_LAYOUT_EVENT_DECLARE(eventname, paramlist) \
-    void Event##eventname##Attach(Delegate<void paramlist> delegate, float order = 0.f); \
-    void Event##eventname##Detach(Delegate<void paramlist> delegate); \
+  #define FRAMES_LAYOUT_EVENT_HOOKS(eventname, paramlist, paramlistcomplete) \
+    void Event##eventname##Attach(Delegate<void paramlistcomplete> delegate, float order = 0.f); \
+    void Event##eventname##Detach(Delegate<void paramlistcomplete> delegate); \
+    static intptr_t Event##eventname##Id(); \
+    private: \
+    static char s_event_##eventname##_id; /* the char itself isn't the ID, the address of the char is */ \
+    public:
+
+  #define FRAMES_LAYOUT_EVENT_DECLARE(eventname, paramlist, paramlistcomplete) \
+    FRAMES_LAYOUT_EVENT_HOOKS(eventname, paramlist, paramlistcomplete) \
     private: \
     void Event##eventname##Trigger paramlist const; \
-    static char s_event_##eventname##_id; /* the char itself isn't the ID, the address of the char is */ \
+    public:
+
+  #define FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(eventname, paramlist, paramlistcomplete) \
+    FRAMES_LAYOUT_EVENT_HOOKS(eventname, paramlist, paramlistcomplete) \
+    FRAMES_LAYOUT_EVENT_HOOKS(eventname##Sink, paramlist, paramlistcomplete) \
+    FRAMES_LAYOUT_EVENT_HOOKS(eventname##Bubble, paramlist, paramlistcomplete) \
+    private: \
+    void Event##eventname##Trigger paramlist const; \
     public:
 
   class Layout : Noncopyable {
@@ -48,11 +65,24 @@ namespace Frames {
     float GetWidth() const { return GetSize(X); }
     float GetHeight() const { return GetSize(Y); }
 
+    Layout *GetParent() const { return m_parent; }
+
+    Layout *GetFrameUnder(int x, int y);
+
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
     // Events?
 
-    FRAMES_LAYOUT_EVENT_DECLARE(Move, ());
-    FRAMES_LAYOUT_EVENT_DECLARE(Size, ());
+    FRAMES_LAYOUT_EVENT_DECLARE(Move, (), (EventHandle *event));
+    FRAMES_LAYOUT_EVENT_DECLARE(Size, (), (EventHandle *event));
+
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseOver, (), (EventHandle *event));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseOut, (), (EventHandle *event));
+
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseUp, (int button), (EventHandle *event, int button));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseDown, (int button), (EventHandle *event, int button));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseClick, (int button), (EventHandle *event, int button));
+
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseWheel, (int delta), (EventHandle *event, int delta));
 
     const char *GetNameStatic() const { return m_name_static; }
     void SetNameStatic(const char *name) { m_name_static = name; }  // WARNING: This does not make a copy! The const char* must have a lifetime longer than this frame.
@@ -95,7 +125,6 @@ namespace Frames {
     void SetHeightDefault(float size) { return SetSizeDefault(Y, size); }
 
     void SetParent(Layout *layout);
-    Layout *GetParent() const { return m_parent; }
 
     void SetLayer(float layer);
     float GetLayer() const { return m_layer; }
@@ -179,7 +208,7 @@ namespace Frames {
     std::string m_name_dynamic;
 
     // Event system
-    std::map<unsigned int, std::multimap<float, EventHandler> > m_events;
+    std::map<intptr_t, std::multimap<float, EventHandler> > m_events;
 
     // Global environment
     Environment *m_env;
