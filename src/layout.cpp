@@ -141,6 +141,8 @@ namespace Frames {
   Layout *Layout::GetFrameUnder(int x, int y) {
     if (!GetVisible()) return 0; // nope
 
+    if (m_fullMouseMasking && !TestMouseMasking(x, y)) return 0;
+
     for (ChildrenList::const_reverse_iterator itr = m_children.rbegin(); itr != m_children.rend(); ++itr) {
       Layout *prv = (*itr)->GetFrameUnder(x, y);
       if (prv) return prv;
@@ -303,7 +305,8 @@ namespace Frames {
       m_last_width(-1),
       m_last_height(-1),
       m_last_x(-1),
-      m_last_y(-1)
+      m_last_y(-1),
+      m_fullMouseMasking(false)
   {
     if (layout) {
       m_env = layout->GetEnvironment();

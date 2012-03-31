@@ -17,6 +17,8 @@ namespace Frames {
     virtual const char *GetType() const { return GetStaticType(); }
 
   protected:
+    virtual bool TestMouseMasking(int x, int y);
+
     virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); Frame::l_Register(L); }
 
     static void l_RegisterFunctions(lua_State *L);

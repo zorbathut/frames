@@ -135,6 +135,11 @@ namespace Frames {
     void SetVisible(bool visible);
     bool GetVisible() const { return m_visible; }
 
+    // This is for further-down classes, not so useful for users
+    void SetFullMouseMasking(bool mask) { m_fullMouseMasking = mask; }
+    bool GetFullMouseMasking() { return m_fullMouseMasking; }
+    virtual bool TestMouseMasking(int x, int y) { return true; }
+
     // This should be called only by the general-purpose macros
     void EventAttach(unsigned int id, const EventHandler &handler, float order);
     void EventDetach(unsigned int id, const EventHandler &handler);
@@ -201,6 +206,9 @@ namespace Frames {
     Layout *m_parent;
     bool m_visible;
     ChildrenList m_children;
+
+    // Input
+    bool m_fullMouseMasking;
 
     // Naming system
     const char *m_name_static;

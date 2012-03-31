@@ -21,6 +21,10 @@ namespace Frames {
     return "Mask";
   }
 
+  bool Mask::TestMouseMasking(int x, int y) {
+    return x >= GetLeft() && y >= GetTop() && x < GetRight() && y < GetBottom();
+  }
+
   /*static*/ void Mask::l_RegisterFunctions(lua_State *L) {
     Frame::l_RegisterFunctions(L);
   }
@@ -39,7 +43,9 @@ namespace Frames {
 
   Mask::Mask(Layout *parent) :
       Frame(parent)
-  { };
+  {
+    SetFullMouseMasking(true);
+  };
   Mask::~Mask() { };
 }
 
