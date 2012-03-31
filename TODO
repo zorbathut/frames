@@ -15,7 +15,7 @@
   X Remove GetLocalCharacterPosition, clean up code that used it
   * here's our little mouse input TODO
     X Basic traversal of GetFrameUnder
-    * Make sure Mask is supported properly
+    X Make sure Mask is supported properly
     X MouseMove via Glorp
     X Get MouseMove into Frames
     X Debug output of MouseMove
