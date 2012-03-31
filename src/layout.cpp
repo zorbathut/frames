@@ -9,6 +9,46 @@
 #include "boost/static_assert.hpp"
 
 namespace Frames {
+  class Layout::EventHandler {
+  public:
+    // NOTE: this works because delegate is POD
+    EventHandler() { }
+    template<typename T> EventHandler(Delegate<T> din) {
+      typedef Delegate<T> dintype;
+      BOOST_STATIC_ASSERT(sizeof(dintype) == sizeof(Delegate<void ()>));
+
+      *reinterpret_cast<dintype *>(c.delegate) = din;
+    }
+    ~EventHandler() { }
+
+    void Call() const {
+      (*reinterpret_cast<const Delegate<void ()> *>(c.delegate))();
+    }
+
+    template<typename T1> void Call(T1 t1) const {
+      (*reinterpret_cast<const Delegate<void (T1)> *>(c.delegate))(t1);
+    }
+
+    template<typename T1, typename T2> void Call(T1 t1, T2 t2) const {
+      (*reinterpret_cast<const Delegate<void (T1, T2)> *>(c.delegate))(t1, t2);
+    }
+
+    template<typename T1, typename T2, typename T3> void Call(T1 t1, T2 t2, T3 t3) const {
+      (*reinterpret_cast<const Delegate<void (T1, T2, T3)> *>(c.delegate))(t1, t2, t3);
+    }
+
+    template<typename T1, typename T2, typename T3, typename T4> void Call(T1 t1, T2 t2, T3 t3, T4 t4) const {
+      (*reinterpret_cast<const Delegate<void (T1, T2, T3, T4)> *>(c.delegate))(t1, t2, t3, t4);
+    }
+
+  private:
+    union {
+      char delegate[sizeof(Delegate<void ()>)];
+    } c;
+    
+    friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);
+  };
+
   /*static*/ const char *Layout::GetStaticType() {
     return "Layout";
   }
@@ -148,7 +188,7 @@ namespace Frames {
       if (prv) return prv;
     }
 
-    if (x >= GetLeft() && y >= GetTop() && x < GetRight() && y < GetBottom()) {
+    if (m_acceptInput && x >= GetLeft() && y >= GetTop() && x < GetRight() && y < GetBottom()) {
       return this;
     }
 
@@ -306,7 +346,8 @@ namespace Frames {
       m_last_height(-1),
       m_last_x(-1),
       m_last_y(-1),
-      m_fullMouseMasking(false)
+      m_fullMouseMasking(false),
+      m_acceptInput(false)
   {
     if (layout) {
       m_env = layout->GetEnvironment();
@@ -640,6 +681,23 @@ namespace Frames {
     Obliterate_Extract();
   }
 
+  const Layout::EventMap *Layout::GetEventTable(intptr_t id) const {
+    std::map<intptr_t, EventMap>::const_iterator itr = m_events.find(id);
+    if (itr != m_events.end()) {
+      return &itr->second;
+    } else {
+      return 0;
+    }
+  }
+
+  void Layout::EventAttached(intptr_t id) {
+    m_acceptInput = GetEventTable(EventMouseClickId()) || GetEventTable(EventMouseUpId()) || GetEventTable(EventMouseDownId()) || GetEventTable(EventMouseWheelId()) || GetEventTable(EventMouseOverId()) || GetEventTable(EventMouseOutId());
+  }
+
+  void Layout::EventDetached(intptr_t id) {
+    m_acceptInput = GetEventTable(EventMouseClickId()) || GetEventTable(EventMouseUpId()) || GetEventTable(EventMouseDownId()) || GetEventTable(EventMouseWheelId()) || GetEventTable(EventMouseOverId()) || GetEventTable(EventMouseOutId());
+  }
+
   void Layout::l_RegisterWorker(lua_State *L, const char *name) const {
     Environment::LuaStackChecker(L, m_env);
     // Incoming: ... newtab Frames_rg
@@ -823,47 +881,6 @@ namespace Frames {
     return lhs < rhs;
   }
 
-
-  class Layout::EventHandler {
-  public:
-    // NOTE: this works because delegate is POD
-    EventHandler() { }
-    template<typename T> EventHandler(Delegate<T> din) {
-      typedef Delegate<T> dintype;
-      BOOST_STATIC_ASSERT(sizeof(dintype) == sizeof(Delegate<void ()>));
-
-      *reinterpret_cast<dintype *>(c.delegate) = din;
-    }
-    ~EventHandler() { }
-
-    void Call() const {
-      (*reinterpret_cast<const Delegate<void ()> *>(c.delegate))();
-    }
-
-    template<typename T1> void Call(T1 t1) const {
-      (*reinterpret_cast<const Delegate<void (T1)> *>(c.delegate))(t1);
-    }
-
-    template<typename T1, typename T2> void Call(T1 t1, T2 t2) const {
-      (*reinterpret_cast<const Delegate<void (T1, T2)> *>(c.delegate))(t1, t2);
-    }
-
-    template<typename T1, typename T2, typename T3> void Call(T1 t1, T2 t2, T3 t3) const {
-      (*reinterpret_cast<const Delegate<void (T1, T2, T3)> *>(c.delegate))(t1, t2, t3);
-    }
-
-    template<typename T1, typename T2, typename T3, typename T4> void Call(T1 t1, T2 t2, T3 t3, T4 t4) const {
-      (*reinterpret_cast<const Delegate<void (T1, T2, T3, T4)> *>(c.delegate))(t1, t2, t3, t4);
-    }
-
-  private:
-    union {
-      char delegate[sizeof(Delegate<void ()>)];
-    } c;
-    
-    friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);
-  };
-
   bool operator==(const Layout::EventHandler &lhs, const Layout::EventHandler &rhs) { return memcmp(&lhs.c, &rhs.c, sizeof(lhs.c)) == 0; }
 
   // eventery
@@ -945,10 +962,11 @@ namespace Frames {
 
   FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseWheel, (int delta), (EventHandle *handle, int delta), (&handle, delta));
 
-  void Layout::EventAttach(unsigned int id, const EventHandler &handler, float order) {
+  void Layout::EventAttach(intptr_t id, const EventHandler &handler, float order) {
     m_events[id].insert(std::make_pair(order, handler)); // kapowza!
+    EventAttached(id);
   }
-  void Layout::EventDetach(unsigned int id, const EventHandler &handler) {
+  void Layout::EventDetach(intptr_t id, const EventHandler &handler) {
     // somewhat more complex, we need to actually find the handler
     std::map<intptr_t, std::multimap<float, EventHandler> >::iterator itr = m_events.find(id);
     if (itr == m_events.end()) {
@@ -960,6 +978,12 @@ namespace Frames {
     for (std::multimap<float, EventHandler>::iterator ev = tab.begin(); ev != tab.end(); ++ev) {
       if (ev->second == handler) {
         tab.erase(ev);
+
+        if (tab.empty()) {
+          m_events.erase(id);
+        }
+
+        EventDetached(id);
         break;
       }
     }

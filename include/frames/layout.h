@@ -51,6 +51,8 @@ namespace Frames {
     struct Sorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
 
   public:
+    typedef std::multimap<float, EventHandler> EventMap;
+
     static const char *GetStaticType();
     virtual const char *GetType() const { return GetStaticType(); }
 
@@ -140,14 +142,17 @@ namespace Frames {
     bool GetFullMouseMasking() { return m_fullMouseMasking; }
     virtual bool TestMouseMasking(int x, int y) { return true; }
 
-    // This should be called only by the general-purpose macros
-    void EventAttach(unsigned int id, const EventHandler &handler, float order);
-    void EventDetach(unsigned int id, const EventHandler &handler);
-
     void Obliterate(); // prep for destruction along with all children
 
     virtual void RenderElement(Renderer *renderer) const { };
     virtual void RenderElementPost(Renderer *renderer) const { };
+
+    // Event-related
+    const EventMap *GetEventTable(intptr_t id) const; // returns null on no events
+    
+    // make sure you call these down if you override them
+    virtual void EventAttached(intptr_t id);
+    virtual void EventDetached(intptr_t id);
 
     // Lua
     virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); } // see Layout::l_Register for what yours should look like
@@ -156,6 +161,10 @@ namespace Frames {
     static void l_RegisterFunctions(lua_State *L);
 
     static void l_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *));
+
+    // Various internal-only functionality
+    void EventAttach(intptr_t id, const EventHandler &handler, float order);
+    void EventDetach(intptr_t id, const EventHandler &handler);
 
   private:
     friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);
@@ -209,6 +218,7 @@ namespace Frames {
 
     // Input
     bool m_fullMouseMasking;
+    bool m_acceptInput;
 
     // Naming system
     const char *m_name_static;
@@ -216,7 +226,7 @@ namespace Frames {
     std::string m_name_dynamic;
 
     // Event system
-    std::map<intptr_t, std::multimap<float, EventHandler> > m_events;
+    std::map<intptr_t, EventMap> m_events;
 
     // Global environment
     Environment *m_env;
