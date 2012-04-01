@@ -21,8 +21,6 @@
     X Debug output of MouseMove
     X Event hook change notification
       X need a vfunc here also for efficiency
-    * Deal with understanding valid frames (I don't remember what this means)
-    * Deal with obliteration of mouseover'ed frame
     * Lua integration
       * Lua needs a way to add an event
       * Lua needs a way to remove an event
@@ -38,6 +36,8 @@
       * Keep a linked list of events so we can traverse and kill them?
       * For now, just run over all frames and clear out the linkages
       * We need a lookup from environment to real environment - Frames_env?
+    * Deal with obliteration of mouseover'ed frame
+      * test this
   * Start worrying about mouse input
     * concepts
       * bubbling
@@ -125,6 +125,7 @@
 
 * Derive font size adjustment more precisely - binsearch, or dig into the code and see wtf is going on
 
+* Refresh mouse position/mouseover when the layout changes
 * Optimization:
   * Propogate acceptance bits upstream
   * Propogate full bounds upstream

@@ -434,6 +434,13 @@ namespace Frames {
     }
   }
 
+  void Environment::DestroyingLayout(Layout *layout) {
+    if (m_over == layout) {
+      m_over = 0;
+      // TODO: refresh mouse position based on the new layout?
+    }
+  }
+
   Environment::LuaStackChecker::LuaStackChecker(lua_State *L, Environment *env) : m_depth(lua_gettop(L)), m_L(L), m_env(env) {
   }
   Environment::LuaStackChecker::~LuaStackChecker() {

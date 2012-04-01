@@ -78,6 +78,9 @@ namespace Frames {
       float point;
     };
     std::vector<LayoutStack_Entry> m_layoutStack;
+    
+    // Maintenance
+    void DestroyingLayout(Layout *layout);
 
     // Configuration
     Configuration m_config;

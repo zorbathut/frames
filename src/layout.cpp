@@ -412,6 +412,9 @@ namespace Frames {
       // Stack: ... Frames_rrg Frames_rg
       lua_pop(L, 2);
     }
+
+    // Notify the environment
+    m_env->DestroyingLayout(this);
   }
 
   void Layout::SetPoint(Axis axis, float mypt, const Layout *link, float linkpt, float offset) {
