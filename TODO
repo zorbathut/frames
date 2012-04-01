@@ -24,6 +24,20 @@
     * Deal with understanding valid frames (I don't remember what this means)
     * Deal with obliteration of mouseover'ed frame
     * Lua integration
+      * Lua needs a way to add an event
+      * Lua needs a way to remove an event
+      * Lua needs a way for the lua-side components to be cleaned up on frame destruction
+      * Lua needs a way for the c++-side components to be cleaned up on lua destruction
+      * So, let's make three new tables, Frames_fev, Frames_rfev, and Frames_cfev. fev gives a lookup from ID to handler, rfev gives a lookup from handler to ID, cfev gives a lookup from ID to count.
+      * If we add a handler that hasn't already been added, we insert it
+      * If we add a handler that's already been added, we just tag increment it and add the functor
+      * If we remove a handler, we decrement it in the lookups, and clear all the elements if needed.
+      * Handler: We have a multimap of Lua handlers in each class. We create a new one and link it to the event DB.
+      * When a class is obliterated and the Lua handlers are destroyed, we do our cleanup (just like removal)
+      * When the Lua environment is shut down, we what?
+      * Keep a linked list of events so we can traverse and kill them?
+      * For now, just run over all frames and clear out the linkages
+      * We need a lookup from environment to real environment - Frames_env?
   * Start worrying about mouse input
     * concepts
       * bubbling
