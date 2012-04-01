@@ -23,25 +23,26 @@ namespace Frames {
 
   // we'll add more internal utility functions if/when needed
   #define FRAMES_LAYOUT_EVENT_HOOKS(eventname, paramlist, paramlistcomplete) \
-    void Event##eventname##Attach(Delegate<void paramlistcomplete> delegate, float order = 0.f); \
-    void Event##eventname##Detach(Delegate<void paramlistcomplete> delegate); \
-    static intptr_t Event##eventname##Id(); \
+      void Event##eventname##Attach(Delegate<void paramlistcomplete> delegate, float order = 0.f); \
+      void Event##eventname##Detach(Delegate<void paramlistcomplete> delegate); \
+      static intptr_t Event##eventname##Id(); \
+      typedef void Event##eventname##Functiontype paramlistcomplete; \
     private: \
-    static char s_event_##eventname##_id; /* the char itself isn't the ID, the address of the char is */ \
+      static char s_event_##eventname##_id; /* the char itself isn't the ID, the address of the char is */ \
     public:
 
   #define FRAMES_LAYOUT_EVENT_DECLARE(eventname, paramlist, paramlistcomplete) \
-    FRAMES_LAYOUT_EVENT_HOOKS(eventname, paramlist, paramlistcomplete) \
+      FRAMES_LAYOUT_EVENT_HOOKS(eventname, paramlist, paramlistcomplete) \
     private: \
-    void Event##eventname##Trigger paramlist const; \
+      void Event##eventname##Trigger paramlist const; \
     public:
 
   #define FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(eventname, paramlist, paramlistcomplete) \
-    FRAMES_LAYOUT_EVENT_HOOKS(eventname, paramlist, paramlistcomplete) \
-    FRAMES_LAYOUT_EVENT_HOOKS(eventname##Sink, paramlist, paramlistcomplete) \
-    FRAMES_LAYOUT_EVENT_HOOKS(eventname##Bubble, paramlist, paramlistcomplete) \
+      FRAMES_LAYOUT_EVENT_HOOKS(eventname, paramlist, paramlistcomplete) \
+      FRAMES_LAYOUT_EVENT_HOOKS(eventname##Sink, paramlist, paramlistcomplete) \
+      FRAMES_LAYOUT_EVENT_HOOKS(eventname##Bubble, paramlist, paramlistcomplete) \
     private: \
-    void Event##eventname##Trigger paramlist const; \
+      void Event##eventname##Trigger paramlist const; \
     public:
 
   class Layout : Noncopyable {
@@ -161,9 +162,9 @@ namespace Frames {
     static void l_RegisterFunctions(lua_State *L);
 
     static void l_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *));
-    static void l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, intptr_t eventId);
+    template<typename Prototype> static void l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, intptr_t eventId);
 
-    static int l_RegisterEventAttach(lua_State *L);
+    template<typename Prototype> static int l_RegisterEventAttach(lua_State *L);
     //static int l_RegisterEventDetach(lua_State *L);
 
     // Various internal-only functionality
@@ -236,7 +237,7 @@ namespace Frames {
     Environment *m_env;
 
     // Lua frame event system
-    void l_EventAttach(lua_State *L, intptr_t event, int idx, float priority);
+    template<typename Prototype> void l_EventAttach(lua_State *L, intptr_t event, int idx, float priority);
     struct LuaFrameEventHandler {
       LuaFrameEventHandler(lua_State *L, int idx, Layout *layout) : L(L), idx(idx), layout(layout) { };
       lua_State *L;
@@ -244,6 +245,7 @@ namespace Frames {
       Layout *layout; // we need this so we can push the right frame in
 
       void Call(EventHandle *handle) const;
+      void Call(EventHandle *handle, int p1) const;
     };
     friend bool operator<(const LuaFrameEventHandler &lhs, const LuaFrameEventHandler &rhs);
     typedef std::map<LuaFrameEventHandler, int> LuaFrameEventMap; // second parameter is refcount

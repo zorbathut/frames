@@ -720,6 +720,14 @@ namespace Frames {
     lua_pop(L, 1);
   }
 
+  #define L_REGISTEREVENT(L, GST, name) \
+    l_RegisterEvent<Event##name##Functiontype>(L, GST, "Event" #name "Attach", "Event" #name "Detach", Event##name##Id());
+
+  #define L_REGISTEREVENT_BUBBLE(L, GST, name) \
+    L_REGISTEREVENT(L, GST, name); \
+    L_REGISTEREVENT(L, GST, name##Sink); \
+    L_REGISTEREVENT(L, GST, name##Bubble);
+
   /*static*/ void Layout::l_RegisterFunctions(lua_State *L) {
     l_RegisterFunction(L, GetStaticType(), "GetLeft", l_GetLeft);
     l_RegisterFunction(L, GetStaticType(), "GetRight", l_GetRight);
@@ -736,8 +744,17 @@ namespace Frames {
     l_RegisterFunction(L, GetStaticType(), "GetNameFull", l_GetNameFull);
     l_RegisterFunction(L, GetStaticType(), "GetType", l_GetType);
 
-    l_RegisterEvent(L, GetStaticType(), "EventMoveAttach", "EventMoveDetach", EventMoveId());
-    l_RegisterEvent(L, GetStaticType(), "EventSizeAttach", "EventSizeDetach", EventSizeId());
+    L_REGISTEREVENT(L, GetStaticType(), Move);
+    L_REGISTEREVENT(L, GetStaticType(), Size);
+
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseOver);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseOut);
+
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseUp);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseDown);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseClick);
+
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseWheel);
   }
 
   /*static*/ void Layout::l_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *)) {
@@ -749,7 +766,7 @@ namespace Frames {
   }
 
   BOOST_STATIC_ASSERT(sizeof(intptr_t) >= sizeof(void*));
-  /*static*/ void Layout::l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, intptr_t eventId) {
+  template<typename Prototype> /*static*/ void Layout::l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, intptr_t eventId) {
     // From Environment::RegisterLuaFrame
     // Stack: ... Frames_mt Frames_rg Frames_fev Frames_rfev Frames_cfev metatable indexes
     lua_getfield(L, -6, owner);
@@ -758,7 +775,7 @@ namespace Frames {
     lua_pushvalue(L, -7); // push _rfev
     lua_pushvalue(L, -7); // push _cfev
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua"); // push lua root
-    lua_pushcclosure(L, l_RegisterEventAttach, 6);
+    lua_pushcclosure(L, l_RegisterEventAttach<Prototype>, 6);
     lua_setfield(L, -2, nameAttach);
 
     // DO IT AGAIN
@@ -769,7 +786,7 @@ namespace Frames {
     lua_setfield(L, -2, nameDetach);*/
   }
 
-  /*static*/ int Layout::l_RegisterEventAttach(lua_State *L) {
+  template<typename Prototype> /*static*/ int Layout::l_RegisterEventAttach(lua_State *L) {
     l_checkparams(L, 2, 3);
     Layout *self = l_checkframe<Layout>(L, 1);
 
@@ -825,7 +842,7 @@ namespace Frames {
     lua_State *L_root = (lua_State *)lua_touserdata(L, lua_upvalueindex(6));
     
     // We've got the root lua, a layout, the event, the priority, and a valid index to a handler. Yahoy!
-    self->l_EventAttach(L_root, event, idx, priority);
+    self->l_EventAttach<Prototype>(L_root, event, idx, priority);
 
     return 0;
   }
@@ -1077,6 +1094,7 @@ namespace Frames {
     }
   }
 
+  // TODO: fix all dis shit
   void Layout::LuaFrameEventHandler::Call(EventHandle *handle) const {
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
     lua_rawgeti(L, -1, idx);
@@ -1094,6 +1112,23 @@ namespace Frames {
     }
   }
 
+  void Layout::LuaFrameEventHandler::Call(EventHandle *handle, int p1) const {
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
+    lua_rawgeti(L, -1, idx);
+    lua_remove(L, -2);
+    layout->l_push(L);
+    lua_newtable(L);
+
+    int parametercount = 1;
+    lua_pushnumber(L, p1);
+    
+    if (lua_pcall(L, parametercount + 2, 0, 0)) {
+      // Error!
+      layout->GetEnvironment()->LogError(lua_tostring(L, -1));
+      lua_pop(L, 1);
+    }
+  }
+
   bool operator<(const Layout::LuaFrameEventHandler &lhs, const Layout::LuaFrameEventHandler &rhs) {
     if (lhs.idx != rhs.idx) return lhs.idx < rhs.idx;
     if (lhs.L != rhs.L) return lhs.L < rhs.L;
@@ -1102,12 +1137,12 @@ namespace Frames {
 
   // for remove, I need to be able to look it up via event idx priority
   // actually really I need to have a refcounted point
-  void Layout::l_EventAttach(lua_State *L, intptr_t event, int idx, float priority) {
+  template<typename Prototype> void Layout::l_EventAttach(lua_State *L, intptr_t event, int idx, float priority) {
     // Need to wrap up L and idx into a structure
     // Then insert that structure
     LuaFrameEventMap::iterator itr = m_lua_events.insert(std::make_pair(LuaFrameEventHandler(L, idx, this), 0)).first;
     itr->second++;
-    EventAttach(event, EventHandler(Delegate<void (EventHandle *)>(&itr->first, &LuaFrameEventHandler::Call)), priority);
+    EventAttach(event, EventHandler(Delegate<Prototype>(&itr->first, &LuaFrameEventHandler::Call)), priority);
   }
 
   /*static*/ int Layout::l_GetLeft(lua_State *L) {

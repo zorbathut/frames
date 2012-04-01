@@ -22,7 +22,7 @@
     X Event hook change notification
       X need a vfunc here also for efficiency
     * Lua integration
-      * Lua needs a way to add an event
+      X Lua needs a way to add an event
       * Lua needs a way to remove an event
       * Lua needs a way for the lua-side components to be cleaned up on frame destruction
       * Lua needs a way for the c++-side components to be cleaned up on lua destruction
