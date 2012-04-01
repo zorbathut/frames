@@ -735,14 +735,99 @@ namespace Frames {
     l_RegisterFunction(L, GetStaticType(), "GetName", l_GetName);
     l_RegisterFunction(L, GetStaticType(), "GetNameFull", l_GetNameFull);
     l_RegisterFunction(L, GetStaticType(), "GetType", l_GetType);
+
+    l_RegisterEvent(L, GetStaticType(), "EventMoveAttach", "EventMoveDetach", EventMoveId());
+    l_RegisterEvent(L, GetStaticType(), "EventSizeAttach", "EventSizeDetach", EventSizeId());
   }
 
   /*static*/ void Layout::l_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *)) {
     // From Environment::RegisterLuaFrame
-    // Stack: ... Frames_mt Frames_rg metatable indexes
-    lua_getfield(L, -3, owner);
+    // Stack: ... Frames_mt Frames_rg Frames_fev Frames_rfev Frames_cfev metatable indexes
+    lua_getfield(L, -6, owner);
     lua_pushcclosure(L, func, 1);
     lua_setfield(L, -2, name);
+  }
+
+  BOOST_STATIC_ASSERT(sizeof(intptr_t) >= sizeof(void*));
+  /*static*/ void Layout::l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, intptr_t eventId) {
+    // From Environment::RegisterLuaFrame
+    // Stack: ... Frames_mt Frames_rg Frames_fev Frames_rfev Frames_cfev metatable indexes
+    lua_getfield(L, -6, owner);
+    lua_pushlightuserdata(L, (void*)eventId); // what was once pointer will now be again pointer
+    lua_pushvalue(L, -7); // push _fev
+    lua_pushvalue(L, -7); // push _rfev
+    lua_pushvalue(L, -7); // push _cfev
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua"); // push lua root
+    lua_pushcclosure(L, l_RegisterEventAttach, 6);
+    lua_setfield(L, -2, nameAttach);
+
+    // DO IT AGAIN
+    /*
+    lua_getfield(L, -6, owner);
+    lua_pushlightuserdata(L, eventId); // what was once pointer will now be again pointer
+    lua_pushcclosure(L, l_RegisterEventDetach, 2);
+    lua_setfield(L, -2, nameDetach);*/
+  }
+
+  /*static*/ int Layout::l_RegisterEventAttach(lua_State *L) {
+    l_checkparams(L, 2, 3);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    // Stack: table handler (priority)
+    // Upvalues: tableregistry eventid _fev _rfev _cfev luaroot
+
+    float priority = (float)luaL_optnumber(L, 3, 0.f);
+    lua_settop(L, 2);
+
+    // Stack: table handler
+
+    // Look up this element in our reverse frame lookup
+    lua_pushvalue(L, -1);
+    lua_rawget(L, lua_upvalueindex(4));
+    int idx = 0;
+    if (!lua_isnil(L, -1)) {
+      // this already exists, so let's increment our refcount
+      // Stack: table handler id
+      idx = (int)lua_tonumber(L, -1);
+      lua_pop(L, 1);
+      // Stack: table handler
+      lua_rawgeti(L, lua_upvalueindex(5), idx);
+      lua_pushnumber(L, lua_tonumber(L, -1) + 1);
+      lua_rawseti(L, lua_upvalueindex(5), idx);
+      lua_pop(L, 2);
+      // Stack: table
+    } else {
+      // doesn't already exist, so do all our setup
+      lua_pop(L, 1);
+      // Stack: table handler
+
+      // Forward table, get our index
+      lua_pushvalue(L, 2);
+      idx = luaL_ref(L, lua_upvalueindex(3));
+      // Stack: table handler
+
+      // Reverse table
+      lua_pushvalue(L, idx);
+      lua_rawset(L, lua_upvalueindex(4));
+      // Stack: table
+
+      // Count table
+      lua_pushnumber(L, 1);
+      lua_rawseti(L, lua_upvalueindex(5), idx);
+      // Stack: table
+    }
+    // One way or another, our tables are maintained properly now
+    // Stack: table
+
+    intptr_t event = (intptr_t)lua_touserdata(L, lua_upvalueindex(2));
+
+    // Finally, we need the "root" lua environment
+    lua_State *L_root = (lua_State *)lua_touserdata(L, lua_upvalueindex(6));
+    
+    // We've got the root lua, a layout, the event, the priority, and a valid index to a handler. Yahoy!
+    self->l_EventAttach(L_root, event, idx, priority);
+
+    return 0;
   }
 
   void Layout::Render(Renderer *renderer) const {
@@ -990,6 +1075,39 @@ namespace Frames {
         break;
       }
     }
+  }
+
+  void Layout::LuaFrameEventHandler::Call(EventHandle *handle) const {
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
+    lua_rawgeti(L, -1, idx);
+    lua_remove(L, -2);
+    layout->l_push(L);
+    lua_newtable(L);
+
+    int parametercount = 0;
+    // parameters here
+    
+    if (lua_pcall(L, parametercount + 2, 0, 0)) {
+      // Error!
+      layout->GetEnvironment()->LogError(lua_tostring(L, -1));
+      lua_pop(L, 1);
+    }
+  }
+
+  bool operator<(const Layout::LuaFrameEventHandler &lhs, const Layout::LuaFrameEventHandler &rhs) {
+    if (lhs.idx != rhs.idx) return lhs.idx < rhs.idx;
+    if (lhs.L != rhs.L) return lhs.L < rhs.L;
+    return 0;
+  }
+
+  // for remove, I need to be able to look it up via event idx priority
+  // actually really I need to have a refcounted point
+  void Layout::l_EventAttach(lua_State *L, intptr_t event, int idx, float priority) {
+    // Need to wrap up L and idx into a structure
+    // Then insert that structure
+    LuaFrameEventMap::iterator itr = m_lua_events.insert(std::make_pair(LuaFrameEventHandler(L, idx, this), 0)).first;
+    itr->second++;
+    EventAttach(event, EventHandler(Delegate<void (EventHandle *)>(&itr->first, &LuaFrameEventHandler::Call)), priority);
   }
 
   /*static*/ int Layout::l_GetLeft(lua_State *L) {

@@ -148,6 +148,38 @@ namespace Frames {
     }
     lua_pop(L, 1);
 
+    // insert our frame event table - registry ID to event callback
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
+    if (lua_isnil(L, -1)) {
+      lua_newtable(L);
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_fev");
+    }
+    lua_pop(L, 1);
+
+    // insert our reverse frame event table - event callback to registry ID
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfev");
+    if (lua_isnil(L, -1)) {
+      lua_newtable(L);
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_rfev");
+    }
+    lua_pop(L, 1);
+
+    // insert our frame event count table - registry ID to refcount
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfev");
+    if (lua_isnil(L, -1)) {
+      lua_newtable(L);
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_cfev");
+    }
+    lua_pop(L, 1);
+
+    // insert the "root" lua environment
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua");
+    if (lua_isnil(L, -1)) {
+      lua_pushlightuserdata(L, L); // lol
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_lua");
+    }
+    lua_pop(L, 1);
+
     // and now insert *us* into the env table
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_env");
     lua_pushlightuserdata(L, this);

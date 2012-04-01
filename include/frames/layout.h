@@ -161,6 +161,10 @@ namespace Frames {
     static void l_RegisterFunctions(lua_State *L);
 
     static void l_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *));
+    static void l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, intptr_t eventId);
+
+    static int l_RegisterEventAttach(lua_State *L);
+    //static int l_RegisterEventDetach(lua_State *L);
 
     // Various internal-only functionality
     void EventAttach(intptr_t id, const EventHandler &handler, float order);
@@ -230,6 +234,21 @@ namespace Frames {
 
     // Global environment
     Environment *m_env;
+
+    // Lua frame event system
+    void l_EventAttach(lua_State *L, intptr_t event, int idx, float priority);
+    struct LuaFrameEventHandler {
+      LuaFrameEventHandler(lua_State *L, int idx, Layout *layout) : L(L), idx(idx), layout(layout) { };
+      lua_State *L;
+      int idx;
+      Layout *layout; // we need this so we can push the right frame in
+
+      void Call(EventHandle *handle) const;
+    };
+    friend bool operator<(const LuaFrameEventHandler &lhs, const LuaFrameEventHandler &rhs);
+    typedef std::map<LuaFrameEventHandler, int> LuaFrameEventMap; // second parameter is refcount
+    LuaFrameEventMap m_lua_events;
+    // NOTE: refcount is just for our internal refcounting! we need to change the global count every time this goes up or down
 
     // Lua bindings
     static int l_GetLeft(lua_State *L);

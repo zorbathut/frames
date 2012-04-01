@@ -38,6 +38,7 @@
       * We need a lookup from environment to real environment - Frames_env?
     * Deal with obliteration of mouseover'ed frame
       * test this
+    * make "remove" a little more controllable
   * Start worrying about mouse input
     * concepts
       * bubbling
@@ -45,6 +46,7 @@
       * stoppropogation
       * event transparency?
       * how does this integrate with c++
+  * change intptr_t to a typedef
   * Cursor placement
   * Selection
   * Start worrying about keyboard input
@@ -53,6 +55,8 @@
       * Remove ScrollToCursor
   * Editing
   * Editing modifiers
+
+* maybe we need to pass "this" along with all events?
   
 
 * SetEditable
@@ -125,6 +129,8 @@
 
 * Derive font size adjustment more precisely - binsearch, or dig into the code and see wtf is going on
 
+* maybe text really does need to insta-refresh its bounds? :/
+  * not quite sure how that's going to work
 * Refresh mouse position/mouseover when the layout changes
 * Optimization:
   * Propogate acceptance bits upstream
