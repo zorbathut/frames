@@ -8,6 +8,8 @@
 
 #include "boost/static_assert.hpp"
 
+#include <math.h> // just for isnan()
+
 namespace Frames {
   class Layout::EventHandler {
   public:
@@ -779,11 +781,14 @@ namespace Frames {
     lua_setfield(L, -2, nameAttach);
 
     // DO IT AGAIN
-    /*
     lua_getfield(L, -6, owner);
-    lua_pushlightuserdata(L, eventId); // what was once pointer will now be again pointer
-    lua_pushcclosure(L, l_RegisterEventDetach, 2);
-    lua_setfield(L, -2, nameDetach);*/
+    lua_pushlightuserdata(L, (void*)eventId); // what was once pointer will now be again pointer
+    lua_pushvalue(L, -7); // push _fev
+    lua_pushvalue(L, -7); // push _rfev
+    lua_pushvalue(L, -7); // push _cfev
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua"); // push lua root
+    lua_pushcclosure(L, l_RegisterEventDetach<Prototype>, 6);
+    lua_setfield(L, -2, nameDetach);
   }
 
   template<typename Prototype> /*static*/ int Layout::l_RegisterEventAttach(lua_State *L) {
@@ -808,10 +813,14 @@ namespace Frames {
       idx = (int)lua_tonumber(L, -1);
       lua_pop(L, 1);
       // Stack: table handler
+
+      // Update count
       lua_rawgeti(L, lua_upvalueindex(5), idx);
       lua_pushnumber(L, lua_tonumber(L, -1) + 1);
       lua_rawseti(L, lua_upvalueindex(5), idx);
-      lua_pop(L, 2);
+      lua_pop(L, 1);
+
+      lua_pop(L, 1);
       // Stack: table
     } else {
       // doesn't already exist, so do all our setup
@@ -819,12 +828,12 @@ namespace Frames {
       // Stack: table handler
 
       // Forward table, get our index
-      lua_pushvalue(L, 2);
+      lua_pushvalue(L, -1);
       idx = luaL_ref(L, lua_upvalueindex(3));
       // Stack: table handler
 
       // Reverse table
-      lua_pushvalue(L, idx);
+      lua_pushnumber(L, idx);
       lua_rawset(L, lua_upvalueindex(4));
       // Stack: table
 
@@ -843,6 +852,62 @@ namespace Frames {
     
     // We've got the root lua, a layout, the event, the priority, and a valid index to a handler. Yahoy!
     self->l_EventAttach<Prototype>(L_root, event, idx, priority);
+
+    return 0;
+  }
+
+  template<typename Prototype> /*static*/ int Layout::l_RegisterEventDetach(lua_State *L) {
+    l_checkparams(L, 2, 3);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    // Stack: table handler (priority)
+    // Upvalues: tableregistry eventid _fev _rfev _cfev luaroot
+
+    float priority = (float)luaL_optnumber(L, 3, 0.f / 0.f);
+    lua_settop(L, 2);
+
+    // Stack: table handler
+  // Look up this element in our reverse frame lookup
+    lua_pushvalue(L, -1);
+    lua_rawget(L, lua_upvalueindex(4));
+    if (lua_isnil(L, -1)) {
+      // this doesn't exist! we're done!
+      return 0;
+    }
+
+    int idx = (int)lua_tonumber(L, -1);
+
+    intptr_t event = (intptr_t)lua_touserdata(L, lua_upvalueindex(2));
+
+    // Finally, we need the "root" lua environment
+    lua_State *L_root = (lua_State *)lua_touserdata(L, lua_upvalueindex(6));
+
+    // We've got the root lua, a layout, the event, the priority, and a valid index to a handler. Yahoy!
+    if (self->l_EventDetach<Prototype>(L_root, event, idx, priority)) {
+      // Success! Go and decrement the count table
+      lua_rawgeti(L, lua_upvalueindex(5), idx);
+      if (lua_tonumber(L, -1) != 1) {
+        lua_pushnumber(L, lua_tonumber(L, -1) - 1);
+        lua_rawseti(L, lua_upvalueindex(5), idx);
+        lua_pop(L, 2);
+      } else {
+        // our final decrement, clean things up
+        lua_pop(L, 1);
+
+        // grab the value from the frame event table
+        lua_rawgeti(L, lua_upvalueindex(3), idx);
+
+        // clear out the frame count and event tables
+        luaL_unref(L, lua_upvalueindex(3), idx);
+
+        lua_pushnil(L);
+        lua_rawseti(L, lua_upvalueindex(5), idx);
+
+        // clear out the reverse event table
+        lua_pushnil(L);
+        lua_rawset(L, lua_upvalueindex(4));
+      }
+    }
 
     return 0;
   }
@@ -990,11 +1055,11 @@ namespace Frames {
 
   // eventery
   #define FRAMES_LAYOUT_EVENT_DEFINE_INFRA(frametype, eventname, paramlist, paramlistcomplete, params) \
-    void frametype::Event##eventname##Attach(Delegate<void paramlistcomplete> delegate, float order) { \
+    void frametype::Event##eventname##Attach(Delegate<void paramlistcomplete> delegate, float order /*= 0.f*/) { \
       EventAttach(Event##eventname##Id(), EventHandler(delegate), order); \
     } \
-    void frametype::Event##eventname##Detach(Delegate<void paramlistcomplete> delegate) { \
-      EventDetach(Event##eventname##Id(), EventHandler(delegate)); \
+    void frametype::Event##eventname##Detach(Delegate<void paramlistcomplete> delegate, float order /*= 0.f / 0.f*/) { \
+      EventDetach(Event##eventname##Id(), EventHandler(delegate), order); \
     } \
     /*static*/ intptr_t frametype::Event##eventname##Id() { \
       return (intptr_t)&s_event_##eventname##_id; \
@@ -1071,17 +1136,17 @@ namespace Frames {
     m_events[id].insert(std::make_pair(order, handler)); // kapowza!
     EventAttached(id);
   }
-  void Layout::EventDetach(intptr_t id, const EventHandler &handler) {
+  bool Layout::EventDetach(intptr_t id, const EventHandler &handler, float order) {
     // somewhat more complex, we need to actually find the handler
     std::map<intptr_t, std::multimap<float, EventHandler> >::iterator itr = m_events.find(id);
     if (itr == m_events.end()) {
-      return;
+      return false;
     }
 
     std::multimap<float, EventHandler> &tab = itr->second;
 
     for (std::multimap<float, EventHandler>::iterator ev = tab.begin(); ev != tab.end(); ++ev) {
-      if (ev->second == handler) {
+      if (ev->second == handler && (isnan(order) || ev->first == order)) {
         tab.erase(ev);
 
         if (tab.empty()) {
@@ -1089,9 +1154,11 @@ namespace Frames {
         }
 
         EventDetached(id);
-        break;
+        return true;
       }
     }
+
+    return false;
   }
 
   // TODO: fix all dis shit
@@ -1141,7 +1208,7 @@ namespace Frames {
     // Need to wrap up L and idx into a structure
     // Then insert that structure
     LuaFrameEventMap::iterator itr = m_lua_events.insert(std::make_pair(LuaFrameEventHandler(L, idx, this), 0)).first;
-    itr->second++;
+    ++(itr->second);
     EventAttach(event, EventHandler(Delegate<Prototype>(&itr->first, &LuaFrameEventHandler::Call)), priority);
   }
 
@@ -1152,6 +1219,24 @@ namespace Frames {
     lua_pushnumber(L, self->GetLeft());
 
     return 1;
+  }
+
+  template<typename Prototype> bool Layout::l_EventDetach(lua_State *L, intptr_t event, int idx, float priority) {
+    // try to find the element
+    LuaFrameEventMap::iterator itr = m_lua_events.find(LuaFrameEventHandler(L, idx, this));
+    if (itr == m_lua_events.end()) {
+      return false;
+    }
+
+    if (EventDetach(event, EventHandler(Delegate<Prototype>(&itr->first, &LuaFrameEventHandler::Call)), priority)) {
+      if (--(itr->second) == 0) {
+        // want to eliminate it entirely
+        m_lua_events.erase(itr);
+      }
+      return true;
+    }
+
+    return false;
   }
 
   /*static*/ int Layout::l_GetRight(lua_State *L) {

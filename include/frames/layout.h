@@ -24,7 +24,7 @@ namespace Frames {
   // we'll add more internal utility functions if/when needed
   #define FRAMES_LAYOUT_EVENT_HOOKS(eventname, paramlist, paramlistcomplete) \
       void Event##eventname##Attach(Delegate<void paramlistcomplete> delegate, float order = 0.f); \
-      void Event##eventname##Detach(Delegate<void paramlistcomplete> delegate); \
+      void Event##eventname##Detach(Delegate<void paramlistcomplete> delegate, float order = 0.f / 0.f); \
       static intptr_t Event##eventname##Id(); \
       typedef void Event##eventname##Functiontype paramlistcomplete; \
     private: \
@@ -165,11 +165,11 @@ namespace Frames {
     template<typename Prototype> static void l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, intptr_t eventId);
 
     template<typename Prototype> static int l_RegisterEventAttach(lua_State *L);
-    //static int l_RegisterEventDetach(lua_State *L);
+    template<typename Prototype> static int l_RegisterEventDetach(lua_State *L);
 
     // Various internal-only functionality
     void EventAttach(intptr_t id, const EventHandler &handler, float order);
-    void EventDetach(intptr_t id, const EventHandler &handler);
+    bool EventDetach(intptr_t id, const EventHandler &handler, float order);
 
   private:
     friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);
@@ -238,6 +238,7 @@ namespace Frames {
 
     // Lua frame event system
     template<typename Prototype> void l_EventAttach(lua_State *L, intptr_t event, int idx, float priority);
+    template<typename Prototype> bool l_EventDetach(lua_State *L, intptr_t event, int idx, float priority);
     struct LuaFrameEventHandler {
       LuaFrameEventHandler(lua_State *L, int idx, Layout *layout) : L(L), idx(idx), layout(layout) { };
       lua_State *L;
