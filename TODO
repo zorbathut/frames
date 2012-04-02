@@ -13,7 +13,7 @@
   X Render selection
   X Selection color
   X Remove GetLocalCharacterPosition, clean up code that used it
-  * here's our little mouse input TODO
+  X here's our little mouse input TODO
     X Basic traversal of GetFrameUnder
     X Make sure Mask is supported properly
     X MouseMove via Glorp
@@ -21,7 +21,7 @@
     X Debug output of MouseMove
     X Event hook change notification
       X need a vfunc here also for efficiency
-    * Lua integration
+    X Lua integration
       X Lua needs a way to add an event
       X Lua needs a way to remove an event
       X these are basically the same thing
@@ -43,16 +43,17 @@
       X Keep a linked list of events so we can traverse and kill them?
       X For now, just run over all frames and clear out the linkages
       X We need a lookup from environment to real environment - Frames_env?
-    * Deal with obliteration of mouseover'ed frame
-      * test this
-    * make "remove" a little more controllable
-  * Start worrying about mouse input
-    * concepts
-      * bubbling
-      * preventdefault
-      * stoppropogation
-      * event transparency?
-      * how does this integrate with c++
+    X Deal with obliteration of mouseover'ed frame
+      X test this
+    X make "remove" a little more controllable
+  X Start worrying about mouse input
+    X concepts
+      X bubbling
+      X preventdefault
+      X stoppropogation
+      X event transparency?
+      X how does this integrate with c++
+  * mousedown, mouseup, mouseclick, coords, etc
   * change intptr_t to a typedef
   * Cursor placement
   * Selection
