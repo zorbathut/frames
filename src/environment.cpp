@@ -55,17 +55,18 @@ namespace Frames {
     Layout *updated = GetFrameUnder(x, y);
 
     if (updated != m_over) {
+      Layout *last = m_over;
+      m_over = updated; // NOTE: ORDER IS IMPORTANT. Either MouseOut or MouseOver can destroy frames. We need to set m_over *first*, in case either of our calls destroy the new frame and m_over needs to be cleared!
+
+      if (last) {
+        LogDebug(Utility::Format("Now moving out of %s", last->GetNameFull().c_str()));
+        last->EventMouseOutTrigger();
+      }
+
       if (m_over) {
-        LogDebug(Utility::Format("Now moving out of %s", m_over->GetNameFull().c_str()));
-        m_over->EventMouseOutTrigger();
-      }
-
-      if (updated) {
         LogDebug(Utility::Format("Now moving into %s", updated->GetNameFull().c_str()));
-        updated->EventMouseOverTrigger();
+        m_over->EventMouseOverTrigger();
       }
-
-      m_over = updated;
     }
   }
 
@@ -215,6 +216,9 @@ namespace Frames {
 
   void Environment::LuaUnregister(lua_State *L) {
     LuaStackChecker(L, this);
+
+    // First, we need to kill off the lua event system. This *can* allocate (and probably shouldn't, todo).
+    m_root->l_ClearLuaEvents_Recursive(L);
 
     // It's somewhat unclear if this should be O(n) in the number of frames in the frames environment, or O(n) in the number of frames in the lua environment
     // We're doing lua environment for now, partially just because it's easier.
@@ -424,6 +428,15 @@ namespace Frames {
 
   void Environment::MarkInvalidated(const Layout *layout) {
     m_invalidated.push_back(layout);
+  }
+
+  void Environment::UnmarkInvalidated(const Layout *layout) {
+    std::deque<const Layout *>::iterator itr = find(m_invalidated.begin(), m_invalidated.end(), layout);
+    if (itr == m_invalidated.end()) {
+      LogError("Internal problem, attempted to unmark and failed");
+    } else {
+      m_invalidated.erase(itr);
+    }
   }
 
   void Environment::LayoutStack_Push(const Layout *layout, Axis axis, float pt) {

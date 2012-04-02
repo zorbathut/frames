@@ -65,6 +65,7 @@ namespace Frames {
     void Init(const Configuration &config);
 
     void MarkInvalidated(const Layout *layout);
+    void UnmarkInvalidated(const Layout *layout); // This is currently very slow.
     std::deque<const Layout *> m_invalidated;
 
     // Layout sanity

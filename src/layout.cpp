@@ -15,7 +15,13 @@ namespace Frames {
   public:
     // NOTE: this works because delegate is POD
     EventHandler() { }
-    template<typename T> EventHandler(Delegate<T> din) {
+    template<typename T> EventHandler(Delegate<T> din) : type(TYPE_NATIVE) {
+      typedef Delegate<T> dintype;
+      BOOST_STATIC_ASSERT(sizeof(dintype) == sizeof(Delegate<void ()>));
+
+      *reinterpret_cast<dintype *>(c.delegate) = din;
+    }
+    template<typename T> EventHandler(Delegate<T> din, const LuaFrameEventHandler *lua) : type(TYPE_LUA), lua(lua) {
       typedef Delegate<T> dintype;
       BOOST_STATIC_ASSERT(sizeof(dintype) == sizeof(Delegate<void ()>));
 
@@ -43,10 +49,21 @@ namespace Frames {
       (*reinterpret_cast<const Delegate<void (T1, T2, T3, T4)> *>(c.delegate))(t1, t2, t3, t4);
     }
 
+    bool IsNative() const { return type == TYPE_NATIVE; }
+
+    bool IsLua() const { return type == TYPE_LUA; }
+    const LuaFrameEventHandler *GetLua() const { return lua; }
+
   private:
     union {
       char delegate[sizeof(Delegate<void ()>)];
     } c;
+
+    enum { TYPE_NATIVE, TYPE_LUA } type;
+
+    union {
+      const LuaFrameEventHandler *lua;
+    };
     
     friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);
   };
@@ -336,7 +353,6 @@ namespace Frames {
 namespace Frames {
   Layout::Layout(Layout *layout, Environment *env) :
       m_resolved(false),
-      m_obliterating(false),
       m_last_width(-1),
       m_last_height(-1),
       m_last_x(-1),
@@ -379,8 +395,15 @@ namespace Frames {
     FRAMES_LAYOUT_CHECK(!m_parent, "Layout destroyed while still connected");
     FRAMES_LAYOUT_CHECK(m_children.empty(), "Layout destroyed while still connected");
 
+    // Clear ourselves out of the resolved todo
+    if (!m_resolved) {
+      m_env->UnmarkInvalidated(this);
+    }
+
     // Clean up all appropriate lua environments
     for (std::set<lua_State *>::const_iterator itr = m_env->m_lua_environments.begin(); itr != m_env->m_lua_environments.end(); ++itr) {
+      l_ClearLuaEvents(*itr); // We can be a little more clever about this if necessary, in a lot of ways. Again, deal with later, if necessary.
+
       lua_State *L = *itr;
 
       lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
@@ -883,33 +906,47 @@ namespace Frames {
     lua_State *L_root = (lua_State *)lua_touserdata(L, lua_upvalueindex(6));
 
     // We've got the root lua, a layout, the event, the priority, and a valid index to a handler. Yahoy!
-    if (self->l_EventDetach<Prototype>(L_root, event, idx, priority)) {
-      // Success! Go and decrement the count table
-      lua_rawgeti(L, lua_upvalueindex(5), idx);
-      if (lua_tonumber(L, -1) != 1) {
-        lua_pushnumber(L, lua_tonumber(L, -1) - 1);
-        lua_rawseti(L, lua_upvalueindex(5), idx);
-        lua_pop(L, 2);
-      } else {
-        // our final decrement, clean things up
-        lua_pop(L, 1);
+    self->l_EventDetach<Prototype>(L_root, event, idx, priority);
 
-        // grab the value from the frame event table
-        lua_rawgeti(L, lua_upvalueindex(3), idx);
+    return 0;
+  }
 
-        // clear out the frame count and event tables
-        luaL_unref(L, lua_upvalueindex(3), idx);
+  struct EventhandlerInfo {
+    Layout::EventHandler *eh;
+    intptr_t event;
+    float priority;
+    bool operator<(const EventhandlerInfo &rhs) const { return eh < rhs.eh; }
+  };
 
-        lua_pushnil(L);
-        lua_rawseti(L, lua_upvalueindex(5), idx);
-
-        // clear out the reverse event table
-        lua_pushnil(L);
-        lua_rawset(L, lua_upvalueindex(4));
+  void Layout::l_ClearLuaEvents(lua_State *lua) {
+    // clear out all events attached to this lua state
+    // this could probably be more efficient - if this is somehow a bottleneck or a speed issue, we can fix it!
+    std::set<EventhandlerInfo> eh;
+    for (std::map<intptr_t, EventMap>::iterator itr = m_events.begin(); itr != m_events.end(); ++itr) {
+      for (EventMap::iterator eitr = itr->second.begin(); eitr != itr->second.end(); ++eitr) {
+        if (eitr->second.IsLua() && eitr->second.GetLua()->L == lua) {
+          EventhandlerInfo ehi;
+          ehi.eh = &eitr->second;
+          ehi.priority = eitr->first;
+          ehi.event = itr->first;
+          eh.insert(ehi);
+        }
       }
     }
 
-    return 0;
+    for (std::set<EventhandlerInfo>::iterator itr = eh.begin(); itr != eh.end(); ++itr) {
+      if (!l_EventDetach(lua, m_lua_events.find(*itr->eh->GetLua()), itr->event, *itr->eh, itr->priority)) {
+        FRAMES_ERROR("Failing to shutdown Lua events properly");
+      }
+    }
+  }
+  void Layout::l_ClearLuaEvents_Recursive(lua_State *lua) {
+    l_ClearLuaEvents(lua);
+
+    // get children to clear events as well
+    for (ChildrenList::iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
+      (*itr)->l_ClearLuaEvents(lua);
+    }
   }
 
   void Layout::Render(Renderer *renderer) const {
@@ -978,11 +1015,7 @@ namespace Frames {
     m_parent = 0;
 
     // And now we're safe to delete ourselves
-    if (m_resolved) {
-      delete this;
-    } else {
-      m_obliterating = true;  // mark ourselves for obliterate - it's this or do something gnarly with the invalidation system
-    }
+    delete this;
   }
 
   void Layout::Obliterate_Extract_Axis(Axis axis) {
@@ -1008,11 +1041,6 @@ namespace Frames {
   }
 
   void Layout::Resolve() const {
-    if (m_obliterating) {
-      delete this; // that was the last reference needed, we're set
-      return;
-    }
-
     float nx = GetLeft();
     GetRight();
     float ny = GetTop();
@@ -1109,7 +1137,7 @@ namespace Frames {
           } \
         } \
       } \
-      for (int i = 0; i < (int)layouts.size(); --i) { \
+      for (int i = 0; i < (int)layouts.size(); ++i) { \
         std::map<intptr_t, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i]->m_events.find(Event##eventname##Bubble##Id()); \
         if (itr != layouts[i]->m_events.end()) { \
           const std::multimap<float, EventHandler> &tab = itr->second; \
@@ -1209,16 +1237,7 @@ namespace Frames {
     // Then insert that structure
     LuaFrameEventMap::iterator itr = m_lua_events.insert(std::make_pair(LuaFrameEventHandler(L, idx, this), 0)).first;
     ++(itr->second);
-    EventAttach(event, EventHandler(Delegate<Prototype>(&itr->first, &LuaFrameEventHandler::Call)), priority);
-  }
-
-  /*static*/ int Layout::l_GetLeft(lua_State *L) {
-    l_checkparams(L, 1);
-    Layout *self = l_checkframe<Layout>(L, 1);
-
-    lua_pushnumber(L, self->GetLeft());
-
-    return 1;
+    EventAttach(event, EventHandler(Delegate<Prototype>(&itr->first, &LuaFrameEventHandler::Call), &itr->first), priority);
   }
 
   template<typename Prototype> bool Layout::l_EventDetach(lua_State *L, intptr_t event, int idx, float priority) {
@@ -1228,15 +1247,77 @@ namespace Frames {
       return false;
     }
 
-    if (EventDetach(event, EventHandler(Delegate<Prototype>(&itr->first, &LuaFrameEventHandler::Call)), priority)) {
+    return l_EventDetach(L, itr, event, EventHandler(Delegate<Prototype>(&itr->first, &LuaFrameEventHandler::Call), &itr->first), priority);
+  }
+  bool Layout::l_EventDetach(lua_State *L, LuaFrameEventMap::iterator itr, intptr_t event, EventHandler handler, float priority) {
+    Environment::LuaStackChecker checker(L, GetEnvironment());
+
+    if (EventDetach(event, handler, priority)) {
       if (--(itr->second) == 0) {
         // want to eliminate it entirely
         m_lua_events.erase(itr);
       }
-      return true;
-    }
 
-    return false;
+      // Success! Go decrement the count
+      // Right now we're assuming we don't have access to upvalues, but in reality we might. Maybe make this faster later?
+      int idx = itr->first.idx;
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfev");
+      lua_rawgeti(L, -1, idx);
+      if (lua_tonumber(L, -1) != 1) {
+        // stack: ... _cfev ct
+        lua_pushnumber(L, lua_tonumber(L, -1) - 1);
+        // stack: ... _cfev ct ct-1
+        lua_rawseti(L, -3, idx);
+        // stack: ... _cfev ct
+        lua_pop(L, 2);
+        // stack: ...
+      } else {
+        // our final decrement, clean things up
+        lua_pop(L, 1);
+
+        // stack: ... _cfev
+
+        lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfev");
+
+        // grab the value from the frame event table
+        lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
+        lua_rawgeti(L, -1, idx);
+
+        // stack: ... _cfev _rfev _fev value
+
+        // clear out the reverse event table
+        lua_pushnil(L);
+        // stack: ... _cfev _rfev _fev value nil
+        lua_rawset(L, -4);
+
+        // stack: ... _cfev _rfev _fev
+
+        // clear out the forward event table
+        luaL_unref(L, -1, idx);
+
+        // clear out the frame count table
+        lua_pushnil(L);
+        lua_rawseti(L, -3, idx);
+
+        // empty
+        lua_pop(L, 3);
+
+        // stack: ...
+      }
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /*static*/ int Layout::l_GetLeft(lua_State *L) {
+    l_checkparams(L, 1);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    lua_pushnumber(L, self->GetLeft());
+
+    return 1;
   }
 
   /*static*/ int Layout::l_GetRight(lua_State *L) {

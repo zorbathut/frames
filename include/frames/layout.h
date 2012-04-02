@@ -167,12 +167,16 @@ namespace Frames {
     template<typename Prototype> static int l_RegisterEventAttach(lua_State *L);
     template<typename Prototype> static int l_RegisterEventDetach(lua_State *L);
 
+    void l_ClearLuaEvents(lua_State *lua);
+    void l_ClearLuaEvents_Recursive(lua_State *lua);
+
     // Various internal-only functionality
     void EventAttach(intptr_t id, const EventHandler &handler, float order);
     bool EventDetach(intptr_t id, const EventHandler &handler, float order);
 
   private:
     friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);
+    friend struct EventhandlerInfo;
 
     void Render(Renderer *renderer) const;
 
@@ -208,7 +212,6 @@ namespace Frames {
     };
     AxisData m_axes[2];
     mutable bool m_resolved;  // whether *this* frame has its layout completely determined
-    bool m_obliterating;
 
     // Layout events
     mutable float m_last_width, m_last_height;
@@ -237,8 +240,6 @@ namespace Frames {
     Environment *m_env;
 
     // Lua frame event system
-    template<typename Prototype> void l_EventAttach(lua_State *L, intptr_t event, int idx, float priority);
-    template<typename Prototype> bool l_EventDetach(lua_State *L, intptr_t event, int idx, float priority);
     struct LuaFrameEventHandler {
       LuaFrameEventHandler(lua_State *L, int idx, Layout *layout) : L(L), idx(idx), layout(layout) { };
       lua_State *L;
@@ -250,6 +251,9 @@ namespace Frames {
     };
     friend bool operator<(const LuaFrameEventHandler &lhs, const LuaFrameEventHandler &rhs);
     typedef std::map<LuaFrameEventHandler, int> LuaFrameEventMap; // second parameter is refcount
+    template<typename Prototype> void l_EventAttach(lua_State *L, intptr_t event, int idx, float priority);
+    template<typename Prototype> bool l_EventDetach(lua_State *L, intptr_t event, int idx, float priority);
+    bool l_EventDetach(lua_State *L, LuaFrameEventMap::iterator itr, intptr_t event, EventHandler handler, float priority);
     LuaFrameEventMap m_lua_events;
     // NOTE: refcount is just for our internal refcounting! we need to change the global count every time this goes up or down
 
