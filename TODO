@@ -1,7 +1,5 @@
 
 * Immediate todo:
-  * WARNINGS FOR RUNNING OFF FUNCTION
-  * WARNINGS FOR PRINTF MISMATCH
   X Test rendering again
   X Test moving offset
   X Make the text cropping work better
@@ -26,8 +24,11 @@
     * Lua integration
       X Lua needs a way to add an event
       X Lua needs a way to remove an event
-      * Lua needs a way for the lua-side components to be cleaned up on frame destruction
-      * Lua needs a way for the c++-side components to be cleaned up on lua destruction
+      * these are basically the same thing
+        * Lua needs a way for the lua-side components to be cleaned up on frame destruction
+        * Lua needs a way for the c++-side components to be cleaned up on lua destruction
+        * urgh this is gonna make eventhandler larger
+        
       * So, let's make three new tables, Frames_fev, Frames_rfev, and Frames_cfev. fev gives a lookup from ID to handler, rfev gives a lookup from handler to ID, cfev gives a lookup from ID to count.
       * If we add a handler that hasn't already been added, we insert it
       * If we add a handler that's already been added, we just tag increment it and add the functor

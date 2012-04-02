@@ -316,7 +316,7 @@ namespace Frames {
 
     if (!delimiter) {
       // well okay then
-      name += Utility::Format("%08x", this);
+      name += Utility::Format("%p", this);
       delimiter = true;
     }
 
@@ -336,20 +336,20 @@ namespace Frames {
 namespace Frames {
   Layout::Layout(Layout *layout, Environment *env) :
       m_resolved(false),
-      m_layer(0),
-      m_strata(0),
-      m_visible(true),
-      m_name_static(0),
-      m_name_id(-1),
-      m_env(0),
       m_obliterating(false),
-      m_parent(0),
       m_last_width(-1),
       m_last_height(-1),
       m_last_x(-1),
       m_last_y(-1),
+      m_layer(0),
+      m_strata(0),
+      m_parent(0),
+      m_visible(true),
       m_fullMouseMasking(false),
-      m_acceptInput(false)
+      m_acceptInput(false),
+      m_name_static(0),
+      m_name_id(-1),
+      m_env(0)
   {
     if (layout) {
       m_env = layout->GetEnvironment();
@@ -1091,7 +1091,7 @@ namespace Frames {
         parent = parent->GetParent(); \
       } \
       EventHandle handle; \
-      for (int i = layouts.size() - 1; i >= 0; --i) { \
+      for (int i = (int)layouts.size() - 1; i >= 0; --i) { \
         std::map<intptr_t, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i]->m_events.find(Event##eventname##Sink##Id()); \
         if (itr != layouts[i]->m_events.end()) { \
           const std::multimap<float, EventHandler> &tab = itr->second; \
@@ -1109,7 +1109,7 @@ namespace Frames {
           } \
         } \
       } \
-      for (int i = 0; i < layouts.size(); --i) { \
+      for (int i = 0; i < (int)layouts.size(); --i) { \
         std::map<intptr_t, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i]->m_events.find(Event##eventname##Bubble##Id()); \
         if (itr != layouts[i]->m_events.end()) { \
           const std::multimap<float, EventHandler> &tab = itr->second; \

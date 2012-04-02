@@ -367,7 +367,7 @@ namespace Frames {
     }
 
     if (passes > 1) {
-      LogError(Utility::Format("Failed to clean up in a single pass, took %d"));
+      LogError(Utility::Format("Failed to clean up in a single pass, took %d", passes));
     }
 
     lua_pop(L, 1);

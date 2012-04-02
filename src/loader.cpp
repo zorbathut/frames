@@ -31,7 +31,7 @@ namespace Frames {
     Stream *istr = (Stream*)png_get_io_ptr(png_ptr);
     
     int ct = istr->Read(data, length);
-    if(ct != length)
+    if(ct != (int)length)
       png_error(png_ptr, "unexpected EOF");
   }
 
@@ -89,7 +89,7 @@ namespace Frames {
 
     tinfo = TextureConfig::CreateManagedRaw(env, png_get_image_width(png_ptr, info_ptr), png_get_image_height(png_ptr, info_ptr), TextureConfig::MODE_RGBA);
     
-    for(int i = 0; i < png_get_image_height(png_ptr, info_ptr); i++)
+    for(int i = 0; i < (int)png_get_image_height(png_ptr, info_ptr); i++)
       ul.push_back(tinfo.Raw_GetData() + i * tinfo.GetWidth() * 4);
     png_read_image(png_ptr, (png_byte**)&ul[0]);
         
@@ -211,7 +211,7 @@ namespace Frames {
 
     rv = TextureConfig::CreateManagedRaw(env, info.image_width, info.image_height, (info.num_components == 3 ? TextureConfig::MODE_RGB : TextureConfig::MODE_L));
 
-    for (int y = 0; y < info.image_height; y++) {
+    for (int y = 0; y < (int)info.image_height; y++) {
       unsigned char *row = rv.Raw_GetData() + y * rv.Raw_GetStride();
       if (jpeg_read_scanlines(&info, &row, 1) != 1) {
         jpeg_destroy_decompress(&info);

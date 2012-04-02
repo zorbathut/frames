@@ -27,6 +27,11 @@ namespace Frames {
       return Reinterpret<unsigned int>(x) == Processing_bitmask;
     }
 
+    // not intended to be called by anything, just makes GCC shut up
+    inline float RemoveUnusedVariableWarnings() {
+      return Undefined + Processing;
+    }
+
     std::string Format(const char *bort, ...) __attribute__((format(printf,1,2)));
 
     inline float Clamp(float current, float min, float max) {

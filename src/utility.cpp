@@ -30,7 +30,7 @@ namespace Frames {
           noresize = true;
         }
         va_end(args);
-      } while(done == buf.size() - 1 || done == -1);
+      } while(done == (int)buf.size() - 1 || done == -1);
 
       std::string rv = std::string(buf.begin(), buf.begin() + done);
 

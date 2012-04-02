@@ -22,7 +22,7 @@ end
 
 local objs = {}
 for k, v in ipairs(srcfiles) do
-  table.insert(objs, ursa.rule{params.build .. "/" .. v .. ".o", {v, headers, params.dependencies or {}}, ursa.util.system_template{"#CXX #CXXFLAGS -Iinclude -c " .. v .. " -o $TARGET || rm $TARGET"}})
+  table.insert(objs, ursa.rule{params.build .. "/" .. v .. ".o", {v, headers, params.dependencies or {}}, ursa.util.system_template{"#CXX #CXXFLAGS -Wall -Werror -Iinclude -c " .. v .. " -o $TARGET || rm $TARGET"}})
 end
 
 local lib = ursa.rule{params.prefix .. "/lib/libframes.a", objs, ursa.util.system_template{"ar rcs $TARGET $SOURCES"}}

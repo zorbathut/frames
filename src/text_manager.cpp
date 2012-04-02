@@ -97,11 +97,11 @@ namespace Frames {
   // =======================================
   // TEXTINFO
 
-  TextInfo::TextInfo(FontInfoPtr parent, float size, std::string text) : m_parent(parent), m_fullWidth(0), m_size(size), m_quads(0) {
+  TextInfo::TextInfo(FontInfoPtr parent, float size, std::string text) : m_parent(parent), m_fullWidth(0), m_quads(0), m_size(size) {
     // TODO: Unicode!
     float linewidth = 0;
     float lastadjust = 0;
-    for (int i = 0; i < text.size(); ++i) {
+    for (int i = 0; i < (int)text.size(); ++i) {
       m_characters.push_back(m_parent->GetCharacterInfo(size, text[i]));
 
       if (!i) {
@@ -287,7 +287,7 @@ namespace Frames {
           ty = (int)std::floor(ty + 0.5f);
           m_lines.push_back(currentWordStartIndex);
 
-          for (int j = currentWordStartIndex; j < m_coordinates.size(); ++j) {
+          for (int j = currentWordStartIndex; j < (int)m_coordinates.size(); ++j) {
             m_coordinates[j] = Point(tx, ty);
             tx += m_parent->GetCharacter(j)->GetAdvance();
             tx += m_parent->GetKerning(j + 1);  // no kerning on the first character
@@ -311,7 +311,7 @@ namespace Frames {
     }
 
     // Go through and add our character offsets
-    for (int i = 0; i < m_coordinates.size(); ++i) {
+    for (int i = 0; i < (int)m_coordinates.size(); ++i) {
       m_coordinates[i].x += m_parent->GetCharacter(i)->GetOffsetX();
       m_coordinates[i].y += m_parent->GetCharacter(i)->GetOffsetY();
     }
@@ -341,7 +341,7 @@ namespace Frames {
     Renderer::Vertex *vertexes = renderer->Request(m_parent->GetQuads() * 4);
 
     int cquad = 0;
-    for (int i = 0; i < m_coordinates.size() - 1; ++i) {
+    for (int i = 0; i < (int)m_coordinates.size() - 1; ++i) {
       Renderer::Vertex *vertex = vertexes + cquad * 4;
       const CharacterInfoPtr &character = m_parent->GetCharacter(i);
 
@@ -361,7 +361,7 @@ namespace Frames {
 
   Point TextLayout::GetCoordinate(int character) const {
     Point coord = m_coordinates[character];
-    if (character + 1 != m_coordinates.size()) {
+    if (character + 1 != (int)m_coordinates.size()) {
       CharacterInfo *chr = GetParent()->GetCharacter(character).get();
       coord.x -= chr->GetOffsetX();
       coord.y -= chr->GetOffsetY();
@@ -371,11 +371,11 @@ namespace Frames {
 
   int TextLayout::GetLineFromCharacter(int character) const {
     int line = 0;
-    while (line < m_lines.size() && character > m_lines[line]) ++line;
+    while (line < (int)m_lines.size() && character > m_lines[line]) ++line;
     return line;
   }
   int TextLayout::GetEOLFromLine(int line) const {
-    if (line == m_lines.size()) return m_coordinates.size() - 1;
+    if (line == (int)m_lines.size()) return m_coordinates.size() - 1;
     return m_lines[line] - 1;
   }
 

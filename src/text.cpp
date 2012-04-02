@@ -169,8 +169,8 @@ namespace Frames {
       m_color_selected(1, 1, 1),
       m_interactive(INTERACTIVE_NONE),
       m_scroll(0, 0),
-      m_cursor(0),
-      m_select(0)
+      m_select(0),
+      m_cursor(0)
   {
     m_font = GetEnvironment()->GetConfiguration().fontDefaultId;
 

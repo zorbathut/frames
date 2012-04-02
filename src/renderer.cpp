@@ -42,7 +42,7 @@ namespace Frames {
     {
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elements);
       vector<GLushort> elements(bufferElements);
-      for (int i = 0; i < elements.size(); ++i) {
+      for (int i = 0; i < (int)elements.size(); ++i) {
         elements[i] = i;
       }
       glBufferData(GL_ELEMENT_ARRAY_BUFFER, elements.size() * sizeof(GLushort), &elements[0], GL_STATIC_DRAW);
@@ -101,7 +101,7 @@ namespace Frames {
 
   Renderer::Vertex *Renderer::Request(int vertices) {
     int size = vertices * sizeof(Vertex);
-    if (m_buffer_pos + vertices > bufferElements) {
+    if ((int)m_buffer_pos + vertices > bufferElements) {
       // we'll have to clear it out
       glBufferData(GL_ARRAY_BUFFER, max(size, bufferSize), 0, GL_STREAM_DRAW);
       m_buffer_pos = 0;
@@ -213,10 +213,10 @@ namespace Frames {
       float ys = (tex.e.y - tex.s.y) / (screen.e.y - screen.s.y);
       
       vertex[0].t.x = (vertex[0].p.x - screen.s.x) * xs + tex.s.x;
-      vertex[0].t.y = (vertex[0].p.y - screen.s.y) * xs + tex.s.y;
+      vertex[0].t.y = (vertex[0].p.y - screen.s.y) * ys + tex.s.y;
       
       vertex[2].t.x = (vertex[2].p.x - screen.s.x) * xs + tex.s.x;
-      vertex[2].t.y = (vertex[2].p.y - screen.s.y) * xs + tex.s.y;
+      vertex[2].t.y = (vertex[2].p.y - screen.s.y) * ys + tex.s.y;
     }
     
     // now we've got a valid [0] and [2], make textures
