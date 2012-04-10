@@ -70,14 +70,15 @@ namespace Frames {
     }
   }
 
-  /*
   void Environment::MouseDown(int button) {
-    if (m_over
+    LogDebug(Utility::Format("Mouse down %d", button));
   }
-  void Environment::MouseUp(int button);
-  void Environment::MouseWheel(int delta);
+  void Environment::MouseUp(int button) {
+    LogDebug(Utility::Format("Mouse up %d", button));
+  }
+  //void Environment::MouseWheel(int delta);
 
-  void Environment::MouseClear();  // mouse no longer in the scene at all*/
+  //void Environment::MouseClear();  // mouse no longer in the scene at all*/
 
   void Environment::Render(const Layout *root) {
     if (!root) {

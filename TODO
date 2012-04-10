@@ -54,6 +54,10 @@
       X event transparency?
       X how does this integrate with c++
   * mousedown, mouseup, mouseclick, coords, etc
+    * mousedown, determine what we're dragging? worry about dragging later
+    * mouseclick is if we did a down and then an up on the same frame
+    * mousemove, mouseout/mousein
+    
   * change intptr_t to a typedef
   * Cursor placement
   * Selection
