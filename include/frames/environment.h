@@ -10,6 +10,7 @@
 #include <deque>
 #include <vector>
 #include <set>
+#include <map>
 
 struct lua_State;
 
@@ -101,6 +102,7 @@ namespace Frames {
 
     // Input state
     Layout *m_over;
+    std::map<int, Layout *> m_buttonDown;
 
     // Lua
     class LuaStackChecker {

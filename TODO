@@ -53,11 +53,11 @@
       X stoppropogation
       X event transparency?
       X how does this integrate with c++
-  * mousedown, mouseup, mouseclick, coords, etc
-    * mousedown, determine what we're dragging? worry about dragging later
-    * mouseclick is if we did a down and then an up on the same frame
-    * mousemove, mouseout/mousein
-    
+  X mousedown, mouseup, mouseclick, coords, etc
+    X mousedown, determine what we're dragging? worry about dragging later
+    X mouseclick is if we did a down and then an up on the same frame
+    X mousemove, mouseout/mousein
+  * lua offset mouse buttons to 1/2/3
   * change intptr_t to a typedef
   * Cursor placement
   * Selection
@@ -68,8 +68,9 @@
   * Editing
   * Editing modifiers
 
-* maybe we need to pass "this" along with all events?
-  
+* maybe we need to pass "this" along with all events? both to lua, and to non-lua?
+
+* event acceptance flags
 
 * SetEditable
 * SetCursor -- obliterates selection

@@ -71,10 +71,41 @@ namespace Frames {
   }
 
   void Environment::MouseDown(int button) {
-    LogDebug(Utility::Format("Mouse down %d", button));
+    if (m_over) {
+      m_buttonDown[button] = m_over;
+      m_over->EventMouseButtonDownTrigger(button);
+      if (button == 0) {
+        m_over->EventMouseLeftDownTrigger();
+      } else if (button == 1) {
+        m_over->EventMouseRightDownTrigger();
+      } else if (button == 2) {
+        m_over->EventMouseMiddleDownTrigger();
+      }
+    }
   }
   void Environment::MouseUp(int button) {
-    LogDebug(Utility::Format("Mouse up %d", button));
+    if (m_over) {
+      m_over->EventMouseButtonUpTrigger(button);
+      if (button == 0) {
+        m_over->EventMouseLeftUpTrigger();
+      } else if (button == 1) {
+        m_over->EventMouseRightUpTrigger();
+      } else if (button == 2) {
+        m_over->EventMouseMiddleUpTrigger();
+      }
+
+      if (m_buttonDown[button] == m_over) {
+        m_over->EventMouseButtonClickTrigger(button);
+        if (button == 0) {
+          m_over->EventMouseLeftClickTrigger();
+        } else if (button == 1) {
+          m_over->EventMouseRightClickTrigger();
+        } else if (button == 2) {
+          m_over->EventMouseMiddleClickTrigger();
+        }
+      }
+    }
+    m_buttonDown.erase(button);
   }
   //void Environment::MouseWheel(int delta);
 
@@ -484,6 +515,12 @@ namespace Frames {
     if (m_over == layout) {
       m_over = 0;
       // TODO: refresh mouse position based on the new layout?
+    }
+
+    for (std::map<int, Layout *>::iterator itr = m_buttonDown.begin(); itr != m_buttonDown.end(); ++itr) {
+      if (itr->second == layout) {
+        itr->second = 0;  // this is sort of silly, but it's easier than doing the whole iterator invalidation dance
+      }
     }
   }
 

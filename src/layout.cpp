@@ -719,11 +719,21 @@ namespace Frames {
   }
 
   void Layout::EventAttached(intptr_t id) {
-    m_acceptInput = GetEventTable(EventMouseClickId()) || GetEventTable(EventMouseUpId()) || GetEventTable(EventMouseDownId()) || GetEventTable(EventMouseWheelId()) || GetEventTable(EventMouseOverId()) || GetEventTable(EventMouseOutId());
+    m_acceptInput =
+      GetEventTable(EventMouseLeftClickId()) || GetEventTable(EventMouseLeftUpId()) || GetEventTable(EventMouseLeftDownId()) ||
+      GetEventTable(EventMouseMiddleClickId()) || GetEventTable(EventMouseMiddleUpId()) || GetEventTable(EventMouseMiddleDownId()) ||
+      GetEventTable(EventMouseRightClickId()) || GetEventTable(EventMouseRightUpId()) || GetEventTable(EventMouseRightDownId()) ||
+      GetEventTable(EventMouseButtonClickId()) || GetEventTable(EventMouseButtonUpId()) || GetEventTable(EventMouseButtonDownId()) ||
+      GetEventTable(EventMouseWheelId()) || GetEventTable(EventMouseOverId()) || GetEventTable(EventMouseOutId());
   }
 
   void Layout::EventDetached(intptr_t id) {
-    m_acceptInput = GetEventTable(EventMouseClickId()) || GetEventTable(EventMouseUpId()) || GetEventTable(EventMouseDownId()) || GetEventTable(EventMouseWheelId()) || GetEventTable(EventMouseOverId()) || GetEventTable(EventMouseOutId());
+    m_acceptInput =
+      GetEventTable(EventMouseLeftClickId()) || GetEventTable(EventMouseLeftUpId()) || GetEventTable(EventMouseLeftDownId()) ||
+      GetEventTable(EventMouseMiddleClickId()) || GetEventTable(EventMouseMiddleUpId()) || GetEventTable(EventMouseMiddleDownId()) ||
+      GetEventTable(EventMouseRightClickId()) || GetEventTable(EventMouseRightUpId()) || GetEventTable(EventMouseRightDownId()) ||
+      GetEventTable(EventMouseButtonClickId()) || GetEventTable(EventMouseButtonUpId()) || GetEventTable(EventMouseButtonDownId()) ||
+      GetEventTable(EventMouseWheelId()) || GetEventTable(EventMouseOverId()) || GetEventTable(EventMouseOutId());
   }
 
   void Layout::l_RegisterWorker(lua_State *L, const char *name) const {
@@ -775,9 +785,21 @@ namespace Frames {
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseOver);
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseOut);
 
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseUp);
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseDown);
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseClick);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseLeftUp);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseLeftDown);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseLeftClick);
+
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMiddleUp);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMiddleDown);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMiddleClick);
+
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseRightUp);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseRightDown);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseRightClick);
+
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseButtonUp);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseButtonDown);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseButtonClick);
 
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseWheel);
   }
@@ -1154,9 +1176,21 @@ namespace Frames {
   FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseOver, (), (EventHandle *handle), (&handle));
   FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseOut, (), (EventHandle *handle), (&handle));
 
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseUp, (int button), (EventHandle *handle, int button), (&handle, button));
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseDown, (int button), (EventHandle *handle, int button), (&handle, button));
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseClick, (int button), (EventHandle *handle, int button), (&handle, button));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseLeftUp, (), (EventHandle *handle), (&handle));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseLeftDown, (), (EventHandle *handle), (&handle));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseLeftClick, (), (EventHandle *handle), (&handle));
+
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseMiddleUp, (), (EventHandle *handle), (&handle));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseMiddleDown, (), (EventHandle *handle), (&handle));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseMiddleClick, (), (EventHandle *handle), (&handle));
+
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseRightUp, (), (EventHandle *handle), (&handle));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseRightDown, (), (EventHandle *handle), (&handle));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseRightClick, (), (EventHandle *handle), (&handle));
+
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseButtonUp, (int button), (EventHandle *handle, int button), (&handle, button));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseButtonDown, (int button), (EventHandle *handle, int button), (&handle, button));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseButtonClick, (int button), (EventHandle *handle, int button), (&handle, button));
 
   FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseWheel, (int delta), (EventHandle *handle, int delta), (&handle, delta));
 

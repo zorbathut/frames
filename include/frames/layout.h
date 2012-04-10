@@ -81,9 +81,21 @@ namespace Frames {
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseOver, (), (EventHandle *event));
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseOut, (), (EventHandle *event));
 
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseUp, (int button), (EventHandle *event, int button));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseDown, (int button), (EventHandle *event, int button));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseClick, (int button), (EventHandle *event, int button));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseLeftUp, (), (EventHandle *event));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseLeftDown, (), (EventHandle *event));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseLeftClick, (), (EventHandle *event));
+
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMiddleUp, (), (EventHandle *event));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMiddleDown, (), (EventHandle *event));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMiddleClick, (), (EventHandle *event));
+
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseRightUp, (), (EventHandle *event));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseRightDown, (), (EventHandle *event));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseRightClick, (), (EventHandle *event));
+
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseButtonUp, (int button), (EventHandle *event, int button));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseButtonDown, (int button), (EventHandle *event, int button));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseButtonClick, (int button), (EventHandle *event, int button));
 
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseWheel, (int delta), (EventHandle *event, int delta));
 
