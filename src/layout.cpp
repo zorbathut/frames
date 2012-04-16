@@ -11,6 +11,9 @@
 #include <math.h> // just for isnan()
 
 namespace Frames {
+  BOOST_STATIC_ASSERT(sizeof(EventId) == sizeof(intptr_t));
+  BOOST_STATIC_ASSERT(sizeof(EventId) == sizeof(void *));
+
   class Layout::EventHandler {
   public:
     // NOTE: this works because delegate is POD
@@ -709,8 +712,8 @@ namespace Frames {
     Obliterate_Extract();
   }
 
-  const Layout::EventMap *Layout::GetEventTable(intptr_t id) const {
-    std::map<intptr_t, EventMap>::const_iterator itr = m_events.find(id);
+  const Layout::EventMap *Layout::GetEventTable(EventId id) const {
+    std::map<EventId, EventMap>::const_iterator itr = m_events.find(id);
     if (itr != m_events.end()) {
       return &itr->second;
     } else {
@@ -718,7 +721,7 @@ namespace Frames {
     }
   }
 
-  void Layout::EventAttached(intptr_t id) {
+  void Layout::EventAttached(EventId id) {
     m_acceptInput =
       GetEventTable(EventMouseLeftClickId()) || GetEventTable(EventMouseLeftUpId()) || GetEventTable(EventMouseLeftDownId()) ||
       GetEventTable(EventMouseMiddleClickId()) || GetEventTable(EventMouseMiddleUpId()) || GetEventTable(EventMouseMiddleDownId()) ||
@@ -727,7 +730,7 @@ namespace Frames {
       GetEventTable(EventMouseWheelId()) || GetEventTable(EventMouseOverId()) || GetEventTable(EventMouseOutId());
   }
 
-  void Layout::EventDetached(intptr_t id) {
+  void Layout::EventDetached(EventId id) {
     m_acceptInput =
       GetEventTable(EventMouseLeftClickId()) || GetEventTable(EventMouseLeftUpId()) || GetEventTable(EventMouseLeftDownId()) ||
       GetEventTable(EventMouseMiddleClickId()) || GetEventTable(EventMouseMiddleUpId()) || GetEventTable(EventMouseMiddleDownId()) ||
@@ -813,7 +816,7 @@ namespace Frames {
   }
 
   BOOST_STATIC_ASSERT(sizeof(intptr_t) >= sizeof(void*));
-  template<typename Prototype> /*static*/ void Layout::l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, intptr_t eventId, typename LayoutHandlerMunger<Prototype>::T pusher) {
+  template<typename Prototype> /*static*/ void Layout::l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, EventId eventId, typename LayoutHandlerMunger<Prototype>::T pusher) {
     BOOST_STATIC_ASSERT(sizeof(Utility::intfptr_t) == sizeof(intptr_t)); // if this fails, we can do something clever with real lua userdata instead
     BOOST_STATIC_ASSERT(sizeof(Utility::intfptr_t) == sizeof(void*)); // if this fails, we can do something clever with real lua userdata instead
     BOOST_STATIC_ASSERT(sizeof(Utility::intfptr_t) >= sizeof(typename Utility::FunctionPtr<typename Utility::FunctionPrefix<lua_State *, Prototype>::T>::T)); // if this fails we are kind of screwed
@@ -896,7 +899,7 @@ namespace Frames {
     // One way or another, our tables are maintained properly now
     // Stack: table
 
-    intptr_t event = (intptr_t)lua_touserdata(L, lua_upvalueindex(2));
+    EventId event = (EventId)lua_touserdata(L, lua_upvalueindex(2));
 
     // Finally, we need the "root" lua environment
     lua_State *L_root = (lua_State *)lua_touserdata(L, lua_upvalueindex(6));
@@ -928,7 +931,7 @@ namespace Frames {
 
     int idx = (int)lua_tonumber(L, -1);
 
-    intptr_t event = (intptr_t)lua_touserdata(L, lua_upvalueindex(2));
+    EventId event = (EventId)lua_touserdata(L, lua_upvalueindex(2));
 
     // Finally, we need the "root" lua environment
     lua_State *L_root = (lua_State *)lua_touserdata(L, lua_upvalueindex(6));
@@ -941,7 +944,7 @@ namespace Frames {
 
   struct EventhandlerInfo {
     Layout::EventHandler *eh;
-    intptr_t event;
+    EventId event;
     float priority;
     bool operator<(const EventhandlerInfo &rhs) const { return eh < rhs.eh; }
   };
@@ -950,7 +953,7 @@ namespace Frames {
     // clear out all events attached to this lua state
     // this could probably be more efficient - if this is somehow a bottleneck or a speed issue, we can fix it!
     std::set<EventhandlerInfo> eh;
-    for (std::map<intptr_t, EventMap>::iterator itr = m_events.begin(); itr != m_events.end(); ++itr) {
+    for (std::map<EventId, EventMap>::iterator itr = m_events.begin(); itr != m_events.end(); ++itr) {
       for (EventMap::iterator eitr = itr->second.begin(); eitr != itr->second.end(); ++eitr) {
         if (eitr->second.IsLua() && eitr->second.GetLua()->L == lua) {
           EventhandlerInfo ehi;
@@ -1131,15 +1134,15 @@ namespace Frames {
     void frametype::Event##eventname##Detach(Delegate<void paramlistcomplete> delegate, float order /*= 0.f / 0.f*/) { \
       EventDetach(Event##eventname##Id(), EventHandler(delegate), order); \
     } \
-    /*static*/ intptr_t frametype::Event##eventname##Id() { \
-      return (intptr_t)&s_event_##eventname##_id; \
+    /*static*/ EventId frametype::Event##eventname##Id() { \
+      return (EventId)&s_event_##eventname##_id; \
     } \
     char frametype::s_event_##eventname##_id = 0;
 
   #define FRAMES_LAYOUT_EVENT_DEFINE(frametype, eventname, paramlist, paramlistcomplete, params) \
     FRAMES_LAYOUT_EVENT_DEFINE_INFRA(frametype, eventname, paramlist, paramlistcomplete, params) \
     void frametype::Event##eventname##Trigger paramlist const { \
-      std::map<intptr_t, std::multimap<float, EventHandler> >::const_iterator itr = m_events.find(Event##eventname##Id()); \
+      std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = m_events.find(Event##eventname##Id()); \
       if (itr != m_events.end()) { \
         EventHandle handle; \
         const std::multimap<float, EventHandler> &tab = itr->second; \
@@ -1162,7 +1165,7 @@ namespace Frames {
       } \
       EventHandle handle; \
       for (int i = (int)layouts.size() - 1; i >= 0; --i) { \
-        std::map<intptr_t, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i]->m_events.find(Event##eventname##Sink##Id()); \
+        std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i]->m_events.find(Event##eventname##Sink##Id()); \
         if (itr != layouts[i]->m_events.end()) { \
           const std::multimap<float, EventHandler> &tab = itr->second; \
           for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
@@ -1171,7 +1174,7 @@ namespace Frames {
         } \
       } \
       { \
-        std::map<intptr_t, std::multimap<float, EventHandler> >::const_iterator itr = m_events.find(Event##eventname##Id()); \
+        std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = m_events.find(Event##eventname##Id()); \
         if (itr != m_events.end()) { \
           const std::multimap<float, EventHandler> &tab = itr->second; \
           for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
@@ -1180,7 +1183,7 @@ namespace Frames {
         } \
       } \
       for (int i = 0; i < (int)layouts.size(); ++i) { \
-        std::map<intptr_t, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i]->m_events.find(Event##eventname##Bubble##Id()); \
+        std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i]->m_events.find(Event##eventname##Bubble##Id()); \
         if (itr != layouts[i]->m_events.end()) { \
           const std::multimap<float, EventHandler> &tab = itr->second; \
           for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
@@ -1214,13 +1217,13 @@ namespace Frames {
 
   FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseWheel, (int delta), (EventHandle *handle, int delta), (&handle, delta));
 
-  void Layout::EventAttach(intptr_t id, const EventHandler &handler, float order) {
+  void Layout::EventAttach(EventId id, const EventHandler &handler, float order) {
     m_events[id].insert(std::make_pair(order, handler)); // kapowza!
     EventAttached(id);
   }
-  bool Layout::EventDetach(intptr_t id, const EventHandler &handler, float order) {
+  bool Layout::EventDetach(EventId id, const EventHandler &handler, float order) {
     // somewhat more complex, we need to actually find the handler
-    std::map<intptr_t, std::multimap<float, EventHandler> >::iterator itr = m_events.find(id);
+    std::map<EventId, std::multimap<float, EventHandler> >::iterator itr = m_events.find(id);
     if (itr == m_events.end()) {
       return false;
     }
@@ -1284,7 +1287,7 @@ namespace Frames {
 
   // for remove, I need to be able to look it up via event idx priority
   // actually really I need to have a refcounted point
-  template<typename Prototype> void Layout::l_EventAttach(lua_State *L, intptr_t event, int idx, float priority, typename LayoutHandlerMunger<Prototype>::T pusher) {
+  template<typename Prototype> void Layout::l_EventAttach(lua_State *L, EventId event, int idx, float priority, typename LayoutHandlerMunger<Prototype>::T pusher) {
     // Need to wrap up L and idx into a structure
     // Then insert that structure
     LuaFrameEventMap::iterator itr = m_lua_events.insert(std::make_pair(LuaFrameEventHandler(L, idx, this, reinterpret_cast<Utility::intfptr_t>(pusher)), 0)).first;
@@ -1292,7 +1295,7 @@ namespace Frames {
     EventAttach(event, EventHandler(Delegate<typename Utility::FunctionPrefix<EventHandle *, Prototype>::T>(&itr->first, &LuaFrameEventHandler::Call), &itr->first), priority);
   }
 
-  template<typename Prototype> bool Layout::l_EventDetach(lua_State *L, intptr_t event, int idx, float priority) {
+  template<typename Prototype> bool Layout::l_EventDetach(lua_State *L, EventId event, int idx, float priority) {
     // try to find the element
     LuaFrameEventMap::iterator itr = m_lua_events.find(LuaFrameEventHandler(L, idx, this, 0));  // fake pusher index, but that isn't compared anyway
     if (itr == m_lua_events.end()) {
@@ -1301,7 +1304,7 @@ namespace Frames {
 
     return l_EventDetach(L, itr, event, EventHandler(Delegate<typename Utility::FunctionPrefix<EventHandle *, Prototype>::T>(&itr->first, &LuaFrameEventHandler::Call), &itr->first), priority);
   }
-  bool Layout::l_EventDetach(lua_State *L, LuaFrameEventMap::iterator itr, intptr_t event, EventHandler handler, float priority) {
+  bool Layout::l_EventDetach(lua_State *L, LuaFrameEventMap::iterator itr, EventId event, EventHandler handler, float priority) {
     Environment::LuaStackChecker checker(L, GetEnvironment());
 
     if (EventDetach(event, handler, priority)) {

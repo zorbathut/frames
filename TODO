@@ -64,8 +64,10 @@
     X pass it through the register subsystems
     X appropriate defaults
     X :D
-  * change intptr_t to a typedef
+  X change intptr_t to a typedef
   * Cursor placement
+    * Given X and Y, return coordinate
+    * let's do this the crummy way for now
   * Selection
   * Start worrying about keyboard input
     * Focus:
