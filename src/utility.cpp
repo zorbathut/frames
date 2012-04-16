@@ -46,6 +46,8 @@ namespace Frames {
       input = (input >> 16) | input;
       return input + 1;
     }
+
+    BOOST_STATIC_ASSERT(sizeof(intfptr_t) >= sizeof(void (*)())); // technically it doesn't guarantee that all function pointers are the same. practically, they are, but we test this anyway when they're used
   }
 }
 

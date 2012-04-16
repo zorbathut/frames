@@ -57,7 +57,13 @@
     X mousedown, determine what we're dragging? worry about dragging later
     X mouseclick is if we did a down and then an up on the same frame
     X mousemove, mouseout/mousein
-  * lua offset mouse buttons to 1/2/3
+  X lua offset mouse buttons to 1/2/3
+    X fptr type, compare in utility.h
+    X jam that into LuaFrameEventHandler somehow
+    X call it from LuaFrameEventHandler
+    X pass it through the register subsystems
+    X appropriate defaults
+    X :D
   * change intptr_t to a typedef
   * Cursor placement
   * Selection

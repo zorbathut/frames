@@ -21,12 +21,19 @@ namespace Frames {
   class EventHandle {
   };
 
+  template<typename F> struct LayoutHandlerMunger;
+  template<> struct LayoutHandlerMunger<void ()> { typedef int (*T)(lua_State *); };
+  template<typename P1> struct LayoutHandlerMunger<void (P1)> { typedef int (*T)(lua_State *, P1); };
+  template<typename P1, typename P2> struct LayoutHandlerMunger<void (P1, P2)> { typedef int (*T)(lua_State *, P1, P2); };
+  template<typename P1, typename P2, typename P3> struct LayoutHandlerMunger<void (P1, P2, P3)> { typedef int (*T)(lua_State *, P1, P2, P3); };
+  template<typename P1, typename P2, typename P3, typename P4> struct LayoutHandlerMunger<void (P1, P2, P3, P4)> { typedef int (*T)(lua_State *, P1, P2, P3, P4); };
+
   // we'll add more internal utility functions if/when needed
   #define FRAMES_LAYOUT_EVENT_HOOKS(eventname, paramlist, paramlistcomplete) \
       void Event##eventname##Attach(Delegate<void paramlistcomplete> delegate, float order = 0.f); \
       void Event##eventname##Detach(Delegate<void paramlistcomplete> delegate, float order = 0.f / 0.f); \
       static intptr_t Event##eventname##Id(); \
-      typedef void Event##eventname##Functiontype paramlistcomplete; \
+      typedef void Event##eventname##Functiontype paramlist; \
     private: \
       static char s_event_##eventname##_id; /* the char itself isn't the ID, the address of the char is */ \
     public:
@@ -174,13 +181,18 @@ namespace Frames {
     static void l_RegisterFunctions(lua_State *L);
 
     static void l_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *));
-    template<typename Prototype> static void l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, intptr_t eventId);
+    template<typename Prototype> static void l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, intptr_t eventId, typename LayoutHandlerMunger<Prototype>::T pusher);
 
     template<typename Prototype> static int l_RegisterEventAttach(lua_State *L);
     template<typename Prototype> static int l_RegisterEventDetach(lua_State *L);
 
     void l_ClearLuaEvents(lua_State *lua);
     void l_ClearLuaEvents_Recursive(lua_State *lua);
+
+    static int l_EventPusher_Default(lua_State *L);
+    static int l_EventPusher_Default(lua_State *L, int p1);
+
+    static int l_EventPusher_Button(lua_State *L, int button);
 
     // Various internal-only functionality
     void EventAttach(intptr_t id, const EventHandler &handler, float order);
@@ -253,17 +265,19 @@ namespace Frames {
 
     // Lua frame event system
     struct LuaFrameEventHandler {
-      LuaFrameEventHandler(lua_State *L, int idx, Layout *layout) : L(L), idx(idx), layout(layout) { };
+      LuaFrameEventHandler(lua_State *L, int idx, Layout *layout, Utility::intfptr_t pusher) : L(L), layout(layout), pusher(pusher), idx(idx) { };
       lua_State *L;
-      int idx;
       Layout *layout; // we need this so we can push the right frame in
+      Utility::intfptr_t pusher; // this is cast to whatever other function type may be necessary
+      int idx;
+      
 
       void Call(EventHandle *handle) const;
       void Call(EventHandle *handle, int p1) const;
     };
     friend bool operator<(const LuaFrameEventHandler &lhs, const LuaFrameEventHandler &rhs);
     typedef std::map<LuaFrameEventHandler, int> LuaFrameEventMap; // second parameter is refcount
-    template<typename Prototype> void l_EventAttach(lua_State *L, intptr_t event, int idx, float priority);
+    template<typename Prototype> void l_EventAttach(lua_State *L, intptr_t event, int idx, float priority, typename LayoutHandlerMunger<Prototype>::T pusher);
     template<typename Prototype> bool l_EventDetach(lua_State *L, intptr_t event, int idx, float priority);
     bool l_EventDetach(lua_State *L, LuaFrameEventMap::iterator itr, intptr_t event, EventHandler handler, float priority);
     LuaFrameEventMap m_lua_events;

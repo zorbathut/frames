@@ -755,13 +755,13 @@ namespace Frames {
     lua_pop(L, 1);
   }
 
-  #define L_REGISTEREVENT(L, GST, name) \
-    l_RegisterEvent<Event##name##Functiontype>(L, GST, "Event" #name "Attach", "Event" #name "Detach", Event##name##Id());
+  #define L_REGISTEREVENT(L, GST, name, handler) \
+    l_RegisterEvent<Event##name##Functiontype>(L, GST, "Event" #name "Attach", "Event" #name "Detach", Event##name##Id(), static_cast<typename LayoutHandlerMunger<Event##name##Functiontype>::T>(handler));
 
-  #define L_REGISTEREVENT_BUBBLE(L, GST, name) \
-    L_REGISTEREVENT(L, GST, name); \
-    L_REGISTEREVENT(L, GST, name##Sink); \
-    L_REGISTEREVENT(L, GST, name##Bubble);
+  #define L_REGISTEREVENT_BUBBLE(L, GST, name, handler) \
+    L_REGISTEREVENT(L, GST, name, handler); \
+    L_REGISTEREVENT(L, GST, name##Sink, handler); \
+    L_REGISTEREVENT(L, GST, name##Bubble, handler);
 
   /*static*/ void Layout::l_RegisterFunctions(lua_State *L) {
     l_RegisterFunction(L, GetStaticType(), "GetLeft", l_GetLeft);
@@ -779,29 +779,29 @@ namespace Frames {
     l_RegisterFunction(L, GetStaticType(), "GetNameFull", l_GetNameFull);
     l_RegisterFunction(L, GetStaticType(), "GetType", l_GetType);
 
-    L_REGISTEREVENT(L, GetStaticType(), Move);
-    L_REGISTEREVENT(L, GetStaticType(), Size);
+    L_REGISTEREVENT(L, GetStaticType(), Move, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT(L, GetStaticType(), Size, &Layout::l_EventPusher_Default);
 
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseOver);
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseOut);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseOver, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseOut, &Layout::l_EventPusher_Default);
 
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseLeftUp);
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseLeftDown);
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseLeftClick);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseLeftUp, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseLeftDown, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseLeftClick, &Layout::l_EventPusher_Default);
 
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMiddleUp);
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMiddleDown);
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMiddleClick);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMiddleUp, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMiddleDown, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMiddleClick, &Layout::l_EventPusher_Default);
 
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseRightUp);
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseRightDown);
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseRightClick);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseRightUp, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseRightDown, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseRightClick, &Layout::l_EventPusher_Default);
 
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseButtonUp);
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseButtonDown);
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseButtonClick);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseButtonUp, &Layout::l_EventPusher_Button);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseButtonDown, &Layout::l_EventPusher_Button);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseButtonClick, &Layout::l_EventPusher_Button);
 
-    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseWheel);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseWheel, &Layout::l_EventPusher_Default);
   }
 
   /*static*/ void Layout::l_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *)) {
@@ -813,7 +813,11 @@ namespace Frames {
   }
 
   BOOST_STATIC_ASSERT(sizeof(intptr_t) >= sizeof(void*));
-  template<typename Prototype> /*static*/ void Layout::l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, intptr_t eventId) {
+  template<typename Prototype> /*static*/ void Layout::l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, intptr_t eventId, typename LayoutHandlerMunger<Prototype>::T pusher) {
+    BOOST_STATIC_ASSERT(sizeof(Utility::intfptr_t) == sizeof(intptr_t)); // if this fails, we can do something clever with real lua userdata instead
+    BOOST_STATIC_ASSERT(sizeof(Utility::intfptr_t) == sizeof(void*)); // if this fails, we can do something clever with real lua userdata instead
+    BOOST_STATIC_ASSERT(sizeof(Utility::intfptr_t) >= sizeof(typename Utility::FunctionPtr<typename Utility::FunctionPrefix<lua_State *, Prototype>::T>::T)); // if this fails we are kind of screwed
+
     // From Environment::RegisterLuaFrame
     // Stack: ... Frames_mt Frames_rg Frames_fev Frames_rfev Frames_cfev metatable indexes
     lua_getfield(L, -6, owner);
@@ -822,7 +826,8 @@ namespace Frames {
     lua_pushvalue(L, -7); // push _rfev
     lua_pushvalue(L, -7); // push _cfev
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua"); // push lua root
-    lua_pushcclosure(L, l_RegisterEventAttach<Prototype>, 6);
+    lua_pushlightuserdata(L, (void*)pusher); // push handler function
+    lua_pushcclosure(L, l_RegisterEventAttach<Prototype>, 7);
     lua_setfield(L, -2, nameAttach);
 
     // DO IT AGAIN
@@ -832,7 +837,8 @@ namespace Frames {
     lua_pushvalue(L, -7); // push _rfev
     lua_pushvalue(L, -7); // push _cfev
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua"); // push lua root
-    lua_pushcclosure(L, l_RegisterEventDetach<Prototype>, 6);
+    lua_pushlightuserdata(L, (void*)pusher); // push handler function
+    lua_pushcclosure(L, l_RegisterEventDetach<Prototype>, 7);
     lua_setfield(L, -2, nameDetach);
   }
 
@@ -841,7 +847,7 @@ namespace Frames {
     Layout *self = l_checkframe<Layout>(L, 1);
 
     // Stack: table handler (priority)
-    // Upvalues: tableregistry eventid _fev _rfev _cfev luaroot
+    // Upvalues: tableregistry eventid _fev _rfev _cfev luaroot handler
 
     float priority = (float)luaL_optnumber(L, 3, 0.f);
     lua_settop(L, 2);
@@ -896,7 +902,7 @@ namespace Frames {
     lua_State *L_root = (lua_State *)lua_touserdata(L, lua_upvalueindex(6));
     
     // We've got the root lua, a layout, the event, the priority, and a valid index to a handler. Yahoy!
-    self->l_EventAttach<Prototype>(L_root, event, idx, priority);
+    self->l_EventAttach<Prototype>(L_root, event, idx, priority, reinterpret_cast<typename LayoutHandlerMunger<Prototype>::T>(lua_touserdata(L, lua_upvalueindex(7))));
 
     return 0;
   }
@@ -969,6 +975,20 @@ namespace Frames {
     for (ChildrenList::iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
       (*itr)->l_ClearLuaEvents(lua);
     }
+  }
+
+  /*static*/ int Layout::l_EventPusher_Default(lua_State *L) {
+    return 0;
+  }
+
+  /*static*/ int Layout::l_EventPusher_Default(lua_State *L, int p1) {
+    lua_pushnumber(L, p1);
+    return 1;
+  }
+
+  /*static*/ int Layout::l_EventPusher_Button(lua_State *L, int button) {
+    lua_pushnumber(L, button + 1);
+    return 1;
   }
 
   void Layout::Render(Renderer *renderer) const {
@@ -1231,8 +1251,7 @@ namespace Frames {
     layout->l_push(L);
     lua_newtable(L);
 
-    int parametercount = 0;
-    // parameters here
+    int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void ()>::T>(pusher))(L);
     
     if (lua_pcall(L, parametercount + 2, 0, 0)) {
       // Error!
@@ -1248,8 +1267,7 @@ namespace Frames {
     layout->l_push(L);
     lua_newtable(L);
 
-    int parametercount = 1;
-    lua_pushnumber(L, p1);
+    int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void (int)>::T>(pusher))(L, p1);
     
     if (lua_pcall(L, parametercount + 2, 0, 0)) {
       // Error!
@@ -1266,22 +1284,22 @@ namespace Frames {
 
   // for remove, I need to be able to look it up via event idx priority
   // actually really I need to have a refcounted point
-  template<typename Prototype> void Layout::l_EventAttach(lua_State *L, intptr_t event, int idx, float priority) {
+  template<typename Prototype> void Layout::l_EventAttach(lua_State *L, intptr_t event, int idx, float priority, typename LayoutHandlerMunger<Prototype>::T pusher) {
     // Need to wrap up L and idx into a structure
     // Then insert that structure
-    LuaFrameEventMap::iterator itr = m_lua_events.insert(std::make_pair(LuaFrameEventHandler(L, idx, this), 0)).first;
+    LuaFrameEventMap::iterator itr = m_lua_events.insert(std::make_pair(LuaFrameEventHandler(L, idx, this, reinterpret_cast<Utility::intfptr_t>(pusher)), 0)).first;
     ++(itr->second);
-    EventAttach(event, EventHandler(Delegate<Prototype>(&itr->first, &LuaFrameEventHandler::Call), &itr->first), priority);
+    EventAttach(event, EventHandler(Delegate<typename Utility::FunctionPrefix<EventHandle *, Prototype>::T>(&itr->first, &LuaFrameEventHandler::Call), &itr->first), priority);
   }
 
   template<typename Prototype> bool Layout::l_EventDetach(lua_State *L, intptr_t event, int idx, float priority) {
     // try to find the element
-    LuaFrameEventMap::iterator itr = m_lua_events.find(LuaFrameEventHandler(L, idx, this));
+    LuaFrameEventMap::iterator itr = m_lua_events.find(LuaFrameEventHandler(L, idx, this, 0));  // fake pusher index, but that isn't compared anyway
     if (itr == m_lua_events.end()) {
       return false;
     }
 
-    return l_EventDetach(L, itr, event, EventHandler(Delegate<Prototype>(&itr->first, &LuaFrameEventHandler::Call), &itr->first), priority);
+    return l_EventDetach(L, itr, event, EventHandler(Delegate<typename Utility::FunctionPrefix<EventHandle *, Prototype>::T>(&itr->first, &LuaFrameEventHandler::Call), &itr->first), priority);
   }
   bool Layout::l_EventDetach(lua_State *L, LuaFrameEventMap::iterator itr, intptr_t event, EventHandler handler, float priority) {
     Environment::LuaStackChecker checker(L, GetEnvironment());

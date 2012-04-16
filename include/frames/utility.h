@@ -41,7 +41,30 @@ namespace Frames {
     }
 
     int ClampToPowerOf2(int input);
-  }
+
+    template<typename prefix, typename F> struct FunctionPrefix;
+    template<typename prefix, typename R> struct FunctionPrefix<prefix, R ()> { typedef R T(prefix); };
+    template<typename prefix, typename R, typename P1> struct FunctionPrefix<prefix, R (P1)> { typedef R T(prefix, P1); };
+    template<typename prefix, typename R, typename P1, typename P2> struct FunctionPrefix<prefix, R (P1, P2)> { typedef R T(prefix, P1, P2); };
+    template<typename prefix, typename R, typename P1, typename P2, typename P3> struct FunctionPrefix<prefix, R (P1, P2, P3)> { typedef R T(prefix, P1, P2, P3); };
+    template<typename prefix, typename R, typename P1, typename P2, typename P3, typename P4> struct FunctionPrefix<prefix, R (P1, P2, P3, P4)> { typedef R T(prefix, P1, P2, P3, P4); };
+
+    template<typename F> struct FunctionPtr;
+    template<typename R> struct FunctionPtr<R ()> { typedef R (*T)(); };
+    template<typename R, typename P1> struct FunctionPtr<R (P1)> { typedef R (*T)(P1); };
+    template<typename R, typename P1, typename P2> struct FunctionPtr<R (P1, P2)> { typedef R (*T)(P1, P2); };
+    template<typename R, typename P1, typename P2, typename P3> struct FunctionPtr<R (P1, P2, P3)> { typedef R (*T)(P1, P2, P3); };
+    template<typename R, typename P1, typename P2, typename P3, typename P4> struct FunctionPtr<R (P1, P2, P3, P4)> { typedef R (*T)(P1, P2, P3, P4); };
+
+    template<typename NR, typename F> struct FunctionRv;
+    template<typename NR, typename R> struct FunctionRv<NR, R ()> { typedef NR T(); };
+    template<typename NR, typename R, typename P1> struct FunctionRv<NR, R (P1)> { typedef NR T(P1); };
+    template<typename NR, typename R, typename P1, typename P2> struct FunctionRv<NR, R (P1, P2)> { typedef NR T(P1, P2); };
+    template<typename NR, typename R, typename P1, typename P2, typename P3> struct FunctionRv<NR, R (P1, P2, P3)> { typedef NR T(P1, P2, P3); };
+    template<typename NR, typename R, typename P1, typename P2, typename P3, typename P4> struct FunctionRv<NR, R (P1, P2, P3, P4)> { typedef NR T(P1, P2, P3, P4); };
+
+    typedef intptr_t intfptr_t; // tested in utility.cpp
+  };
 }
 
 #endif
