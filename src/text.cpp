@@ -66,7 +66,17 @@ namespace Frames {
 
   void Text::SetInteractive(InteractivityMode interactive) {
     m_interactive = interactive;
-    // clear focus?
+    // clear focus if necessary
+
+    // clear event handlers
+    EventMouseLeftDownDetach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftDown));
+    EventMouseLeftUpDetach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
+
+    // if necessary, insert event handlers
+    if (interactive == INTERACTIVE_SELECT || interactive == INTERACTIVE_EDIT) {
+      EventMouseLeftDownAttach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftDown));
+      EventMouseLeftUpAttach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
+    }
   }
 
   void Text::SetCursor(int position) {
@@ -217,7 +227,7 @@ namespace Frames {
       return;
     }*/
 
-    Point tpos = m_layout->GetCoordinate(m_cursor);
+    Point tpos = m_layout->GetCoordinateFromCharacter(m_cursor);
     Point cscroll = GetScroll();
 
     // First, do the X axis
@@ -264,8 +274,8 @@ namespace Frames {
           int te = std::min(m_layout->GetEOLFromLine(i), e);
 
           Rect rect;
-          rect.s = m_layout->GetCoordinate(ts);
-          rect.e = m_layout->GetCoordinate(te);
+          rect.s = m_layout->GetCoordinateFromCharacter(ts);
+          rect.e = m_layout->GetCoordinateFromCharacter(te);
 
           rect.s -= m_scroll;
           rect.e -= m_scroll;
@@ -294,7 +304,7 @@ namespace Frames {
         renderer->SetTexture();
         Renderer::Vertex *vert = renderer->Request(4);
         
-        Point origin = m_layout->GetCoordinate(m_cursor) - m_scroll;
+        Point origin = m_layout->GetCoordinateFromCharacter(m_cursor) - m_scroll;
         origin.x += GetLeft();
         origin.y += GetTop();
         
@@ -303,6 +313,17 @@ namespace Frames {
         renderer->Return(GL_QUADS);
       }
     }
+  }
+
+  void Text::EventInternal_LeftDown(EventHandle *e) {
+    int pos = m_layout->GetCharacterFromCoordinate(GetEnvironment()->GetMouse() - m_scroll - Point(GetLeft(), GetTop()));
+    SetCursor(pos);
+    SetSelection();
+  }
+  void Text::EventInternal_LeftUp(EventHandle *e) {
+    int pos = m_layout->GetCharacterFromCoordinate(GetEnvironment()->GetMouse() - m_scroll - Point(GetLeft(), GetTop()));
+    SetSelection(GetCursor(), pos);
+    SetCursor(pos);
   }
 
   /*static*/ int Text::l_SetText(lua_State *L) {

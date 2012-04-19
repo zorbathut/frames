@@ -53,6 +53,7 @@ namespace Frames {
 
   void Environment::MouseMove(int x, int y) {
     Layout *updated = GetFrameUnder(x, y);
+    m_mouse = Point(x, y);
 
     if (updated != m_over) {
       Layout *last = m_over;

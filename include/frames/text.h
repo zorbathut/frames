@@ -86,6 +86,10 @@ namespace Frames {
     int m_select;
     int m_cursor;
 
+    // Event handlers for mouse events
+    void EventInternal_LeftDown(EventHandle *e);
+    void EventInternal_LeftUp(EventHandle *e);
+
     // Lua bindings
     static int l_SetText(lua_State *L);
     static int l_GetText(lua_State *L);

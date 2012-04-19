@@ -5,6 +5,7 @@
 
 #include "frames/configuration.h"
 #include "frames/noncopyable.h"
+#include "frames/point.h"
 #include "frames/utility.h"
 
 #include <deque>
@@ -36,6 +37,8 @@ namespace Frames {
     void MouseWheel(int delta);
 
     void MouseClear();  // mouse no longer in the scene at all
+
+    const Point &GetMouse() const { return m_mouse; }
     
     // Rendering
     void Render(const Layout *root = 0);
@@ -103,6 +106,7 @@ namespace Frames {
     // Input state
     Layout *m_over;
     std::map<int, Layout *> m_buttonDown;
+    Point m_mouse;
 
     // Lua
     class LuaStackChecker {

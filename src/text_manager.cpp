@@ -210,7 +210,7 @@ namespace Frames {
   // =======================================
   // TEXTLAYOUT
 
-  TextLayout::TextLayout(TextInfoPtr parent, float width, bool wordwrap) : m_parent(parent) {
+  TextLayout::TextLayout(TextInfoPtr parent, float width, bool wordwrap) : m_parent(parent), m_width(width) {
     // we're not doing word wrapping quite yet, soooo
     
     // Word wrapping algorithm:
@@ -359,7 +359,7 @@ namespace Frames {
     renderer->Return(GL_QUADS, cquad * 4);
   }
 
-  Point TextLayout::GetCoordinate(int character) const {
+  Point TextLayout::GetCoordinateFromCharacter(int character) const {
     Point coord = m_coordinates[character];
     if (character + 1 != (int)m_coordinates.size()) {
       CharacterInfo *chr = GetParent()->GetCharacter(character).get();
@@ -367,6 +367,23 @@ namespace Frames {
       coord.y -= chr->GetOffsetY();
     }
     return coord;
+  }
+
+  int TextLayout::GetCharacterFromCoordinate(const Point &pt) const {
+    // yeah we're just going to go mad right here
+    Point lpt = Utility::Clamp(pt, Point(0, 0), Point(m_width, m_fullHeight));
+    int line = int(lpt.y / GetParent()->GetParent()->GetLineHeight(GetParent()->GetSize()));
+
+    int s = 0;
+    if (line)
+      s = m_lines[line - 1];
+    int e = GetEOLFromLine(line);
+    for (int i = s; i < e; ++i) {
+      if (GetCoordinateFromCharacter(i).x >= lpt.x) {
+        return i; // this is gonna be a little off, but it's close enough for now
+      }
+    }
+    return e;
   }
 
   int TextLayout::GetLineFromCharacter(int character) const {

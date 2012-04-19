@@ -68,7 +68,13 @@
   * Cursor placement
     * Given X and Y, return coordinate
     * let's do this the crummy way for now
+    * clamp to the box
   * Selection
+    * place cursor and select on mousedown
+    * place cursor on mouseup
+  X gonna have to make the events appear only for editable, to cut down on cpu/memory
+  * figure out mousemove behavior while dragging?
+  * MouseHover?
   * Start worrying about keyboard input
     * Focus:
       * Make cursor go away
@@ -104,6 +110,7 @@
 
 ---- real stuff here
 
+* guarantee order by some sort of global ID?
 * Move GetParent more into Layout
 * bubbling, need to propogate events into areas that may not have those events
 

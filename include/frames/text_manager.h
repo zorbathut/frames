@@ -168,7 +168,8 @@ namespace Frames {
     void Render(Renderer *renderer, const Color &color, Rect bounds, Point offset); // bounds.s.x and bounds.s.y interpreted as starting coordinates, text clamped to stay within bounds. offset is text's skew within those bounds
     // passed by value because we modify them
 
-    Point GetCoordinate(int character) const;
+    Point GetCoordinateFromCharacter(int character) const;
+    int GetCharacterFromCoordinate(const Point &pt) const;
 
     int GetLineFromCharacter(int character) const;
     int GetEOLFromLine(int line) const;
@@ -181,6 +182,7 @@ namespace Frames {
     std::vector<int> m_lines; // first character of each line
 
     float m_fullHeight;
+    float m_width;
   };
 
   class TextManager : Noncopyable {
