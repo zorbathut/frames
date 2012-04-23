@@ -1,87 +1,13 @@
 
 * Immediate todo:
-  X Test rendering again
-  X Test moving offset
-  X Make the text cropping work better
-    X also with cursor
-  X Render cursor
-    X Render
-    X Test movement
-  X Cursor relative to top of line, not top of character
-    X GetCharacterPosition is sort of doing the wrong thing
-    X Both in cursor placement and in scrolltocursor
-  X Render selection
-  X Selection color
-  X Remove GetLocalCharacterPosition, clean up code that used it
-  X here's our little mouse input TODO
-    X Basic traversal of GetFrameUnder
-    X Make sure Mask is supported properly
-    X MouseMove via Glorp
-    X Get MouseMove into Frames
-    X Debug output of MouseMove
-    X Event hook change notification
-      X need a vfunc here also for efficiency
-    X Lua integration
-      X Lua needs a way to add an event
-      X Lua needs a way to remove an event
-      X these are basically the same thing
-        X Lua needs a way for the lua-side components to be cleaned up on frame destruction
-        X Lua needs a way for the c++-side components to be cleaned up on lua destruction
-        X urgh this is gonna make eventhandler larger
-        X So, for each event handler: include a "type" field and a pointer to something
-        X On lua cleanup, use that pointer to find things from that lua environment that need to be torn down
-        X Remove them
-        
-        
-      X So, let's make three new tables, Frames_fev, Frames_rfev, and Frames_cfev. fev gives a lookup from ID to handler, rfev gives a lookup from handler to ID, cfev gives a lookup from ID to count.
-      X If we add a handler that hasn't already been added, we insert it
-      X If we add a handler that's already been added, we just tag increment it and add the functor
-      X If we remove a handler, we decrement it in the lookups, and clear all the elements if needed.
-      X Handler: We have a multimap of Lua handlers in each class. We create a new one and link it to the event DB.
-      X When a class is obliterated and the Lua handlers are destroyed, we do our cleanup (just like removal)
-      X When the Lua environment is shut down, we what?
-      X Keep a linked list of events so we can traverse and kill them?
-      X For now, just run over all frames and clear out the linkages
-      X We need a lookup from environment to real environment - Frames_env?
-    X Deal with obliteration of mouseover'ed frame
-      X test this
-    X make "remove" a little more controllable
-  X Start worrying about mouse input
-    X concepts
-      X bubbling
-      X preventdefault
-      X stoppropogation
-      X event transparency?
-      X how does this integrate with c++
-  X mousedown, mouseup, mouseclick, coords, etc
-    X mousedown, determine what we're dragging? worry about dragging later
-    X mouseclick is if we did a down and then an up on the same frame
-    X mousemove, mouseout/mousein
-  X lua offset mouse buttons to 1/2/3
-    X fptr type, compare in utility.h
-    X jam that into LuaFrameEventHandler somehow
-    X call it from LuaFrameEventHandler
-    X pass it through the register subsystems
-    X appropriate defaults
-    X :D
-  X change intptr_t to a typedef
-  X Cursor placement
-    X Given X and Y, return coordinate
-    X let's do this the crummy way for now
-    X clamp to the box
-  * Selection
-    * place cursor and select on mousedown
-    * place cursor on mouseup
-  X gonna have to make the events appear only for editable, to cut down on cpu/memory
-  * figure out mousemove behavior while dragging?
-  * MouseHover?
   * Start worrying about keyboard input
     * Focus:
       * Make cursor go away
       * Remove ScrollToCursor
   * Editing
   * Editing modifiers
-  * I think we need frames attached to the message?
+  * Clipboard stuff
+  * I think we need frames attached to the event?
   * "fix all dis shit"
 
 * maybe we need to pass "this" along with all events? both to lua, and to non-lua?
@@ -114,7 +40,7 @@
 
 * guarantee order by some sort of global ID?
 * Move GetParent more into Layout
-* bubbling, need to propogate events into areas that may not have those events
+* MouseHover?
 
 * Need to queue up obliterates if that's being used in the middle of an event handler
 
