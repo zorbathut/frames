@@ -55,19 +55,32 @@ namespace Frames {
     Layout *updated = GetFrameUnder(x, y);
     m_mouse = Point(x, y);
 
+    bool mouseover = false;
     if (updated != m_over) {
       Layout *last = m_over;
       m_over = updated; // NOTE: ORDER IS IMPORTANT. Either MouseOut or MouseOver can destroy frames. We need to set m_over *first*, in case either of our calls destroy the new frame and m_over needs to be cleared!
 
       if (last) {
-        LogDebug(Utility::Format("Now moving out of %s", last->GetNameFull().c_str()));
         last->EventMouseOutTrigger();
       }
 
-      if (m_over) {
-        LogDebug(Utility::Format("Now moving into %s", updated->GetNameFull().c_str()));
-        m_over->EventMouseOverTrigger();
+      mouseover = true;
+    }
+
+    // Do our mousemove messages
+    if (m_over) {
+      m_over->EventMouseMoveTrigger(Point(x, y));
+    }
+
+    // Do our mousemoveout messages
+    for (std::map<int, Layout *>::const_iterator itr = m_buttonDown.begin(); itr != m_buttonDown.end(); ++itr) {
+      if (itr->second && itr->second != m_over) {
+        itr->second->EventMouseMoveOutsideTrigger(Point(x, y));
       }
+    }
+
+    if (mouseover && m_over) {
+      m_over->EventMouseOverTrigger();
     }
   }
 
@@ -84,29 +97,50 @@ namespace Frames {
       }
     }
   }
+
   void Environment::MouseUp(int button) {
+    // be careful: any event can cause m_over or any m_buttonDown to be cleared
     if (m_over) {
       m_over->EventMouseButtonUpTrigger(button);
-      if (button == 0) {
-        m_over->EventMouseLeftUpTrigger();
-      } else if (button == 1) {
-        m_over->EventMouseRightUpTrigger();
-      } else if (button == 2) {
-        m_over->EventMouseMiddleUpTrigger();
+      if (m_over) {
+        if (button == 0) {
+          m_over->EventMouseLeftUpTrigger();
+        } else if (button == 1) {
+          m_over->EventMouseRightUpTrigger();
+        } else if (button == 2) {
+          m_over->EventMouseMiddleUpTrigger();
+        }
       }
 
-      if (m_buttonDown[button] == m_over) {
+      if (m_over && m_buttonDown[button] == m_over) {
         m_over->EventMouseButtonClickTrigger(button);
-        if (button == 0) {
-          m_over->EventMouseLeftClickTrigger();
-        } else if (button == 1) {
-          m_over->EventMouseRightClickTrigger();
-        } else if (button == 2) {
-          m_over->EventMouseMiddleClickTrigger();
+        if (m_over) {
+          if (button == 0) {
+            m_over->EventMouseLeftClickTrigger();
+          } else if (button == 1) {
+            m_over->EventMouseRightClickTrigger();
+          } else if (button == 2) {
+            m_over->EventMouseMiddleClickTrigger();
+          }
         }
       }
     }
-    m_buttonDown.erase(button);
+
+    Layout *mbd = m_buttonDown[button];
+    if (mbd && mbd != m_over) {
+      mbd->EventMouseButtonUpOutsideTrigger(button);
+      if (mbd) {
+        if (button == 0) {
+          mbd->EventMouseLeftUpOutsideTrigger();
+        } else if (button == 1) {
+          mbd->EventMouseRightUpOutsideTrigger();
+        } else if (button == 2) {
+          mbd->EventMouseMiddleUpOutsideTrigger();
+        }
+      }
+    }
+
+    m_buttonDown[button] = 0; // We explicitly do *not* erase items from this set ever! This lets us iterate over the set while removing elements from it.
   }
   //void Environment::MouseWheel(int delta);
 
@@ -520,7 +554,7 @@ namespace Frames {
 
     for (std::map<int, Layout *>::iterator itr = m_buttonDown.begin(); itr != m_buttonDown.end(); ++itr) {
       if (itr->second == layout) {
-        itr->second = 0;  // this is sort of silly, but it's easier than doing the whole iterator invalidation dance
+        itr->second = 0;  // We explicitly do *not* erase items from this set ever! This lets us iterate over the set while removing elements from it.
       }
     }
   }

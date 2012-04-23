@@ -5,6 +5,7 @@
 
 #include "frames/delegate.h"
 #include "frames/noncopyable.h"
+#include "frames/point.h"
 #include "frames/utility.h"
 
 #include <vector>
@@ -56,6 +57,7 @@ namespace Frames {
 
   class Layout : Noncopyable {
     friend class Environment;
+    template<typename> friend class EventHandlerCaller;
 
     class EventHandler; // defined in layout.cpp
     struct Sorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
@@ -88,21 +90,27 @@ namespace Frames {
     FRAMES_LAYOUT_EVENT_DECLARE(Size, (), (EventHandle *event));
 
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseOver, (), (EventHandle *event));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMove, (const Point &pt), (EventHandle *event, const Point &pt));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMoveOutside, (const Point &pt), (EventHandle *event, const Point &pt));
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseOut, (), (EventHandle *event));
 
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseLeftUp, (), (EventHandle *event));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseLeftUpOutside, (), (EventHandle *event));
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseLeftDown, (), (EventHandle *event));
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseLeftClick, (), (EventHandle *event));
 
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMiddleUp, (), (EventHandle *event));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMiddleUpOutside, (), (EventHandle *event));
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMiddleDown, (), (EventHandle *event));
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMiddleClick, (), (EventHandle *event));
 
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseRightUp, (), (EventHandle *event));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseRightUpOutside, (), (EventHandle *event));
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseRightDown, (), (EventHandle *event));
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseRightClick, (), (EventHandle *event));
 
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseButtonUp, (int button), (EventHandle *event, int button));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseButtonUpOutside, (int button), (EventHandle *event, int button));
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseButtonDown, (int button), (EventHandle *event, int button));
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseButtonClick, (int button), (EventHandle *event, int button));
 
@@ -193,6 +201,7 @@ namespace Frames {
 
     static int l_EventPusher_Default(lua_State *L);
     static int l_EventPusher_Default(lua_State *L, int p1);
+    static int l_EventPusher_Default(lua_State *L, const Point &pt);
 
     static int l_EventPusher_Button(lua_State *L, int button);
 
@@ -275,6 +284,7 @@ namespace Frames {
       
       void Call(EventHandle *handle) const;
       void Call(EventHandle *handle, int p1) const;
+      void Call(EventHandle *handle, const Point &pt) const;
     };
     friend bool operator<(const LuaFrameEventHandler &lhs, const LuaFrameEventHandler &rhs);
     typedef std::map<LuaFrameEventHandler, int> LuaFrameEventMap; // second parameter is refcount

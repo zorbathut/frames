@@ -32,10 +32,6 @@ namespace Frames {
     }
     ~EventHandler() { }
 
-    void Call() const {
-      (*reinterpret_cast<const Delegate<void ()> *>(c.delegate))();
-    }
-
     template<typename T1> void Call(T1 t1) const {
       (*reinterpret_cast<const Delegate<void (T1)> *>(c.delegate))(t1);
     }
@@ -70,6 +66,13 @@ namespace Frames {
     
     friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);
   };
+
+  template<typename F> struct EventHandlerCaller;
+  template<> struct EventHandlerCaller<void ()> { static void Call(const Layout::EventHandler *ev, EventHandle *eh) { ev->Call<EventHandle *>(eh); } };
+  template<typename P1> struct EventHandlerCaller<void (P1)> { static void Call(const Layout::EventHandler *ev, EventHandle *eh, P1 p1) { ev->Call<EventHandle *, P1>(eh, p1); } };
+  template<typename P1, typename P2> struct EventHandlerCaller<void (P1, P2)> { static void Call(const Layout::EventHandler *ev, EventHandle *eh, P1 p1, P2 p2) { ev->Call<EventHandle *, P1, P2>(eh, p1, p2); } };
+  template<typename P1, typename P2, typename P3> struct EventHandlerCaller<void (P1, P2, P3)> { static void Call(const Layout::EventHandler *ev, EventHandle *eh, P1 p1, P2 p2, P3 p3) { ev->Call<EventHandle *, P1, P2, P3>(eh, p1, p2, p3); } };
+  template<typename P1, typename P2, typename P3, typename P4> struct EventHandlerCaller<void (P1, P2, P3, P4)> { static void Call(const Layout::EventHandler *ev, EventHandle *eh, P1 p1, P2 p2, P3 p3, P4 p4) { ev->Call<EventHandle *, P1, P2, P3, P4>(eh, p1, p2, p3, p4); } };
 
   /*static*/ const char *Layout::GetStaticType() {
     return "Layout";
@@ -786,21 +789,27 @@ namespace Frames {
     L_REGISTEREVENT(L, GetStaticType(), Size, &Layout::l_EventPusher_Default);
 
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseOver, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMove, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMoveOutside, &Layout::l_EventPusher_Default);
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseOut, &Layout::l_EventPusher_Default);
 
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseLeftUp, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseLeftUpOutside, &Layout::l_EventPusher_Default);
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseLeftDown, &Layout::l_EventPusher_Default);
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseLeftClick, &Layout::l_EventPusher_Default);
 
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMiddleUp, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMiddleUpOutside, &Layout::l_EventPusher_Default);
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMiddleDown, &Layout::l_EventPusher_Default);
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseMiddleClick, &Layout::l_EventPusher_Default);
 
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseRightUp, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseRightUpOutside, &Layout::l_EventPusher_Default);
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseRightDown, &Layout::l_EventPusher_Default);
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseRightClick, &Layout::l_EventPusher_Default);
 
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseButtonUp, &Layout::l_EventPusher_Button);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseButtonUpOutside, &Layout::l_EventPusher_Button);
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseButtonDown, &Layout::l_EventPusher_Button);
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseButtonClick, &Layout::l_EventPusher_Button);
 
@@ -989,6 +998,12 @@ namespace Frames {
     return 1;
   }
 
+  /*static*/ int Layout::l_EventPusher_Default(lua_State *L, const Point &pt) {
+    lua_pushnumber(L, pt.x);
+    lua_pushnumber(L, pt.y);
+    return 2;
+  }
+
   /*static*/ int Layout::l_EventPusher_Button(lua_State *L, int button) {
     lua_pushnumber(L, button + 1);
     return 1;
@@ -1127,6 +1142,8 @@ namespace Frames {
   bool operator==(const Layout::EventHandler &lhs, const Layout::EventHandler &rhs) { return memcmp(&lhs.c, &rhs.c, sizeof(lhs.c)) == 0; }
 
   // eventery
+  #define FLEPREPARAMETERS &ev->second, &handle
+
   #define FRAMES_LAYOUT_EVENT_DEFINE_INFRA(frametype, eventname, paramlist, paramlistcomplete, params) \
     void frametype::Event##eventname##Attach(Delegate<void paramlistcomplete> delegate, float order /*= 0.f*/) { \
       EventAttach(Event##eventname##Id(), EventHandler(delegate), order); \
@@ -1147,7 +1164,7 @@ namespace Frames {
         EventHandle handle; \
         const std::multimap<float, EventHandler> &tab = itr->second; \
         for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
-          ev->second.Call params; \
+          EventHandlerCaller<Event##eventname##Functiontype>::Call params; \
         } \
       } \
     }
@@ -1169,7 +1186,7 @@ namespace Frames {
         if (itr != layouts[i]->m_events.end()) { \
           const std::multimap<float, EventHandler> &tab = itr->second; \
           for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
-            ev->second.Call params; \
+            EventHandlerCaller<Event##eventname##Functiontype>::Call params; \
           } \
         } \
       } \
@@ -1178,7 +1195,7 @@ namespace Frames {
         if (itr != m_events.end()) { \
           const std::multimap<float, EventHandler> &tab = itr->second; \
           for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
-            ev->second.Call params; \
+            EventHandlerCaller<Event##eventname##Functiontype>::Call params; \
           } \
         } \
       } \
@@ -1187,35 +1204,41 @@ namespace Frames {
         if (itr != layouts[i]->m_events.end()) { \
           const std::multimap<float, EventHandler> &tab = itr->second; \
           for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
-            ev->second.Call params; \
+            EventHandlerCaller<Event##eventname##Functiontype>::Call params; \
           } \
         } \
       } \
     }
 
-  FRAMES_LAYOUT_EVENT_DEFINE(Layout, Move, (), (EventHandle *handle), (&handle));
-  FRAMES_LAYOUT_EVENT_DEFINE(Layout, Size, (), (EventHandle *handle), (&handle));
+  FRAMES_LAYOUT_EVENT_DEFINE(Layout, Move, (), (EventHandle *handle), (FLEPREPARAMETERS));
+  FRAMES_LAYOUT_EVENT_DEFINE(Layout, Size, (), (EventHandle *handle), (FLEPREPARAMETERS));
 
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseOver, (), (EventHandle *handle), (&handle));
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseOut, (), (EventHandle *handle), (&handle));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseOver, (), (EventHandle *handle), (FLEPREPARAMETERS));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseMove, (const Point &pt), (EventHandle *handle, const Point &pt), (FLEPREPARAMETERS, pt));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseMoveOutside, (const Point &pt), (EventHandle *handle, const Point &pt), (FLEPREPARAMETERS, pt));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseOut, (), (EventHandle *handle), (FLEPREPARAMETERS));
 
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseLeftUp, (), (EventHandle *handle), (&handle));
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseLeftDown, (), (EventHandle *handle), (&handle));
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseLeftClick, (), (EventHandle *handle), (&handle));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseLeftUp, (), (EventHandle *handle), (FLEPREPARAMETERS));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseLeftUpOutside, (), (EventHandle *handle), (FLEPREPARAMETERS));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseLeftDown, (), (EventHandle *handle), (FLEPREPARAMETERS));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseLeftClick, (), (EventHandle *handle), (FLEPREPARAMETERS));
 
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseMiddleUp, (), (EventHandle *handle), (&handle));
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseMiddleDown, (), (EventHandle *handle), (&handle));
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseMiddleClick, (), (EventHandle *handle), (&handle));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseMiddleUp, (), (EventHandle *handle), (FLEPREPARAMETERS));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseMiddleUpOutside, (), (EventHandle *handle), (FLEPREPARAMETERS));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseMiddleDown, (), (EventHandle *handle), (FLEPREPARAMETERS));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseMiddleClick, (), (EventHandle *handle), (FLEPREPARAMETERS));
 
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseRightUp, (), (EventHandle *handle), (&handle));
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseRightDown, (), (EventHandle *handle), (&handle));
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseRightClick, (), (EventHandle *handle), (&handle));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseRightUp, (), (EventHandle *handle), (FLEPREPARAMETERS));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseRightUpOutside, (), (EventHandle *handle), (FLEPREPARAMETERS));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseRightDown, (), (EventHandle *handle), (FLEPREPARAMETERS));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseRightClick, (), (EventHandle *handle), (FLEPREPARAMETERS));
 
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseButtonUp, (int button), (EventHandle *handle, int button), (&handle, button));
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseButtonDown, (int button), (EventHandle *handle, int button), (&handle, button));
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseButtonClick, (int button), (EventHandle *handle, int button), (&handle, button));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseButtonUp, (int button), (EventHandle *handle, int button), (FLEPREPARAMETERS, button));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseButtonUpOutside, (int button), (EventHandle *handle, int button), (FLEPREPARAMETERS, button));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseButtonDown, (int button), (EventHandle *handle, int button), (FLEPREPARAMETERS, button));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseButtonClick, (int button), (EventHandle *handle, int button), (FLEPREPARAMETERS, button));
 
-  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseWheel, (int delta), (EventHandle *handle, int delta), (&handle, delta));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseWheel, (int delta), (EventHandle *handle, int delta), (FLEPREPARAMETERS, delta));
 
   void Layout::EventAttach(EventId id, const EventHandler &handler, float order) {
     m_events[id].insert(std::make_pair(order, handler)); // kapowza!
@@ -1262,7 +1285,6 @@ namespace Frames {
       lua_pop(L, 1);
     }
   }
-
   void Layout::LuaFrameEventHandler::Call(EventHandle *handle, int p1) const {
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
     lua_rawgeti(L, -1, idx);
@@ -1271,6 +1293,21 @@ namespace Frames {
     lua_newtable(L);
 
     int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void (int)>::T>(pusher))(L, p1);
+    
+    if (lua_pcall(L, parametercount + 2, 0, 0)) {
+      // Error!
+      layout->GetEnvironment()->LogError(lua_tostring(L, -1));
+      lua_pop(L, 1);
+    }
+  }
+  void Layout::LuaFrameEventHandler::Call(EventHandle *handle, const Point &pt) const {
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
+    lua_rawgeti(L, -1, idx);
+    lua_remove(L, -2);
+    layout->l_push(L);
+    lua_newtable(L);
+
+    int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void (const Point &)>::T>(pusher))(L, pt);
     
     if (lua_pcall(L, parametercount + 2, 0, 0)) {
       // Error!

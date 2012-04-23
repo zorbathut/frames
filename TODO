@@ -65,10 +65,10 @@
     X appropriate defaults
     X :D
   X change intptr_t to a typedef
-  * Cursor placement
-    * Given X and Y, return coordinate
-    * let's do this the crummy way for now
-    * clamp to the box
+  X Cursor placement
+    X Given X and Y, return coordinate
+    X let's do this the crummy way for now
+    X clamp to the box
   * Selection
     * place cursor and select on mousedown
     * place cursor on mouseup
@@ -81,6 +81,8 @@
       * Remove ScrollToCursor
   * Editing
   * Editing modifiers
+  * I think we need frames attached to the message?
+  * "fix all dis shit"
 
 * maybe we need to pass "this" along with all events? both to lua, and to non-lua?
 
