@@ -39,7 +39,7 @@ namespace Frames {
     InteractivityMode GetInteractive() const { return m_interactive; }
 
     void SetCursor(int position);
-    int GetCursor() const { return m_select; }
+    int GetCursor() const { return m_cursor; }
 
     void SetSelection();  // clear
     void SetSelection(int start, int end);
@@ -89,6 +89,7 @@ namespace Frames {
     // Event handlers for mouse events
     void EventInternal_LeftDown(EventHandle *e);
     void EventInternal_LeftUp(EventHandle *e);
+    void EventInternal_Move(EventHandle *e, const Point &pt);
 
     // Lua bindings
     static int l_SetText(lua_State *L);

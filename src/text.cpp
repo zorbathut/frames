@@ -71,11 +71,13 @@ namespace Frames {
     // clear event handlers
     EventMouseLeftDownDetach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftDown));
     EventMouseLeftUpDetach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
+    EventMouseLeftUpOutsideDetach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
 
     // if necessary, insert event handlers
     if (interactive == INTERACTIVE_SELECT || interactive == INTERACTIVE_EDIT) {
       EventMouseLeftDownAttach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftDown));
       EventMouseLeftUpAttach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
+      EventMouseLeftUpOutsideAttach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
     }
   }
 
@@ -316,13 +318,42 @@ namespace Frames {
   }
 
   void Text::EventInternal_LeftDown(EventHandle *e) {
-    int pos = m_layout->GetCharacterFromCoordinate(GetEnvironment()->GetMouse() - m_scroll - Point(GetLeft(), GetTop()));
+    int pos = m_layout->GetCharacterFromCoordinate(GetEnvironment()->GetMouse() + m_scroll - Point(GetLeft(), GetTop()));
     SetCursor(pos);
     SetSelection();
+
+    EventMouseMoveAttach(Delegate<void (EventHandle *, const Point &pt)>(this, &Text::EventInternal_Move));
+    EventMouseMoveOutsideAttach(Delegate<void (EventHandle *, const Point &pt)>(this, &Text::EventInternal_Move));
   }
+
   void Text::EventInternal_LeftUp(EventHandle *e) {
-    int pos = m_layout->GetCharacterFromCoordinate(GetEnvironment()->GetMouse() - m_scroll - Point(GetLeft(), GetTop()));
-    SetSelection(GetCursor(), pos);
+    int pos = m_layout->GetCharacterFromCoordinate(GetEnvironment()->GetMouse() + m_scroll - Point(GetLeft(), GetTop()));
+
+    // We want to change the cursor position, but still preserve the selection, which takes a little effort
+    int start, end;
+    GetSelection(&start, &end);
+    if (start == GetCursor()) {
+      SetSelection(pos, end);
+    } else {
+      SetSelection(start, pos);
+    }
+    SetCursor(pos);
+
+    EventMouseMoveDetach(Delegate<void (EventHandle *, const Point &pt)>(this, &Text::EventInternal_Move));
+    EventMouseMoveOutsideDetach(Delegate<void (EventHandle *, const Point &pt)>(this, &Text::EventInternal_Move));
+  }
+
+  void Text::EventInternal_Move(EventHandle *e, const Point &pt) {
+    int pos = m_layout->GetCharacterFromCoordinate(pt + m_scroll - Point(GetLeft(), GetTop()));
+
+    // We want to change the cursor position, but still preserve the selection, which takes a little effort
+    int start, end;
+    GetSelection(&start, &end);
+    if (start == GetCursor()) {
+      SetSelection(pos, end);
+    } else {
+      SetSelection(start, pos);
+    }
     SetCursor(pos);
   }
 

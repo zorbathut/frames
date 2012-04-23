@@ -85,8 +85,14 @@ namespace Frames {
   }
 
   void Environment::MouseDown(int button) {
+    if (m_buttonDown[button]) {
+      LogError(Utility::Format("Received a mouse down message for button %d while in the middle of a click. Fabricating fake MouseUp message in order to preserve ordering guarantees.", button));
+      MouseUp(button);
+    }
+
     if (m_over) {
       m_buttonDown[button] = m_over;
+
       m_over->EventMouseButtonDownTrigger(button);
       if (button == 0) {
         m_over->EventMouseLeftDownTrigger();
