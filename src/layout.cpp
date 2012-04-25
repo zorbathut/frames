@@ -814,6 +814,10 @@ namespace Frames {
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseButtonClick, &Layout::l_EventPusher_Button);
 
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), MouseWheel, &Layout::l_EventPusher_Default);
+
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), KeyDown, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), KeyType, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), KeyUp, &Layout::l_EventPusher_Default);
   }
 
   /*static*/ void Layout::l_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *)) {
@@ -998,9 +1002,32 @@ namespace Frames {
     return 1;
   }
 
+  /*static*/ int Layout::l_EventPusher_Default(lua_State *L, const std::string &p1) {
+    lua_pushstring(L, p1.c_str());
+    return 1;
+  }
+
   /*static*/ int Layout::l_EventPusher_Default(lua_State *L, const Point &pt) {
     lua_pushnumber(L, pt.x);
     lua_pushnumber(L, pt.y);
+    return 2;
+  }
+
+   /*static*/ int Layout::l_EventPusher_Default(lua_State *L, const KeyEvent &p1) {
+    lua_pushnumber(L, p1.key);
+    lua_newtable(L);
+    if (p1.shift) {
+      lua_pushboolean(L, true);
+      lua_setfield(L, -2, "shift");
+    }
+    if (p1.alt) {
+      lua_pushboolean(L, true);
+      lua_setfield(L, -2, "alt");
+    }
+    if (p1.ctrl) {
+      lua_pushboolean(L, true);
+      lua_setfield(L, -2, "ctrl");
+    }
     return 2;
   }
 
@@ -1240,6 +1267,10 @@ namespace Frames {
 
   FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, MouseWheel, (int delta), (EventHandle *handle, int delta), (FLEPREPARAMETERS, delta));
 
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, KeyDown, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev), (FLEPREPARAMETERS, kev));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, KeyType, (const std::string &text), (EventHandle *event, const std::string &text), (FLEPREPARAMETERS, text));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, KeyUp, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev), (FLEPREPARAMETERS, kev));
+
   void Layout::EventAttach(EventId id, const EventHandler &handler, float order) {
     m_events[id].insert(std::make_pair(order, handler)); // kapowza!
     EventAttached(id);
@@ -1300,6 +1331,21 @@ namespace Frames {
       lua_pop(L, 1);
     }
   }
+  void Layout::LuaFrameEventHandler::Call(EventHandle *handle, const std::string &text) const {
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
+    lua_rawgeti(L, -1, idx);
+    lua_remove(L, -2);
+    layout->l_push(L);
+    lua_newtable(L);
+
+    int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void (const std::string &)>::T>(pusher))(L, text);
+    
+    if (lua_pcall(L, parametercount + 2, 0, 0)) {
+      // Error!
+      layout->GetEnvironment()->LogError(lua_tostring(L, -1));
+      lua_pop(L, 1);
+    }
+  }
   void Layout::LuaFrameEventHandler::Call(EventHandle *handle, const Point &pt) const {
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
     lua_rawgeti(L, -1, idx);
@@ -1308,6 +1354,21 @@ namespace Frames {
     lua_newtable(L);
 
     int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void (const Point &)>::T>(pusher))(L, pt);
+    
+    if (lua_pcall(L, parametercount + 2, 0, 0)) {
+      // Error!
+      layout->GetEnvironment()->LogError(lua_tostring(L, -1));
+      lua_pop(L, 1);
+    }
+  }
+  void Layout::LuaFrameEventHandler::Call(EventHandle *handle, const KeyEvent &ke) const {
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
+    lua_rawgeti(L, -1, idx);
+    lua_remove(L, -2);
+    layout->l_push(L);
+    lua_newtable(L);
+
+    int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void (const KeyEvent &)>::T>(pusher))(L, ke);
     
     if (lua_pcall(L, parametercount + 2, 0, 0)) {
       // Error!

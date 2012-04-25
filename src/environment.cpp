@@ -84,7 +84,7 @@ namespace Frames {
     }
   }
 
-  void Environment::MouseDown(int button) {
+  bool Environment::MouseDown(int button) {
     if (m_buttonDown[button]) {
       LogError(Utility::Format("Received a mouse down message for button %d while in the middle of a click. Fabricating fake MouseUp message in order to preserve ordering guarantees.", button));
       MouseUp(button);
@@ -101,12 +101,18 @@ namespace Frames {
       } else if (button == 2) {
         m_over->EventMouseMiddleDownTrigger();
       }
+
+      return true;
     }
+    return false;
   }
 
-  void Environment::MouseUp(int button) {
+  bool Environment::MouseUp(int button) {
     // be careful: any event can cause m_over or any m_buttonDown to be cleared
+    bool consumed = false;
+
     if (m_over) {
+      consumed = true;
       m_over->EventMouseButtonUpTrigger(button);
       if (m_over) {
         if (button == 0) {
@@ -147,10 +153,46 @@ namespace Frames {
     }
 
     m_buttonDown[button] = 0; // We explicitly do *not* erase items from this set ever! This lets us iterate over the set while removing elements from it.
+
+    return consumed;
   }
   //void Environment::MouseWheel(int delta);
 
   //void Environment::MouseClear();  // mouse no longer in the scene at all*/
+
+  bool Environment::KeyDown(const KeyEvent &key) {
+    if (m_focus) {
+      m_focus->EventKeyDownTrigger(key);
+      return true;
+    }
+    return false;
+  }
+  bool Environment::KeyType(const std::string &type) {
+    if (m_focus) {
+      m_focus->EventKeyTypeTrigger(type);
+      return true;
+    }
+    return false;
+  }
+  bool Environment::KeyUp(const KeyEvent &key) {
+    if (m_focus) {
+      m_focus->EventKeyUpTrigger(key);
+      return true;
+    }
+    return false;
+  }
+
+  void Environment::SetFocus(Layout *layout) {
+    if (layout->GetEnvironment() != this) {
+      LogError("Attempted to set focus to frame with incorrect environment");
+    } else {
+      m_focus = layout;
+    }
+  }
+
+  void Environment::ClearFocus() {
+    m_focus = 0;
+  }
 
   void Environment::Render(const Layout *root) {
     if (!root) {
@@ -493,6 +535,7 @@ namespace Frames {
     m_root->SetNameStatic("Root");
 
     m_over = 0;
+    m_focus = 0;
 
     m_renderer = new Renderer(this);
     m_text_manager = new TextManager(this);
@@ -556,6 +599,10 @@ namespace Frames {
     if (m_over == layout) {
       m_over = 0;
       // TODO: refresh mouse position based on the new layout?
+    }
+
+    if (m_focus == layout) {
+      m_focus = 0;
     }
 
     for (std::map<int, Layout *>::iterator itr = m_buttonDown.begin(); itr != m_buttonDown.end(); ++itr) {

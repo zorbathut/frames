@@ -258,7 +258,7 @@ namespace Frames {
       Rect bounds = GetBounds();
 
       // render selection
-      if (m_cursor != m_select) {
+      if (m_interactive >= INTERACTIVE_SELECT && m_cursor != m_select) {
         renderer->SetTexture();
 
         int s = m_cursor;
@@ -301,7 +301,7 @@ namespace Frames {
       m_layout->Render(renderer, m_color_text, GetBounds(), GetScroll());
 
       // render cursor, if there is one
-      if (true) { // display only if in focus
+      if (m_interactive >= INTERACTIVE_CURSOR && GetFocus()) { // display only if in focus
         // TODO: cull properly when too small
         renderer->SetTexture();
         Renderer::Vertex *vert = renderer->Request(4);

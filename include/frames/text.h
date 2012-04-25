@@ -12,7 +12,7 @@ namespace Frames {
     friend class Environment;
 
   public:
-    enum InteractivityMode { INTERACTIVE_NONE, INTERACTIVE_SELECT, INTERACTIVE_EDIT };
+    enum InteractivityMode { INTERACTIVE_NONE, INTERACTIVE_SELECT, INTERACTIVE_CURSOR, INTERACTIVE_EDIT };
 
     static Text *CreateBare(Layout *parent);
     static Text *CreateTagged_imp(const char *filename, int line, Layout *parent);

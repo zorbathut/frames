@@ -4,6 +4,7 @@
 #define FRAMES_ENVIRONMENT
 
 #include "frames/configuration.h"
+#include "frames/input.h"
 #include "frames/noncopyable.h"
 #include "frames/point.h"
 #include "frames/utility.h"
@@ -29,17 +30,28 @@ namespace Frames {
     ~Environment();
 
     // Update to the state of the world, incoming events
+    // Bool return values indicate that the event was consumed, if applicable
     void ResizeRoot(int x, int y);
 
     void MouseMove(int x, int y);
-    void MouseDown(int button);
-    void MouseUp(int button);
-    void MouseWheel(int delta);
+    bool MouseDown(int button);
+    bool MouseUp(int button);
+    bool MouseWheel(int delta);
 
     void MouseClear();  // mouse no longer in the scene at all
 
     const Point &GetMouse() const { return m_mouse; }
+
+    bool KeyDown(const KeyEvent &key);
+    bool KeyType(const std::string &type);
+    bool KeyUp(const KeyEvent &key);
     
+    // Focus
+    Layout *GetFocus() { return m_focus; }
+    const Layout *GetFocus() const { return m_focus; }
+    void SetFocus(Layout *layout);
+    void ClearFocus();
+
     // Rendering
     void Render(const Layout *root = 0);
     
@@ -64,6 +76,7 @@ namespace Frames {
     void LogDebug(const std::string &log) { if (m_config.logger) m_config.logger->LogDebug(log); }
   private:
     friend class Layout;
+    friend class Frame;
 
     // Utility functions and parameters
     void Init(const Configuration &config);
@@ -105,6 +118,7 @@ namespace Frames {
 
     // Input state
     Layout *m_over;
+    Layout *m_focus;
     std::map<int, Layout *> m_buttonDown;
     Point m_mouse;
 

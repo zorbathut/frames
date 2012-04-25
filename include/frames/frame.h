@@ -38,6 +38,9 @@ namespace Frames {
     void SetBackground(const Color &color);
     const Color &GetBackground() const { return m_bg; }
 
+    void SetFocus(bool focus);
+    bool GetFocus() const;
+
     using Layout::Obliterate;
 
   protected:
@@ -73,6 +76,9 @@ namespace Frames {
 
     static int l_SetBackground(lua_State *L);
     static int l_GetBackground(lua_State *L);
+
+    static int l_SetFocus(lua_State *L);
+    static int l_GetFocus(lua_State *L);
 
     static int l_Obliterate(lua_State *L);
   };

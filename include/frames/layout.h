@@ -4,6 +4,7 @@
 #define FRAMES_LAYOUT
 
 #include "frames/delegate.h"
+#include "frames/input.h"
 #include "frames/noncopyable.h"
 #include "frames/point.h"
 #include "frames/utility.h"
@@ -116,6 +117,10 @@ namespace Frames {
 
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseWheel, (int delta), (EventHandle *event, int delta));
 
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(KeyDown, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(KeyType, (const std::string &text), (EventHandle *event, const std::string &text));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(KeyUp, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev));
+
     const char *GetNameStatic() const { return m_name_static; }
     void SetNameStatic(const char *name) { m_name_static = name; }  // WARNING: This does not make a copy! The const char* must have a lifetime longer than this frame.
 
@@ -201,7 +206,9 @@ namespace Frames {
 
     static int l_EventPusher_Default(lua_State *L);
     static int l_EventPusher_Default(lua_State *L, int p1);
+    static int l_EventPusher_Default(lua_State *L, const std::string &pt);
     static int l_EventPusher_Default(lua_State *L, const Point &pt);
+    static int l_EventPusher_Default(lua_State *L, const KeyEvent &pt);
 
     static int l_EventPusher_Button(lua_State *L, int button);
 
@@ -284,7 +291,9 @@ namespace Frames {
       
       void Call(EventHandle *handle) const;
       void Call(EventHandle *handle, int p1) const;
+      void Call(EventHandle *handle, const std::string &text) const;
       void Call(EventHandle *handle, const Point &pt) const;
+      void Call(EventHandle *handle, const KeyEvent &ke) const;
     };
     friend bool operator<(const LuaFrameEventHandler &lhs, const LuaFrameEventHandler &rhs);
     typedef std::map<LuaFrameEventHandler, int> LuaFrameEventMap; // second parameter is refcount

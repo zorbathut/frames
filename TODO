@@ -1,10 +1,12 @@
 
 * Immediate todo:
-  * Start worrying about keyboard input
-    * Focus:
-      * Make cursor go away
-      * Remove ScrollToCursor
   * Editing
+    X keydown
+    X keyup
+    * keytype
+  * lua event with proper text
+  * Start worrying about keyboard input
+    * Test cursor/selection behavior - need at least to add click interactive behavior
   * Editing modifiers
   * Clipboard stuff
   * I think we need frames attached to the event?
@@ -27,6 +29,7 @@
 
 * May need to figure out how internal character positioning should work
 
+* definitely need a way to remove events *while* we're iterating over events
 
 * Need to figure out key events, text input
 * text edit field
