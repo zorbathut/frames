@@ -4,6 +4,8 @@
     X keydown
     X keyup
     * keytype
+    * missing type messages
+    * missing mouseclicks
   * lua event with proper text
   * Start worrying about keyboard input
     * Test cursor/selection behavior - need at least to add click interactive behavior
