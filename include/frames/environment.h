@@ -44,6 +44,7 @@ namespace Frames {
 
     bool KeyDown(const KeyEvent &key);
     bool KeyType(const std::string &type);
+    bool KeyRepeat(const KeyEvent &key);
     bool KeyUp(const KeyEvent &key);
     
     // Focus

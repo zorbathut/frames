@@ -817,6 +817,7 @@ namespace Frames {
 
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), KeyDown, &Layout::l_EventPusher_Default);
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), KeyType, &Layout::l_EventPusher_Default);
+    L_REGISTEREVENT_BUBBLE(L, GetStaticType(), KeyRepeat, &Layout::l_EventPusher_Default);
     L_REGISTEREVENT_BUBBLE(L, GetStaticType(), KeyUp, &Layout::l_EventPusher_Default);
   }
 
@@ -1269,6 +1270,7 @@ namespace Frames {
 
   FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, KeyDown, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev), (FLEPREPARAMETERS, kev));
   FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, KeyType, (const std::string &text), (EventHandle *event, const std::string &text), (FLEPREPARAMETERS, text));
+  FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, KeyRepeat, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev), (FLEPREPARAMETERS, kev));
   FRAMES_LAYOUT_EVENT_DEFINE_BUBBLE(Layout, KeyUp, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev), (FLEPREPARAMETERS, kev));
 
   void Layout::EventAttach(EventId id, const EventHandler &handler, float order) {

@@ -167,6 +167,7 @@ namespace Frames {
     }
     return false;
   }
+
   bool Environment::KeyType(const std::string &type) {
     if (m_focus) {
       m_focus->EventKeyTypeTrigger(type);
@@ -174,6 +175,15 @@ namespace Frames {
     }
     return false;
   }
+
+  bool Environment::KeyRepeat(const KeyEvent &key) {
+    if (m_focus) {
+      m_focus->EventKeyRepeatTrigger(key);
+      return true;
+    }
+    return false;
+  }
+
   bool Environment::KeyUp(const KeyEvent &key) {
     if (m_focus) {
       m_focus->EventKeyUpTrigger(key);

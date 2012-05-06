@@ -119,6 +119,7 @@ namespace Frames {
 
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(KeyDown, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev));
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(KeyType, (const std::string &text), (EventHandle *event, const std::string &text));
+    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(KeyRepeat, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev));
     FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(KeyUp, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev));
 
     const char *GetNameStatic() const { return m_name_static; }
