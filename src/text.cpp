@@ -66,18 +66,34 @@ namespace Frames {
 
   void Text::SetInteractive(InteractivityMode interactive) {
     m_interactive = interactive;
-    // clear focus if necessary
+    
+    // kill focus if we no longer need to be focused
+    if (interactive == INTERACTIVE_NONE || interactive == INTERACTIVE_SELECT) {
+      if (GetEnvironment()->GetFocus() == this) {
+        GetEnvironment()->SetFocus(0);
+      }
+    }
 
     // clear event handlers
     EventMouseLeftDownDetach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftDown));
     EventMouseLeftUpDetach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
     EventMouseLeftUpOutsideDetach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
 
+    EventKeyDownDetach(Delegate<void (EventHandle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+    EventKeyRepeatDetach(Delegate<void (EventHandle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+    EventKeyTypeDetach(Delegate<void (EventHandle *, const std::string &)>(this, &Text::EventInternal_KeyType));
+
     // if necessary, insert event handlers
-    if (interactive == INTERACTIVE_SELECT || interactive == INTERACTIVE_EDIT) {
+    if (interactive == INTERACTIVE_SELECT || interactive == INTERACTIVE_CURSOR || interactive == INTERACTIVE_EDIT) {
       EventMouseLeftDownAttach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftDown));
       EventMouseLeftUpAttach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
       EventMouseLeftUpOutsideAttach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
+    }
+
+    if (interactive == INTERACTIVE_CURSOR || interactive == INTERACTIVE_EDIT) {
+      EventKeyDownAttach(Delegate<void (EventHandle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+      EventKeyRepeatAttach(Delegate<void (EventHandle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+      EventKeyTypeAttach(Delegate<void (EventHandle *, const std::string &)>(this, &Text::EventInternal_KeyType));
     }
   }
 
@@ -324,6 +340,10 @@ namespace Frames {
 
     EventMouseMoveAttach(Delegate<void (EventHandle *, const Point &pt)>(this, &Text::EventInternal_Move));
     EventMouseMoveOutsideAttach(Delegate<void (EventHandle *, const Point &pt)>(this, &Text::EventInternal_Move));
+
+    if (m_interactive >= INTERACTIVE_CURSOR) {
+      GetEnvironment()->SetFocus(this);
+    }
   }
 
   void Text::EventInternal_LeftUp(EventHandle *e) {
@@ -355,6 +375,21 @@ namespace Frames {
       SetSelection(start, pos);
     }
     SetCursor(pos);
+  }
+
+  void Text::EventInternal_KeyType(EventHandle *e, const std::string &type) {
+    // First, see if we even can have things enter
+    if (m_interactive != INTERACTIVE_EDIT) {
+      return;
+    }
+
+    int ncursor = m_cursor + type.size();
+
+    SetText(m_text.substr(0, std::min(m_cursor, m_select)) + type + m_text.substr(std::max(m_cursor, m_select)));
+    SetCursor(ncursor);
+    SetSelection();
+  }
+  void Text::EventInternal_KeyDownOrRepeat(EventHandle *e, const KeyEvent &ev) {
   }
 
   /*static*/ int Text::l_SetText(lua_State *L) {

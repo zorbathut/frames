@@ -91,6 +91,10 @@ namespace Frames {
     void EventInternal_LeftUp(EventHandle *e);
     void EventInternal_Move(EventHandle *e, const Point &pt);
 
+    // Event handlers for key events
+    void EventInternal_KeyType(EventHandle *e, const std::string &type);
+    void EventInternal_KeyDownOrRepeat(EventHandle *e, const KeyEvent &ev);
+
     // Lua bindings
     static int l_SetText(lua_State *L);
     static int l_GetText(lua_State *L);

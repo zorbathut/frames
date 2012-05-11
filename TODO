@@ -1,13 +1,12 @@
 
 * Immediate todo:
-  * lua event with proper text for keydown/up/repeat
   * Basic typing behavior
-    * Filter real keystrokes, append
+    X Filter real keystrokes, append
     * Cursor movement
     * Special cursor keys (home, end)
     * Selection
     * Per-word with ctrl
-    * Replace
+    X Replace
   * Clipboard stuff
     * ctrl-c
     * ctrl-v
