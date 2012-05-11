@@ -1015,7 +1015,7 @@ namespace Frames {
   }
 
    /*static*/ int Layout::l_EventPusher_Default(lua_State *L, const KeyEvent &p1) {
-    lua_pushnumber(L, p1.key);
+    lua_pushstring(L, Key::StringFromKey(p1.key));
     lua_newtable(L);
     if (p1.shift) {
       lua_pushboolean(L, true);

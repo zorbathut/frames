@@ -133,6 +133,8 @@ namespace Frames {
       F15,
       Pause,
     };
+
+    const char *StringFromKey(Key key);
   }
 
   struct KeyEvent {
