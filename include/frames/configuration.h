@@ -74,6 +74,15 @@ namespace Frames {
     TextureFromStream *textureFromStream;
 
     std::string fontDefaultId;
+
+    class Clipboard {
+    public:
+      virtual ~Clipboard() { }
+
+      virtual void Set(const std::string &dat);
+      virtual std::string Get();
+    };
+    Clipboard *clipboard;
   };
 }
 

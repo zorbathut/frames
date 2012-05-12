@@ -12,7 +12,7 @@
 #include <windows.h>
 
 namespace Frames {
-  Configuration::Configuration() : logger(0), textureFromId(0), streamFromId(0), pathFromId(0), textureFromStream(0) { };
+  Configuration::Configuration() : logger(0), textureFromId(0), streamFromId(0), pathFromId(0), textureFromStream(0), clipboard(0) { };
 
   void Configuration::Logger::LogError(const std::string &log) {
     std::printf("Frames error: %s", log.c_str());
@@ -56,5 +56,55 @@ namespace Frames {
       typeHint = ImageType::DDS;*/
     else
       return TextureConfig(); // give up
+  }
+
+  // win32 only. TODO: split into crossplatform
+  void Configuration::Clipboard::Set(const std::string &dat) {
+    // TODO: unicode
+    if (OpenClipboard(0)) {
+      EmptyClipboard();
+
+      std::string clipboarded;
+      for (int i = 0; i < (int)dat.size(); ++i) {
+        if (dat[i] == '\n') {
+          clipboarded += '\r';
+        }
+        clipboarded += dat[i];
+      }
+
+      HGLOBAL data = GlobalAlloc(GMEM_MOVEABLE, clipboarded.size() + 1);
+
+      if (data) {
+        char *write = (char*)GlobalLock(data);
+        memcpy(write, clipboarded.c_str(), clipboarded.size() + 1);
+        GlobalUnlock(data);
+
+        SetClipboardData(CF_TEXT, data);
+      }
+
+      CloseClipboard();
+    }
+  }
+  std::string Configuration::Clipboard::Get() {
+    // TODO: unicode
+    std::string result;
+    if (OpenClipboard(0)) {
+      HGLOBAL data = GetClipboardData(CF_TEXT);
+
+      if (data) {
+        const char *read = (const char*)GlobalLock(data);
+        if (read) {
+          while (*read) {
+            if (*read != '\r') {
+              result += *(read++);
+            }
+          }
+          GlobalUnlock(data);
+        }
+      }
+
+      CloseClipboard();
+    }
+    return result;
   }
 }

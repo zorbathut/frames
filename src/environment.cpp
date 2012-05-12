@@ -44,6 +44,11 @@ namespace Frames {
     delete m_renderer;
     delete m_texture_manager;
     delete m_config_logger_owned;
+    delete m_config_tfi_owned;
+    delete m_config_sfi_owned;
+    delete m_config_pfi_owned;
+    delete m_config_tfs_owned;
+    delete m_config_clipboard_owned;
   }
 
   void Environment::ResizeRoot(int x, int y) {
@@ -528,6 +533,11 @@ namespace Frames {
 
   void Environment::Init(const Configuration &config) {
     m_config_logger_owned = 0;
+    m_config_tfi_owned = 0;
+    m_config_sfi_owned = 0;
+    m_config_pfi_owned = 0;
+    m_config_tfs_owned = 0;
+    m_config_clipboard_owned = 0;
 
     m_config = config;
 
@@ -554,6 +564,11 @@ namespace Frames {
     if (!m_config.textureFromStream) {
       m_config_tfs_owned = new Configuration::TextureFromStream();
       m_config.textureFromStream = m_config_tfs_owned;
+    }
+
+    if (!m_config.clipboard) {
+      m_config_clipboard_owned = new Configuration::Clipboard();
+      m_config.clipboard = m_config_clipboard_owned;
     }
 
     m_root = new Layout(0, this);

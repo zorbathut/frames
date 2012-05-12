@@ -483,6 +483,29 @@ namespace Frames {
     } else if (ev.key == Key::A && ev.ctrl) {
       SetSelection(0, m_text.size());
       SetCursor(m_text.size());
+    } else if (ev.key == Key::C && ev.ctrl) {
+      // copy to clipboard
+      if (m_cursor != m_select) {
+        GetEnvironment()->GetConfiguration().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
+      }
+    } else if (ev.key == Key::X && ev.ctrl) {
+      // cut to clipboard
+      if (m_cursor != m_select) {
+        GetEnvironment()->GetConfiguration().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
+
+        // chop out that text
+        int ncursor = std::min(m_cursor, m_select);
+        SetText(m_text.substr(0, std::min(m_cursor, m_select)) + m_text.substr(std::max(m_cursor, m_select)));
+        SetCursor(ncursor);
+        SetSelection();
+      }
+    } else if (ev.key == Key::V && ev.ctrl) {
+      // paste from clipboard
+      std::string clipboard = GetEnvironment()->GetConfiguration().clipboard->Get();
+      int ncursor = m_cursor + clipboard.size();
+      SetText(m_text.substr(0, std::min(m_cursor, m_select)) + clipboard + m_text.substr(std::max(m_cursor, m_select)));
+      SetCursor(ncursor);
+      SetSelection();
     }
 
     // todo: pageup

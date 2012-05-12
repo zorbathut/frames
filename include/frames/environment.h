@@ -113,6 +113,7 @@ namespace Frames {
     Configuration::StreamFromId *m_config_sfi_owned;
     Configuration::PathFromId *m_config_pfi_owned;
     Configuration::TextureFromStream *m_config_tfs_owned;
+    Configuration::Clipboard *m_config_clipboard_owned;
 
     // Managers
     Renderer *m_renderer;
