@@ -383,6 +383,10 @@ namespace Frames {
       return;
     }
 
+    if (GetEnvironment()->IsCtrl() || GetEnvironment()->IsAlt()) {
+      return;
+    }
+
     int ncursor = m_cursor + type.size();
 
     SetText(m_text.substr(0, std::min(m_cursor, m_select)) + type + m_text.substr(std::max(m_cursor, m_select)));
@@ -390,29 +394,69 @@ namespace Frames {
     SetSelection();
   }
   void Text::EventInternal_KeyDownOrRepeat(EventHandle *e, const KeyEvent &ev) {
-    if (ev.key == Key::Left) {
-      // todo: shift
-      // todo: ctrl
-      SetCursor(GetCursor() - 1);
-      SetSelection();
-    } else if (ev.key == Key::Right) {
-      // todo: shift
-      // todo: ctrl
-      SetCursor(GetCursor() + 1);
-      SetSelection();
-    } else if (ev.key == Key::Up) {
-      float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
-      Point ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
-      ccor.y -= lineheight / 2;
-      SetCursor(m_layout->GetCharacterFromCoordinate(ccor));
-      SetSelection();
-    } else if (ev.key == Key::Down) {
-      float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
-      Point ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
-      ccor.y += lineheight * 3 / 2; // need to bump it into the bottom line
-      SetCursor(m_layout->GetCharacterFromCoordinate(ccor));
-      SetSelection();
-    } else if (ev.key == Key::Backspace) {
+    {
+      // movement-based things
+      int newcursor = -1;
+      bool hascursor = true;
+      if (ev.key == Key::Left) {
+        if (ev.ctrl) {
+          // shift a word
+          int curs = m_cursor - 2;
+          for (; curs > 0; curs--) {
+            if (isspace(m_text[curs])) {
+              curs++; // put us after the space
+              break;
+            }
+          }
+          newcursor = curs;
+        } else {
+          newcursor = m_cursor - 1;
+        }
+      } else if (ev.key == Key::Right) {
+        if (ev.ctrl) {
+          // shift a word
+          int curs = m_cursor + 1;
+          for (; curs < (int)m_text.size(); curs++) {
+            if (isspace(m_text[curs])) {
+              break;
+            }
+          }
+          newcursor = curs;
+        } else {
+          newcursor = m_cursor + 1;
+        }
+      } else if (ev.key == Key::Up) {
+        float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
+        Point ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
+        ccor.y -= lineheight / 2;
+        newcursor = m_layout->GetCharacterFromCoordinate(ccor);
+      } else if (ev.key == Key::Down) {
+        float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
+        Point ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
+        ccor.y += lineheight * 3 / 2; // need to bump it into the bottom line
+        newcursor = m_layout->GetCharacterFromCoordinate(ccor);
+      } else if (ev.key == Key::Home) {
+        newcursor = 0;
+      } else if (ev.key == Key::End) {
+        newcursor = m_text.size();
+      } else {
+        // isn't actually a cursor movement key
+        hascursor = false;
+      }
+
+      if (hascursor) {
+        newcursor = Utility::Clamp(newcursor, 0, m_text.size());
+        if (ev.shift) {
+          SetSelection(m_select, newcursor);
+          SetCursor(newcursor);
+        } else {
+          SetCursor(newcursor);
+          SetSelection();
+        }
+      }
+    }
+
+    if (ev.key == Key::Backspace) {
       if (m_cursor != m_select) {
         // wipe out the selection
         int ncursor = std::min(m_cursor, m_select);
@@ -421,8 +465,9 @@ namespace Frames {
         SetSelection();
       } else if (m_cursor) {
         // wipe out the character before the cursor
+        int ncursor = m_cursor - 1;
         SetText(m_text.substr(0, m_cursor - 1) + m_text.substr(m_cursor));
-        SetCursor(m_cursor - 1);
+        SetCursor(ncursor);
       }
     } else if (ev.key == Key::Delete) {
       if (m_cursor != m_select) {
@@ -435,13 +480,11 @@ namespace Frames {
         // wipe out the character after the cursor
         SetText(m_text.substr(0, m_cursor) + m_text.substr(m_cursor + 1));
       }
-    } else if (ev.key == Key::Home) {
-      SetCursor(0);
-      SetSelection();
-    } else if (ev.key == Key::End) {
+    } else if (ev.key == Key::A && ev.ctrl) {
+      SetSelection(0, m_text.size());
       SetCursor(m_text.size());
-      SetSelection();
     }
+
     // todo: pageup
     // todo: pagedown
   }

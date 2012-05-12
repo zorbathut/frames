@@ -46,6 +46,11 @@ namespace Frames {
     bool KeyType(const std::string &type);
     bool KeyRepeat(const KeyEvent &key);
     bool KeyUp(const KeyEvent &key);
+
+    // state as of the current event that's being handled
+    bool IsShift() const;
+    bool IsCtrl() const;
+    bool IsAlt() const;
     
     // Focus
     Layout *GetFocus() { return m_focus; }
@@ -122,6 +127,7 @@ namespace Frames {
     Layout *m_focus;
     std::map<int, Layout *> m_buttonDown;
     Point m_mouse;
+    KeyEvent m_lastEvent; // stores the shift/ctrl/alt states
 
     // Lua
     class LuaStackChecker {

@@ -1,18 +1,10 @@
 
 * Immediate todo:
-  * Basic typing behavior
-    X Filter real keystrokes, append
-    X Cursor movement
-    X Special cursor keys (home, end)
-    * Selection
-    * Per-word with ctrl
-    X Replace
   * Clipboard stuff
     * ctrl-c
     * ctrl-v
   * "fix all dis shit"
   * figure out why text editing is really slow
-  * fix fkeys
 
 * maybe we need to pass "this" along with all events? both to lua, and to non-lua?
 
@@ -40,8 +32,11 @@
 * make this part of Text, or?
 * Textfield - separate and editable
 * Text needs accessors for getting locations and for backtracking locations
+* lua error output
 
 ---- real stuff here
+
+* pageup/pagedown
 
 * guarantee order by some sort of global ID?
 * Move GetParent more into Layout

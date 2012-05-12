@@ -161,6 +161,7 @@ namespace Frames {
   //void Environment::MouseClear();  // mouse no longer in the scene at all*/
 
   bool Environment::KeyDown(const KeyEvent &key) {
+    m_lastEvent = key;
     if (m_focus) {
       m_focus->EventKeyDownTrigger(key);
       return true;
@@ -177,6 +178,7 @@ namespace Frames {
   }
 
   bool Environment::KeyRepeat(const KeyEvent &key) {
+    m_lastEvent = key;
     if (m_focus) {
       m_focus->EventKeyRepeatTrigger(key);
       return true;
@@ -185,11 +187,24 @@ namespace Frames {
   }
 
   bool Environment::KeyUp(const KeyEvent &key) {
+    m_lastEvent = key;
     if (m_focus) {
       m_focus->EventKeyUpTrigger(key);
       return true;
     }
     return false;
+  }
+
+  bool Environment::IsShift() const {
+    return m_lastEvent.shift;
+  }
+
+  bool Environment::IsCtrl() const {
+    return m_lastEvent.ctrl;
+  }
+
+  bool Environment::IsAlt() const {
+    return m_lastEvent.alt;
   }
 
   void Environment::SetFocus(Layout *layout) {
