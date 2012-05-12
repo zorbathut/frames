@@ -2,8 +2,8 @@
 * Immediate todo:
   * Basic typing behavior
     X Filter real keystrokes, append
-    * Cursor movement
-    * Special cursor keys (home, end)
+    X Cursor movement
+    X Special cursor keys (home, end)
     * Selection
     * Per-word with ctrl
     X Replace
@@ -11,6 +11,8 @@
     * ctrl-c
     * ctrl-v
   * "fix all dis shit"
+  * figure out why text editing is really slow
+  * fix fkeys
 
 * maybe we need to pass "this" along with all events? both to lua, and to non-lua?
 

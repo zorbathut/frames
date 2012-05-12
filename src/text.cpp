@@ -390,6 +390,60 @@ namespace Frames {
     SetSelection();
   }
   void Text::EventInternal_KeyDownOrRepeat(EventHandle *e, const KeyEvent &ev) {
+    if (ev.key == Key::Left) {
+      // todo: shift
+      // todo: ctrl
+      SetCursor(GetCursor() - 1);
+      SetSelection();
+    } else if (ev.key == Key::Right) {
+      // todo: shift
+      // todo: ctrl
+      SetCursor(GetCursor() + 1);
+      SetSelection();
+    } else if (ev.key == Key::Up) {
+      float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
+      Point ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
+      ccor.y -= lineheight / 2;
+      SetCursor(m_layout->GetCharacterFromCoordinate(ccor));
+      SetSelection();
+    } else if (ev.key == Key::Down) {
+      float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
+      Point ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
+      ccor.y += lineheight * 3 / 2; // need to bump it into the bottom line
+      SetCursor(m_layout->GetCharacterFromCoordinate(ccor));
+      SetSelection();
+    } else if (ev.key == Key::Backspace) {
+      if (m_cursor != m_select) {
+        // wipe out the selection
+        int ncursor = std::min(m_cursor, m_select);
+        SetText(m_text.substr(0, std::min(m_cursor, m_select)) + m_text.substr(std::max(m_cursor, m_select)));
+        SetCursor(ncursor);
+        SetSelection();
+      } else if (m_cursor) {
+        // wipe out the character before the cursor
+        SetText(m_text.substr(0, m_cursor - 1) + m_text.substr(m_cursor));
+        SetCursor(m_cursor - 1);
+      }
+    } else if (ev.key == Key::Delete) {
+      if (m_cursor != m_select) {
+        // wipe out the selection
+        int ncursor = std::min(m_cursor, m_select);
+        SetText(m_text.substr(0, std::min(m_cursor, m_select)) + m_text.substr(std::max(m_cursor, m_select)));
+        SetCursor(ncursor);
+        SetSelection();
+      } else {
+        // wipe out the character after the cursor
+        SetText(m_text.substr(0, m_cursor) + m_text.substr(m_cursor + 1));
+      }
+    } else if (ev.key == Key::Home) {
+      SetCursor(0);
+      SetSelection();
+    } else if (ev.key == Key::End) {
+      SetCursor(m_text.size());
+      SetSelection();
+    }
+    // todo: pageup
+    // todo: pagedown
   }
 
   /*static*/ int Text::l_SetText(lua_State *L) {
