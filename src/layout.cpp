@@ -1302,82 +1302,28 @@ namespace Frames {
     return false;
   }
 
-  // TODO: fix all dis shit
-  void Layout::LuaFrameEventHandler::Call(EventHandle *handle) const {
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
-    lua_rawgeti(L, -1, idx);
-    lua_remove(L, -2);
-    layout->l_push(L);
-    lua_newtable(L);
+  #define LFEH_CALL_CREATION(params, pushertype, call) \
+    void Layout::LuaFrameEventHandler::Call params const { \
+        lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev"); \
+        lua_rawgeti(L, -1, idx); \
+        lua_remove(L, -2); \
+        layout->l_push(L); \
+        lua_newtable(L); \
+    \
+        int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void pushertype>::T>(pusher)) call; \
+    \
+        if (lua_pcall(L, parametercount + 2, 0, 0)) { \
+          /* Error! */ \
+          layout->GetEnvironment()->LogError(lua_tostring(L, -1)); \
+          lua_pop(L, 1); \
+        } \
+      }
 
-    int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void ()>::T>(pusher))(L);
-    
-    if (lua_pcall(L, parametercount + 2, 0, 0)) {
-      // Error!
-      layout->GetEnvironment()->LogError(lua_tostring(L, -1));
-      lua_pop(L, 1);
-    }
-  }
-  void Layout::LuaFrameEventHandler::Call(EventHandle *handle, int p1) const {
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
-    lua_rawgeti(L, -1, idx);
-    lua_remove(L, -2);
-    layout->l_push(L);
-    lua_newtable(L);
-
-    int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void (int)>::T>(pusher))(L, p1);
-    
-    if (lua_pcall(L, parametercount + 2, 0, 0)) {
-      // Error!
-      layout->GetEnvironment()->LogError(lua_tostring(L, -1));
-      lua_pop(L, 1);
-    }
-  }
-  void Layout::LuaFrameEventHandler::Call(EventHandle *handle, const std::string &text) const {
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
-    lua_rawgeti(L, -1, idx);
-    lua_remove(L, -2);
-    layout->l_push(L);
-    lua_newtable(L);
-
-    int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void (const std::string &)>::T>(pusher))(L, text);
-    
-    if (lua_pcall(L, parametercount + 2, 0, 0)) {
-      // Error!
-      layout->GetEnvironment()->LogError(lua_tostring(L, -1));
-      lua_pop(L, 1);
-    }
-  }
-  void Layout::LuaFrameEventHandler::Call(EventHandle *handle, const Point &pt) const {
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
-    lua_rawgeti(L, -1, idx);
-    lua_remove(L, -2);
-    layout->l_push(L);
-    lua_newtable(L);
-
-    int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void (const Point &)>::T>(pusher))(L, pt);
-    
-    if (lua_pcall(L, parametercount + 2, 0, 0)) {
-      // Error!
-      layout->GetEnvironment()->LogError(lua_tostring(L, -1));
-      lua_pop(L, 1);
-    }
-  }
-  void Layout::LuaFrameEventHandler::Call(EventHandle *handle, const KeyEvent &ke) const {
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
-    lua_rawgeti(L, -1, idx);
-    lua_remove(L, -2);
-    layout->l_push(L);
-    lua_newtable(L);
-
-    int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void (const KeyEvent &)>::T>(pusher))(L, ke);
-    
-    if (lua_pcall(L, parametercount + 2, 0, 0)) {
-      // Error!
-      layout->GetEnvironment()->LogError(lua_tostring(L, -1));
-      lua_pop(L, 1);
-    }
-  }
+  LFEH_CALL_CREATION((EventHandle *handle), (), (L));
+  LFEH_CALL_CREATION((EventHandle *handle, int value), (int), (L, value));
+  LFEH_CALL_CREATION((EventHandle *handle, const std::string &text), (const std::string &), (L, text));
+  LFEH_CALL_CREATION((EventHandle *handle, const Point &point), (const Point &), (L, point));
+  LFEH_CALL_CREATION((EventHandle *handle, const KeyEvent &keyevent), (const KeyEvent &), (L, keyevent));
 
   bool operator<(const Layout::LuaFrameEventHandler &lhs, const Layout::LuaFrameEventHandler &rhs) {
     if (lhs.idx != rhs.idx) return lhs.idx < rhs.idx;
