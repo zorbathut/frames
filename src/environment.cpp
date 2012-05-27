@@ -225,6 +225,8 @@ namespace Frames {
   }
 
   void Environment::Render(const Layout *root) {
+    Performance perf(this, 0.3, 0.5, 0.3);
+
     if (!root) {
       root = m_root;
     }
@@ -234,23 +236,39 @@ namespace Frames {
       return;
     }
 
-    // We want to batch up events if possible (todo: is this the case? which is faster - flushing as they go, or flushing all at once?) so, two nested loops
-    while (!m_invalidated.empty()) {
+    {
+      Performance perf(this, 1, 0, 0);
+      // We want to batch up events if possible (todo: is this the case? which is faster - flushing as they go, or flushing all at once?) so, two nested loops
       while (!m_invalidated.empty()) {
-        const Layout *layout = m_invalidated.front();
-        m_invalidated.pop_front();
+        while (!m_invalidated.empty()) {
+          const Layout *layout = m_invalidated.front();
+          m_invalidated.pop_front();
 
-        layout->Resolve();
+          layout->Resolve();
+        }
+
+        // send events here
       }
-
-      // send events here
     }
 
-    m_renderer->Begin(m_root->GetWidth(), m_root->GetHeight());
+    {
+      Performance perf(this, 0.5, 0.8, 0.5);
 
-    root->Render(m_renderer);
+      {
+        Performance perf(this, 0.4, 0.2, 0.2);
+        m_renderer->Begin(m_root->GetWidth(), m_root->GetHeight());
+      }
 
-    m_renderer->End();
+      {
+        Performance perf(this, 0.8, 0.6, 0.6);
+        root->Render(m_renderer);
+      }
+
+      {
+        Performance perf(this, 0.4, 0.2, 0.2);
+        m_renderer->End();
+      }
+    }
   }
 
   Layout *Environment::GetFrameUnder(int x, int y) {
@@ -529,6 +547,17 @@ namespace Frames {
     RegisterLuaFrameCreation<Text>(L);
     RegisterLuaFrameCreation<Texture>(L);
     RegisterLuaFrameCreation<Mask>(L);
+  }
+
+  Environment::Performance::Performance(Environment *env, float r, float g, float b) : m_env(env) { // handle left uninitialized intentionally
+    if (m_env->GetConfiguration().performance) {
+      m_handle = m_env->GetConfiguration().performance->Push(r, g, b);
+    }
+  }
+  Environment::Performance::~Performance() {
+    if (m_env->GetConfiguration().performance) {
+      m_env->GetConfiguration().performance->Pop(m_handle);
+    }
   }
 
   void Environment::Init(const Configuration &config) {

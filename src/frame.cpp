@@ -98,7 +98,7 @@ namespace Frames {
 
   Frame::Frame(Layout *parent) :
       Layout(parent),
-      m_bg(0, 0, 0, 1)
+      m_bg(0, 0, 0, 0)
   { };
   Frame::~Frame() { };
 

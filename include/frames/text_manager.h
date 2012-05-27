@@ -64,12 +64,23 @@ namespace Frames {
     float GetLineHeight(float size);
     float GetLineHeightFirst(float size);
 
+    float GetKerning(float size, int char1, int char2);
+
     Environment *GetEnvironment() { return m_env; }
   private:
     ~FontInfo();
 
     boost::bimap<std::pair<float, std::string>, TextInfo *> m_text;
     boost::bimap<std::pair<float, int>, CharacterInfo *> m_character;
+
+    // TODO: clear this out when no longer needed?
+    struct KerningInfo {
+      float size;
+      int char1;
+      int char2;
+      bool operator<(const KerningInfo &rhs) const;
+    };
+    std::map<KerningInfo, float> m_kerning;
 
     // it's possible this should be either global or tied to a size, but fuck it
     TextureBackingPtr m_texture;

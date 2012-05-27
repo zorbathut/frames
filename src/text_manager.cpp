@@ -89,9 +89,41 @@ namespace Frames {
     FT_Face face = GetFace(size);
     return face->size->metrics.height / 64.0f;
   }
+
   float FontInfo::GetLineHeightFirst(float size) {
     FT_Face face = GetFace(size);
     return (face->size->metrics.ascender - face->size->metrics.descender) / 64.0f;
+  }
+
+  float FontInfo::GetKerning(float size, int char1, int char2) {
+    KerningInfo kinfo;
+    kinfo.size = size;
+    kinfo.char1 = char1;
+    kinfo.char2 = char2;
+
+    std::map<KerningInfo, float>::iterator found = m_kerning.find(kinfo);
+    if (found != m_kerning.end()) {
+      return found->second;
+    } else {
+      FT_Face face = GetFace(size);
+
+      FT_UInt index_prev = FT_Get_Char_Index(face, char1);
+      FT_UInt index_current = FT_Get_Char_Index(face, char2);
+
+      FT_Vector delta;
+      FT_Get_Kerning(face, index_prev, index_current, FT_KERNING_DEFAULT, &delta);
+
+      float kern = std::floor(delta.x / 64.f + 0.5f);
+
+      m_kerning[kinfo] = kern;
+      return kern;
+    }
+  }
+
+  bool FontInfo::KerningInfo::operator<(const KerningInfo &rhs) const {
+    if (char1 != rhs.char1) return char1 < rhs.char1;
+    if (char2 != rhs.char2) return char2 < rhs.char2;
+    return size < rhs.size;
   }
 
   // =======================================
@@ -107,15 +139,7 @@ namespace Frames {
       if (!i) {
         m_kerning.push_back(0.f);
       } else {
-        FT_Face face = m_parent->GetFace(size);
-
-        FT_UInt index_prev = FT_Get_Char_Index(face, text[i - 1]);
-        FT_UInt index_current = FT_Get_Char_Index(face, text[i]);
-
-        FT_Vector delta;
-        FT_Get_Kerning(face, index_prev, index_current, FT_KERNING_DEFAULT, &delta);
-
-        float kerning = std::floor(delta.x / 64.f + 0.5f);
+        float kerning = m_parent->GetKerning(size, text[i - 1], text[i]);
 
         m_kerning.push_back(kerning);
 

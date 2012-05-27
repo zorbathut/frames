@@ -83,6 +83,15 @@ namespace Frames {
       virtual std::string Get();
     };
     Clipboard *clipboard;
+
+    class Performance {
+    public:
+      virtual ~Performance() { }
+
+      virtual void *Push(float r, float g, float b) = 0;  // need to rework the performance system, right now it expects floating-point values
+      virtual void Pop(void *) = 0;
+    };
+    Performance *performance;
   };
 }
 

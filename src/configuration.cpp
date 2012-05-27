@@ -12,7 +12,7 @@
 #include <windows.h>
 
 namespace Frames {
-  Configuration::Configuration() : logger(0), textureFromId(0), streamFromId(0), pathFromId(0), textureFromStream(0), clipboard(0) { };
+  Configuration::Configuration() : logger(0), textureFromId(0), streamFromId(0), pathFromId(0), textureFromStream(0), clipboard(0), performance(0) { };
 
   void Configuration::Logger::LogError(const std::string &log) {
     std::printf("Frames error: %s", log.c_str());

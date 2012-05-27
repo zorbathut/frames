@@ -80,6 +80,16 @@ namespace Frames {
 
     void LogError(const std::string &log) { if (m_config.logger) m_config.logger->LogError(log); }
     void LogDebug(const std::string &log) { if (m_config.logger) m_config.logger->LogDebug(log); }
+
+    class Performance {
+    public:
+      Performance(Environment *env, float r, float g, float b);
+      ~Performance();
+
+    private:
+      Environment *m_env;
+      void *m_handle;
+    };
   private:
     friend class Layout;
     friend class Frame;
