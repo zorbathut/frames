@@ -1,7 +1,4 @@
 
-* Immediate todo:
-  * figure out why text editing is really slow
-
 * maybe we need to pass "this" along with all events? both to lua, and to non-lua?
 
 * event acceptance flags
