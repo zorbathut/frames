@@ -18,7 +18,6 @@
 * NaCl
 
 * SetAlpha
-* pushstring -> pushliteral
 
 * Lua API advanced
   * lua error output
