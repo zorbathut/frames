@@ -1,55 +1,19 @@
 
-* maybe we need to pass "this" along with all events? both to lua, and to non-lua?
-
-* event acceptance flags
-
-* SetEditable
-* SetCursor -- obliterates selection
-* SetSelection
-* SetScroll
-
-* SelectionColor?
-* SelectedColor?
-
-* Verify consistency at all points
-* Rendering
-
-* May need to figure out how internal character positioning should work
-
-* definitely need a way to remove events *while* we're iterating over events
-
-* Need to figure out key events, text input
-* text edit field
-* we'll provide some sort of "move field" and "move cursor"
-* cursor might be visible or not-visible
-* make this part of Text, or?
-* Textfield - separate and editable
-* Text needs accessors for getting locations and for backtracking locations
-* lua error output
-
----- real stuff here
-
-* pageup/pagedown
+* BIG STUFF TO THINK ABOUT:
+  * event acceptance flags
+    * Terminate:
+      * Handle
+      * Immediate
+      * need to sketch these out better
+  * maybe we need to pass "this" along with all events? both to lua, and to non-lua?
+  * definitely need a way to safely remove events *while* we're iterating over events
+    * environment-wide event lockout, queue up changes?
+    * when we implement "list" we'll need to keep both lists in mind
+    * Need to queue up obliterates if that's being used in the middle of an event handler
 
 * guarantee order by some sort of global ID?
 * Move GetParent more into Layout
 * MouseHover?
-
-* Need to queue up obliterates if that's being used in the middle of an event handler
-
-* Lua API
-  * Events
-    * Figure out how the API will work
-    .AddEventMove
-    .RemoveEventMove
-    * Figure out how to make lua events go away properly on shutdown
-  * Test re-update height if the width changes and wordwrap
-  * Test Obliterate
-  
-
-* Rename GetNameDebug, split into GetName/GetNameFull
-* where is my warning
-* may need to improve error output
 
 * NaCl
 
@@ -57,18 +21,17 @@
 * pushstring -> pushliteral
 
 * Lua API advanced
+  * lua error output
   * Optionally tag frames with filename, line number
   * Optional inline documentation
   * Handle Lua environment shutdown before Frames
   * At some point we should set up something to notify Frames if Lua shuts down first
 
-* Crop text to bounds in a way that won't look amazingly awful for barely-on-the-fringe lines
 * Raw
-* Flesh out frame events
-  * Events that get passed down - the Bubble phase?
-  * If any event does not return true, then stop, otherwise propogate the click upwards (does not occur for other events, just clicks)
 * Figure out 9-slice
 * Look over rift docs, verify that I have all the things
+
+=== POLISH PASSES BELOW
 
 * Text distance field
   * http://www.comp.nus.edu.sg/~tants/pba.html
@@ -80,6 +43,8 @@
 
 * Derive font size adjustment more precisely - binsearch, or dig into the code and see wtf is going on
 
+* pageup/pagedown for textfields
+* at some point we need to figure out mouseover testing and key fallthroughs
 * maybe text really does need to insta-refresh its bounds? :/
   * not quite sure how that's going to work
 * Refresh mouse position/mouseover when the layout changes
