@@ -1,15 +1,11 @@
 
 * BIG STUFF TO THINK ABOUT:
-  * event acceptance flags
-    * Terminate:
-      * Handle
-      * Immediate
-      * need to sketch these out better
-  * maybe we need to pass "this" along with all events? both to lua, and to non-lua?
-  * definitely need a way to safely remove events *while* we're iterating over events
+  * cursor keys out of bounds, fixery
+  * definitely need a way to safely do horrifying things *while* we're iterating over events
     * environment-wide event lockout, queue up changes?
     * when we implement "list" we'll need to keep both lists in mind
     * Need to queue up obliterates if that's being used in the middle of an event handler
+    * we could also attach Resolve to this, I suppose
 
 * guarantee order by some sort of global ID?
 * Move GetParent more into Layout
@@ -29,6 +25,8 @@
 * Raw
 * Figure out 9-slice
 * Look over rift docs, verify that I have all the things
+
+* all sorts of consistency checks for doing nasty things during an event handler
 
 === POLISH PASSES BELOW
 

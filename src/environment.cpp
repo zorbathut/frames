@@ -34,7 +34,7 @@ namespace Frames {
 
     // this flushes everything out of memory
     while (!m_invalidated.empty()) {
-      const Layout *layout = m_invalidated.front();
+      Layout *layout = m_invalidated.front();
       m_invalidated.pop_front();
 
       layout->Resolve();
@@ -241,7 +241,7 @@ namespace Frames {
       // We want to batch up events if possible (todo: is this the case? which is faster - flushing as they go, or flushing all at once?) so, two nested loops
       while (!m_invalidated.empty()) {
         while (!m_invalidated.empty()) {
-          const Layout *layout = m_invalidated.front();
+          Layout *layout = m_invalidated.front();
           m_invalidated.pop_front();
 
           layout->Resolve();
@@ -341,6 +341,22 @@ namespace Frames {
     if (lua_isnil(L, -1)) {
       lua_pushlightuserdata(L, L); // lol
       lua_setfield(L, LUA_REGISTRYINDEX, "Frames_lua");
+    }
+    lua_pop(L, 1);
+
+    // insert the EventHandler lookup table - table to lightuserdata pointer
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
+    if (lua_isnil(L, -1)) {
+      lua_newtable(L);
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
+    }
+    lua_pop(L, 1);
+
+    // insert the EventHandler metatable - this has to happen after Frames_ehl has been inserted!
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehmt");
+    if (lua_isnil(L, -1)) {
+      EventHandle::INTERNAL_l_CreateMetatable(L);
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_ehmt");
     }
     lua_pop(L, 1);
 
@@ -611,12 +627,12 @@ namespace Frames {
     m_texture_manager = new TextureManager(this);
   }
 
-  void Environment::MarkInvalidated(const Layout *layout) {
+  void Environment::MarkInvalidated(Layout *layout) {
     m_invalidated.push_back(layout);
   }
 
-  void Environment::UnmarkInvalidated(const Layout *layout) {
-    std::deque<const Layout *>::iterator itr = find(m_invalidated.begin(), m_invalidated.end(), layout);
+  void Environment::UnmarkInvalidated(Layout *layout) {
+    std::deque<Layout *>::iterator itr = find(m_invalidated.begin(), m_invalidated.end(), layout);
     if (itr == m_invalidated.end()) {
       LogError("Internal problem, attempted to unmark and failed");
     } else {

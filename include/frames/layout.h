@@ -19,8 +19,36 @@ namespace Frames {
   class Environment;
   class Rect;
   class Renderer;
+  class Layout;
 
   class EventHandle {
+  public:
+    EventHandle(const EventHandle &ev);
+
+    Layout *GetTarget() const { return m_target; }
+
+    // Enabled when it's exited Sink mode, disabled again when entering bubble.
+    // If triggered, prevents future events for this message.
+    bool CanFinalize() const { return m_finalize_can; }
+    void Finalize();
+    bool GetFinalize() const { return m_finalize; }
+
+    // INTERNAL ONLY BELOW THIS LINE, we'll improve this later
+    static EventHandle INTERNAL_Initialize(Layout *layout);
+    void INTERNAL_SetCanFinalize(bool finalizeable) { m_finalize_can = finalizeable; }
+    static void INTERNAL_l_CreateMetatable(lua_State *L);
+  private:
+    EventHandle();
+
+    Layout *m_target;
+
+    bool m_finalize;
+    bool m_finalize_can;
+
+    static int l_GetTarget(lua_State *L);
+    static int l_CanFinalize(lua_State *L);
+    static int l_Finalize(lua_State *L);
+    static int l_GetFinalize(lua_State *L);
   };
 
   template<typename F> struct LayoutHandlerMunger;
@@ -45,7 +73,7 @@ namespace Frames {
   #define FRAMES_LAYOUT_EVENT_DECLARE(eventname, paramlist, paramlistcomplete) \
       FRAMES_LAYOUT_EVENT_HOOKS(eventname, paramlist, paramlistcomplete) \
     private: \
-      void Event##eventname##Trigger paramlist const; \
+      void Event##eventname##Trigger paramlist; \
     public:
 
   #define FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(eventname, paramlist, paramlistcomplete) \
@@ -53,7 +81,7 @@ namespace Frames {
       FRAMES_LAYOUT_EVENT_HOOKS(eventname##Sink, paramlist, paramlistcomplete) \
       FRAMES_LAYOUT_EVENT_HOOKS(eventname##Bubble, paramlist, paramlistcomplete) \
     private: \
-      void Event##eventname##Trigger paramlist const; \
+      void Event##eventname##Trigger paramlist; \
     public:
 
   class Layout : Noncopyable {
@@ -224,12 +252,12 @@ namespace Frames {
     void Render(Renderer *renderer) const;
 
     // Layout engine
-    void Invalidate(Axis axis) const;
+    void Invalidate(Axis axis);
     void Obliterate_Detach(); // Detach this layout from all layouts
     void Obliterate_Extract();  // Detach everything that refers to this layout
     void Obliterate_Extract_Axis(Axis axis);  // Detach everything that refers to this axis
     void Obliterate_Extract_From(Axis axis, const Layout *layout);
-    void Resolve() const;
+    void Resolve();
     struct AxisData {
       AxisData() : size_cached(Utility::Undefined), size_set(Utility::Undefined), size_default(40) { };
 
@@ -295,6 +323,10 @@ namespace Frames {
       void Call(EventHandle *handle, const std::string &text) const;
       void Call(EventHandle *handle, const Point &pt) const;
       void Call(EventHandle *handle, const KeyEvent &ke) const;
+
+    private:
+      void CallSetup(lua_State *L, EventHandle *eh) const;
+      void CallTeardown(lua_State *L) const;
     };
     friend bool operator<(const LuaFrameEventHandler &lhs, const LuaFrameEventHandler &rhs);
     typedef std::map<LuaFrameEventHandler, int> LuaFrameEventMap; // second parameter is refcount

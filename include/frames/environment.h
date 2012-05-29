@@ -97,9 +97,9 @@ namespace Frames {
     // Utility functions and parameters
     void Init(const Configuration &config);
 
-    void MarkInvalidated(const Layout *layout);
-    void UnmarkInvalidated(const Layout *layout); // This is currently very slow.
-    std::deque<const Layout *> m_invalidated;
+    void MarkInvalidated(Layout *layout);
+    void UnmarkInvalidated(Layout *layout); // This is currently very slow.
+    std::deque<Layout *> m_invalidated;
 
     // Layout sanity
     void LayoutStack_Push(const Layout *layout, Axis axis, float pt);

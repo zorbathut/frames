@@ -11,6 +11,101 @@
 #include <math.h> // just for isnan()
 
 namespace Frames {
+
+  void EventHandle::Finalize() {
+    if (m_finalize_can) {
+      m_finalize = true;
+    } else {
+      m_target->GetEnvironment()->LogError("Finalize incorrectly called when an event handle isn't finalizable.");
+    }
+  }
+
+  /*static*/ EventHandle EventHandle::INTERNAL_Initialize(Layout *layout) {
+    EventHandle rv;
+    rv.m_target = layout;
+    return rv;
+  }
+
+  /*static*/ void EventHandle::INTERNAL_l_CreateMetatable(lua_State *L) {
+    // First, we'll need to create the actual metatable
+    lua_newtable(L);
+
+    // This is the index lookup
+    lua_newtable(L);
+
+    // Insert functions, tagged with the eventhandle lookup upvalue
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
+    lua_pushcclosure(L, l_GetTarget, 1);
+    lua_setfield(L, -2, "GetTarget");
+
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
+    lua_pushcclosure(L, l_CanFinalize, 1);
+    lua_setfield(L, -2, "CanFinalize");
+
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
+    lua_pushcclosure(L, l_Finalize, 1);
+    lua_setfield(L, -2, "Finalize");
+
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
+    lua_pushcclosure(L, l_GetFinalize, 1);
+    lua_setfield(L, -2, "GetFinalize");
+
+    // Jam index lookup into actual table as necessary
+    lua_setfield(L, -2, "__index");
+
+    // and the metatable is done!
+  }
+
+  EventHandle::EventHandle() : m_target(0), m_finalize(false), m_finalize_can(false) {
+  }
+
+  EventHandle::EventHandle(const EventHandle &ev) : m_target(ev.m_target), m_finalize(ev.m_finalize), m_finalize_can(ev.m_finalize_can) {
+  }
+
+  /*static*/ int EventHandle::l_GetTarget(lua_State *L) {
+    l_checkparams(L, 1);
+    lua_rawget(L, lua_upvalueindex(1));
+    luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
+    EventHandle *eh = (EventHandle*)lua_touserdata(L, -1);
+
+    eh->GetTarget()->l_push(L);
+
+    return 1;
+  }
+
+  /*static*/ int EventHandle::l_CanFinalize(lua_State *L) {
+    l_checkparams(L, 1);
+    lua_rawget(L, lua_upvalueindex(1));
+    luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
+    EventHandle *eh = (EventHandle*)lua_touserdata(L, -1);
+
+    lua_pushboolean(L, eh->CanFinalize());
+
+    return 1;
+  }
+
+  /*static*/ int EventHandle::l_Finalize(lua_State *L) {
+    l_checkparams(L, 1);
+    lua_rawget(L, lua_upvalueindex(1));
+    luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
+    EventHandle *eh = (EventHandle*)lua_touserdata(L, -1);
+
+    eh->Finalize();
+
+    return 0;
+  }
+
+  /*static*/ int EventHandle::l_GetFinalize(lua_State *L) {
+    l_checkparams(L, 1);
+    lua_rawget(L, lua_upvalueindex(1));
+    luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
+    EventHandle *eh = (EventHandle*)lua_touserdata(L, -1);
+
+    lua_pushboolean(L, eh->GetFinalize());
+
+    return 1;
+  }
+
   BOOST_STATIC_ASSERT(sizeof(EventId) == sizeof(intptr_t));
   BOOST_STATIC_ASSERT(sizeof(EventId) == sizeof(void *));
 
@@ -1052,7 +1147,7 @@ namespace Frames {
   // Technically, invalidate could be a lot more specific. There are cases where invalidating an entire axis is unnecessary - A depends on one connection, B depends on another connection, and only A's connection is invalidated.
   // It's unclear if this would be worth the additional overhead and complexity.
   // Invalidating extra stuff, while slow, is at least always correct.
-  void Layout::Invalidate(Axis axis) const {
+  void Layout::Invalidate(Axis axis) {
     // see if anything needs invalidating
     const AxisData &ax = m_axes[axis];
 
@@ -1128,7 +1223,7 @@ namespace Frames {
     }
   }
 
-  void Layout::Resolve() const {
+  void Layout::Resolve() {
     float nx = GetLeft();
     GetRight();
     float ny = GetTop();
@@ -1186,12 +1281,13 @@ namespace Frames {
 
   #define FRAMES_LAYOUT_EVENT_DEFINE(frametype, eventname, paramlist, paramlistcomplete, params) \
     FRAMES_LAYOUT_EVENT_DEFINE_INFRA(frametype, eventname, paramlist, paramlistcomplete, params) \
-    void frametype::Event##eventname##Trigger paramlist const { \
+    void frametype::Event##eventname##Trigger paramlist { \
       std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = m_events.find(Event##eventname##Id()); \
       if (itr != m_events.end()) { \
-        EventHandle handle; \
+        EventHandle handle = EventHandle::INTERNAL_Initialize(this); \
+        handle.INTERNAL_SetCanFinalize(true); \
         const std::multimap<float, EventHandler> &tab = itr->second; \
-        for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
+        for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end() && !handle.GetFinalize(); ++ev) { \
           EventHandlerCaller<Event##eventname##Functiontype>::Call params; \
         } \
       } \
@@ -1201,14 +1297,14 @@ namespace Frames {
     FRAMES_LAYOUT_EVENT_DEFINE_INFRA(frametype, eventname, paramlist, paramlistcomplete, params) \
     FRAMES_LAYOUT_EVENT_DEFINE_INFRA(frametype, eventname##Sink, paramlist, paramlistcomplete, params) \
     FRAMES_LAYOUT_EVENT_DEFINE_INFRA(frametype, eventname##Bubble, paramlist, paramlistcomplete, params) \
-    void frametype::Event##eventname##Trigger paramlist const { \
+    void frametype::Event##eventname##Trigger paramlist { \
       std::vector<Layout *> layouts; \
       Layout *parent = GetParent(); \
       while (parent) { \
         layouts.push_back(parent); \
         parent = parent->GetParent(); \
       } \
-      EventHandle handle; \
+      EventHandle handle = EventHandle::INTERNAL_Initialize(this); \
       for (int i = (int)layouts.size() - 1; i >= 0; --i) { \
         std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i]->m_events.find(Event##eventname##Sink##Id()); \
         if (itr != layouts[i]->m_events.end()) { \
@@ -1221,10 +1317,13 @@ namespace Frames {
       { \
         std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = m_events.find(Event##eventname##Id()); \
         if (itr != m_events.end()) { \
+          handle.INTERNAL_SetCanFinalize(true); \
           const std::multimap<float, EventHandler> &tab = itr->second; \
-          for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
+          for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end() && !handle.GetFinalize(); ++ev) { \
             EventHandlerCaller<Event##eventname##Functiontype>::Call params; \
           } \
+          handle.Finalize(); \
+          handle.INTERNAL_SetCanFinalize(false); \
         } \
       } \
       for (int i = 0; i < (int)layouts.size(); ++i) { \
@@ -1304,19 +1403,17 @@ namespace Frames {
 
   #define LFEH_CALL_CREATION(params, pushertype, call) \
     void Layout::LuaFrameEventHandler::Call params const { \
-        lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev"); \
-        lua_rawgeti(L, -1, idx); \
-        lua_remove(L, -2); \
-        layout->l_push(L); \
-        lua_newtable(L); \
+        CallSetup(L, handle); \
     \
         int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void pushertype>::T>(pusher)) call; \
     \
         if (lua_pcall(L, parametercount + 2, 0, 0)) { \
-          /* Error! */ \
+          /* Error! TODO handle better */ \
           layout->GetEnvironment()->LogError(lua_tostring(L, -1)); \
           lua_pop(L, 1); \
         } \
+    \
+        CallTeardown(L); \
       }
 
   LFEH_CALL_CREATION((EventHandle *handle), (), (L));
@@ -1324,6 +1421,53 @@ namespace Frames {
   LFEH_CALL_CREATION((EventHandle *handle, const std::string &text), (const std::string &), (L, text));
   LFEH_CALL_CREATION((EventHandle *handle, const Point &point), (const Point &), (L, point));
   LFEH_CALL_CREATION((EventHandle *handle, const KeyEvent &keyevent), (const KeyEvent &), (L, keyevent));
+
+  void Layout::LuaFrameEventHandler::CallSetup(lua_State *L, EventHandle *eh) const {
+    // Create the handler table
+    lua_newtable(L);
+    // Stack: ... handle
+
+    // Set it up as our metatable
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehmt");
+    lua_setmetatable(L, -2);
+    // Stack: ... handle
+
+    // Register it properly
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
+    lua_pushvalue(L, -2);
+    lua_pushlightuserdata(L, eh);
+    lua_rawset(L, -3);
+    // Stack: ... handle Frames_ehl
+
+    // Now get our function call ready
+    // Get the function call itself
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
+    lua_rawgeti(L, -1, idx);
+    lua_remove(L, -2);
+    // Stack: ... handle Frames_ehl function
+
+    // Add the table
+    layout->l_push(L);
+    // Stack: ... handle Frames_ehl function frame
+
+    // Add our handler table
+    lua_pushvalue(L, -4);
+    // Stack: ... handle Frames_ehl function frame handle
+  }
+
+  void Layout::LuaFrameEventHandler::CallTeardown(lua_State *L) const {
+    // Stack: ... handle Frames_ehl
+
+    // Clear out the frame lookup
+    lua_pushvalue(L, -2);
+    lua_pushnil(L);
+    lua_rawset(L, -3);
+    lua_pop(L, 1);
+    // Stack: ... handle
+
+    // And throw away the handle! :D
+    lua_pop(L, 1);
+  }
 
   bool operator<(const Layout::LuaFrameEventHandler &lhs, const Layout::LuaFrameEventHandler &rhs) {
     if (lhs.idx != rhs.idx) return lhs.idx < rhs.idx;
