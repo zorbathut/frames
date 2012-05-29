@@ -387,7 +387,7 @@ namespace Frames {
       return;
     }
 
-    int ncursor = m_cursor + type.size();
+    int ncursor = std::min(m_cursor, m_select) + type.size();
 
     SetText(m_text.substr(0, std::min(m_cursor, m_select)) + type + m_text.substr(std::max(m_cursor, m_select)));
     SetCursor(ncursor);
@@ -476,7 +476,7 @@ namespace Frames {
         SetText(m_text.substr(0, std::min(m_cursor, m_select)) + m_text.substr(std::max(m_cursor, m_select)));
         SetCursor(ncursor);
         SetSelection();
-      } else {
+      } else if (m_cursor != (int)m_text.size()) {
         // wipe out the character after the cursor
         SetText(m_text.substr(0, m_cursor) + m_text.substr(m_cursor + 1));
       }
