@@ -1,6 +1,5 @@
 
 * BIG STUFF TO THINK ABOUT:
-  * cursor keys out of bounds, fixery
   * definitely need a way to safely do horrifying things *while* we're iterating over events
     * environment-wide event lockout, queue up changes?
     * when we implement "list" we'll need to keep both lists in mind

@@ -396,7 +396,7 @@ namespace Frames {
   int TextLayout::GetCharacterFromCoordinate(const Point &pt) const {
     // yeah we're just going to go mad right here
     Point lpt = Utility::Clamp(pt, Point(0, 0), Point(m_width, m_fullHeight));
-    int line = int(lpt.y / GetParent()->GetParent()->GetLineHeight(GetParent()->GetSize()));
+    int line = std::min(int(lpt.y / GetParent()->GetParent()->GetLineHeight(GetParent()->GetSize())), (int)m_lines.size());
 
     int s = 0;
     if (line)
