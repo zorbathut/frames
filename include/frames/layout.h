@@ -212,7 +212,7 @@ namespace Frames {
     virtual void RenderElementPost(Renderer *renderer) const { };
 
     // Event-related
-    const EventMap *GetEventTable(EventId id) const; // returns null on no events
+    bool HasEvent(EventId id) const;
     
     // make sure you call these down if you override them
     virtual void EventAttached(EventId id);
@@ -306,6 +306,11 @@ namespace Frames {
 
     // Event system
     std::map<EventId, EventMap> m_events;
+    bool m_event_locked;
+    bool m_event_buffered;
+    bool Event_Lock(); // must store the result of this to pass back into Unlock
+    void Event_Unlock(bool original);
+    
 
     // Global environment
     Environment *m_env;

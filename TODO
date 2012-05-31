@@ -2,9 +2,13 @@
 * BIG STUFF TO THINK ABOUT:
   * definitely need a way to safely do horrifying things *while* we're iterating over events
     * environment-wide event lockout, queue up changes?
+      * "obliterate" is pending on the global event lock?
+        * how do we pend obliterate without making it a nightmare
+        * just . . . don't obliterate, I guess? Then obliterate later.
     * when we implement "list" we'll need to keep both lists in mind
     * Need to queue up obliterates if that's being used in the middle of an event handler
-    * we could also attach Resolve to this, I suppose
+
+* EventHandle needs to be m_ prefixed
 
 * guarantee order by some sort of global ID?
 * Move GetParent more into Layout

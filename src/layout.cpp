@@ -128,19 +128,19 @@ namespace Frames {
     ~EventHandler() { }
 
     template<typename T1> void Call(T1 t1) const {
-      (*reinterpret_cast<const Delegate<void (T1)> *>(c.delegate))(t1);
+      if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1)> *>(c.delegate))(t1);
     }
 
     template<typename T1, typename T2> void Call(T1 t1, T2 t2) const {
-      (*reinterpret_cast<const Delegate<void (T1, T2)> *>(c.delegate))(t1, t2);
+      if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2)> *>(c.delegate))(t1, t2);
     }
 
     template<typename T1, typename T2, typename T3> void Call(T1 t1, T2 t2, T3 t3) const {
-      (*reinterpret_cast<const Delegate<void (T1, T2, T3)> *>(c.delegate))(t1, t2, t3);
+      if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2, T3)> *>(c.delegate))(t1, t2, t3);
     }
 
     template<typename T1, typename T2, typename T3, typename T4> void Call(T1 t1, T2 t2, T3 t3, T4 t4) const {
-      (*reinterpret_cast<const Delegate<void (T1, T2, T3, T4)> *>(c.delegate))(t1, t2, t3, t4);
+      if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2, T3, T4)> *>(c.delegate))(t1, t2, t3, t4);
     }
 
     bool IsNative() const { return type == TYPE_NATIVE; }
@@ -148,12 +148,15 @@ namespace Frames {
     bool IsLua() const { return type == TYPE_LUA; }
     const LuaFrameEventHandler *GetLua() const { return lua; }
 
+    bool IsErased() const { return type == TYPE_ERASED; }
+    void MarkErased() { /* TODO: make sure it is not yet erased */ type = TYPE_ERASED; lua = 0; }
+
   private:
     union {
       char delegate[sizeof(Delegate<void ()>)];
     } c;
 
-    enum { TYPE_NATIVE, TYPE_LUA } type;
+    enum { TYPE_ERASED, TYPE_NATIVE, TYPE_LUA } type;
 
     union {
       const LuaFrameEventHandler *lua;
@@ -466,6 +469,8 @@ namespace Frames {
       m_acceptInput(false),
       m_name_static(0),
       m_name_id(-1),
+      m_event_locked(false),
+      m_event_buffered(false),
       m_env(0)
   {
     if (layout) {
@@ -810,31 +815,43 @@ namespace Frames {
     Obliterate_Extract();
   }
 
-  const Layout::EventMap *Layout::GetEventTable(EventId id) const {
+  bool Layout::HasEvent(EventId id) const {
     std::map<EventId, EventMap>::const_iterator itr = m_events.find(id);
-    if (itr != m_events.end()) {
-      return &itr->second;
-    } else {
-      return 0;
+    if (itr == m_events.end()) {
+      return false;
     }
+
+    if (!m_event_buffered) {  // if we're not buffered, then any erased items have already been removed
+      return true;
+    }
+
+    // we're now in the annoying position of needing to iterate over the entire event table to see if it *really* has anything attached
+    for (EventMap::const_iterator eitr = itr->second.begin(); eitr != itr->second.end(); ++eitr) {
+      if (!eitr->second.IsErased()) {
+        return true;
+      }
+    }
+
+    // apparently not!
+    return false;
   }
 
   void Layout::EventAttached(EventId id) {
     m_acceptInput =
-      GetEventTable(EventMouseLeftClickId()) || GetEventTable(EventMouseLeftUpId()) || GetEventTable(EventMouseLeftDownId()) ||
-      GetEventTable(EventMouseMiddleClickId()) || GetEventTable(EventMouseMiddleUpId()) || GetEventTable(EventMouseMiddleDownId()) ||
-      GetEventTable(EventMouseRightClickId()) || GetEventTable(EventMouseRightUpId()) || GetEventTable(EventMouseRightDownId()) ||
-      GetEventTable(EventMouseButtonClickId()) || GetEventTable(EventMouseButtonUpId()) || GetEventTable(EventMouseButtonDownId()) ||
-      GetEventTable(EventMouseWheelId()) || GetEventTable(EventMouseOverId()) || GetEventTable(EventMouseOutId());
+      HasEvent(EventMouseLeftClickId()) || HasEvent(EventMouseLeftUpId()) || HasEvent(EventMouseLeftDownId()) ||
+      HasEvent(EventMouseMiddleClickId()) || HasEvent(EventMouseMiddleUpId()) || HasEvent(EventMouseMiddleDownId()) ||
+      HasEvent(EventMouseRightClickId()) || HasEvent(EventMouseRightUpId()) || HasEvent(EventMouseRightDownId()) ||
+      HasEvent(EventMouseButtonClickId()) || HasEvent(EventMouseButtonUpId()) || HasEvent(EventMouseButtonDownId()) ||
+      HasEvent(EventMouseWheelId()) || HasEvent(EventMouseOverId()) || HasEvent(EventMouseOutId());
   }
 
   void Layout::EventDetached(EventId id) {
     m_acceptInput =
-      GetEventTable(EventMouseLeftClickId()) || GetEventTable(EventMouseLeftUpId()) || GetEventTable(EventMouseLeftDownId()) ||
-      GetEventTable(EventMouseMiddleClickId()) || GetEventTable(EventMouseMiddleUpId()) || GetEventTable(EventMouseMiddleDownId()) ||
-      GetEventTable(EventMouseRightClickId()) || GetEventTable(EventMouseRightUpId()) || GetEventTable(EventMouseRightDownId()) ||
-      GetEventTable(EventMouseButtonClickId()) || GetEventTable(EventMouseButtonUpId()) || GetEventTable(EventMouseButtonDownId()) ||
-      GetEventTable(EventMouseWheelId()) || GetEventTable(EventMouseOverId()) || GetEventTable(EventMouseOutId());
+      HasEvent(EventMouseLeftClickId()) || HasEvent(EventMouseLeftUpId()) || HasEvent(EventMouseLeftDownId()) ||
+      HasEvent(EventMouseMiddleClickId()) || HasEvent(EventMouseMiddleUpId()) || HasEvent(EventMouseMiddleDownId()) ||
+      HasEvent(EventMouseRightClickId()) || HasEvent(EventMouseRightUpId()) || HasEvent(EventMouseRightDownId()) ||
+      HasEvent(EventMouseButtonClickId()) || HasEvent(EventMouseButtonUpId()) || HasEvent(EventMouseButtonDownId()) ||
+      HasEvent(EventMouseWheelId()) || HasEvent(EventMouseOverId()) || HasEvent(EventMouseOutId());
   }
 
   void Layout::l_RegisterWorker(lua_State *L, const char *name) const {
@@ -1286,10 +1303,12 @@ namespace Frames {
       if (itr != m_events.end()) { \
         EventHandle handle = EventHandle::INTERNAL_Initialize(this); \
         handle.INTERNAL_SetCanFinalize(true); \
+        bool oldlock = Event_Lock(); \
         const std::multimap<float, EventHandler> &tab = itr->second; \
         for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end() && !handle.GetFinalize(); ++ev) { \
           EventHandlerCaller<Event##eventname##Functiontype>::Call params; \
         } \
+        Event_Unlock(oldlock); \
       } \
     }
 
@@ -1308,20 +1327,24 @@ namespace Frames {
       for (int i = (int)layouts.size() - 1; i >= 0; --i) { \
         std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i]->m_events.find(Event##eventname##Sink##Id()); \
         if (itr != layouts[i]->m_events.end()) { \
+          bool oldlock = layouts[i]->Event_Lock(); \
           const std::multimap<float, EventHandler> &tab = itr->second; \
           for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
             EventHandlerCaller<Event##eventname##Functiontype>::Call params; \
           } \
+          layouts[i]->Event_Unlock(oldlock); \
         } \
       } \
       { \
         std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = m_events.find(Event##eventname##Id()); \
         if (itr != m_events.end()) { \
           handle.INTERNAL_SetCanFinalize(true); \
+          bool oldlock = Event_Lock(); \
           const std::multimap<float, EventHandler> &tab = itr->second; \
           for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end() && !handle.GetFinalize(); ++ev) { \
             EventHandlerCaller<Event##eventname##Functiontype>::Call params; \
           } \
+          Event_Unlock(oldlock); \
           handle.Finalize(); \
           handle.INTERNAL_SetCanFinalize(false); \
         } \
@@ -1329,10 +1352,12 @@ namespace Frames {
       for (int i = 0; i < (int)layouts.size(); ++i) { \
         std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i]->m_events.find(Event##eventname##Bubble##Id()); \
         if (itr != layouts[i]->m_events.end()) { \
+          bool oldlock = layouts[i]->Event_Lock(); \
           const std::multimap<float, EventHandler> &tab = itr->second; \
           for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
             EventHandlerCaller<Event##eventname##Functiontype>::Call params; \
           } \
+          layouts[i]->Event_Unlock(oldlock); \
         } \
       } \
     }
@@ -1385,12 +1410,18 @@ namespace Frames {
 
     std::multimap<float, EventHandler> &tab = itr->second;
 
+    // this can be done more efficiently if order isn't nan, but worry about that later
     for (std::multimap<float, EventHandler>::iterator ev = tab.begin(); ev != tab.end(); ++ev) {
       if (ev->second == handler && (isnan(order) || ev->first == order)) {
-        tab.erase(ev);
+        if (m_event_locked) {
+          ev->second.MarkErased();
+          m_event_buffered = true;
+        } else {
+          tab.erase(ev);
 
-        if (tab.empty()) {
-          m_events.erase(id);
+          if (tab.empty()) {
+            m_events.erase(id);
+          }
         }
 
         EventDetached(id);
@@ -1399,6 +1430,42 @@ namespace Frames {
     }
 
     return false;
+  }
+
+  bool Layout::Event_Lock() {
+    bool storage = m_event_locked;
+    m_event_locked = true;
+    return storage;
+  }
+  void Layout::Event_Unlock(bool original) {
+    FRAMES_LAYOUT_CHECK(m_event_locked, "Unlocking frame when already unlocked, internal error");
+    m_event_locked = original;
+    if (!m_event_locked && m_event_buffered) {
+      // in theory we could be more efficient by storing which events need to be taken care of, but ATM this really isn't a priority - buffering events will be rare
+      for (std::map<EventId, EventMap>::iterator itr = m_events.begin(); itr != m_events.end(); ) {
+        for (EventMap::iterator eitr = itr->second.begin(); eitr != itr->second.end(); ) {
+          if (eitr->second.IsErased()) {
+            EventMap::iterator ritr = eitr;
+            ++eitr;
+            itr->second.erase(ritr);
+          } else {
+            ++eitr;
+          }
+        }
+
+        if (itr->second.empty()) {
+          std::map<EventId, EventMap>::iterator ritr = itr;
+          ++itr;
+          m_events.erase(ritr);
+        } else {
+          ++itr;
+        }
+      }
+
+      // No EventRemoved events since we're not *actually* removing any events, just cleaning up a data structure
+
+      m_event_buffered = false;
+    }
   }
 
   #define LFEH_CALL_CREATION(params, pushertype, call) \
