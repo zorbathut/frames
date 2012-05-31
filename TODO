@@ -5,6 +5,9 @@
       * "obliterate" is pending on the global event lock?
         * how do we pend obliterate without making it a nightmare
         * just . . . don't obliterate, I guess? Then obliterate later.
+      * obliterate:
+        * we need another kind of event lock for locking all the things we might be touching
+        * add an obliterate boolean, kill ASAP once the lock is freed
     * when we implement "list" we'll need to keep both lists in mind
     * Need to queue up obliterates if that's being used in the middle of an event handler
 

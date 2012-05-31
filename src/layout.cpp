@@ -1202,10 +1202,9 @@ namespace Frames {
     // OBLITERATE ALL CHILDREN.
     for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ) {
       // little dance here 'cause our children are going to be fucking around with our structure
-      ChildrenList::const_iterator next = itr;
-      ++next;
-      (*itr)->Obliterate_Extract();
-      itr = next;
+      ChildrenList::const_iterator kill = itr;
+      ++itr;
+      (*kill)->Obliterate_Extract();
     }
 
     // Detach ourselves from our parent
