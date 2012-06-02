@@ -24,6 +24,13 @@
 
 === POLISH PASSES BELOW
 
+* Doublecheck Environment event spawners to make sure they're Obliterate-safe
+
+* Call semantics:
+  * Any Layout function can be called from an event handler at any time
+  * Environment functions may not be called from event handlers
+  * Doublecheck these in debug mode? Global event locks wouldn't be tricky
+
 * Text distance field
   * http://www.comp.nus.edu.sg/~tants/pba.html
   * http://directtovideo.files.wordpress.com/2012/03/gdc_2012_released.pdf
