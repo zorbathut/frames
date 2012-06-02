@@ -811,6 +811,12 @@ namespace Frames {
   }
 
   void Layout::Obliterate() {
+    if (m_obliterate_locked) {
+      // can't do this quite yet, do it later
+      m_obliterate_buffered = true;
+      return;
+    }
+
     Obliterate_Detach();
     Obliterate_Extract();
   }
@@ -1302,12 +1308,14 @@ namespace Frames {
       if (itr != m_events.end()) { \
         EventHandle handle = EventHandle::INTERNAL_Initialize(this); \
         handle.INTERNAL_SetCanFinalize(true); \
-        bool oldlock = Event_Lock(); \
+        bool oboldlock = Obliterate_Lock(); \
+        bool evoldlock = Event_Lock(); \
         const std::multimap<float, EventHandler> &tab = itr->second; \
         for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end() && !handle.GetFinalize(); ++ev) { \
           EventHandlerCaller<Event##eventname##Functiontype>::Call params; \
         } \
-        Event_Unlock(oldlock); \
+        Event_Unlock(evoldlock); \
+        Obliterate_Unlock(oboldlock); \
       } \
     }
 
@@ -1316,49 +1324,54 @@ namespace Frames {
     FRAMES_LAYOUT_EVENT_DEFINE_INFRA(frametype, eventname##Sink, paramlist, paramlistcomplete, params) \
     FRAMES_LAYOUT_EVENT_DEFINE_INFRA(frametype, eventname##Bubble, paramlist, paramlistcomplete, params) \
     void frametype::Event##eventname##Trigger paramlist { \
-      std::vector<Layout *> layouts; \
+      bool oboldlock = Obliterate_Lock(); \
+      std::vector<std::pair<Layout *, bool> > layouts; \
       Layout *parent = GetParent(); \
       while (parent) { \
-        layouts.push_back(parent); \
+        layouts.push_back(std::make_pair(parent, parent->Obliterate_Lock())); \
         parent = parent->GetParent(); \
       } \
       EventHandle handle = EventHandle::INTERNAL_Initialize(this); \
       for (int i = (int)layouts.size() - 1; i >= 0; --i) { \
-        std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i]->m_events.find(Event##eventname##Sink##Id()); \
-        if (itr != layouts[i]->m_events.end()) { \
-          bool oldlock = layouts[i]->Event_Lock(); \
+        std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i].first->m_events.find(Event##eventname##Sink##Id()); \
+        if (itr != layouts[i].first->m_events.end()) { \
+          bool evoldlock = layouts[i].first->Event_Lock(); \
           const std::multimap<float, EventHandler> &tab = itr->second; \
           for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
             EventHandlerCaller<Event##eventname##Functiontype>::Call params; \
           } \
-          layouts[i]->Event_Unlock(oldlock); \
+          layouts[i].first->Event_Unlock(evoldlock); \
         } \
       } \
       { \
         std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = m_events.find(Event##eventname##Id()); \
         if (itr != m_events.end()) { \
           handle.INTERNAL_SetCanFinalize(true); \
-          bool oldlock = Event_Lock(); \
+          bool evoldlock = Event_Lock(); \
           const std::multimap<float, EventHandler> &tab = itr->second; \
           for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end() && !handle.GetFinalize(); ++ev) { \
             EventHandlerCaller<Event##eventname##Functiontype>::Call params; \
           } \
-          Event_Unlock(oldlock); \
+          Event_Unlock(evoldlock); \
           handle.Finalize(); \
           handle.INTERNAL_SetCanFinalize(false); \
         } \
       } \
       for (int i = 0; i < (int)layouts.size(); ++i) { \
-        std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i]->m_events.find(Event##eventname##Bubble##Id()); \
-        if (itr != layouts[i]->m_events.end()) { \
-          bool oldlock = layouts[i]->Event_Lock(); \
+        std::map<EventId, std::multimap<float, EventHandler> >::const_iterator itr = layouts[i].first->m_events.find(Event##eventname##Bubble##Id()); \
+        if (itr != layouts[i].first->m_events.end()) { \
+          bool evoldlock = layouts[i].first->Event_Lock(); \
           const std::multimap<float, EventHandler> &tab = itr->second; \
           for (std::multimap<float, EventHandler>::const_iterator ev = tab.begin(); ev != tab.end(); ++ev) { \
             EventHandlerCaller<Event##eventname##Functiontype>::Call params; \
           } \
-          layouts[i]->Event_Unlock(oldlock); \
+          layouts[i].first->Event_Unlock(evoldlock); \
         } \
       } \
+      for (int i = 0; i < (int)layouts.size(); ++i) { \
+        layouts[i].first->Obliterate_Unlock(layouts[i].first); \
+      } \
+      Obliterate_Unlock(oboldlock); \
     }
 
   FRAMES_LAYOUT_EVENT_DEFINE(Layout, Move, (), (EventHandle *handle), (FLEPREPARAMETERS));
@@ -1436,8 +1449,9 @@ namespace Frames {
     m_event_locked = true;
     return storage;
   }
+
   void Layout::Event_Unlock(bool original) {
-    FRAMES_LAYOUT_CHECK(m_event_locked, "Unlocking frame when already unlocked, internal error");
+    FRAMES_LAYOUT_CHECK(m_event_locked, "Unlocking frame event when already unlocked, internal error");
     m_event_locked = original;
     if (!m_event_locked && m_event_buffered) {
       // in theory we could be more efficient by storing which events need to be taken care of, but ATM this really isn't a priority - buffering events will be rare
@@ -1464,6 +1478,20 @@ namespace Frames {
       // No EventRemoved events since we're not *actually* removing any events, just cleaning up a data structure
 
       m_event_buffered = false;
+    }
+  }
+
+  bool Layout::Obliterate_Lock() {
+    bool storage = m_obliterate_locked;
+    m_obliterate_locked = true;
+    return storage;
+  }
+
+  void Layout::Obliterate_Unlock(bool original) {
+    FRAMES_LAYOUT_CHECK(m_event_locked, "Unlocking frame obliterate when already unlocked, internal error");
+    m_obliterate_locked = original;
+    if (!m_obliterate_locked && m_obliterate_buffered) {
+      Obliterate(); // kaboom!
     }
   }
 

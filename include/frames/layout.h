@@ -310,7 +310,12 @@ namespace Frames {
     bool m_event_buffered;
     bool Event_Lock(); // must store the result of this to pass back into Unlock
     void Event_Unlock(bool original);
-    
+
+    // Obliterate buffering (sort of related to the event system)
+    bool m_obliterate_locked;
+    bool m_obliterate_buffered;
+    bool Obliterate_Lock(); // must store the result of this to pass back into Unlock
+    void Obliterate_Unlock(bool original); // note that, after calling this function, the frame might eat itself
 
     // Global environment
     Environment *m_env;
