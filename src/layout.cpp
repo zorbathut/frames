@@ -441,6 +441,8 @@ namespace Frames {
       delimiter = true;
     }
 
+    name = Utility::Format("[%s %s]", GetType(), name.c_str());
+
     return name;
   }
 
@@ -450,7 +452,7 @@ namespace Frames {
       name = m_parent->GetNameFull() + ".";
     }
 
-    return name + "(" + GetName() + ")";
+    return name + GetName();
   }
 }
 #include <windows.h>

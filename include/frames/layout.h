@@ -157,7 +157,7 @@ namespace Frames {
     void SetNameId(int id) { m_name_id = id; }
 
     const std::string &GetNameDynamic() const { return m_name_dynamic; }
-    void SetNameStatic(const std::string &name) { m_name_dynamic = name; }
+    void SetNameDynamic(const std::string &name) { m_name_dynamic = name; }
 
     typedef std::set<Layout *, Sorter> ChildrenList;
     const ChildrenList &GetChildren() { return m_children; }

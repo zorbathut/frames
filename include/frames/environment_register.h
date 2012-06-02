@@ -28,6 +28,34 @@ namespace Frames {
 
     T *item = T::CreateBare(layout);
 
+    // Optional tagging with file/line
+    {
+      std::string id;
+
+      lua_Debug ar;
+      if (lua_getstack(L, 1, &ar)) {
+        lua_getinfo(L, "Snl", &ar);
+        id += Utility::Format("%s:", ar.short_src);
+        if (ar.currentline > 0)
+          id += Utility::Format("%d:", ar.currentline);
+        if (*ar.namewhat != '\0') {
+          id += Utility::Format(" in function %s", ar.name);
+        } else {
+          if (*ar.what == 'm') {
+            id += " in main chunk";
+          } else if (*ar.what == 'C' || *ar.what == 't') {
+            id += " ?";
+          } else {
+            id += Utility::Format(" in function <%s:%d>", ar.short_src, ar.linedefined);
+          }
+        }
+      } else {
+        id = "(unknown lua)";
+      }
+
+      item->SetNameDynamic(id);
+    }
+
     // Ahoy!
 
     item->l_push(L);

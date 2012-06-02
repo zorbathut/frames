@@ -1,23 +1,17 @@
 
+* lua error output
+
+=== POLISH PASSES BELOW
+
 * guarantee order by some sort of global ID?
 * Move GetParent more into Layout
-* MouseHover?
 
 * NaCl
 
 * SetAlpha
 
-* Lua API advanced
-  * lua error output
-  * Optionally tag frames with filename, line number
-  * Optional inline documentation
-  * At some point we should set up something to notify Frames if Lua shuts down first
-
 * Raw
 * Figure out 9-slice
-* Look over rift docs, verify that I have all the things
-
-=== POLISH PASSES BELOW
 
 * Doublecheck Environment event spawners to make sure they're Obliterate-safe
 
@@ -32,9 +26,15 @@
   * http://www.ronaldperry.org/PCTPres.pdf
   * http://www.youtube.com/watch?v=CGZRHJvJYIg
 
+* MouseHover?
+
 * Unit testing
 
 * Derive font size adjustment more precisely - binsearch, or dig into the code and see wtf is going on
+
+* Lua API advanced
+  * Optional inline documentation
+  * At some point we should set up something to notify Frames if Lua shuts down first
 
 * pageup/pagedown for textfields
 * at some point we need to figure out mouseover testing and key fallthroughs
