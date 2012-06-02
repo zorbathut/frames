@@ -400,7 +400,7 @@ namespace Frames {
       // stack: ... newtab Frames_rg
       // Now we call our deep virtual register function - this leaves the stack at the same level
       {
-        Environment::LuaStackChecker(L, m_env);
+        Environment::LuaStackChecker lsc(L, m_env);
         l_Register(L);
       }
 
@@ -473,6 +473,8 @@ namespace Frames {
       m_name_id(-1),
       m_event_locked(false),
       m_event_buffered(false),
+      m_obliterate_locked(false),
+      m_obliterate_buffered(false),
       m_env(0)
   {
     if (layout) {
@@ -863,7 +865,7 @@ namespace Frames {
   }
 
   void Layout::l_RegisterWorker(lua_State *L, const char *name) const {
-    Environment::LuaStackChecker(L, m_env);
+    Environment::LuaStackChecker lsc(L, m_env);
     // Incoming: ... newtab Frames_rg
 
     lua_getfield(L, -1, name);
@@ -1371,7 +1373,7 @@ namespace Frames {
         } \
       } \
       for (int i = 0; i < (int)layouts.size(); ++i) { \
-        layouts[i].first->Obliterate_Unlock(layouts[i].first); \
+        layouts[i].first->Obliterate_Unlock(layouts[i].second); \
       } \
       Obliterate_Unlock(oboldlock); \
     }
@@ -1490,7 +1492,7 @@ namespace Frames {
   }
 
   void Layout::Obliterate_Unlock(bool original) {
-    FRAMES_LAYOUT_CHECK(m_event_locked, "Unlocking frame obliterate when already unlocked, internal error");
+    FRAMES_LAYOUT_CHECK(m_obliterate_locked, "Unlocking frame obliterate when already unlocked, internal error");
     m_obliterate_locked = original;
     if (!m_obliterate_locked && m_obliterate_buffered) {
       Obliterate(); // kaboom!
@@ -1503,9 +1505,8 @@ namespace Frames {
     \
         int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void pushertype>::T>(pusher)) call; \
     \
-        if (lua_pcall(L, parametercount + 2, 0, 0)) { \
-          /* Error! TODO handle better */ \
-          layout->GetEnvironment()->LogError(lua_tostring(L, -1)); \
+        if (lua_pcall(L, parametercount + 2, 0, -(parametercount + 4))) { \
+          /* Error! */ \
           lua_pop(L, 1); \
         } \
     \
@@ -1535,24 +1536,31 @@ namespace Frames {
     lua_rawset(L, -3);
     // Stack: ... handle Frames_ehl
 
+    // Prep our error handler
+    layout->GetEnvironment()->Lua_PushErrorHandler(L);
+    // Stack: ... handle Frames_ehl errhandle
+
     // Now get our function call ready
     // Get the function call itself
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
     lua_rawgeti(L, -1, idx);
     lua_remove(L, -2);
-    // Stack: ... handle Frames_ehl function
+    // Stack: ... handle Frames_ehl errhandle function
 
     // Add the table
     layout->l_push(L);
-    // Stack: ... handle Frames_ehl function frame
+    // Stack: ... handle Frames_ehl errhandle function frame
 
     // Add our handler table
-    lua_pushvalue(L, -4);
-    // Stack: ... handle Frames_ehl function frame handle
+    lua_pushvalue(L, -5);
+    // Stack: ... handle Frames_ehl errhandle function frame handle
   }
 
   void Layout::LuaFrameEventHandler::CallTeardown(lua_State *L) const {
-    // Stack: ... handle Frames_ehl
+    // Stack: ... handle Frames_ehl errhandle
+
+    // Toss the error handler
+    lua_pop(L, 1);
 
     // Clear out the frame lookup
     lua_pushvalue(L, -2);

@@ -68,7 +68,7 @@ namespace Frames {
     const Configuration &GetConfiguration() { return m_config; }
 
     // Scripting languages
-    void LuaRegister(lua_State *L);
+    void LuaRegister(lua_State *L, bool hasErrorHandle = false); // if error handle is true, top element of the stack will be popped
     void LuaUnregister(lua_State *L);
     void LuaRegisterFramesBuiltin(lua_State *L);
     template<typename T> void RegisterLuaFrame(lua_State *L);
@@ -143,7 +143,7 @@ namespace Frames {
     // Lua
     class LuaStackChecker {
     public:
-      LuaStackChecker(lua_State *L, Environment *env);
+      LuaStackChecker(lua_State *L, Environment *env, int offset = 0);
       ~LuaStackChecker();
 
     private:
@@ -152,6 +152,8 @@ namespace Frames {
       Environment *m_env;
     };
     std::set<lua_State *> m_lua_environments;
+    void Lua_PushErrorHandler(lua_State *L);
+    static int l_errorDefault(lua_State *L);
   };
 }
 

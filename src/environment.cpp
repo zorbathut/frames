@@ -276,8 +276,19 @@ namespace Frames {
     return m_root->GetFrameUnder(x, y);
   }
 
-  void Environment::LuaRegister(lua_State *L) {
-    LuaStackChecker(L, this);
+  void Environment::LuaRegister(lua_State *L, bool hasErrorHandle) {
+    LuaStackChecker lsc(L, this, hasErrorHandle ? -1 : 0);
+
+    if (!hasErrorHandle) {
+      // insert our default handler
+      
+      // add the "this" pointer and the traceback function
+      lua_pushlightuserdata(L, this);
+      lua_getglobal(L, "debug");
+      lua_getfield(L, -1, "traceback");
+      lua_remove(L, -2);  // remove the "debug" table
+      lua_pushcclosure(L, l_errorDefault, 2);
+    }
 
     // insert our framespec metatable table
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_mt");
@@ -303,8 +314,7 @@ namespace Frames {
     }
     lua_pop(L, 1);
 
-    // insert our environment registry table - lightuserdata to bool.
-    // TODO remove in release, maybe
+    // insert our environment registry table - lightuserdata to error handle.
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_env");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
@@ -363,7 +373,7 @@ namespace Frames {
     // and now insert *us* into the env table
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_env");
     lua_pushlightuserdata(L, this);
-    lua_pushboolean(L, true);
+    lua_pushvalue(L, -3);
     lua_rawset(L, -3);
     lua_pop(L, 1);  // toot
 
@@ -388,13 +398,13 @@ namespace Frames {
       lua_setfield(L, -3, "Root");
     }
 
-    lua_pop(L, 2);  // both the nil/root still on the stack, and the Frames global
+    lua_pop(L, 3);  // the nil/root still on the stack, the Frames global, and the error handler
 
     m_lua_environments.insert(L);
   }
 
   void Environment::LuaUnregister(lua_State *L) {
-    LuaStackChecker(L, this);
+    LuaStackChecker lsc(L, this);
 
     // First, we need to kill off the lua event system. This *can* allocate (and probably shouldn't, todo).
     m_root->l_ClearLuaEvents_Recursive(L);
@@ -697,12 +707,34 @@ namespace Frames {
     }
   }
 
-  Environment::LuaStackChecker::LuaStackChecker(lua_State *L, Environment *env) : m_depth(lua_gettop(L)), m_L(L), m_env(env) {
+  Environment::LuaStackChecker::LuaStackChecker(lua_State *L, Environment *env, int offset) : m_depth(lua_gettop(L) + offset), m_L(L), m_env(env) {
   }
+
   Environment::LuaStackChecker::~LuaStackChecker() {
     if (m_depth != lua_gettop(m_L)) {
       m_env->LogError(Utility::Format("Lua stack size mismatch (%d -> %d)", m_depth, lua_gettop(m_L)));
     }
+  }
+
+  void Environment::Lua_PushErrorHandler(lua_State *L) {
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_env");
+    lua_pushlightuserdata(L, this);
+    lua_rawget(L, -2);
+    lua_remove(L, -2);
+  }
+
+  /*static*/ int Environment::l_errorDefault(lua_State *L) {
+    lua_pushliteral(L, "\n");
+    lua_pushvalue(L, lua_upvalueindex(2));
+    lua_call(L, 0, 1);
+    // now we have our stack trace
+
+    lua_concat(L, 3); // and now we have a full error message
+
+    Environment *env = (Environment*)lua_touserdata(L, lua_upvalueindex(1));
+    env->LogError(lua_tostring(L, -1));
+
+    return 1; // not that this will be used, but
   }
 }
 
