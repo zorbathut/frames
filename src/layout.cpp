@@ -113,53 +113,53 @@ namespace Frames {
   public:
     // NOTE: this works because delegate is POD
     EventHandler() { }
-    template<typename T> EventHandler(Delegate<T> din) : type(TYPE_NATIVE) {
+    template<typename T> EventHandler(Delegate<T> din) : m_type(TYPE_NATIVE), m_lua(0) {
       typedef Delegate<T> dintype;
       BOOST_STATIC_ASSERT(sizeof(dintype) == sizeof(Delegate<void ()>));
 
-      *reinterpret_cast<dintype *>(c.delegate) = din;
+      *reinterpret_cast<dintype *>(c.m_delegate) = din;
     }
-    template<typename T> EventHandler(Delegate<T> din, const LuaFrameEventHandler *lua) : type(TYPE_LUA), lua(lua) {
+    template<typename T> EventHandler(Delegate<T> din, const LuaFrameEventHandler *lua) : m_type(TYPE_LUA), m_lua(lua) {
       typedef Delegate<T> dintype;
       BOOST_STATIC_ASSERT(sizeof(dintype) == sizeof(Delegate<void ()>));
 
-      *reinterpret_cast<dintype *>(c.delegate) = din;
+      *reinterpret_cast<dintype *>(c.m_delegate) = din;
     }
     ~EventHandler() { }
 
     template<typename T1> void Call(T1 t1) const {
-      if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1)> *>(c.delegate))(t1);
+      if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1)> *>(c.m_delegate))(t1);
     }
 
     template<typename T1, typename T2> void Call(T1 t1, T2 t2) const {
-      if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2)> *>(c.delegate))(t1, t2);
+      if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2)> *>(c.m_delegate))(t1, t2);
     }
 
     template<typename T1, typename T2, typename T3> void Call(T1 t1, T2 t2, T3 t3) const {
-      if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2, T3)> *>(c.delegate))(t1, t2, t3);
+      if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2, T3)> *>(c.m_delegate))(t1, t2, t3);
     }
 
     template<typename T1, typename T2, typename T3, typename T4> void Call(T1 t1, T2 t2, T3 t3, T4 t4) const {
-      if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2, T3, T4)> *>(c.delegate))(t1, t2, t3, t4);
+      if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2, T3, T4)> *>(c.m_delegate))(t1, t2, t3, t4);
     }
 
-    bool IsNative() const { return type == TYPE_NATIVE; }
+    bool IsNative() const { return m_type == TYPE_NATIVE; }
 
-    bool IsLua() const { return type == TYPE_LUA; }
-    const LuaFrameEventHandler *GetLua() const { return lua; }
+    bool IsLua() const { return m_type == TYPE_LUA; }
+    const LuaFrameEventHandler *GetLua() const { return m_lua; }
 
-    bool IsErased() const { return type == TYPE_ERASED; }
-    void MarkErased() { /* TODO: make sure it is not yet erased */ type = TYPE_ERASED; lua = 0; }
+    bool IsErased() const { return m_type == TYPE_ERASED; }
+    void MarkErased() { /* TODO: make sure it is not yet erased */ m_type = TYPE_ERASED; m_lua = 0; }
 
   private:
     union {
-      char delegate[sizeof(Delegate<void ()>)];
+      char m_delegate[sizeof(Delegate<void ()>)];
     } c;
 
-    enum { TYPE_ERASED, TYPE_NATIVE, TYPE_LUA } type;
+    enum { TYPE_ERASED, TYPE_NATIVE, TYPE_LUA } m_type;
 
     union {
-      const LuaFrameEventHandler *lua;
+      const LuaFrameEventHandler *m_lua;
     };
     
     friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);

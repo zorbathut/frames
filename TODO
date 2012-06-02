@@ -1,6 +1,4 @@
 
-* EventHandle needs to be m_ prefixed
-
 * guarantee order by some sort of global ID?
 * Move GetParent more into Layout
 * MouseHover?
@@ -13,14 +11,11 @@
   * lua error output
   * Optionally tag frames with filename, line number
   * Optional inline documentation
-  * Handle Lua environment shutdown before Frames
   * At some point we should set up something to notify Frames if Lua shuts down first
 
 * Raw
 * Figure out 9-slice
 * Look over rift docs, verify that I have all the things
-
-* all sorts of consistency checks for doing nasty things during an event handler
 
 === POLISH PASSES BELOW
 
