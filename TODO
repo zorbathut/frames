@@ -1,4 +1,8 @@
 
+* event for focus change?
+* check text, see if we can toss out more of the englishified names
+* click outside to remove focus
+
 === POLISH PASSES BELOW
 
 * guarantee order by some sort of global ID?
