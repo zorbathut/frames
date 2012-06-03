@@ -799,7 +799,7 @@ namespace Frames {
       m_parent->m_children.erase(this);
     }
 
-    m_strata = m_strata;
+    m_strata = strata;
 
     if (m_parent) {
       m_parent->m_children.insert(this);
