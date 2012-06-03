@@ -68,7 +68,7 @@ namespace Frames {
     m_interactive = interactive;
     
     // kill focus if we no longer need to be focused
-    if (interactive == INTERACTIVE_NONE || interactive == INTERACTIVE_SELECT) {
+    if (interactive == INTERACTIVE_NONE) {
       if (GetEnvironment()->GetFocus() == this) {
         GetEnvironment()->SetFocus(0);
       }
@@ -88,9 +88,8 @@ namespace Frames {
       EventMouseLeftDownAttach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftDown));
       EventMouseLeftUpAttach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
       EventMouseLeftUpOutsideAttach(Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
-    }
-
-    if (interactive == INTERACTIVE_CURSOR || interactive == INTERACTIVE_EDIT) {
+    
+      // These are needed mostly for ctrl-C
       EventKeyDownAttach(Delegate<void (EventHandle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
       EventKeyRepeatAttach(Delegate<void (EventHandle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
       EventKeyTypeAttach(Delegate<void (EventHandle *, const std::string &)>(this, &Text::EventInternal_KeyType));
@@ -341,7 +340,7 @@ namespace Frames {
     EventMouseMoveAttach(Delegate<void (EventHandle *, const Point &pt)>(this, &Text::EventInternal_Move));
     EventMouseMoveOutsideAttach(Delegate<void (EventHandle *, const Point &pt)>(this, &Text::EventInternal_Move));
 
-    if (m_interactive >= INTERACTIVE_CURSOR) {
+    if (m_interactive >= INTERACTIVE_SELECT) {
       GetEnvironment()->SetFocus(this);
     }
   }
@@ -394,6 +393,24 @@ namespace Frames {
     SetSelection();
   }
   void Text::EventInternal_KeyDownOrRepeat(EventHandle *e, const KeyEvent &ev) {
+    // Things supported for everything interactive
+    if (ev.key == Key::A && ev.ctrl) {
+      SetSelection(0, m_text.size());
+      SetCursor(m_text.size());
+    } else if ((ev.key == Key::C && ev.ctrl) || (m_interactive == INTERACTIVE_SELECT && ev.key == Key::X && ev.ctrl)) { // if we're in select mode, interpret cut as copy
+      // copy to clipboard
+      if (m_cursor != m_select) {
+        GetEnvironment()->GetConfiguration().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
+      }
+    }
+
+    // todo: pageup
+    // todo: pagedown
+
+    if (m_interactive < INTERACTIVE_CURSOR) {
+      return;
+    }
+
     {
       // movement-based things
       int newcursor = -1;
@@ -456,6 +473,10 @@ namespace Frames {
       }
     }
 
+    if (m_interactive < INTERACTIVE_EDIT) {
+      return;
+    }
+
     if (ev.key == Key::Backspace) {
       if (m_cursor != m_select) {
         // wipe out the selection
@@ -480,14 +501,6 @@ namespace Frames {
         // wipe out the character after the cursor
         SetText(m_text.substr(0, m_cursor) + m_text.substr(m_cursor + 1));
       }
-    } else if (ev.key == Key::A && ev.ctrl) {
-      SetSelection(0, m_text.size());
-      SetCursor(m_text.size());
-    } else if (ev.key == Key::C && ev.ctrl) {
-      // copy to clipboard
-      if (m_cursor != m_select) {
-        GetEnvironment()->GetConfiguration().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
-      }
     } else if (ev.key == Key::X && ev.ctrl) {
       // cut to clipboard
       if (m_cursor != m_select) {
@@ -507,9 +520,6 @@ namespace Frames {
       SetCursor(ncursor);
       SetSelection();
     }
-
-    // todo: pageup
-    // todo: pagedown
   }
 
   /*static*/ int Text::l_SetText(lua_State *L) {
