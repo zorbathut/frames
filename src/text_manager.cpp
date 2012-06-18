@@ -155,9 +155,9 @@ namespace Frames {
       } else {
         linewidth += m_characters.back()->GetAdvance();
         if (m_characters.back()->GetTexture()) {
-          lastadjust = m_characters.back()->GetTexture()->GetWidth() - m_characters.back()->GetAdvance();
+          lastadjust = m_characters.back()->GetAdvance() - m_characters.back()->GetTexture()->GetWidth();
         } else {
-          lastadjust = -m_characters.back()->GetAdvance();
+          lastadjust = m_characters.back()->GetAdvance();
         }
       }
 
