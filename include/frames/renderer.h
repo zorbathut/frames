@@ -40,8 +40,12 @@ namespace Frames {
     void SetTexture(TextureChunk *tex);
     void SetTexture(TextureBacking *tex);
 
-    void PushScissor(const Rect &rect);
-    void PopScissor();
+    void ScissorPush(const Rect &rect);
+    void ScissorPop();
+
+    void StatePush();
+    void StateClean();
+    void StatePop();
     
     static bool WriteCroppedRect(Vertex *vertex, const Rect &screen, const Color &color, const Rect &bounds); // no fancy lerping
     static bool WriteCroppedTexRect(Vertex *vertex, const Rect &screen, const Rect &tex, const Color &color, const Rect &bounds);  // fancy lerping

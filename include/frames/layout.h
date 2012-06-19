@@ -4,10 +4,13 @@
 #define FRAMES_LAYOUT
 
 #include "frames/delegate.h"
+#include "frames/event_declaration.h"
 #include "frames/input.h"
 #include "frames/noncopyable.h"
 #include "frames/point.h"
 #include "frames/utility.h"
+
+#include "boost/static_assert.hpp"
 
 #include <vector>
 #include <set>
@@ -21,6 +24,8 @@ namespace Frames {
   class Renderer;
   class Layout;
 
+  // This class is passed as a parameter to every event handler.
+  // It's the method for requesting non-event-type-specific event information or modifying behavior about the event.
   class EventHandle {
   public:
     EventHandle(const EventHandle &ev);
@@ -60,36 +65,18 @@ namespace Frames {
 
   typedef intptr_t EventId;
 
-  // we'll add more internal utility functions if/when needed
-  #define FRAMES_LAYOUT_EVENT_HOOKS(eventname, paramlist, paramlistcomplete) \
-      void Event##eventname##Attach(Delegate<void paramlistcomplete> delegate, float order = 0.f); \
-      void Event##eventname##Detach(Delegate<void paramlistcomplete> delegate, float order = 0.f / 0.f); \
-      static EventId Event##eventname##Id(); \
-      typedef void Event##eventname##Functiontype paramlist; \
-    private: \
-      static char s_event_##eventname##_id; /* the char itself isn't the ID, the address of the char is */ \
-    public:
-
-  #define FRAMES_LAYOUT_EVENT_DECLARE(eventname, paramlist, paramlistcomplete) \
-      FRAMES_LAYOUT_EVENT_HOOKS(eventname, paramlist, paramlistcomplete) \
-    private: \
-      void Event##eventname##Trigger paramlist; \
-    public:
-
-  #define FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(eventname, paramlist, paramlistcomplete) \
-      FRAMES_LAYOUT_EVENT_HOOKS(eventname, paramlist, paramlistcomplete) \
-      FRAMES_LAYOUT_EVENT_HOOKS(eventname##Sink, paramlist, paramlistcomplete) \
-      FRAMES_LAYOUT_EVENT_HOOKS(eventname##Bubble, paramlist, paramlistcomplete) \
-    private: \
-      void Event##eventname##Trigger paramlist; \
-    public:
-
   class Layout : Noncopyable {
+  private:
     friend class Environment;
-    template<typename> friend class EventHandlerCaller;
+    template<typename> friend class INTERNAL_EventHandlerCaller;
+    template<typename> friend class INTERNAL_EventDispatch;
+    template<typename> friend class INTERNAL_EventDispatchBubble;
 
-    class EventHandler; // defined in layout.cpp
+    struct LuaFrameEventHandler;
     struct Sorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
+
+  protected:
+    class EventHandler;
 
   public:
     typedef std::multimap<float, EventHandler> EventMap;
@@ -115,40 +102,40 @@ namespace Frames {
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
     // Events?
 
-    FRAMES_LAYOUT_EVENT_DECLARE(Move, (), (EventHandle *event));
-    FRAMES_LAYOUT_EVENT_DECLARE(Size, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE(Move, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE(Size, (), (EventHandle *event));
 
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseOver, (), (EventHandle *event));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMove, (const Point &pt), (EventHandle *event, const Point &pt));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMoveOutside, (const Point &pt), (EventHandle *event, const Point &pt));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseOut, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseOver, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMove, (const Point &pt), (EventHandle *event, const Point &pt));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMoveOutside, (const Point &pt), (EventHandle *event, const Point &pt));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseOut, (), (EventHandle *event));
 
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseLeftUp, (), (EventHandle *event));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseLeftUpOutside, (), (EventHandle *event));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseLeftDown, (), (EventHandle *event));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseLeftClick, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUp, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUpOutside, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftDown, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftClick, (), (EventHandle *event));
 
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMiddleUp, (), (EventHandle *event));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMiddleUpOutside, (), (EventHandle *event));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMiddleDown, (), (EventHandle *event));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseMiddleClick, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUp, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUpOutside, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleDown, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleClick, (), (EventHandle *event));
 
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseRightUp, (), (EventHandle *event));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseRightUpOutside, (), (EventHandle *event));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseRightDown, (), (EventHandle *event));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseRightClick, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUp, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUpOutside, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightDown, (), (EventHandle *event));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightClick, (), (EventHandle *event));
 
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseButtonUp, (int button), (EventHandle *event, int button));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseButtonUpOutside, (int button), (EventHandle *event, int button));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseButtonDown, (int button), (EventHandle *event, int button));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseButtonClick, (int button), (EventHandle *event, int button));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUp, (int button), (EventHandle *event, int button));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUpOutside, (int button), (EventHandle *event, int button));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonDown, (int button), (EventHandle *event, int button));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonClick, (int button), (EventHandle *event, int button));
 
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(MouseWheel, (int delta), (EventHandle *event, int delta));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseWheel, (int delta), (EventHandle *event, int delta));
 
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(KeyDown, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(KeyType, (const std::string &text), (EventHandle *event, const std::string &text));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(KeyRepeat, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev));
-    FRAMES_LAYOUT_EVENT_DECLARE_BUBBLE(KeyUp, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyDown, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyType, (const std::string &text), (EventHandle *event, const std::string &text));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyRepeat, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev));
+    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyUp, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev));
 
     const char *GetNameStatic() const { return m_name_static; }
     void SetNameStatic(const char *name) { m_name_static = name; }  // WARNING: This does not make a copy! The const char* must have a lifetime longer than this frame.
@@ -242,8 +229,64 @@ namespace Frames {
     static int l_EventPusher_Button(lua_State *L, int button);
 
     // Various internal-only functionality
-    void EventAttach(EventId id, const EventHandler &handler, float order);
-    bool EventDetach(EventId id, const EventHandler &handler, float order);
+    void INTERNAL_EventAttach(EventId id, const EventHandler &handler, float order);
+    bool INTERNAL_EventDetach(EventId id, const EventHandler &handler, float order);
+
+    class EventHandler {
+    public:
+      // NOTE: this works because delegate is POD
+      EventHandler() { }
+      template<typename T> EventHandler(Delegate<T> din) : m_type(TYPE_NATIVE), m_lua(0) {
+        typedef Delegate<T> dintype;
+        BOOST_STATIC_ASSERT(sizeof(dintype) == sizeof(Delegate<void ()>));
+
+        *reinterpret_cast<dintype *>(c.m_delegate) = din;
+      }
+      template<typename T> EventHandler(Delegate<T> din, const LuaFrameEventHandler *lua) : m_type(TYPE_LUA), m_lua(lua) {
+        typedef Delegate<T> dintype;
+        BOOST_STATIC_ASSERT(sizeof(dintype) == sizeof(Delegate<void ()>));
+
+        *reinterpret_cast<dintype *>(c.m_delegate) = din;
+      }
+      ~EventHandler() { }
+
+      template<typename T1> void Call(T1 t1) const {
+        if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1)> *>(c.m_delegate))(t1);
+      }
+
+      template<typename T1, typename T2> void Call(T1 t1, T2 t2) const {
+        if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2)> *>(c.m_delegate))(t1, t2);
+      }
+
+      template<typename T1, typename T2, typename T3> void Call(T1 t1, T2 t2, T3 t3) const {
+        if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2, T3)> *>(c.m_delegate))(t1, t2, t3);
+      }
+
+      template<typename T1, typename T2, typename T3, typename T4> void Call(T1 t1, T2 t2, T3 t3, T4 t4) const {
+        if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2, T3, T4)> *>(c.m_delegate))(t1, t2, t3, t4);
+      }
+
+      bool IsNative() const { return m_type == TYPE_NATIVE; }
+
+      bool IsLua() const { return m_type == TYPE_LUA; }
+      const LuaFrameEventHandler *GetLua() const { return m_lua; }
+
+      bool IsErased() const { return m_type == TYPE_ERASED; }
+      void MarkErased() { /* TODO: make sure it is not yet erased */ m_type = TYPE_ERASED; m_lua = 0; }
+
+    private:
+      union {
+        char m_delegate[sizeof(Delegate<void ()>)];
+      } c;
+
+      enum { TYPE_ERASED, TYPE_NATIVE, TYPE_LUA } m_type;
+
+      union {
+        const LuaFrameEventHandler *m_lua;
+      };
+      
+      friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);
+    };
 
   private:
     friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);

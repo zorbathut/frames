@@ -11,6 +11,7 @@
 #include "frames/text.h"
 #include "frames/texture.h"
 #include "frames/mask.h"
+#include "frames/raw.h"
 
 #include <GL/gl.h>
 
@@ -573,6 +574,7 @@ namespace Frames {
     RegisterLuaFrameCreation<Text>(L);
     RegisterLuaFrameCreation<Texture>(L);
     RegisterLuaFrameCreation<Mask>(L);
+    RegisterLuaFrameCreation<Raw>(L);
   }
 
   Environment::Performance::Performance(Environment *env, float r, float g, float b) : m_env(env) { // handle left uninitialized intentionally

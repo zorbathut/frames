@@ -59,8 +59,7 @@ namespace Frames {
     m_width = width;
     m_height = height;
 
-    glPushAttrib(~0);
-    glPushClientAttrib(~0);
+    StatePush();
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -95,8 +94,7 @@ namespace Frames {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-    glPopClientAttrib();
-    glPopAttrib();
+    StatePop();
   }
 
   Renderer::Vertex *Renderer::Request(int vertices) {
@@ -144,7 +142,7 @@ namespace Frames {
     }
   }
 
-  void Renderer::PushScissor(const Rect &rect) {
+  void Renderer::ScissorPush(const Rect &rect) {
     if (m_scissor.empty()) {
       glEnable(GL_SCISSOR_TEST);
     }
@@ -154,7 +152,7 @@ namespace Frames {
     SetScissor(rect);
   }
 
-  void Renderer::PopScissor() {
+  void Renderer::ScissorPop() {
     m_scissor.pop();
 
     if (m_scissor.empty()) {
@@ -162,6 +160,39 @@ namespace Frames {
     } else {
       SetScissor(m_scissor.back());
     }
+  }
+
+  void Renderer::StatePush() {
+    // THIS IS DEFINITELY NOT HORRIFYINGLY SLOW
+    glPushAttrib(~0);
+    glPushClientAttrib(~0);
+
+    glMatrixMode(GL_TEXTURE);
+    glPushMatrix();
+
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+  }
+  void Renderer::StateClean() {
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // we intentionally leave the translation matrices
+  }
+  void Renderer::StatePop() {
+    glPopClientAttrib();
+    glPopAttrib();
+
+    glMatrixMode(GL_TEXTURE);
+    glPopMatrix();
+
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
   }
   
   bool Renderer::WriteCroppedRect(Vertex *verts, const Rect &screen, const Color &color, const Rect &bounds) {

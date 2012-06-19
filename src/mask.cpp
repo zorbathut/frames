@@ -32,11 +32,11 @@ namespace Frames {
   void Mask::RenderElement(Renderer *renderer) const {
     Frame::RenderElement(renderer);
 
-    renderer->PushScissor(GetBounds());
+    renderer->ScissorPush(GetBounds());
   }
 
   void Mask::RenderElementPost(Renderer *renderer) const {
-    renderer->PopScissor();
+    renderer->ScissorPop();
 
     Frame::RenderElementPost(renderer);
   }
