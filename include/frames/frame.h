@@ -35,6 +35,9 @@ namespace Frames {
     using Layout::SetVisible;
     using Layout::GetVisible;
 
+    using Layout::SetAlpha;
+    using Layout::GetAlpha;
+
     void SetBackground(const Color &color);
     const Color &GetBackground() const { return m_bg; }
 
@@ -73,6 +76,9 @@ namespace Frames {
 
     static int l_SetVisible(lua_State *L);
     static int l_GetVisible(lua_State *L);
+
+    static int l_SetAlpha(lua_State *L);
+    static int l_GetAlpha(lua_State *L);
 
     static int l_SetBackground(lua_State *L);
     static int l_GetBackground(lua_State *L);

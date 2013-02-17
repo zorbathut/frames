@@ -403,6 +403,7 @@ namespace Frames {
       m_strata(0),
       m_parent(0),
       m_visible(true),
+      m_alpha(1),
       m_fullMouseMasking(false),
       m_acceptInput(false),
       m_name_static(0),
@@ -1091,6 +1092,7 @@ namespace Frames {
 
   void Layout::Render(Renderer *renderer) const {
     if (m_visible) {
+      renderer->AlphaPush(GetAlpha());
       RenderElement(renderer);
 
       for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
@@ -1098,6 +1100,7 @@ namespace Frames {
       }
       
       RenderElementPost(renderer);
+      renderer->AlphaPop();
     }
   }
 

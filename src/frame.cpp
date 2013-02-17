@@ -44,6 +44,8 @@ namespace Frames {
 
   void Frame::RenderElement(Renderer *renderer) const {
     if (m_bg.a > 0) {
+      Color bgc = m_bg * Color(1, 1, 1, renderer->AlphaGet());
+
       renderer->SetTexture();
 
       float u = GetTop();
@@ -58,10 +60,10 @@ namespace Frames {
       v[2].p.x = r; v[2].p.y = d;
       v[3].p.x = l; v[3].p.y = d;
 
-      v[0].c = m_bg;
-      v[1].c = m_bg;
-      v[2].c = m_bg;
-      v[3].c = m_bg;
+      v[0].c = bgc;
+      v[1].c = bgc;
+      v[2].c = bgc;
+      v[3].c = bgc;
 
       renderer->Return(GL_QUADS);
     }
@@ -86,6 +88,9 @@ namespace Frames {
 
     l_RegisterFunction(L, GetStaticType(), "SetVisible", l_SetVisible);
     l_RegisterFunction(L, GetStaticType(), "GetVisible", l_GetVisible);
+
+    l_RegisterFunction(L, GetStaticType(), "SetAlpha", l_SetAlpha);
+    l_RegisterFunction(L, GetStaticType(), "GetAlpha", l_GetAlpha);
 
     l_RegisterFunction(L, GetStaticType(), "SetBackground", l_SetBackground);
     l_RegisterFunction(L, GetStaticType(), "GetBackground", l_GetBackground);
@@ -318,6 +323,24 @@ namespace Frames {
     Frame *self = l_checkframe<Frame>(L, 1);
 
     lua_pushboolean(L, self->GetVisible());
+
+    return 1;
+  }
+
+  /*static*/ int Frame::l_SetAlpha(lua_State *L) {
+    l_checkparams(L, 2);
+    Frame *self = l_checkframe<Frame>(L, 1);
+
+    self->SetAlpha(luaL_checknumber(L, 2));
+
+    return 0;
+  }
+
+  /*static*/ int Frame::l_GetAlpha(lua_State *L) {
+    l_checkparams(L, 1);
+    Frame *self = l_checkframe<Frame>(L, 1);
+
+    lua_pushnumber(L, self->GetAlpha());
 
     return 1;
   }

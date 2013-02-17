@@ -46,6 +46,10 @@ namespace Frames {
     void StatePush();
     void StateClean();
     void StatePop();
+
+    void AlphaPush(float alpha);
+    float AlphaGet() const;
+    void AlphaPop();
     
     static bool WriteCroppedRect(Vertex *vertex, const Rect &screen, const Color &color, const Rect &bounds); // no fancy lerping
     static bool WriteCroppedTexRect(Vertex *vertex, const Rect &screen, const Rect &tex, const Color &color, const Rect &bounds);  // fancy lerping
@@ -69,6 +73,8 @@ namespace Frames {
 
     void SetScissor(const Rect &rect);
     std::queue<Rect> m_scissor;
+
+    std::vector<float> m_alpha; // we'll only really allocate it once
   };
 };
 

@@ -21,6 +21,10 @@ namespace Frames {
   inline bool operator!=(const Color &lhs, const Color &rhs) {
     return lhs.r != rhs.r || lhs.g != rhs.g || lhs.b != rhs.b || lhs.a != rhs.a;
   }
+
+  inline Color operator*(const Color &lhs, const Color &rhs) {
+    return Color(lhs.r * rhs.r, lhs.g * rhs.g, lhs.b * rhs.b, lhs.a * rhs.a);
+  }
 }
 
 #endif

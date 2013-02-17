@@ -46,6 +46,8 @@ namespace Frames {
     Frame::RenderElement(renderer);
 
     if (m_texture) {
+      Color tint = m_tint * Color(1, 1, 1, renderer->AlphaGet());
+
       renderer->SetTexture(m_texture.get());
 
       float u = GetTop();
@@ -69,10 +71,10 @@ namespace Frames {
       v[3].t.x = v[0].t.x;
       v[3].t.y = v[2].t.y;
 
-      v[0].c = m_tint;
-      v[1].c = m_tint;
-      v[2].c = m_tint;
-      v[3].c = m_tint;
+      v[0].c = tint;
+      v[1].c = tint;
+      v[2].c = tint;
+      v[3].c = tint;
 
       renderer->Return(GL_QUADS);
     }

@@ -48,6 +48,9 @@ namespace Frames {
       glBufferData(GL_ELEMENT_ARRAY_BUFFER, elements.size() * sizeof(GLushort), &elements[0], GL_STATIC_DRAW);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
+
+    // prime our alpha stack
+    m_alpha.push_back(1);
   };
 
   Renderer::~Renderer() {
@@ -195,6 +198,18 @@ namespace Frames {
     glPopMatrix();
   }
   
+  void Renderer::AlphaPush(float alpha) {
+    m_alpha.push_back(alpha * AlphaGet());
+  }
+
+  float Renderer::AlphaGet() const {
+    return m_alpha.back();
+  }
+
+  void Renderer::AlphaPop() {
+    m_alpha.pop_back();
+  }
+
   bool Renderer::WriteCroppedRect(Vertex *verts, const Rect &screen, const Color &color, const Rect &bounds) {
     if (screen.s.x > bounds.e.x || screen.e.x < bounds.s.x || screen.s.y > bounds.e.y || screen.e.y < bounds.s.y) {
       return false;

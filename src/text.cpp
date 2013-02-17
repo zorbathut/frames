@@ -305,7 +305,7 @@ namespace Frames {
 
           rect.e.y += m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
 
-          if (Renderer::WriteCroppedRect(verts + idx, rect, m_color_selection, bounds)) {
+          if (Renderer::WriteCroppedRect(verts + idx, rect, m_color_selection * Color(1, 1, 1, renderer->AlphaGet()), bounds)) {
             idx += 4;
           }
         }
@@ -313,7 +313,7 @@ namespace Frames {
       }
 
       // render the actual text
-      m_layout->Render(renderer, m_color_text, GetBounds(), GetScroll());
+      m_layout->Render(renderer, m_color_text * Color(1, 1, 1, renderer->AlphaGet()), GetBounds(), GetScroll());
 
       // render cursor, if there is one
       if (m_interactive >= INTERACTIVE_CURSOR && GetFocus()) { // display only if in focus
@@ -325,7 +325,7 @@ namespace Frames {
         origin.x += GetLeft();
         origin.y += GetTop();
         
-        Renderer::WriteCroppedTexRect(vert, Rect(origin, origin + Point(1, m_layout->GetParent()->GetParent()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1), bounds);
+        Renderer::WriteCroppedTexRect(vert, Rect(origin, origin + Point(1, m_layout->GetParent()->GetParent()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1, renderer->AlphaGet()), bounds);
 
         renderer->Return(GL_QUADS);
       }

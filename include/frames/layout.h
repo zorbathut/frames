@@ -188,6 +188,9 @@ namespace Frames {
     void SetVisible(bool visible);
     bool GetVisible() const { return m_visible; }
 
+    void SetAlpha(float alpha) { m_alpha = alpha; }
+    float GetAlpha() const { return m_alpha; }
+
     // This is for further-down classes, not so useful for users
     void SetFullMouseMasking(bool mask) { m_fullMouseMasking = mask; }
     bool GetFullMouseMasking() { return m_fullMouseMasking; }
@@ -337,6 +340,9 @@ namespace Frames {
     Layout *m_parent;
     bool m_visible;
     ChildrenList m_children;
+
+    // Rendering effects
+    float m_alpha;
 
     // Input
     bool m_fullMouseMasking;

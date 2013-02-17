@@ -36,6 +36,8 @@ namespace Frames {
     renderer->StatePush();
     renderer->StateClean();
 
+    // TODO: alpha?
+
     const_cast<Raw*>(this)->EventRenderTrigger(); // Yeah, this is ugly, but we're not about to rig up an entire new event system for const elements, and it's not like it would help anyway.
     // This particular restriction *has* to be enforced by just telling users not to screw it up.
 
