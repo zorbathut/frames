@@ -37,9 +37,11 @@ namespace Frames {
 
     l_RegisterFunction(L, GetStaticType(), "SetTexture", l_SetTexture);
     l_RegisterFunction(L, GetStaticType(), "GetTexture", l_GetTexture);
+
+    l_RegisterFunction(L, GetStaticType(), "SetTint", l_SetTint);
+    l_RegisterFunction(L, GetStaticType(), "GetTint", l_GetTint);
   }
 
-  static const Color white = Color(1, 1, 1, 1);
   void Texture::RenderElement(Renderer *renderer) const {
     Frame::RenderElement(renderer);
 
@@ -67,10 +69,10 @@ namespace Frames {
       v[3].t.x = v[0].t.x;
       v[3].t.y = v[2].t.y;
 
-      v[0].c = white;
-      v[1].c = white;
-      v[2].c = white;
-      v[3].c = white;
+      v[0].c = m_tint;
+      v[1].c = m_tint;
+      v[2].c = m_tint;
+      v[3].c = m_tint;
 
       renderer->Return(GL_QUADS);
     }
@@ -97,6 +99,35 @@ namespace Frames {
     lua_pushstring(L, self->GetTexture().c_str());
 
     return 1;
+  }
+
+  /*static*/ int Texture::l_SetTint(lua_State *L) {
+    l_checkparams(L, 4, 5);
+    Texture *self = l_checkframe<Texture>(L, 1);
+
+    Color color(1, 1, 1, 1);
+    color.r = luaL_checknumber(L, 2);
+    color.g = luaL_checknumber(L, 3);
+    color.b = luaL_checknumber(L, 4);
+    if (lua_gettop(L) == 5) {
+      color.a = luaL_checknumber(L, 5);
+    }
+
+    self->m_tint = color;
+
+    return 0;
+  }
+
+  /*static*/ int Texture::l_GetTint(lua_State *L) {
+    l_checkparams(L, 1);
+    Texture *self = l_checkframe<Texture>(L, 1);
+
+    lua_pushnumber(L, self->m_tint.r);
+    lua_pushnumber(L, self->m_tint.g);
+    lua_pushnumber(L, self->m_tint.b);
+    lua_pushnumber(L, self->m_tint.a);
+
+    return 4;
   }
 }
 

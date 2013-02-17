@@ -3,6 +3,9 @@
 * check text, see if we can toss out more of the englishified names
 * click outside to remove focus
 
+* redesign event system to use global event IDs
+* rejigger event core to handle remove-while-trigger better
+
 === POLISH PASSES BELOW
 
 * guarantee order by some sort of global ID?
@@ -13,7 +16,7 @@
 * SetAlpha
 
 * Raw
-* Figure out 9-slice
+* Figure out 9-slice (much later?)
 
 * Doublecheck Environment event spawners to make sure they're Obliterate-safe
 

@@ -20,6 +20,10 @@ namespace Frames {
     void SetTexture(const std::string &id);
     const std::string &GetTexture() const { return m_texture_id; }
 
+    // EXPERIMENTAL
+    void SetTint(Color color);
+    Color GetTint() const { return m_tint; }
+
   protected:
     virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); Frame::l_Register(L); }
 
@@ -34,9 +38,14 @@ namespace Frames {
     std::string m_texture_id;
     TextureChunkPtr m_texture;
 
+    Color m_tint;
+
     // Lua bindings
     static int l_SetTexture(lua_State *L);
     static int l_GetTexture(lua_State *L);
+
+    static int l_SetTint(lua_State *L);
+    static int l_GetTint(lua_State *L);
   };
 }
 
