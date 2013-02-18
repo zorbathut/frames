@@ -170,6 +170,8 @@ namespace Frames {
     // In other words, the only cases we actually care about are "0 vertices, size" and "1 vertex, size"
     // In all cases, we assume size exists via GetSize() - the only question is whether we have a vertex or not
 
+    // It's worth noting that we're guaranteed to validate our size while doing this, which means that anything deriving its info from us *will* be properly invalidated later if necessary
+
     // Find a valid vertex - we'll only be using one
     const AxisData::Connector *connect;
     if (Utility::IsUndefined(axa.point_mine)) {
@@ -390,9 +392,21 @@ namespace Frames {
 
     return name + GetName();
   }
-}
-#include <windows.h>
-namespace Frames {
+
+  void Layout::DebugDumpLayout() const {
+    FRAMES_DEBUG("Dump for layout %s", GetNameFull().c_str());
+    FRAMES_DEBUG("  XAXIS:");
+    FRAMES_DEBUG("    Connector 0 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[0].point_mine, (int)m_axes[X].connections[0].link, m_axes[X].connections[0].point_link, m_axes[X].connections[0].offset, m_axes[X].connections[0].cached);
+    FRAMES_DEBUG("    Connector 1 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[1].point_mine, (int)m_axes[X].connections[1].link, m_axes[X].connections[1].point_link, m_axes[X].connections[1].offset, m_axes[X].connections[0].cached);
+    FRAMES_DEBUG("    Size %f (def %f), cache %f", m_axes[X].size_set, m_axes[X].size_default, m_axes[X].size_cached);
+    FRAMES_DEBUG("    Linkcount %d", m_axes[X].children.size());
+    FRAMES_DEBUG("  YAXIS:");
+    FRAMES_DEBUG("    Connector 0 from %f to %08x:%f offset %f, cache %f", m_axes[Y].connections[0].point_mine, (int)m_axes[Y].connections[0].link, m_axes[Y].connections[0].point_link, m_axes[Y].connections[0].offset, m_axes[Y].connections[0].cached);
+    FRAMES_DEBUG("    Connector 1 from %f to %08x:%f offset %f, cache %f", m_axes[Y].connections[1].point_mine, (int)m_axes[Y].connections[1].link, m_axes[Y].connections[1].point_link, m_axes[Y].connections[1].offset, m_axes[Y].connections[0].cached);
+    FRAMES_DEBUG("    Size %f (def %f), cache %f", m_axes[Y].size_set, m_axes[Y].size_default, m_axes[Y].size_cached);
+    FRAMES_DEBUG("    Linkcount %d", m_axes[Y].children.size());
+  }
+
   Layout::Layout(Layout *layout, Environment *env) :
       m_resolved(false),
       m_last_width(-1),
@@ -423,7 +437,7 @@ namespace Frames {
     if (layout && env) {
       FRAMES_LAYOUT_CHECK(layout->GetEnvironment() == env, "Layout's explicit parent and environment do not match");
     }
-    // TODO: come up with a better panic button for this? if we have no parent or environment then we have no way to do debug loggin
+    // TODO: come up with a better panic button for this? if we have no parent or environment then we have no way to do debug logging
     FRAMES_LAYOUT_CHECK(layout || env, "Layout not given parent or environment");
 
     m_env->MarkInvalidated(this); // We'll need to resolve this before we go
@@ -495,7 +509,7 @@ namespace Frames {
     AxisData::Connector &axa = ax.connections[0];
     if (axa.point_mine == mypt) {
       // We don't care if we haven't changed
-      if (axa.link == link && (!link || axa.point_link != linkpt) && axa.offset != offset) {
+      if (axa.link == link && (!link || axa.point_link == linkpt) && axa.offset == offset) {
         return;
       }
 
@@ -523,7 +537,7 @@ namespace Frames {
     AxisData::Connector &axb = ax.connections[1];
     if (axb.point_mine == mypt) {
       // We don't care if we haven't changed
-      if (axb.link == link && (!link || axb.point_link != linkpt) && axb.offset != offset) {
+      if (axb.link == link && (!link || axb.point_link == linkpt) && axb.offset == offset) {
         return;
       }
 
@@ -572,6 +586,11 @@ namespace Frames {
     replace->link = link;
     replace->point_link = linkpt;
     replace->offset = offset;
+
+    if (link)
+    {
+      link->m_axes[axis].children.insert(this);
+    }
 
     return;
   }
@@ -835,6 +854,8 @@ namespace Frames {
     l_RegisterFunction(L, GetStaticType(), "GetName", l_GetName);
     l_RegisterFunction(L, GetStaticType(), "GetNameFull", l_GetNameFull);
     l_RegisterFunction(L, GetStaticType(), "GetType", l_GetType);
+
+    l_RegisterFunction(L, GetStaticType(), "DebugDumpLayout", l_DebugDumpLayout);
 
     FRAMES_FRAMEEVENT_L_REGISTER(L, GetStaticType(), Move, &Layout::l_EventPusher_Default);
     FRAMES_FRAMEEVENT_L_REGISTER(L, GetStaticType(), Size, &Layout::l_EventPusher_Default);
@@ -1613,6 +1634,15 @@ namespace Frames {
     lua_pushstring(L, self->GetType());
 
     return 1;
+  }
+
+  /*static*/ int Layout::l_DebugDumpLayout(lua_State *L)  {
+    l_checkparams(L, 1);
+    Layout *self = l_checkframe<Layout>(L, 1);
+
+    self->DebugDumpLayout();
+
+    return 0;
   }
 }
 

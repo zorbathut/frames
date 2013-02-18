@@ -81,7 +81,8 @@ namespace Frames {
   }
 
   Texture::Texture(Layout *parent) :
-      Frame(parent)
+      Frame(parent),
+      m_tint(1, 1, 1, 1)
   { };
   Texture::~Texture() { };
 

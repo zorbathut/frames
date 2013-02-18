@@ -157,6 +157,9 @@ namespace Frames {
     std::string GetName() const;
     std::string GetNameFull() const;    // THIS MIGHT BE VERY, VERY SLOW
 
+    // Debug
+    void DebugDumpLayout() const;
+
   protected:
     Layout(Layout *parent, Environment *env = 0);
     virtual ~Layout();
@@ -410,6 +413,8 @@ namespace Frames {
     static int l_GetName(lua_State *L);
     static int l_GetNameFull(lua_State *L);
     static int l_GetType(lua_State *L);
+
+    static int l_DebugDumpLayout(lua_State *L);
   };
 
   // Debug code
