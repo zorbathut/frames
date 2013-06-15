@@ -1,10 +1,33 @@
 
+* #define CreateTagged(...) CreateTagged_imp(__FILE__, __LINE__, __VA_ARGS__)
+
 * event for focus change?
 * check text, see if we can toss out more of the englishified names
 * click outside to remove focus
 
 * redesign event system to use global event IDs
 * rejigger event core to handle remove-while-trigger better
+
+* frames/textures don't appear until a window gets invalidated
+
+=== DOCUMENTATION NECESSITIES
+
+* example runtime
+* fix the debug hook provided for environment
+
+=== MSVC PORT
+
+* changes were very minor too. i had to replace args... with ... and use __VA_ARGS__
+* and i had to replace all of your 0/0 creating NaNs, cos VC wouldn't compile a div-by-zero
+* axa.cached = std::numeric_limits<float>::quiet_NaN( );
+
+* /* If we're not using GNU C, elide __attribute__ */
+* #ifndef __GNUC__
+* #  define  __attribute__(x)  /*NOTHING*/
+* #endif
+
+* isnan/_isnan
+* #define __builtin_expect
 
 === POLISH PASSES BELOW
 

@@ -1,0 +1,13 @@
+This is currently maintained by hand and isn't meant to track version numbers. It's just me making notes. Will be more official in the future.
+
+Frames depends on:
+
+* Boost
+* Glew
+* Libfreetype
+* Libjpeg
+* Libpng
+* Zlib
+* Lua or LuaJIT, your choice (LuaJIT recommended where available)
+
+In future revisions many of these dependencies may be removed or made optional. Right now, it's deep in "just make it work" territory.
