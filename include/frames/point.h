@@ -1,11 +1,11 @@
 // Point class
 
-#ifndef FRAMES_POINT
-#define FRAMES_POINT
+#ifndef FRAME_POINT
+#define FRAME_POINT
 
 #include "frames/utility.h"
 
-namespace Frames {
+namespace Frame {
   struct Point {
     Point() { };
     Point(float x, float y) : x(x), y(y) { };

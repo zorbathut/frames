@@ -1,13 +1,13 @@
 // Template functions for Layout
 
-#ifndef FRAMES_LAYOUT_TEMPLATE_INLINE
-#define FRAMES_LAYOUT_TEMPLATE_INLINE
+#ifndef FRAME_LAYOUT_TEMPLATE_INLINE
+#define FRAME_LAYOUT_TEMPLATE_INLINE
 
-#ifndef FRAMES_LAYOUT
+#ifndef FRAME_LAYOUT
 #error Do not include layout_template_inline.h independently!
 #endif
 
-namespace Frames {
+namespace Frame {
   template <typename Parameters> void Layout::EventAttach(const EventType<Parameters> &event, typename EventType<Parameters>::TypeDelegate handler, float priority /*= 0.0*/) {
     m_events[&event].insert(FECallback::CreateNative(handler, priority));
     

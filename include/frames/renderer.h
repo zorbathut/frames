@@ -1,14 +1,14 @@
 // Renderer core
 
-#ifndef FRAMES_RENDERER
-#define FRAMES_RENDERER
+#ifndef FRAME_RENDERER
+#define FRAME_RENDERER
 
 #include <queue>
 
 #include "frames/color.h"
 #include "frames/rect.h"
 
-namespace Frames {
+namespace Frame {
   // fake opengl typedefs, used so we don't pull the entire header in
   typedef unsigned int GLuint;
   typedef unsigned short GLushort;

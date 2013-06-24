@@ -3,7 +3,7 @@
 
 #include "frames/environment.h"
 
-namespace Frames {
+namespace Frame {
 
   int TextureConfig::GetBPP(Type type) {
     if (type == MODE_RGBA) {

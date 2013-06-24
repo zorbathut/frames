@@ -1,11 +1,11 @@
 // Rect class
 
-#ifndef FRAMES_RECT
-#define FRAMES_RECT
+#ifndef FRAME_RECT
+#define FRAME_RECT
 
 #include "frames/point.h"
 
-namespace Frames {
+namespace Frame {
   struct Rect {
     Rect() { }
     Rect(Point s, Point e) : s(s), e(e) { }

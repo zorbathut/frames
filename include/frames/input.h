@@ -1,11 +1,11 @@
 // Input enums and structs
 
-#ifndef FRAMES_INPUT
-#define FRAMES_INPUT
+#ifndef FRAME_INPUT
+#define FRAME_INPUT
 
-namespace Frames {
+namespace Frame {
   namespace Key {
-    // This list of keys is copied largely-verbatim from SFML, which did a dang good job with it. It's been modified slightly to fit Frames conventions.
+    // This list of keys is copied largely-verbatim from SFML, which did a dang good job with it. It's been modified slightly to fit Frame conventions.
     // There is no guarantee made that this will correspond to SFML in the future.
     //
     // SFML - Simple and Fast Multimedia Library

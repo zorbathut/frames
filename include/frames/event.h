@@ -1,5 +1,5 @@
-#ifndef FRAMES_EVENT
-#define FRAMES_EVENT
+#ifndef FRAME_EVENT
+#define FRAME_EVENT
 
 #include "frames/utility.h"
 #include "frames/noncopyable.h"
@@ -7,7 +7,7 @@
 
 #include <lua.hpp>
 
-namespace Frames {
+namespace Frame {
   class Layout;
   
   // Handle with member functions that can be called to get event data or modify event behavior
@@ -51,12 +51,12 @@ namespace Frames {
     typedef Delegate<typename Utility::FunctionPrefix<EventHandle*, Parameters>::T> TypeDelegate;
   };
 
-  #define FRAMES_FRAMEEVENT_DECLARE(eventname, paramlist) \
+  #define FRAME_FRAMEEVENT_DECLARE(eventname, paramlist) \
     namespace Event { \
       extern EventType<void paramlist> eventname; \
     }
 
-  #define FRAMES_FRAMEEVENT_DECLARE_BUBBLE(eventname, paramlist) \
+  #define FRAME_FRAMEEVENT_DECLARE_BUBBLE(eventname, paramlist) \
     namespace Event { \
       extern EventType<void paramlist> eventname; \
       extern EventType<void paramlist> eventname##Dive; \

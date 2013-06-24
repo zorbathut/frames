@@ -1,12 +1,12 @@
 // The Frame class
 
-#ifndef FRAMES_FRAME
-#define FRAMES_FRAME
+#ifndef FRAME_FRAME
+#define FRAME_FRAME
 
 #include "frames/color.h"
 #include "frames/layout.h"
 
-namespace Frames {
+namespace Frame {
   class Frame : public Layout {
     friend class Environment;
 

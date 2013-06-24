@@ -6,7 +6,7 @@
 
 #include <GL/GLew.h>
 
-namespace Frames {
+namespace Frame {
   Mask *Mask::CreateBare(Layout *parent) {
     return new Mask(parent);
   }

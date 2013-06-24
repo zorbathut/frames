@@ -1,7 +1,7 @@
 // Utility functions and items
 
-#ifndef FRAMES_UTILITY
-#define FRAMES_UTILITY
+#ifndef FRAME_UTILITY
+#define FRAME_UTILITY
 
 #include <string>
 
@@ -9,7 +9,7 @@
 #include <boost/type_traits/add_lvalue_reference.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
-namespace Frames {
+namespace Frame {
   enum Axis { X, Y }; // axes
 
   namespace Utility {

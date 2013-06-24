@@ -1,11 +1,11 @@
 // Smart pointer
 
-#ifndef FRAMES_PTR
-#define FRAMES_PTR
+#ifndef FRAME_PTR
+#define FRAME_PTR
 
 #include "frames/noncopyable.h"
 
-namespace Frames {
+namespace Frame {
   template <typename T> class Ptr {
   public:
     typedef Ptr<T> this_type;

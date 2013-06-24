@@ -1,7 +1,7 @@
 // Texture/font coordinator
 
-#ifndef FRAMES_TEXT_MANAGER
-#define FRAMES_TEXT_MANAGER
+#ifndef FRAME_TEXT_MANAGER
+#define FRAME_TEXT_MANAGER
 
 #include <map>
 #include <set>
@@ -21,7 +21,7 @@
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
-namespace Frames {
+namespace Frame {
   class Environment;
   class Renderer;
   class Stream;

@@ -1,7 +1,7 @@
 
 #include "frames/stream.h"
 
-namespace Frames {
+namespace Frame {
   StreamFile *StreamFile::Create(const std::string &fname) {
     std::FILE *fil = fopen(fname.c_str(), "rb");
     if (!fil) return 0;

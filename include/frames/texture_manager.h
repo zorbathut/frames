@@ -1,7 +1,7 @@
 // Texture coordinator
 
-#ifndef FRAMES_TEXTURE_MANAGER
-#define FRAMES_TEXTURE_MANAGER
+#ifndef FRAME_TEXTURE_MANAGER
+#define FRAME_TEXTURE_MANAGER
 
 #include <string>
 #include <map>
@@ -15,7 +15,7 @@
 #include "frames/ptr.h"
 #include "frames/rect.h"
 
-namespace Frames {
+namespace Frame {
   class Environment;
   class TextureConfig;
 

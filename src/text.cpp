@@ -9,7 +9,7 @@
 
 #include <GL/GLew.h>
 
-namespace Frames {
+namespace Frame {
   Text *Text::CreateBare(Layout *parent) {
     return new Text(parent);
   }

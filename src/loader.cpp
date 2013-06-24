@@ -15,7 +15,7 @@ extern "C" {
 
 #include <vector>
 
-namespace Frames {
+namespace Frame {
   bool Loader::PNG::Is(Stream *stream) {
     unsigned char tag[8];
     int got = stream->Read(tag, 8);

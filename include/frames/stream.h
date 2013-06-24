@@ -1,15 +1,15 @@
 
 // Input streams
 
-#ifndef FRAMES_STREAM
-#define FRAMES_STREAM
+#ifndef FRAME_STREAM
+#define FRAME_STREAM
 
 #include "frames/noncopyable.h"
 
 #include <string>
 #include <cstdio>
 
-namespace Frames {
+namespace Frame {
   class Stream : Noncopyable {
   public:
     Stream() { };

@@ -1,7 +1,7 @@
-#ifndef FRAMES_CONFIG
-#define FRAMES_CONFIG
+#ifndef FRAME_CONFIG
+#define FRAME_CONFIG
 
 // Config flags and settings
-#define FRAMES_BOOST_ENABLED
+#define FRAME_BOOST_ENABLED
 
 #endif

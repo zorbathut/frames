@@ -1,7 +1,7 @@
 // The Environment class
 
-#ifndef FRAMES_ENVIRONMENT
-#define FRAMES_ENVIRONMENT
+#ifndef FRAME_ENVIRONMENT
+#define FRAME_ENVIRONMENT
 
 #include "frames/configuration.h"
 #include "frames/input.h"
@@ -16,7 +16,7 @@
 
 struct lua_State;
 
-namespace Frames {
+namespace Frame {
   class Frame;
   class Layout;
   class Renderer;
@@ -70,7 +70,7 @@ namespace Frames {
 
     // Scripting languages
     void LuaRegister(lua_State *L, bool hasErrorHandle = false); // if error handle is true, top element of the stack will be popped
-    template<typename T> void LuaRegisterFrame(lua_State *L); // needed only if you create third-party frames - Frames will automatically register its internal frame types
+    template<typename T> void LuaRegisterFrame(lua_State *L); // needed only if you create third-party frames - Frame will automatically register its internal frame types
     void LuaRegisterEvent(lua_State *L, EventTypeBase *feb);
     void LuaUnregister(lua_State *L);
 

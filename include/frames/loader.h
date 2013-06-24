@@ -1,9 +1,9 @@
 // Loaders for various 
 
-#ifndef FRAMES_LOADER
-#define FRAMES_LOADER
+#ifndef FRAME_LOADER
+#define FRAME_LOADER
 
-namespace Frames {
+namespace Frame {
   class Environment;
   class Stream;
   class TextureConfig;

@@ -1,12 +1,12 @@
 // The Texture class
 
-#ifndef FRAMES_TEXTURE
-#define FRAMES_TEXTURE
+#ifndef FRAME_TEXTURE
+#define FRAME_TEXTURE
 
 #include "frames/frame.h"
 #include "frames/texture_manager.h"
 
-namespace Frames {
+namespace Frame {
   class Texture : public Frame {
     friend class Environment;
 

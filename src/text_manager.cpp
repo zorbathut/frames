@@ -8,7 +8,7 @@
 #include "frames/texture_config.h"
 #include "frames/texture_manager.h"
 
-namespace Frames {
+namespace Frame {
   // =======================================
   // FONTINFO
 

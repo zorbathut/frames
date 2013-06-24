@@ -1,6 +1,6 @@
 
-* really need a global assert function
 * Rename to Frame
+* really need a global assert function
 * Deal with notepad++ wanting to look inside my build directories
 * Better global register setup
 * MSVC support

@@ -1,12 +1,12 @@
 // The Raw class
 
-#ifndef FRAMES_RAW
-#define FRAMES_RAW
+#ifndef FRAME_RAW
+#define FRAME_RAW
 
 #include "frames/frame.h"
 
-namespace Frames {
-  FRAMES_FRAMEEVENT_DECLARE(Render, ());
+namespace Frame {
+  FRAME_FRAMEEVENT_DECLARE(Render, ());
 
   class Raw : public Frame {
     friend class Environment;

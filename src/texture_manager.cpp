@@ -5,7 +5,7 @@
 #include "frames/environment.h"
 #include "frames/texture_config.h"
 
-namespace Frames {
+namespace Frame {
   TextureBacking::TextureBacking(Environment *env) :
       m_env(env),
       m_id(0),

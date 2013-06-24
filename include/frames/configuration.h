@@ -1,13 +1,13 @@
 // The Configuration class
 
-#ifndef FRAMES_CONFIGURATION
-#define FRAMES_CONFIGURATION
+#ifndef FRAME_CONFIGURATION
+#define FRAME_CONFIGURATION
 
 #include <string>
 
 #include <GL/GLew.h>
 
-namespace Frames {
+namespace Frame {
   class Environment;
   class Stream;
   class TextureConfig;

@@ -6,8 +6,8 @@
 
 #include <GL/GLew.h>
 
-namespace Frames {
-  FRAMES_FRAMEEVENT_DEFINE(Render, ());
+namespace Frame {
+  FRAME_FRAMEEVENT_DEFINE(Render, ());
   
   Raw *Raw::CreateBare(Layout *parent) {
     return new Raw(parent);

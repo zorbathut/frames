@@ -1,13 +1,13 @@
 -- basics test
-local winframe = Frames.Frame(Frames.Root)
+local winframe = Frame.Frame(Frame.Root)
 
-winframe:SetPoint("TOPLEFT", Frames.Root, "TOPLEFT", 40, 40)
+winframe:SetPoint("TOPLEFT", Frame.Root, "TOPLEFT", 40, 40)
 winframe:SetWidth(300);
 winframe:SetHeight(600);
 
 winframe:SetBackground(0.3, 0.3, 0.3);
 
-local title = Frames.Frame(winframe)
+local title = Frame.Frame(winframe)
 
 title:SetPoint("TOPLEFT", winframe, "TOPLEFT", 10, 10)
 title:SetPoint("RIGHT", winframe, "RIGHT", -10, nil)
@@ -15,7 +15,7 @@ title:SetHeight(20)
 
 title:SetBackground(1, 1, 0, 0.5)
 
-local ok = Frames.Frame(winframe)
+local ok = Frame.Frame(winframe)
 
 ok:SetPoint("BOTTOMRIGHT", winframe, "BOTTOMRIGHT", -10, -10)
 ok:SetHeight(20)
@@ -24,9 +24,9 @@ ok:SetWidth(80)
 ok:SetBackground(0, 1, 0, 0.5)
 
 -- circular dependency test
-local aframe = Frames.Frame(Frames.Root)
-local bframe = Frames.Frame(Frames.Root)
-local cframe = Frames.Frame(Frames.Root)
+local aframe = Frame.Frame(Frame.Root)
+local bframe = Frame.Frame(Frame.Root)
+local cframe = Frame.Frame(Frame.Root)
 
 aframe:SetPoint("LEFT", bframe, "LEFT")
 bframe:SetPoint("LEFT", cframe, "LEFT")
@@ -36,34 +36,34 @@ cframe:SetPoint("LEFT", aframe, "LEFT")
 -- aframe->EventMoveAttach(PrintWoopWoop);
 
 -- obliterate test, tbi
-local gcframe = Frames.Frame(Frames.Root)
+local gcframe = Frame.Frame(Frame.Root)
 gcframe:Obliterate()
 
 -- mask/texture test
-local mask = Frames.Mask(Frames.Root)
-mask:SetPoint("TOPLEFT", Frames.Root, "CENTER")
-mask:SetPoint("BOTTOMRIGHT", Frames.Root, "BOTTOMRIGHT")
+local mask = Frame.Mask(Frame.Root)
+mask:SetPoint("TOPLEFT", Frame.Root, "CENTER")
+mask:SetPoint("BOTTOMRIGHT", Frame.Root, "BOTTOMRIGHT")
 
-local tex = Frames.Texture(mask)
-tex:SetPoint("CENTER", Frames.Root, "CENTER")
+local tex = Frame.Texture(mask)
+tex:SetPoint("CENTER", Frame.Root, "CENTER")
 tex:SetBackground(1, 1, 1, 0.1)
 tex:SetTexture("awesome_med.png")
 
-local tex2 = Frames.Texture(mask)
-tex2:SetPoint("CENTER", Frames.Root, 0.8, 0.8)
+local tex2 = Frame.Texture(mask)
+tex2:SetPoint("CENTER", Frame.Root, 0.8, 0.8)
 tex2:SetBackground(1, 1, 1, 0.1)
 tex2:SetTexture("mind-in-pictures-january-12_1_thumb.jpg")
 
 -- text test
-local texu = Frames.Text(Frames.Root)
-texu:SetPoint("TOPLEFT", Frames.Root, "TOPLEFT", 60, 120)
+local texu = Frame.Text(Frame.Root)
+texu:SetPoint("TOPLEFT", Frame.Root, "TOPLEFT", 60, 120)
 texu:SetBackground(1, 0, 0, 0.1)
 texu:SetText("AVAVAVAVAVAVAVAV")
 texu:SetSize(30)
 texu:SetLayer(3)
 
-local texix = Frames.Text(Frames.Root)
-texix:SetPoint("TOPLEFT", Frames.Root, "TOPLEFT", 400, 80)
+local texix = Frame.Text(Frame.Root)
+texix:SetPoint("TOPLEFT", Frame.Root, "TOPLEFT", 400, 80)
 texix:SetBackground(0, 1, 0, 0.1)
 texix:SetText("lend me your arms,\nfast as thunderbolts,\nfor a pillow on my journey.")
 texix:SetSize(50)
@@ -72,8 +72,8 @@ texix:SetLayer(3)
 texix:SetWidth(texix:GetWidth() - 50);
 texix:SetHeight(texix:GetHeight() - 20);
 
-local texite = Frames.Text(Frames.Root)
-texite:SetPoint("TOPLEFT", Frames.Root, "TOPLEFT", 100, 250)
+local texite = Frame.Text(Frame.Root)
+texite:SetPoint("TOPLEFT", Frame.Root, "TOPLEFT", 100, 250)
 texite:SetWidth(600)
 texite:SetBackground(0, 0, 1, 0.1)
 texite:SetColor(1, 0.8, 0.8, 0.8)

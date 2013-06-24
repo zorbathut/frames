@@ -10,7 +10,7 @@
 // for the undefined types
 BOOST_STATIC_ASSERT(sizeof(float) == sizeof(int));
 
-namespace Frames {
+namespace Frame {
   namespace Utility {
     std::string Format(const char *bort, ...) {
       // NOTE: this function isn't particularly efficient, but is used only for debug output anyway

@@ -1,11 +1,11 @@
 // The Mask class
 
-#ifndef FRAMES_MASK
-#define FRAMES_MASK
+#ifndef FRAME_MASK
+#define FRAME_MASK
 
 #include "frames/frame.h"
 
-namespace Frames {
+namespace Frame {
   class Mask : public Frame {
     friend class Environment;
 

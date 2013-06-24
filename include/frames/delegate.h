@@ -45,10 +45,10 @@
 //                * Bugfix for Metrowerks: empty() was buggy because a valid MFP can be 0 on MWCC!
 //                * More optimal assignment,== and != operators for static function pointers.
 
-// Modified for the Frames library to drop delegates into our own namespace, with a global search/replace to change FastDelegate into Delegate, and a similar one to change MakeDelegate into DelegateMake
+// Modified for the Frame library to drop delegates into our own namespace, with a global search/replace to change FastDelegate into Delegate, and a similar one to change MakeDelegate into DelegateMake
 
-#ifndef FRAMES_FASTDELEGATE_H // FRAMES MODIFICATION
-#define FRAMES_FASTDELEGATE_H // FRAMES MODIFICATION
+#ifndef FRAME_FASTDELEGATE_H // FRAMES MODIFICATION
+#define FRAME_FASTDELEGATE_H // FRAMES MODIFICATION
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
@@ -141,7 +141,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-namespace Frames {
+namespace Frame {
 namespace detail {	// we'll hide the implementation details in a nested namespace.
 
 //		implicit_cast< >

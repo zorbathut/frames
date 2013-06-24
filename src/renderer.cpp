@@ -15,12 +15,12 @@
 
 using namespace std;
 
-BOOST_STATIC_ASSERT(sizeof(Frames::GLfloat) == sizeof(GLfloat));
-BOOST_STATIC_ASSERT(sizeof(Frames::GLushort) == sizeof(GLushort));
-BOOST_STATIC_ASSERT(sizeof(Frames::GLuint) == sizeof(GLuint));
-BOOST_STATIC_ASSERT(sizeof(Frames::Color) == sizeof(GLfloat) * 4);
+BOOST_STATIC_ASSERT(sizeof(Frame::GLfloat) == sizeof(GLfloat));
+BOOST_STATIC_ASSERT(sizeof(Frame::GLushort) == sizeof(GLushort));
+BOOST_STATIC_ASSERT(sizeof(Frame::GLuint) == sizeof(GLuint));
+BOOST_STATIC_ASSERT(sizeof(Frame::Color) == sizeof(GLfloat) * 4);
 
-namespace Frames {
+namespace Frame {
   const int bufferElements = 1 << 16; // fit in a ushort
   const int bufferSize = bufferElements * sizeof(Renderer::Vertex);
 

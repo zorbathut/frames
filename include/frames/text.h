@@ -1,13 +1,13 @@
 // The Text class
 
-#ifndef FRAMES_TEXT
-#define FRAMES_TEXT
+#ifndef FRAME_TEXT
+#define FRAME_TEXT
 
 #include "frames/frame.h"
 
 #include "frames/text_manager.h"
 
-namespace Frames {
+namespace Frame {
   class Text : public Frame {
     friend class Environment;
 

@@ -11,15 +11,15 @@
 
 #include <windows.h>
 
-namespace Frames {
+namespace Frame {
   Configuration::Configuration() : logger(0), textureFromId(0), streamFromId(0), pathFromId(0), textureFromStream(0), clipboard(0), performance(0) { };
 
   void Configuration::Logger::LogError(const std::string &log) {
-    std::printf("Frames error: %s", log.c_str());
-    MessageBox(0, log.c_str(), "Frames error", MB_OK | MB_ICONEXCLAMATION);
+    std::printf("Frame error: %s", log.c_str());
+    MessageBox(0, log.c_str(), "Frame error", MB_OK | MB_ICONEXCLAMATION);
   }
   void Configuration::Logger::LogDebug(const std::string &log) {
-    std::printf("Frames debug: %s", log.c_str());
+    std::printf("Frame debug: %s", log.c_str());
   }
 
   TextureConfig Configuration::TextureFromId::Create(Environment *env, const std::string &id) {

@@ -1,9 +1,9 @@
 // The Color class
 
-#ifndef FRAMES_COLOR
-#define FRAMES_COLOR
+#ifndef FRAME_COLOR
+#define FRAME_COLOR
 
-namespace Frames {
+namespace Frame {
   class Color {
   public:
     Color() : r(0), g(0), b(0), a(1) { };

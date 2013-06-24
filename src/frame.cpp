@@ -7,7 +7,7 @@
 
 #include <GL/gl.h>
 
-namespace Frames {
+namespace Frame {
   Frame *Frame::CreateBare(Layout *parent) {
     return new Frame(parent);
   }

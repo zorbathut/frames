@@ -4,7 +4,7 @@
 #include "frames/point.h"
 #include "frames/input.h"
 
-namespace Frames {
+namespace Frame {
   void luaF_push(lua_State *L, int x) {
     lua_pushinteger(L, x);
   }

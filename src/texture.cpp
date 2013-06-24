@@ -8,7 +8,7 @@
 
 #include <GL/GLew.h>
 
-namespace Frames {
+namespace Frame {
   Texture *Texture::CreateBare(Layout *parent) {
     return new Texture(parent);
   }

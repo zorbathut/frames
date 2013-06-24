@@ -3,7 +3,7 @@
 #ifndef TEXTURE_CONFIG
 #define TEXTURE_CONFIG
 
-namespace Frames {
+namespace Frame {
   class Environment;
 
   class TextureConfig {

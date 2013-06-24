@@ -1,16 +1,16 @@
 // Noncopyable inheritance
 
-#ifndef FRAMES_NONCOPYABLE
-#define FRAMES_NONCOPYABLE
+#ifndef FRAME_NONCOPYABLE
+#define FRAME_NONCOPYABLE
 
 #include "frames/config.h"
 
-#ifdef FRAMES_BOOST_ENABLED
+#ifdef FRAME_BOOST_ENABLED
 #include <boost/noncopyable.hpp>
 #endif
 
-namespace Frames {
-  #ifdef FRAMES_BOOST_ENABLED
+namespace Frame {
+  #ifdef FRAME_BOOST_ENABLED
     typedef boost::noncopyable Noncopyable;
   #else
     #error this isnt actually tested yet!
