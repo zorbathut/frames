@@ -25,8 +25,8 @@ namespace Frames {
     return x >= GetLeft() && y >= GetTop() && x < GetRight() && y < GetBottom();
   }
 
-  /*static*/ void Mask::l_RegisterFunctions(lua_State *L) {
-    Frame::l_RegisterFunctions(L);
+  /*static*/ void Mask::luaF_RegisterFunctions(lua_State *L) {
+    Frame::luaF_RegisterFunctions(L);
   }
 
   void Mask::RenderElement(Renderer *renderer) const {

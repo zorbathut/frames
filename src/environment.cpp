@@ -290,7 +290,7 @@ namespace Frames {
       lua_getglobal(L, "debug");
       lua_getfield(L, -1, "traceback");
       lua_remove(L, -2);  // remove the "debug" table
-      lua_pushcclosure(L, l_errorDefault, 2);
+      lua_pushcclosure(L, luaF_errorDefault, 2);
     }
 
     // ==================
@@ -425,7 +425,7 @@ namespace Frames {
     // Don't overwrite the old one (this is important - our error compensation for trying to push a frame into Lua from an unregistered Frames environment will register it, and swapping out Frames.Root without warning is really really bad!)
     lua_getfield(L, -1, "Root");
     if (lua_isnil(L, -1)) {
-      m_root->l_push(L);
+      m_root->luaF_push(L);
       lua_setfield(L, -3, "Root");
     }
 
@@ -895,7 +895,7 @@ namespace Frames {
     lua_remove(L, -2);
   }
 
-  /*static*/ int Environment::l_errorDefault(lua_State *L) {
+  /*static*/ int Environment::luaF_errorDefault(lua_State *L) {
     lua_pushliteral(L, "\n");
     lua_pushvalue(L, lua_upvalueindex(2));
     lua_call(L, 0, 1);

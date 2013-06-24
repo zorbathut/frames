@@ -32,14 +32,14 @@ namespace Frames {
     SetHeightDefault(m_texture->GetHeight());
   }
 
-  /*static*/ void Texture::l_RegisterFunctions(lua_State *L) {
-    Frame::l_RegisterFunctions(L);
+  /*static*/ void Texture::luaF_RegisterFunctions(lua_State *L) {
+    Frame::luaF_RegisterFunctions(L);
 
-    l_RegisterFunction(L, GetStaticType(), "SetTexture", l_SetTexture);
-    l_RegisterFunction(L, GetStaticType(), "GetTexture", l_GetTexture);
+    luaF_RegisterFunction(L, GetStaticType(), "SetTexture", luaF_SetTexture);
+    luaF_RegisterFunction(L, GetStaticType(), "GetTexture", luaF_GetTexture);
 
-    l_RegisterFunction(L, GetStaticType(), "SetTint", l_SetTint);
-    l_RegisterFunction(L, GetStaticType(), "GetTint", l_GetTint);
+    luaF_RegisterFunction(L, GetStaticType(), "SetTint", luaF_SetTint);
+    luaF_RegisterFunction(L, GetStaticType(), "GetTint", luaF_GetTint);
   }
 
   void Texture::RenderElement(Renderer *renderer) const {
@@ -86,27 +86,27 @@ namespace Frames {
   { };
   Texture::~Texture() { };
 
-  /*static*/ int Texture::l_SetTexture(lua_State *L) {
-    l_checkparams(L, 2);
-    Texture *self = l_checkframe<Texture>(L, 1);
+  /*static*/ int Texture::luaF_SetTexture(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Texture *self = luaF_checkframe<Texture>(L, 1);
 
     self->SetTexture(luaL_checkstring(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Texture::l_GetTexture(lua_State *L) {
-    l_checkparams(L, 1);
-    Texture *self = l_checkframe<Texture>(L, 1);
+  /*static*/ int Texture::luaF_GetTexture(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Texture *self = luaF_checkframe<Texture>(L, 1);
 
     lua_pushstring(L, self->GetTexture().c_str());
 
     return 1;
   }
 
-  /*static*/ int Texture::l_SetTint(lua_State *L) {
-    l_checkparams(L, 4, 5);
-    Texture *self = l_checkframe<Texture>(L, 1);
+  /*static*/ int Texture::luaF_SetTint(lua_State *L) {
+    luaF_checkparams(L, 4, 5);
+    Texture *self = luaF_checkframe<Texture>(L, 1);
 
     Color color(1, 1, 1, 1);
     color.r = luaL_checknumber(L, 2);
@@ -121,9 +121,9 @@ namespace Frames {
     return 0;
   }
 
-  /*static*/ int Texture::l_GetTint(lua_State *L) {
-    l_checkparams(L, 1);
-    Texture *self = l_checkframe<Texture>(L, 1);
+  /*static*/ int Texture::luaF_GetTint(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Texture *self = luaF_checkframe<Texture>(L, 1);
 
     lua_pushnumber(L, self->m_tint.r);
     lua_pushnumber(L, self->m_tint.g);

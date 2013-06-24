@@ -124,7 +124,7 @@ namespace Frames {
           dg(eh, p1);
         } else if (m_type == TYPE_LUA) {
           int stackfront = luaF_prepare(eh);
-          luaF_push(c.lua.L, p1);
+          ::Frames::luaF_push(c.lua.L, p1);
           luaF_call(stackfront);
         }
       }
@@ -254,7 +254,7 @@ namespace Frames {
     Environment *GetEnvironment() const { return m_env; }
 
     // Lua-specific
-    void l_push(lua_State *L) const;
+    void luaF_push(lua_State *L) const;
 
     std::string GetName() const;
     std::string GetNameFull() const;    // THIS MIGHT BE VERY, VERY SLOW
@@ -313,12 +313,12 @@ namespace Frames {
     virtual void EventDetached(const EventTypeBase *id);
     
     // Lua
-    virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); } // see Layout::l_Register for what yours should look like
-    void l_RegisterWorker(lua_State *L, const char *name) const;
+    virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, GetStaticType()); } // see Layout::luaF_Register for what yours should look like
+    void luaF_RegisterWorker(lua_State *L, const char *name) const;
 
-    static void l_RegisterFunctions(lua_State *L);
+    static void luaF_RegisterFunctions(lua_State *L);
 
-    static void l_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *));
+    static void luaF_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *));
 
   private:
     void Render(Renderer *renderer) const;
@@ -395,25 +395,25 @@ namespace Frames {
     Environment *m_env;
 
     // Lua bindings
-    static int l_GetLeft(lua_State *L);
-    static int l_GetRight(lua_State *L);
-    static int l_GetTop(lua_State *L);
-    static int l_GetBottom(lua_State *L);
-    static int l_GetBounds(lua_State *L);
+    static int luaF_GetLeft(lua_State *L);
+    static int luaF_GetRight(lua_State *L);
+    static int luaF_GetTop(lua_State *L);
+    static int luaF_GetBottom(lua_State *L);
+    static int luaF_GetBounds(lua_State *L);
 
-    static int l_GetWidth(lua_State *L);
-    static int l_GetHeight(lua_State *L);
+    static int luaF_GetWidth(lua_State *L);
+    static int luaF_GetHeight(lua_State *L);
 
-    static int l_GetChildren(lua_State *L);
+    static int luaF_GetChildren(lua_State *L);
 
-    static int l_GetName(lua_State *L);
-    static int l_GetNameFull(lua_State *L);
-    static int l_GetType(lua_State *L);
+    static int luaF_GetName(lua_State *L);
+    static int luaF_GetNameFull(lua_State *L);
+    static int luaF_GetType(lua_State *L);
     
-    static int l_EventAttach(lua_State *L);
-    static int l_EventDetach(lua_State *L);
+    static int luaF_EventAttach(lua_State *L);
+    static int luaF_EventDetach(lua_State *L);
     
-    static int l_DebugDumpLayout(lua_State *L);
+    static int luaF_DebugDumpLayout(lua_State *L);
   };
 
   // Debug code

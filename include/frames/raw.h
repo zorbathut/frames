@@ -19,9 +19,9 @@ namespace Frames {
     virtual const char *GetType() const { return GetStaticType(); }
     
   protected:
-    virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); Frame::l_Register(L); }
+    virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, GetStaticType()); Frame::luaF_Register(L); }
 
-    static void l_RegisterFunctions(lua_State *L);
+    static void luaF_RegisterFunctions(lua_State *L);
 
   private:
     Raw(Layout *parent);

@@ -150,41 +150,41 @@ namespace Frames {
     m_color_selected = color;
   }
 
-  /*static*/ void Text::l_RegisterFunctions(lua_State *L) {
-    Frame::l_RegisterFunctions(L);
+  /*static*/ void Text::luaF_RegisterFunctions(lua_State *L) {
+    Frame::luaF_RegisterFunctions(L);
 
-    l_RegisterFunction(L, GetStaticType(), "SetText", l_SetText);
-    l_RegisterFunction(L, GetStaticType(), "GetText", l_GetText);
+    luaF_RegisterFunction(L, GetStaticType(), "SetText", luaF_SetText);
+    luaF_RegisterFunction(L, GetStaticType(), "GetText", luaF_GetText);
 
-    l_RegisterFunction(L, GetStaticType(), "SetFont", l_SetFont);
-    l_RegisterFunction(L, GetStaticType(), "GetFont", l_GetFont);
+    luaF_RegisterFunction(L, GetStaticType(), "SetFont", luaF_SetFont);
+    luaF_RegisterFunction(L, GetStaticType(), "GetFont", luaF_GetFont);
 
-    l_RegisterFunction(L, GetStaticType(), "SetSize", l_SetSize);
-    l_RegisterFunction(L, GetStaticType(), "GetSize", l_GetSize);
+    luaF_RegisterFunction(L, GetStaticType(), "SetSize", luaF_SetSize);
+    luaF_RegisterFunction(L, GetStaticType(), "GetSize", luaF_GetSize);
 
-    l_RegisterFunction(L, GetStaticType(), "SetWordwrap", l_SetWordwrap);
-    l_RegisterFunction(L, GetStaticType(), "GetWordwrap", l_GetWordwrap);
+    luaF_RegisterFunction(L, GetStaticType(), "SetWordwrap", luaF_SetWordwrap);
+    luaF_RegisterFunction(L, GetStaticType(), "GetWordwrap", luaF_GetWordwrap);
 
-    l_RegisterFunction(L, GetStaticType(), "SetColor", l_SetColor);
-    l_RegisterFunction(L, GetStaticType(), "GetColor", l_GetColor);
+    luaF_RegisterFunction(L, GetStaticType(), "SetColor", luaF_SetColor);
+    luaF_RegisterFunction(L, GetStaticType(), "GetColor", luaF_GetColor);
 
-    l_RegisterFunction(L, GetStaticType(), "SetInteractive", l_SetInteractive);
-    l_RegisterFunction(L, GetStaticType(), "GetInteractive", l_GetInteractive);
+    luaF_RegisterFunction(L, GetStaticType(), "SetInteractive", luaF_SetInteractive);
+    luaF_RegisterFunction(L, GetStaticType(), "GetInteractive", luaF_GetInteractive);
 
-    l_RegisterFunction(L, GetStaticType(), "SetCursor", l_SetCursor);
-    l_RegisterFunction(L, GetStaticType(), "GetCursor", l_GetCursor);
+    luaF_RegisterFunction(L, GetStaticType(), "SetCursor", luaF_SetCursor);
+    luaF_RegisterFunction(L, GetStaticType(), "GetCursor", luaF_GetCursor);
 
-    l_RegisterFunction(L, GetStaticType(), "SetSelection", l_SetSelection);
-    l_RegisterFunction(L, GetStaticType(), "GetSelection", l_GetSelection);
+    luaF_RegisterFunction(L, GetStaticType(), "SetSelection", luaF_SetSelection);
+    luaF_RegisterFunction(L, GetStaticType(), "GetSelection", luaF_GetSelection);
 
-    l_RegisterFunction(L, GetStaticType(), "SetScroll", l_SetScroll);
-    l_RegisterFunction(L, GetStaticType(), "GetScroll", l_GetScroll);
+    luaF_RegisterFunction(L, GetStaticType(), "SetScroll", luaF_SetScroll);
+    luaF_RegisterFunction(L, GetStaticType(), "GetScroll", luaF_GetScroll);
 
-    l_RegisterFunction(L, GetStaticType(), "SetColorSelection", l_SetColorSelection);
-    l_RegisterFunction(L, GetStaticType(), "GetColorSelection", l_GetColorSelection);
+    luaF_RegisterFunction(L, GetStaticType(), "SetColorSelection", luaF_SetColorSelection);
+    luaF_RegisterFunction(L, GetStaticType(), "GetColorSelection", luaF_GetColorSelection);
 
-    l_RegisterFunction(L, GetStaticType(), "SetColorSelected", l_SetColorSelected);
-    l_RegisterFunction(L, GetStaticType(), "GetColorSelected", l_GetColorSelected);
+    luaF_RegisterFunction(L, GetStaticType(), "SetColorSelected", luaF_SetColorSelected);
+    luaF_RegisterFunction(L, GetStaticType(), "GetColorSelected", luaF_GetColorSelected);
   }
 
   Text::Text(Layout *parent) :
@@ -522,63 +522,63 @@ namespace Frames {
     }
   }
 
-  /*static*/ int Text::l_SetText(lua_State *L) {
-    l_checkparams(L, 2);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_SetText(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     self->SetText(luaL_checkstring(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Text::l_GetText(lua_State *L) {
-    l_checkparams(L, 1);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_GetText(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     lua_pushstring(L, self->GetText().c_str());
 
     return 1;
   }
 
-  /*static*/ int Text::l_SetFont(lua_State *L) {
-    l_checkparams(L, 2);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_SetFont(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     self->SetFont(luaL_checkstring(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Text::l_GetFont(lua_State *L) {
-    l_checkparams(L, 1);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_GetFont(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     lua_pushstring(L, self->GetFont().c_str());
 
     return 1;
   }
 
-  /*static*/ int Text::l_SetSize(lua_State *L) {
-    l_checkparams(L, 2);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_SetSize(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     self->SetSize(luaL_checknumber(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Text::l_GetSize(lua_State *L) {
-    l_checkparams(L, 1);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_GetSize(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     lua_pushnumber(L, self->GetSize());
 
     return 1;
   }
 
-  /*static*/ int Text::l_SetWordwrap(lua_State *L) {
-    l_checkparams(L, 2);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_SetWordwrap(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     luaL_checktype(L, 2, LUA_TBOOLEAN); // sigh
     self->SetWordwrap(lua_toboolean(L, 2));
@@ -586,27 +586,27 @@ namespace Frames {
     return 0;
   }
 
-  /*static*/ int Text::l_GetWordwrap(lua_State *L) {
-    l_checkparams(L, 1);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_GetWordwrap(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     lua_pushboolean(L, self->GetWordwrap());
 
     return 1;
   }
 
-  /*static*/ int Text::l_SetColor(lua_State *L) {
-    l_checkparams(L, 4, 5);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_SetColor(lua_State *L) {
+    luaF_checkparams(L, 4, 5);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     self->SetColor(Color(luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_optnumber(L, 5, 1.f)));
 
     return 0;
   }
 
-  /*static*/ int Text::l_GetColor(lua_State *L) {
-    l_checkparams(L, 1);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_GetColor(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     const Color &col = self->GetColor();
 
@@ -618,9 +618,9 @@ namespace Frames {
     return 4;
   }
 
-  /*static*/ int Text::l_SetInteractive(lua_State *L) {
-    l_checkparams(L, 2);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_SetInteractive(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     const char *param = lua_tostring(L, 2);
     if (strcmp(param, "none") == 0) {
@@ -636,9 +636,9 @@ namespace Frames {
     return 0;
   }
 
-  /*static*/ int Text::l_GetInteractive(lua_State *L) {
-    l_checkparams(L, 1);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_GetInteractive(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     if (self->GetInteractive() == INTERACTIVE_NONE) {
       lua_pushliteral(L, "none");
@@ -654,27 +654,27 @@ namespace Frames {
     return 1;
   }
 
-  /*static*/ int Text::l_SetCursor(lua_State *L) {
-    l_checkparams(L, 2);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_SetCursor(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     self->SetCursor(luaL_checknumber(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Text::l_GetCursor(lua_State *L) {
-    l_checkparams(L, 1);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_GetCursor(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     lua_pushnumber(L, self->GetCursor());
 
     return 1;
   }
 
-  /*static*/ int Text::l_SetSelection(lua_State *L) {
-    l_checkparams(L, 1, 3);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_SetSelection(lua_State *L) {
+    luaF_checkparams(L, 1, 3);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     if (lua_gettop(L) == 1) {
       self->SetSelection();
@@ -687,9 +687,9 @@ namespace Frames {
     return 0;
   }
 
-  /*static*/ int Text::l_GetSelection(lua_State *L) {
-    l_checkparams(L, 1);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_GetSelection(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     int s, e;
     if (self->GetSelection(&s, &e)) {
@@ -703,18 +703,18 @@ namespace Frames {
     return 2;
   }
 
-  /*static*/ int Text::l_SetScroll(lua_State *L) {
-    l_checkparams(L, 3);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_SetScroll(lua_State *L) {
+    luaF_checkparams(L, 3);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     self->SetScroll(Point(luaL_checknumber(L, 2), luaL_checknumber(L, 3)));
 
     return 0;
   }
 
-  /*static*/ int Text::l_GetScroll(lua_State *L) {
-    l_checkparams(L, 1);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_GetScroll(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     lua_pushnumber(L, self->GetScroll().x);
     lua_pushnumber(L, self->GetScroll().y);
@@ -722,18 +722,18 @@ namespace Frames {
     return 2;
   }
 
-  /*static*/ int Text::l_SetColorSelection(lua_State *L) {
-    l_checkparams(L, 4, 5);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_SetColorSelection(lua_State *L) {
+    luaF_checkparams(L, 4, 5);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     self->SetColorSelection(Color(luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_optnumber(L, 5, 1.f)));
 
     return 0;
   }
 
-  /*static*/ int Text::l_GetColorSelection(lua_State *L) {
-    l_checkparams(L, 1);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_GetColorSelection(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     const Color &col = self->GetColorSelection();
 
@@ -745,18 +745,18 @@ namespace Frames {
     return 4;
   }
 
-  /*static*/ int Text::l_SetColorSelected(lua_State *L) {
-    l_checkparams(L, 4, 5);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_SetColorSelected(lua_State *L) {
+    luaF_checkparams(L, 4, 5);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     self->SetColorSelected(Color(luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_optnumber(L, 5, 1.f)));
 
     return 0;
   }
 
-  /*static*/ int Text::l_GetColorSelected(lua_State *L) {
-    l_checkparams(L, 1);
-    Text *self = l_checkframe<Text>(L, 1);
+  /*static*/ int Text::luaF_GetColorSelected(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Text *self = luaF_checkframe<Text>(L, 1);
 
     const Color &col = self->GetColorSelected();
 

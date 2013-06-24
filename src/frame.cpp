@@ -69,36 +69,36 @@ namespace Frames {
     }
   }
 
-  /*static*/ void Frame::l_RegisterFunctions(lua_State *L) {
-    Layout::l_RegisterFunctions(L);
+  /*static*/ void Frame::luaF_RegisterFunctions(lua_State *L) {
+    Layout::luaF_RegisterFunctions(L);
 
-    l_RegisterFunction(L, GetStaticType(), "SetPoint", l_SetPoint);
+    luaF_RegisterFunction(L, GetStaticType(), "SetPoint", luaF_SetPoint);
 
-    l_RegisterFunction(L, GetStaticType(), "SetWidth", l_SetWidth);
-    l_RegisterFunction(L, GetStaticType(), "SetHeight", l_SetHeight);
+    luaF_RegisterFunction(L, GetStaticType(), "SetWidth", luaF_SetWidth);
+    luaF_RegisterFunction(L, GetStaticType(), "SetHeight", luaF_SetHeight);
 
-    l_RegisterFunction(L, GetStaticType(), "SetParent", l_SetParent);
-    l_RegisterFunction(L, GetStaticType(), "GetParent", l_GetParent);
+    luaF_RegisterFunction(L, GetStaticType(), "SetParent", luaF_SetParent);
+    luaF_RegisterFunction(L, GetStaticType(), "GetParent", luaF_GetParent);
 
-    l_RegisterFunction(L, GetStaticType(), "SetLayer", l_SetLayer);
-    l_RegisterFunction(L, GetStaticType(), "GetLayer", l_GetLayer);
+    luaF_RegisterFunction(L, GetStaticType(), "SetLayer", luaF_SetLayer);
+    luaF_RegisterFunction(L, GetStaticType(), "GetLayer", luaF_GetLayer);
 
-    l_RegisterFunction(L, GetStaticType(), "SetStrata", l_SetStrata);
-    l_RegisterFunction(L, GetStaticType(), "GetStrata", l_GetStrata);
+    luaF_RegisterFunction(L, GetStaticType(), "SetStrata", luaF_SetStrata);
+    luaF_RegisterFunction(L, GetStaticType(), "GetStrata", luaF_GetStrata);
 
-    l_RegisterFunction(L, GetStaticType(), "SetVisible", l_SetVisible);
-    l_RegisterFunction(L, GetStaticType(), "GetVisible", l_GetVisible);
+    luaF_RegisterFunction(L, GetStaticType(), "SetVisible", luaF_SetVisible);
+    luaF_RegisterFunction(L, GetStaticType(), "GetVisible", luaF_GetVisible);
 
-    l_RegisterFunction(L, GetStaticType(), "SetAlpha", l_SetAlpha);
-    l_RegisterFunction(L, GetStaticType(), "GetAlpha", l_GetAlpha);
+    luaF_RegisterFunction(L, GetStaticType(), "SetAlpha", luaF_SetAlpha);
+    luaF_RegisterFunction(L, GetStaticType(), "GetAlpha", luaF_GetAlpha);
 
-    l_RegisterFunction(L, GetStaticType(), "SetBackground", l_SetBackground);
-    l_RegisterFunction(L, GetStaticType(), "GetBackground", l_GetBackground);
+    luaF_RegisterFunction(L, GetStaticType(), "SetBackground", luaF_SetBackground);
+    luaF_RegisterFunction(L, GetStaticType(), "GetBackground", luaF_GetBackground);
 
-    l_RegisterFunction(L, GetStaticType(), "SetFocus", l_SetFocus);
-    l_RegisterFunction(L, GetStaticType(), "GetFocus", l_GetFocus);
+    luaF_RegisterFunction(L, GetStaticType(), "SetFocus", luaF_SetFocus);
+    luaF_RegisterFunction(L, GetStaticType(), "GetFocus", luaF_GetFocus);
 
-    l_RegisterFunction(L, GetStaticType(), "Obliterate", l_Obliterate);
+    luaF_RegisterFunction(L, GetStaticType(), "Obliterate", luaF_Obliterate);
   }
 
   Frame::Frame(Layout *parent) :
@@ -107,7 +107,7 @@ namespace Frames {
   { };
   Frame::~Frame() { };
 
-  static void l_ParseCoord(lua_State *L, int *cindex, bool stringable, bool write, bool *xe, bool *ye, float *xt, float *yt) {
+  static void luaF_ParseCoord(lua_State *L, int *cindex, bool stringable, bool write, bool *xe, bool *ye, float *xt, float *yt) {
     bool lxe = false;
     bool lye = false;
 
@@ -184,9 +184,9 @@ namespace Frames {
     }
   }
 
-  /*static*/ int Frame::l_SetPoint(lua_State *L) {
+  /*static*/ int Frame::luaF_SetPoint(lua_State *L) {
     // this one is a horrible beast
-    Frame *self = l_checkframe<Frame>(L, 1);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     int cindex = 2;
 
@@ -197,7 +197,7 @@ namespace Frames {
     float x_src = 0.f;
     float y_src = 0.f;
 
-    l_ParseCoord(L, &cindex, true, true, &x_enabled, &y_enabled, &x_src, &y_src);
+    luaF_ParseCoord(L, &cindex, true, true, &x_enabled, &y_enabled, &x_src, &y_src);
 
     if (lua_gettop(L) < cindex) {
       luaL_error(L, "Ran out of parameters in SetPoint");
@@ -210,16 +210,16 @@ namespace Frames {
       // well okay I guess that's it
       cindex++;
     } else {
-      target = l_checkframe_external<Layout>(L, cindex);
+      target = luaF_checkframe_external<Layout>(L, cindex);
       cindex++;
 
-      l_ParseCoord(L, &cindex, true, false, &x_enabled, &y_enabled, &x_target, &y_target);
+      luaF_ParseCoord(L, &cindex, true, false, &x_enabled, &y_enabled, &x_target, &y_target);
     }
 
     float x_ofs = 0.f;
     float y_ofs = 0.f;
     if (lua_gettop(L) >= cindex) {
-      l_ParseCoord(L, &cindex, false, false, &x_enabled, &y_enabled, &x_ofs, &y_ofs);
+      luaF_ParseCoord(L, &cindex, false, false, &x_enabled, &y_enabled, &x_ofs, &y_ofs);
     }
 
     if (lua_gettop(L) != cindex - 1) {
@@ -236,81 +236,81 @@ namespace Frames {
     return 0;
   }
 
-  /*static*/ int Frame::l_SetWidth(lua_State *L) {
-    l_checkparams(L, 2);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_SetWidth(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     self->SetWidth(luaL_checknumber(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Frame::l_SetHeight(lua_State *L) {
-    l_checkparams(L, 2);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_SetHeight(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     self->SetHeight(luaL_checknumber(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Frame::l_SetParent(lua_State *L) {
-    l_checkparams(L, 2);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_SetParent(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->SetParent(l_checkframe<Layout>(L, 2));
+    self->SetParent(luaF_checkframe<Layout>(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Frame::l_GetParent(lua_State *L) {
-    l_checkparams(L, 1);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_GetParent(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->GetParent()->l_push(L);
+    self->GetParent()->luaF_push(L);
 
     return 1;
   }
 
-  /*static*/ int Frame::l_SetLayer(lua_State *L) {
-    l_checkparams(L, 2);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_SetLayer(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     self->SetLayer(luaL_checknumber(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Frame::l_GetLayer(lua_State *L) {
-    l_checkparams(L, 1);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_GetLayer(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     lua_pushnumber(L, self->GetLayer());
 
     return 1;
   }
 
-  /*static*/ int Frame::l_SetStrata(lua_State *L) {
-    l_checkparams(L, 2);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_SetStrata(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     self->SetStrata(luaL_checknumber(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Frame::l_GetStrata(lua_State *L) {
-    l_checkparams(L, 1);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_GetStrata(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     lua_pushnumber(L, self->GetStrata());
 
     return 1;
   }
 
-  /*static*/ int Frame::l_SetVisible(lua_State *L) {
-    l_checkparams(L, 2);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_SetVisible(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     luaL_checktype(L, 2, LUA_TBOOLEAN); // sigh
     self->SetVisible(lua_toboolean(L, 2));
@@ -318,45 +318,45 @@ namespace Frames {
     return 0;
   }
 
-  /*static*/ int Frame::l_GetVisible(lua_State *L) {
-    l_checkparams(L, 1);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_GetVisible(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     lua_pushboolean(L, self->GetVisible());
 
     return 1;
   }
 
-  /*static*/ int Frame::l_SetAlpha(lua_State *L) {
-    l_checkparams(L, 2);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_SetAlpha(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     self->SetAlpha(luaL_checknumber(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Frame::l_GetAlpha(lua_State *L) {
-    l_checkparams(L, 1);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_GetAlpha(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     lua_pushnumber(L, self->GetAlpha());
 
     return 1;
   }
 
-  /*static*/ int Frame::l_SetBackground(lua_State *L) {
-    l_checkparams(L, 4, 5);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_SetBackground(lua_State *L) {
+    luaF_checkparams(L, 4, 5);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     self->SetBackground(Color(luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_optnumber(L, 5, 1.f)));
 
     return 0;
   }
 
-  /*static*/ int Frame::l_GetBackground(lua_State *L) {
-    l_checkparams(L, 1);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_GetBackground(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     const Color &col = self->GetBackground();
 
@@ -368,27 +368,27 @@ namespace Frames {
     return 4;
   }
 
-  /*static*/ int Frame::l_SetFocus(lua_State *L) {
-    l_checkparams(L, 2);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_SetFocus(lua_State *L) {
+    luaF_checkparams(L, 2);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     self->SetFocus(lua_toboolean(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Frame::l_GetFocus(lua_State *L) {
-    l_checkparams(L, 1);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_GetFocus(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     lua_pushboolean(L, self->GetFocus());
 
     return 1;
   }
 
-  /*static*/ int Frame::l_Obliterate(lua_State *L) {
-    l_checkparams(L, 1);
-    Frame *self = l_checkframe<Frame>(L, 1);
+  /*static*/ int Frame::luaF_Obliterate(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Frame *self = luaF_checkframe<Frame>(L, 1);
 
     self->Obliterate();
 

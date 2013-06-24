@@ -154,7 +154,7 @@ namespace Frames {
     };
     std::set<lua_State *> m_lua_environments;
     void Lua_PushErrorHandler(lua_State *L);
-    static int l_errorDefault(lua_State *L);
+    static int luaF_errorDefault(lua_State *L);
   };
 }
 

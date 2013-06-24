@@ -5,6 +5,7 @@
 * Rename to Frame
 * Deal with notepad++ wanting to look inside my build directories
 * Better global register setup
+* MSVC support
 
 * #define CreateTagged(...) CreateTagged_imp(__FILE__, __LINE__, __VA_ARGS__)
 

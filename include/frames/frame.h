@@ -52,41 +52,41 @@ namespace Frames {
 
     virtual void RenderElement(Renderer *renderer) const;
 
-    void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); Layout::l_Register(L); }
+    void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, GetStaticType()); Layout::luaF_Register(L); }
 
-    static void l_RegisterFunctions(lua_State *L);
+    static void luaF_RegisterFunctions(lua_State *L);
 
   private:
     Color m_bg;
 
     // Lua bindings
-    static int l_SetPoint(lua_State *L);
+    static int luaF_SetPoint(lua_State *L);
 
-    static int l_SetWidth(lua_State *L);
-    static int l_SetHeight(lua_State *L);
+    static int luaF_SetWidth(lua_State *L);
+    static int luaF_SetHeight(lua_State *L);
 
-    static int l_SetParent(lua_State *L);
-    static int l_GetParent(lua_State *L);
+    static int luaF_SetParent(lua_State *L);
+    static int luaF_GetParent(lua_State *L);
 
-    static int l_SetLayer(lua_State *L);
-    static int l_GetLayer(lua_State *L);
+    static int luaF_SetLayer(lua_State *L);
+    static int luaF_GetLayer(lua_State *L);
 
-    static int l_SetStrata(lua_State *L);
-    static int l_GetStrata(lua_State *L);
+    static int luaF_SetStrata(lua_State *L);
+    static int luaF_GetStrata(lua_State *L);
 
-    static int l_SetVisible(lua_State *L);
-    static int l_GetVisible(lua_State *L);
+    static int luaF_SetVisible(lua_State *L);
+    static int luaF_GetVisible(lua_State *L);
 
-    static int l_SetAlpha(lua_State *L);
-    static int l_GetAlpha(lua_State *L);
+    static int luaF_SetAlpha(lua_State *L);
+    static int luaF_GetAlpha(lua_State *L);
 
-    static int l_SetBackground(lua_State *L);
-    static int l_GetBackground(lua_State *L);
+    static int luaF_SetBackground(lua_State *L);
+    static int luaF_GetBackground(lua_State *L);
 
-    static int l_SetFocus(lua_State *L);
-    static int l_GetFocus(lua_State *L);
+    static int luaF_SetFocus(lua_State *L);
+    static int luaF_GetFocus(lua_State *L);
 
-    static int l_Obliterate(lua_State *L);
+    static int luaF_Obliterate(lua_State *L);
   };
 }
 

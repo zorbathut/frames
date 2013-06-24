@@ -12,7 +12,7 @@
 namespace Frames {
   // Template creation function. Not really part of environment, and there are difficulties with taking the address of member function templates on many semi-modern compilers
   // So we're just going it this way
-  template <typename T> int l_create(lua_State *L) {
+  template <typename T> int luaF_frameCreate(lua_State *L) {
     if (lua_gettop(L) != 1) luaL_error(L, "Wrong number of parameters to Frames creation function (%d, should be %d)", lua_gettop(L), 1);
     luaL_checktype(L, 1, LUA_TTABLE);
 
@@ -58,7 +58,7 @@ namespace Frames {
 
     // Ahoy!
 
-    item->l_push(L);
+    item->luaF_push(L);
 
     return 1;
   }
@@ -150,9 +150,9 @@ namespace Frames {
     lua_newtable(L);
 
     // Stack: ... Frames_mt Frames_rg Frames_fevh Frames_rfevh Frames_cfevh metatable indexes
-    // This goes back to Layout::l_RegisterFunction - if this layout is changed, that function may need to be changed
-    // l_RegisterFunctions used to want a lot of these parameters so it could efficiently set up upvalues. Right now, we don't really care. This can probably be cleaned up quite a bit.
-    T::l_RegisterFunctions(L);
+    // This goes back to Layout::luaF_RegisterFunction - if this layout is changed, that function may need to be changed
+    // luaF_RegisterFunctions used to want a lot of these parameters so it could efficiently set up upvalues. Right now, we don't really care. This can probably be cleaned up quite a bit.
+    T::luaF_RegisterFunctions(L);
 
     // Attach it as the index accessor
     lua_setfield(L, -2, "__index");
@@ -214,7 +214,7 @@ namespace Frames {
     // Stack: ... globalFrames Frames_rg Layoutlookup
 
     // Insert function
-    lua_pushcclosure(L, &l_create<T>, 1);
+    lua_pushcclosure(L, &luaF_frameCreate<T>, 1);
     lua_setfield(L, -3, T::GetStaticType());
 
     // Stack: ... globalFrames Frames_rg

@@ -20,7 +20,7 @@ namespace Frames {
   void luaF_push(lua_State *L, const Point &pt);
   void luaF_push(lua_State *L, const KeyEvent &kev);
   
-  template <typename T> T *l_checkframe_fromregistry(lua_State *L, int index, int registry) {
+  template <typename T> T *luaF_checkframe_fromregistry(lua_State *L, int index, int registry) {
     luaL_checktype(L, index, LUA_TTABLE);
     lua_pushvalue(L, index);
     lua_rawget(L, registry);
@@ -37,7 +37,7 @@ namespace Frames {
     return result;
   }
 
-  template <typename T> T *l_checkframe(lua_State *L, int index) {
+  template <typename T> T *luaF_checkframe(lua_State *L, int index) {
     if (index < 0) index += lua_gettop(L) + 1;
 
     // TODO: remove this doublecheck in optimized mode
@@ -49,23 +49,23 @@ namespace Frames {
     }
     lua_pop(L, 1);
 
-    return l_checkframe_fromregistry<T>(L, index, lua_upvalueindex(1));
+    return luaF_checkframe_fromregistry<T>(L, index, lua_upvalueindex(1));
   }
 
-  template <typename T> T *l_checkframe_external(lua_State *L, int index) {
+  template <typename T> T *luaF_checkframe_external(lua_State *L, int index) {
     if (index < 0) index += lua_gettop(L) + 1;
 
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
     lua_getfield(L, -1, T::GetStaticType());
 
-    T *result = l_checkframe_fromregistry<T>(L, index, lua_gettop(L));
+    T *result = luaF_checkframe_fromregistry<T>(L, index, lua_gettop(L));
 
     lua_pop(L, 2); // get rid of the lookup table and friend
 
     return result;
   }
 
-  inline void l_checkparams(lua_State *L, int mn, int mx = -1) {
+  inline void luaF_checkparams(lua_State *L, int mn, int mx = -1) {
     if (mx == -1) mx = mn;
     int lgt = lua_gettop(L);
     if (lgt < mn || lgt > mx) {
@@ -73,7 +73,7 @@ namespace Frames {
     }
   }
   
-  inline const EventTypeBase *l_checkevent(lua_State *L, int index) {
+  inline const EventTypeBase *luaF_checkevent(lua_State *L, int index) {
     if (index < 0) index += lua_gettop(L) + 1;
     
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");

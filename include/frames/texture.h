@@ -25,9 +25,9 @@ namespace Frames {
     Color GetTint() const { return m_tint; }
 
   protected:
-    virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); Frame::l_Register(L); }
+    virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, GetStaticType()); Frame::luaF_Register(L); }
 
-    static void l_RegisterFunctions(lua_State *L);
+    static void luaF_RegisterFunctions(lua_State *L);
 
   private:
     Texture(Layout *parent);
@@ -41,11 +41,11 @@ namespace Frames {
     Color m_tint;
 
     // Lua bindings
-    static int l_SetTexture(lua_State *L);
-    static int l_GetTexture(lua_State *L);
+    static int luaF_SetTexture(lua_State *L);
+    static int luaF_GetTexture(lua_State *L);
 
-    static int l_SetTint(lua_State *L);
-    static int l_GetTint(lua_State *L);
+    static int luaF_SetTint(lua_State *L);
+    static int luaF_GetTint(lua_State *L);
   };
 }
 

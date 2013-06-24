@@ -23,8 +23,8 @@ namespace Frames {
     return "Raw";
   }
 
-  /*static*/ void Raw::l_RegisterFunctions(lua_State *L) {
-    Frame::l_RegisterFunctions(L);
+  /*static*/ void Raw::luaF_RegisterFunctions(lua_State *L) {
+    Frame::luaF_RegisterFunctions(L);
   }
 
   void Raw::RenderElement(Renderer *renderer) const {

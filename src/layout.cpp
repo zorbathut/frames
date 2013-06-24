@@ -196,7 +196,7 @@ namespace Frames {
     return 0;
   }
 
-  void Layout::l_push(lua_State *L) const {
+  void Layout::luaF_push(lua_State *L) const {
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
 
     if (lua_isnil(L, -1)) {
@@ -279,7 +279,7 @@ namespace Frames {
       // Now we call our deep virtual register function - this leaves the stack at the same level
       {
         Environment::LuaStackChecker lsc(L, m_env);
-        l_Register(L);
+        luaF_Register(L);
       }
 
       // Now we're all registered in both lookup tables, yay
@@ -767,7 +767,7 @@ namespace Frames {
     }
   }
 
-  void Layout::l_RegisterWorker(lua_State *L, const char *name) const {
+  void Layout::luaF_RegisterWorker(lua_State *L, const char *name) const {
     Environment::LuaStackChecker lsc(L, m_env);
     // Incoming: ... newtab Frames_rg
 
@@ -786,29 +786,29 @@ namespace Frames {
     lua_pop(L, 1);
   }
 
-  /*static*/ void Layout::l_RegisterFunctions(lua_State *L) {
-    l_RegisterFunction(L, GetStaticType(), "GetLeft", l_GetLeft);
-    l_RegisterFunction(L, GetStaticType(), "GetRight", l_GetRight);
-    l_RegisterFunction(L, GetStaticType(), "GetTop", l_GetTop);
-    l_RegisterFunction(L, GetStaticType(), "GetBottom", l_GetBottom);
-    l_RegisterFunction(L, GetStaticType(), "GetBounds", l_GetBounds);
+  /*static*/ void Layout::luaF_RegisterFunctions(lua_State *L) {
+    luaF_RegisterFunction(L, GetStaticType(), "GetLeft", luaF_GetLeft);
+    luaF_RegisterFunction(L, GetStaticType(), "GetRight", luaF_GetRight);
+    luaF_RegisterFunction(L, GetStaticType(), "GetTop", luaF_GetTop);
+    luaF_RegisterFunction(L, GetStaticType(), "GetBottom", luaF_GetBottom);
+    luaF_RegisterFunction(L, GetStaticType(), "GetBounds", luaF_GetBounds);
 
-    l_RegisterFunction(L, GetStaticType(), "GetWidth", l_GetWidth);
-    l_RegisterFunction(L, GetStaticType(), "GetHeight", l_GetHeight);
+    luaF_RegisterFunction(L, GetStaticType(), "GetWidth", luaF_GetWidth);
+    luaF_RegisterFunction(L, GetStaticType(), "GetHeight", luaF_GetHeight);
 
-    l_RegisterFunction(L, GetStaticType(), "GetChildren", l_GetChildren);
+    luaF_RegisterFunction(L, GetStaticType(), "GetChildren", luaF_GetChildren);
 
-    l_RegisterFunction(L, GetStaticType(), "GetName", l_GetName);
-    l_RegisterFunction(L, GetStaticType(), "GetNameFull", l_GetNameFull);
-    l_RegisterFunction(L, GetStaticType(), "GetType", l_GetType);
+    luaF_RegisterFunction(L, GetStaticType(), "GetName", luaF_GetName);
+    luaF_RegisterFunction(L, GetStaticType(), "GetNameFull", luaF_GetNameFull);
+    luaF_RegisterFunction(L, GetStaticType(), "GetType", luaF_GetType);
     
-    l_RegisterFunction(L, GetStaticType(), "EventAttach", l_EventAttach);
-    l_RegisterFunction(L, GetStaticType(), "EventDetach", l_EventDetach);
+    luaF_RegisterFunction(L, GetStaticType(), "EventAttach", luaF_EventAttach);
+    luaF_RegisterFunction(L, GetStaticType(), "EventDetach", luaF_EventDetach);
 
-    l_RegisterFunction(L, GetStaticType(), "DebugDumpLayout", l_DebugDumpLayout);
+    luaF_RegisterFunction(L, GetStaticType(), "DebugDumpLayout", luaF_DebugDumpLayout);
   }
 
-  /*static*/ void Layout::l_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *)) {
+  /*static*/ void Layout::luaF_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *)) {
     // From Environment::RegisterLuaFrame
     // Stack: ... Frames_mt Frames_rg Frames_fevh Frames_rfevh Frames_cfevh metatable indexes
     lua_getfield(L, -6, owner);
@@ -999,7 +999,7 @@ namespace Frames {
     lua_remove(L, -2);
     
     // target frame
-    eh->GetTarget()->l_push(L);
+    eh->GetTarget()->luaF_push(L);
     
     // event handle
     eh->luaF_push(L);
@@ -1257,45 +1257,45 @@ namespace Frames {
     }
   }
 
-  /*static*/ int Layout::l_GetLeft(lua_State *L) {
-    l_checkparams(L, 1);
-    Layout *self = l_checkframe<Layout>(L, 1);
+  /*static*/ int Layout::luaF_GetLeft(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Layout *self = luaF_checkframe<Layout>(L, 1);
 
     lua_pushnumber(L, self->GetLeft());
 
     return 1;
   }
 
-  /*static*/ int Layout::l_GetRight(lua_State *L) {
-    l_checkparams(L, 1);
-    Layout *self = l_checkframe<Layout>(L, 1);
+  /*static*/ int Layout::luaF_GetRight(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Layout *self = luaF_checkframe<Layout>(L, 1);
 
     lua_pushnumber(L, self->GetRight());
 
     return 1;
   }
 
-  /*static*/ int Layout::l_GetTop(lua_State *L) {
-    l_checkparams(L, 1);
-    Layout *self = l_checkframe<Layout>(L, 1);
+  /*static*/ int Layout::luaF_GetTop(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Layout *self = luaF_checkframe<Layout>(L, 1);
 
     lua_pushnumber(L, self->GetTop());
 
     return 1;
   }
 
-  /*static*/ int Layout::l_GetBottom(lua_State *L) {
-    l_checkparams(L, 1);
-    Layout *self = l_checkframe<Layout>(L, 1);
+  /*static*/ int Layout::luaF_GetBottom(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Layout *self = luaF_checkframe<Layout>(L, 1);
 
     lua_pushnumber(L, self->GetBottom());
 
     return 1;
   }
 
-  /*static*/ int Layout::l_GetBounds(lua_State *L) {
-    l_checkparams(L, 1);
-    Layout *self = l_checkframe<Layout>(L, 1);
+  /*static*/ int Layout::luaF_GetBounds(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Layout *self = luaF_checkframe<Layout>(L, 1);
 
     lua_pushnumber(L, self->GetLeft());
     lua_pushnumber(L, self->GetTop());
@@ -1305,73 +1305,73 @@ namespace Frames {
     return 4;
   }
 
-  /*static*/ int Layout::l_GetWidth(lua_State *L) {
-    l_checkparams(L, 1);
-    Layout *self = l_checkframe<Layout>(L, 1);
+  /*static*/ int Layout::luaF_GetWidth(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Layout *self = luaF_checkframe<Layout>(L, 1);
 
     lua_pushnumber(L, self->GetWidth());
 
     return 1;
   }
 
-  /*static*/ int Layout::l_GetHeight(lua_State *L) {
-    l_checkparams(L, 1);
-    Layout *self = l_checkframe<Layout>(L, 1);
+  /*static*/ int Layout::luaF_GetHeight(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Layout *self = luaF_checkframe<Layout>(L, 1);
 
     lua_pushnumber(L, self->GetHeight());
 
     return 1;
   }
 
-  /*static*/ int Layout::l_GetChildren(lua_State *L) {
-    l_checkparams(L, 1);
-    Layout *self = l_checkframe<Layout>(L, 1);
+  /*static*/ int Layout::luaF_GetChildren(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Layout *self = luaF_checkframe<Layout>(L, 1);
 
     lua_newtable(L);
 
     const ChildrenList &children = self->GetChildren();
     for (ChildrenList::const_iterator itr = children.begin(); itr != children.end(); ++itr) {
-      (*itr)->l_push(L);
+      (*itr)->luaF_push(L);
       lua_rawseti(L, -2, lua_objlen(L, -2));
     }
 
     return 1;
   }
 
-  /*static*/ int Layout::l_GetName(lua_State *L) {
-    l_checkparams(L, 1);
-    Layout *self = l_checkframe<Layout>(L, 1);
+  /*static*/ int Layout::luaF_GetName(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Layout *self = luaF_checkframe<Layout>(L, 1);
 
     lua_pushstring(L, self->GetName().c_str());
 
     return 1;
   }
 
-  /*static*/ int Layout::l_GetNameFull(lua_State *L) {
-    l_checkparams(L, 1);
-    Layout *self = l_checkframe<Layout>(L, 1);
+  /*static*/ int Layout::luaF_GetNameFull(lua_State *L) {
+    luaF_checkparams(L, 1);
+    Layout *self = luaF_checkframe<Layout>(L, 1);
 
     lua_pushstring(L, self->GetNameFull().c_str());
 
     return 1;
   }
 
-  /*static*/ int Layout::l_GetType(lua_State *L)  {
-    l_checkparams(L, 1);
-    Layout *self = l_checkframe<Layout>(L, 1);
+  /*static*/ int Layout::luaF_GetType(lua_State *L)  {
+    luaF_checkparams(L, 1);
+    Layout *self = luaF_checkframe<Layout>(L, 1);
 
     lua_pushstring(L, self->GetType());
 
     return 1;
   }
 
-  /*static*/ int Layout::l_EventAttach(lua_State *L) {
-    l_checkparams(L, 3, 4);
+  /*static*/ int Layout::luaF_EventAttach(lua_State *L) {
+    luaF_checkparams(L, 3, 4);
     
     // Stack: layout eventhandle handler (priority)
     
-    Layout *self = l_checkframe<Layout>(L, 1);
-    const EventTypeBase *event = l_checkevent(L, 2);
+    Layout *self = luaF_checkframe<Layout>(L, 1);
+    const EventTypeBase *event = luaF_checkevent(L, 2);
     float priority = (float)luaL_optnumber(L, 4, 0.f);
     
     int handler = LUA_NOREF;
@@ -1433,13 +1433,13 @@ namespace Frames {
     return 0;
   }
   
-  /*static*/ int Layout::l_EventDetach(lua_State *L) {
-    l_checkparams(L, 3, 4);
+  /*static*/ int Layout::luaF_EventDetach(lua_State *L) {
+    luaF_checkparams(L, 3, 4);
     
     // Stack: layout eventhandle handler (priority)
     
-    Layout *self = l_checkframe<Layout>(L, 1);
-    const EventTypeBase *event = l_checkevent(L, 2);
+    Layout *self = luaF_checkframe<Layout>(L, 1);
+    const EventTypeBase *event = luaF_checkevent(L, 2);
     float priority = (float)luaL_optnumber(L, 4, Utility::Undefined);
     
     int handler = LUA_NOREF;
@@ -1477,9 +1477,9 @@ namespace Frames {
     return 0;
   }
     
-  /*static*/ int Layout::l_DebugDumpLayout(lua_State *L)  {
-    l_checkparams(L, 1);
-    Layout *self = l_checkframe<Layout>(L, 1);
+  /*static*/ int Layout::luaF_DebugDumpLayout(lua_State *L)  {
+    luaF_checkparams(L, 1);
+    Layout *self = luaF_checkframe<Layout>(L, 1);
 
     self->DebugDumpLayout();
 
