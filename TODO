@@ -1,5 +1,4 @@
 
-* Change l_ to luaF_
 * what kind of quotes am I using for includes >:(
 * really need a global assert function
 * Rename to Frame
