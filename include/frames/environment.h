@@ -22,6 +22,7 @@ namespace Frames {
   class Renderer;
   class TextManager;
   class TextureManager;
+  class EventTypeBase;
 
   class Environment : Noncopyable {
   public:
@@ -69,10 +70,9 @@ namespace Frames {
 
     // Scripting languages
     void LuaRegister(lua_State *L, bool hasErrorHandle = false); // if error handle is true, top element of the stack will be popped
+    template<typename T> void LuaRegisterFrame(lua_State *L); // needed only if you create third-party frames - Frames will automatically register its internal frame types
+    void LuaRegisterEvent(lua_State *L, EventTypeBase *feb);
     void LuaUnregister(lua_State *L);
-    void LuaRegisterFramesBuiltin(lua_State *L);
-    template<typename T> void RegisterLuaFrame(lua_State *L);
-    template<typename T> void RegisterLuaFrameCreation(lua_State *L); // Calls RegisterLuaFrame implicitly
 
     // Internal only, do not call below this line
     TextManager *GetTextManager() { return m_text_manager; }
@@ -96,6 +96,7 @@ namespace Frames {
 
     // Utility functions and parameters
     void Init(const Configuration &config);
+    template<typename T> void LuaRegisterFrameLookup(lua_State *L);
 
     void MarkInvalidated(Layout *layout);
     void UnmarkInvalidated(Layout *layout); // This is currently very slow.

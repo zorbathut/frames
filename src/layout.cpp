@@ -10,101 +10,41 @@
 #include <math.h> // just for isnan()
 
 namespace Frames {
+  FRAMES_FRAMEEVENT_DEFINE(Move, ());
+  FRAMES_FRAMEEVENT_DEFINE(Size, ());
 
-  void EventHandle::Finalize() {
-    if (m_finalize_can) {
-      m_finalize = true;
-    } else {
-      m_target->GetEnvironment()->LogError("Finalize incorrectly called when an event handle isn't finalizable.");
-    }
-  }
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseOver, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMove, (const Point &pt));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMoveoutside, (const Point &pt));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseOut, ());
 
-  /*static*/ EventHandle EventHandle::INTERNAL_Initialize(Layout *layout) {
-    EventHandle rv;
-    rv.m_target = layout;
-    return rv;
-  }
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftUp, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftUpoutside, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftDown, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftClick, ());
 
-  /*static*/ void EventHandle::INTERNAL_l_CreateMetatable(lua_State *L) {
-    // First, we'll need to create the actual metatable
-    lua_newtable(L);
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleUp, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleUpoutside, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleDown, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleClick, ());
 
-    // This is the index lookup
-    lua_newtable(L);
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseRightUp, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseRightUpoutside, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseRightDown, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseRightClick, ());
 
-    // Insert functions, tagged with the eventhandle lookup upvalue
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
-    lua_pushcclosure(L, l_GetTarget, 1);
-    lua_setfield(L, -2, "GetTarget");
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonUp, (int button));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonUpoutside, (int button));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonDown, (int button));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonClick, (int button));
 
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
-    lua_pushcclosure(L, l_CanFinalize, 1);
-    lua_setfield(L, -2, "CanFinalize");
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseWheel, (int delta));
 
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
-    lua_pushcclosure(L, l_Finalize, 1);
-    lua_setfield(L, -2, "Finalize");
-
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
-    lua_pushcclosure(L, l_GetFinalize, 1);
-    lua_setfield(L, -2, "GetFinalize");
-
-    // Jam index lookup into actual table as necessary
-    lua_setfield(L, -2, "__index");
-
-    // and the metatable is done!
-  }
-
-  EventHandle::EventHandle() : m_target(0), m_finalize(false), m_finalize_can(false) {
-  }
-
-  EventHandle::EventHandle(const EventHandle &ev) : m_target(ev.m_target), m_finalize(ev.m_finalize), m_finalize_can(ev.m_finalize_can) {
-  }
-
-  /*static*/ int EventHandle::l_GetTarget(lua_State *L) {
-    l_checkparams(L, 1);
-    lua_rawget(L, lua_upvalueindex(1));
-    luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
-    EventHandle *eh = (EventHandle*)lua_touserdata(L, -1);
-
-    eh->GetTarget()->l_push(L);
-
-    return 1;
-  }
-
-  /*static*/ int EventHandle::l_CanFinalize(lua_State *L) {
-    l_checkparams(L, 1);
-    lua_rawget(L, lua_upvalueindex(1));
-    luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
-    EventHandle *eh = (EventHandle*)lua_touserdata(L, -1);
-
-    lua_pushboolean(L, eh->CanFinalize());
-
-    return 1;
-  }
-
-  /*static*/ int EventHandle::l_Finalize(lua_State *L) {
-    l_checkparams(L, 1);
-    lua_rawget(L, lua_upvalueindex(1));
-    luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
-    EventHandle *eh = (EventHandle*)lua_touserdata(L, -1);
-
-    eh->Finalize();
-
-    return 0;
-  }
-
-  /*static*/ int EventHandle::l_GetFinalize(lua_State *L) {
-    l_checkparams(L, 1);
-    lua_rawget(L, lua_upvalueindex(1));
-    luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
-    EventHandle *eh = (EventHandle*)lua_touserdata(L, -1);
-
-    lua_pushboolean(L, eh->GetFinalize());
-
-    return 1;
-  }
-
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(KeyDown, (const KeyEvent &kev));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(KeyType, (const std::string &text));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(KeyRepeat, (const KeyEvent &kev));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(KeyUp, (const KeyEvent &kev));
+  
   BOOST_STATIC_ASSERT(sizeof(EventId) == sizeof(intptr_t));
   BOOST_STATIC_ASSERT(sizeof(EventId) == sizeof(void *));
 
@@ -422,9 +362,7 @@ namespace Frames {
       m_acceptInput(false),
       m_name_static(0),
       m_name_id(-1),
-      m_event_locked(false),
-      m_event_buffered(false),
-      m_obliterate_locked(false),
+      m_obliterate_lock(0),
       m_obliterate_buffered(false),
       m_env(0)
   {
@@ -460,11 +398,18 @@ namespace Frames {
     if (!m_resolved) {
       m_env->UnmarkInvalidated(this);
     }
+    
+    // Take out all our event handlers
+    while (!m_events.empty()) {
+      EventLookup::iterator eventTable = m_events.begin();
+      
+      while (!eventTable->second.empty()) {
+        EventDestroy(eventTable, eventTable->second.begin()); // kaboom!
+      }
+    }
 
     // Clean up all appropriate lua environments
     for (std::set<lua_State *>::const_iterator itr = m_env->m_lua_environments.begin(); itr != m_env->m_lua_environments.end(); ++itr) {
-      l_ClearLuaEvents(*itr); // We can be a little more clever about this if necessary, in a lot of ways. Again, deal with later, if necessary.
-
       lua_State *L = *itr;
 
       lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
@@ -771,7 +716,7 @@ namespace Frames {
   }
 
   void Layout::Obliterate() {
-    if (m_obliterate_locked) {
+    if (m_obliterate_lock) {
       // can't do this quite yet, do it later
       m_obliterate_buffered = true;
       return;
@@ -781,43 +726,45 @@ namespace Frames {
     Obliterate_Extract();
   }
 
-  bool Layout::HasEvent(EventId id) const {
-    std::map<EventId, EventMap>::const_iterator itr = m_events.find(id);
+  bool Layout::EventHookedIs(const EventTypeBase &event) const {
+    std::map<const EventTypeBase *, std::multiset<FECallback, FECallback::Sorter> >::const_iterator itr = m_events.find(&event);
     if (itr == m_events.end()) {
+      // no handles, we're good
       return false;
     }
-
-    if (!m_event_buffered) {  // if we're not buffered, then any erased items have already been removed
-      return true;
-    }
-
-    // we're now in the annoying position of needing to iterate over the entire event table to see if it *really* has anything attached
-    for (EventMap::const_iterator eitr = itr->second.begin(); eitr != itr->second.end(); ++eitr) {
-      if (!eitr->second.IsErased()) {
+    
+    // We now need to iterate over all events just in case they're all destroy-flagged
+    const std::multiset<FECallback, FECallback::Sorter> &eventSet = itr->second;
+    for (std::multiset<FECallback, FECallback::Sorter>::const_iterator itr = eventSet.begin(); itr != eventSet.end(); ++itr) {
+      if (!itr->DestroyFlagGet()) {
         return true;
       }
     }
-
-    // apparently not!
+    
+    // they are! sigh
     return false;
   }
 
-  void Layout::EventAttached(EventId id) {
-    m_acceptInput =
-      HasEvent(EventMouseLeftClickId()) || HasEvent(EventMouseLeftUpId()) || HasEvent(EventMouseLeftDownId()) ||
-      HasEvent(EventMouseMiddleClickId()) || HasEvent(EventMouseMiddleUpId()) || HasEvent(EventMouseMiddleDownId()) ||
-      HasEvent(EventMouseRightClickId()) || HasEvent(EventMouseRightUpId()) || HasEvent(EventMouseRightDownId()) ||
-      HasEvent(EventMouseButtonClickId()) || HasEvent(EventMouseButtonUpId()) || HasEvent(EventMouseButtonDownId()) ||
-      HasEvent(EventMouseWheelId()) || HasEvent(EventMouseOverId()) || HasEvent(EventMouseOutId());
+  void Layout::EventAttached(const EventTypeBase *event) {
+    if (!m_acceptInput) {
+      m_acceptInput =
+        EventHookedIs(Event::MouseLeftClick) || EventHookedIs(Event::MouseLeftUp) || EventHookedIs(Event::MouseLeftDown) ||
+        EventHookedIs(Event::MouseMiddleClick) || EventHookedIs(Event::MouseMiddleUp) || EventHookedIs(Event::MouseMiddleDown) ||
+        EventHookedIs(Event::MouseRightClick) || EventHookedIs(Event::MouseRightUp) || EventHookedIs(Event::MouseRightDown) ||
+        EventHookedIs(Event::MouseButtonClick) || EventHookedIs(Event::MouseButtonUp) || EventHookedIs(Event::MouseButtonDown) ||
+        EventHookedIs(Event::MouseMove) || EventHookedIs(Event::MouseWheel) || EventHookedIs(Event::MouseOver) || EventHookedIs(Event::MouseOut);
+    }
   }
 
-  void Layout::EventDetached(EventId id) {
-    m_acceptInput =
-      HasEvent(EventMouseLeftClickId()) || HasEvent(EventMouseLeftUpId()) || HasEvent(EventMouseLeftDownId()) ||
-      HasEvent(EventMouseMiddleClickId()) || HasEvent(EventMouseMiddleUpId()) || HasEvent(EventMouseMiddleDownId()) ||
-      HasEvent(EventMouseRightClickId()) || HasEvent(EventMouseRightUpId()) || HasEvent(EventMouseRightDownId()) ||
-      HasEvent(EventMouseButtonClickId()) || HasEvent(EventMouseButtonUpId()) || HasEvent(EventMouseButtonDownId()) ||
-      HasEvent(EventMouseWheelId()) || HasEvent(EventMouseOverId()) || HasEvent(EventMouseOutId());
+  void Layout::EventDetached(const EventTypeBase *event) {
+    if (m_acceptInput) {
+      m_acceptInput =
+        EventHookedIs(Event::MouseLeftClick) || EventHookedIs(Event::MouseLeftUp) || EventHookedIs(Event::MouseLeftDown) ||
+        EventHookedIs(Event::MouseMiddleClick) || EventHookedIs(Event::MouseMiddleUp) || EventHookedIs(Event::MouseMiddleDown) ||
+        EventHookedIs(Event::MouseRightClick) || EventHookedIs(Event::MouseRightUp) || EventHookedIs(Event::MouseRightDown) ||
+        EventHookedIs(Event::MouseButtonClick) || EventHookedIs(Event::MouseButtonUp) || EventHookedIs(Event::MouseButtonDown) ||
+        EventHookedIs(Event::MouseMove) || EventHookedIs(Event::MouseWheel) || EventHookedIs(Event::MouseOver) || EventHookedIs(Event::MouseOut);
+    }
   }
 
   void Layout::l_RegisterWorker(lua_State *L, const char *name) const {
@@ -854,261 +801,19 @@ namespace Frames {
     l_RegisterFunction(L, GetStaticType(), "GetName", l_GetName);
     l_RegisterFunction(L, GetStaticType(), "GetNameFull", l_GetNameFull);
     l_RegisterFunction(L, GetStaticType(), "GetType", l_GetType);
+    
+    l_RegisterFunction(L, GetStaticType(), "EventAttach", l_EventAttach);
+    l_RegisterFunction(L, GetStaticType(), "EventDetach", l_EventDetach);
 
     l_RegisterFunction(L, GetStaticType(), "DebugDumpLayout", l_DebugDumpLayout);
-
-    FRAMES_FRAMEEVENT_L_REGISTER(L, GetStaticType(), Move, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER(L, GetStaticType(), Size, &Layout::l_EventPusher_Default);
-
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseOver, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseMove, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseMoveOutside, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseOut, &Layout::l_EventPusher_Default);
-
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseLeftUp, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseLeftUpOutside, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseLeftDown, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseLeftClick, &Layout::l_EventPusher_Default);
-
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseMiddleUp, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseMiddleUpOutside, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseMiddleDown, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseMiddleClick, &Layout::l_EventPusher_Default);
-
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseRightUp, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseRightUpOutside, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseRightDown, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseRightClick, &Layout::l_EventPusher_Default);
-
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseButtonUp, &Layout::l_EventPusher_Button);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseButtonUpOutside, &Layout::l_EventPusher_Button);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseButtonDown, &Layout::l_EventPusher_Button);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseButtonClick, &Layout::l_EventPusher_Button);
-
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), MouseWheel, &Layout::l_EventPusher_Default);
-
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), KeyDown, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), KeyType, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), KeyRepeat, &Layout::l_EventPusher_Default);
-    FRAMES_FRAMEEVENT_L_REGISTER_BUBBLE(L, GetStaticType(), KeyUp, &Layout::l_EventPusher_Default);
   }
 
   /*static*/ void Layout::l_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *)) {
     // From Environment::RegisterLuaFrame
-    // Stack: ... Frames_mt Frames_rg Frames_fev Frames_rfev Frames_cfev metatable indexes
+    // Stack: ... Frames_mt Frames_rg Frames_fevh Frames_rfevh Frames_cfevh metatable indexes
     lua_getfield(L, -6, owner);
     lua_pushcclosure(L, func, 1);
     lua_setfield(L, -2, name);
-  }
-
-  BOOST_STATIC_ASSERT(sizeof(intptr_t) >= sizeof(void*));
-  template<typename Prototype> /*static*/ void Layout::l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, EventId eventId, typename LayoutHandlerMunger<Prototype>::T pusher) {
-    BOOST_STATIC_ASSERT(sizeof(Utility::intfptr_t) == sizeof(intptr_t)); // if this fails, we can do something clever with real lua userdata instead
-    BOOST_STATIC_ASSERT(sizeof(Utility::intfptr_t) == sizeof(void*)); // if this fails, we can do something clever with real lua userdata instead
-    BOOST_STATIC_ASSERT(sizeof(Utility::intfptr_t) >= sizeof(typename Utility::FunctionPtr<typename Utility::FunctionPrefix<lua_State *, Prototype>::T>::T)); // if this fails we are kind of screwed
-
-    // From Environment::RegisterLuaFrame
-    // Stack: ... Frames_mt Frames_rg Frames_fev Frames_rfev Frames_cfev metatable indexes
-    lua_getfield(L, -6, "Layout");  // We always register Layout's because, technically, every frame can support events of any event ID
-    lua_pushlightuserdata(L, (void*)eventId); // what was once pointer will now be again pointer
-    lua_pushvalue(L, -7); // push _fev
-    lua_pushvalue(L, -7); // push _rfev
-    lua_pushvalue(L, -7); // push _cfev
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua"); // push lua root
-    lua_pushlightuserdata(L, (void*)pusher); // push handler function
-    // Stack: ... Frames_mt Frames_rg Frames_fev Frames_rfev Frames_cfev metatable indexes | tableregistry eventid _fev _rfev _cfev luaroot handler
-    lua_pushcclosure(L, l_RegisterEventAttach<Prototype>, 7);
-    lua_setfield(L, -2, nameAttach);
-
-    // DO IT AGAIN
-    lua_getfield(L, -6, "Layout");  // We always register Layout's because, technically, every frame can support events of any event ID
-    lua_pushlightuserdata(L, (void*)eventId); // what was once pointer will now be again pointer
-    lua_pushvalue(L, -7); // push _fev
-    lua_pushvalue(L, -7); // push _rfev
-    lua_pushvalue(L, -7); // push _cfev
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua"); // push lua root
-    lua_pushlightuserdata(L, (void*)pusher); // push handler function
-    // Stack: ... Frames_mt Frames_rg Frames_fev Frames_rfev Frames_cfev metatable indexes | tableregistry eventid _fev _rfev _cfev luaroot handler
-    lua_pushcclosure(L, l_RegisterEventDetach<Prototype>, 7);
-    lua_setfield(L, -2, nameDetach);
-  }
-
-  template<typename Prototype> /*static*/ int Layout::l_RegisterEventAttach(lua_State *L) {
-    l_checkparams(L, 2, 3);
-    Layout *self = l_checkframe<Layout>(L, 1);
-
-    // Stack: table handler (priority)
-    // Upvalues: tableregistry eventid _fev _rfev _cfev luaroot handler
-
-    float priority = (float)luaL_optnumber(L, 3, 0.f);
-    lua_settop(L, 2);
-
-    // Stack: table handler
-
-    // Look up this element in our reverse frame lookup
-    lua_pushvalue(L, -1);
-    lua_rawget(L, lua_upvalueindex(4));
-    int idx = 0;
-    if (!lua_isnil(L, -1)) {
-      // this already exists, so let's increment our refcount
-      // Stack: table handler id
-      idx = (int)lua_tonumber(L, -1);
-      lua_pop(L, 1);
-      // Stack: table handler
-
-      // Update count
-      lua_rawgeti(L, lua_upvalueindex(5), idx);
-      lua_pushnumber(L, lua_tonumber(L, -1) + 1);
-      lua_rawseti(L, lua_upvalueindex(5), idx);
-      lua_pop(L, 1);
-
-      lua_pop(L, 1);
-      // Stack: table
-    } else {
-      // doesn't already exist, so do all our setup
-      lua_pop(L, 1);
-      // Stack: table handler
-
-      // Forward table, get our index
-      lua_pushvalue(L, -1);
-      idx = luaL_ref(L, lua_upvalueindex(3));
-      // Stack: table handler
-
-      // Reverse table
-      lua_pushnumber(L, idx);
-      lua_rawset(L, lua_upvalueindex(4));
-      // Stack: table
-
-      // Count table
-      lua_pushnumber(L, 1);
-      lua_rawseti(L, lua_upvalueindex(5), idx);
-      // Stack: table
-    }
-    // One way or another, our tables are maintained properly now
-    // Stack: table
-
-    EventId event = (EventId)lua_touserdata(L, lua_upvalueindex(2));
-
-    // Finally, we need the "root" lua environment
-    lua_State *L_root = (lua_State *)lua_touserdata(L, lua_upvalueindex(6));
-    
-    // We've got the root lua, a layout, the event, the priority, and a valid index to a handler. Yahoy!
-    self->l_EventAttach<Prototype>(L_root, event, idx, priority, reinterpret_cast<typename LayoutHandlerMunger<Prototype>::T>(lua_touserdata(L, lua_upvalueindex(7))));
-
-    return 0;
-  }
-
-  template<typename Prototype> /*static*/ int Layout::l_RegisterEventDetach(lua_State *L) {
-    l_checkparams(L, 2, 3);
-    Layout *self = l_checkframe<Layout>(L, 1);
-
-    // Stack: table handler (priority)
-    // Upvalues: tableregistry eventid _fev _rfev _cfev luaroot
-
-    float priority = (float)luaL_optnumber(L, 3, 0.f / 0.f);
-    lua_settop(L, 2);
-
-    // Stack: table handler
-  // Look up this element in our reverse frame lookup
-    lua_pushvalue(L, -1);
-    lua_rawget(L, lua_upvalueindex(4));
-    if (lua_isnil(L, -1)) {
-      // this doesn't exist! we're done!
-      return 0;
-    }
-
-    int idx = (int)lua_tonumber(L, -1);
-
-    EventId event = (EventId)lua_touserdata(L, lua_upvalueindex(2));
-
-    // Finally, we need the "root" lua environment
-    lua_State *L_root = (lua_State *)lua_touserdata(L, lua_upvalueindex(6));
-
-    // We've got the root lua, a layout, the event, the priority, and a valid index to a handler. Yahoy!
-    self->l_EventDetach<Prototype>(L_root, event, idx, priority);
-
-    return 0;
-  }
-
-  struct EventhandlerInfo {
-    Layout::EventHandler *eh;
-    EventId event;
-    float priority;
-    bool operator<(const EventhandlerInfo &rhs) const { return eh < rhs.eh; }
-  };
-
-  void Layout::l_ClearLuaEvents(lua_State *lua) {
-    // clear out all events attached to this lua state
-    // this could probably be more efficient - if this is somehow a bottleneck or a speed issue, we can fix it!
-    std::set<EventhandlerInfo> eh;
-    for (std::map<EventId, EventMap>::iterator itr = m_events.begin(); itr != m_events.end(); ++itr) {
-      for (EventMap::iterator eitr = itr->second.begin(); eitr != itr->second.end(); ++eitr) {
-        if (eitr->second.IsLua() && eitr->second.GetLua()->L == lua) {
-          EventhandlerInfo ehi;
-          ehi.eh = &eitr->second;
-          ehi.priority = eitr->first;
-          ehi.event = itr->first;
-          eh.insert(ehi);
-        }
-      }
-    }
-
-    for (std::set<EventhandlerInfo>::iterator itr = eh.begin(); itr != eh.end(); ++itr) {
-      if (!l_EventDetach(lua, m_lua_events.find(*itr->eh->GetLua()), itr->event, *itr->eh, itr->priority)) {
-        FRAMES_ERROR("Failing to shutdown Lua events properly");
-      }
-    }
-  }
-  void Layout::l_ClearLuaEvents_Recursive(lua_State *lua) {
-    l_ClearLuaEvents(lua);
-
-    // get children to clear events as well
-    for (ChildrenList::iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
-      (*itr)->l_ClearLuaEvents(lua);
-    }
-  }
-
-  /*static*/ int Layout::l_EventPusher_Default(lua_State *L) {
-    return 0;
-  }
-
-  /*static*/ int Layout::l_EventPusher_Default(lua_State *L, int p1) {
-    lua_pushnumber(L, p1);
-    return 1;
-  }
-
-  /*static*/ int Layout::l_EventPusher_Default(lua_State *L, const std::string &p1) {
-    lua_pushstring(L, p1.c_str());
-    return 1;
-  }
-
-  /*static*/ int Layout::l_EventPusher_Default(lua_State *L, const Point &pt) {
-    lua_pushnumber(L, pt.x);
-    lua_pushnumber(L, pt.y);
-    return 2;
-  }
-
-   /*static*/ int Layout::l_EventPusher_Default(lua_State *L, const KeyEvent &p1) {
-    lua_pushstring(L, Key::StringFromKey(p1.key));
-    lua_newtable(L);
-    if (p1.shift) {
-      lua_pushboolean(L, true);
-      lua_setfield(L, -2, "shift");
-    }
-    if (p1.alt) {
-      lua_pushboolean(L, true);
-      lua_setfield(L, -2, "alt");
-    }
-    if (p1.ctrl) {
-      lua_pushboolean(L, true);
-      lua_setfield(L, -2, "ctrl");
-    }
-    return 2;
-  }
-
-  /*static*/ int Layout::l_EventPusher_Button(lua_State *L, int button) {
-    lua_pushnumber(L, button + 1);
-    return 1;
   }
 
   void Layout::Render(Renderer *renderer) const {
@@ -1223,17 +928,268 @@ namespace Frames {
     m_last_y = ny;
 
     if (sizechange) {
-      EventSizeTrigger();
+      EventTrigger(Event::Size);
     }
 
     if (sizechange || movechange) {
-      EventMoveTrigger();
+      EventTrigger(Event::Move);
     }
 
     // Todo: queue up movement events
   }
 
-  bool Layout::Sorter::operator()(const Layout *lhs, const Layout *rhs) const {
+  bool Layout::FECallback::Sorter::operator()(const Layout::FECallback &lhs, const Layout::FECallback &rhs) const {
+    return lhs.m_priority < rhs.m_priority;
+  }
+  
+  void Layout::FECallback::Teardown() const {
+    if (m_type == TYPE_LUA) {
+      // Derefcount, cleanup
+      lua_State *L = c.lua.L;
+      
+      // stack: ...
+      
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfevh");
+      lua_rawgeti(L, -1, c.lua.handle);
+      if (lua_tointeger(L, -1) > 1) {
+        // don't dealloc, just update
+        lua_pushinteger(L, lua_tointeger(L, -1) - 1);
+        lua_remove(L, -2);
+        lua_rawseti(L, -2, c.lua.handle);
+        lua_pop(L, 2);
+        // cleaned up!
+      } else {
+        // need a full dealloc
+        lua_pop(L, 1);
+        lua_pushnil(L);
+        lua_rawseti(L, -2, c.lua.handle);
+        lua_pop(L, 2);
+        // cleaned up, but still working
+        
+        // we need to clean up the forward lookup next, but keep a handle around so we can clean up the reverse lookup
+        lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fevh");
+        lua_rawgeti(L, -1, c.lua.handle);
+        // ... Frames_fevh func
+        luaL_unref(L, -2, c.lua.handle);
+        lua_remove(L, -2);
+        // ... func
+        
+        lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfevh");
+        lua_insert(L, -2);
+        lua_pushnil(L);
+        // ... Frames_rfevh func nil
+        lua_rawset(L, -3);
+        lua_pop(L, 1);
+        // cleaned up! really!
+      }
+    }
+  }
+  
+  int Layout::FECallback::luaF_prepare(EventHandle *eh) const {
+    lua_State *L = c.lua.L;
+    
+    int ctop = lua_gettop(L);
+    
+    // error handler
+    eh->GetTarget()->GetEnvironment()->Lua_PushErrorHandler(L);
+    
+    // get function
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fevh");
+    lua_rawgeti(L, -1, c.lua.handle);
+    lua_remove(L, -2);
+    
+    // target frame
+    eh->GetTarget()->l_push(L);
+    
+    // event handle
+    eh->luaF_push(L);
+    
+    return ctop;
+  }
+  
+  void Layout::FECallback::luaF_call(int stackfront) const {
+    // TODO: Better error handling!
+    lua_State *L = c.lua.L;
+    if (lua_pcall(L, lua_gettop(c.lua.L) - stackfront - 2, 0, stackfront + 1)) {
+      // Error occured. TODO detect LUA_ERRERR and complain about it?
+      lua_pop(L, 1);
+    }
+  }
+      
+  Layout::FEIterator::FEIterator() : m_state(STATE_COMPLETE), m_diveIndex(0), m_target(0), m_event(0) { };
+
+  Layout::FEIterator::FEIterator(Layout *target, const EventTypeBase *event) : m_state(STATE_DIVE), m_diveIndex(0), m_target(target), m_event(event) { // set to STATE_DIVE so that NextIndex() does the right thing
+    target->Obliterate_Lock();
+    
+    if (event->GetDive()) {
+      // Dive event! Accumulate everything we need
+      Layout *ctar = target;
+      while (ctar) {
+        m_dives.push_back(ctar);
+        ctar->Obliterate_Lock();
+        ctar = ctar->GetParent();
+      }
+      m_diveIndex = m_dives.size();
+      
+      IndexNext();
+    } else {
+      IndexNext();
+    }
+    
+    if (m_state != STATE_COMPLETE) {
+      m_current->LockFlagIncrement();
+    }
+  };
+  
+  Layout::FEIterator::FEIterator(const FEIterator &itr) : m_state(STATE_COMPLETE), m_diveIndex(0), m_target(0), m_event(0) {
+    *this = itr;
+  }
+  
+  void Layout::FEIterator::operator=(const FEIterator &itr) {
+    if (this == &itr) return;
+    
+    if (m_state != STATE_COMPLETE) {
+      IteratorUnlock(m_current);
+    }
+    
+    if (m_target) {
+      m_target->Obliterate_Unlock();
+    }
+    
+    for (int i = 0; i < (int)m_dives.size(); ++i) {
+      m_dives[i]->Obliterate_Unlock();
+    }
+    
+    m_state = itr.m_state;
+    m_dives = itr.m_dives;
+    m_diveIndex = itr.m_diveIndex;
+    m_target = itr.m_target;
+    m_event = itr.m_event;
+    m_current = itr.m_current;
+    m_last = itr.m_last;
+    
+    for (int i = 0; i < (int)m_dives.size(); ++i) {
+      m_dives[i]->Obliterate_Lock();
+    }
+    
+    if (m_target) {
+      m_target->Obliterate_Lock();
+    }
+    
+    if (m_state != STATE_COMPLETE) {
+      m_current->LockFlagIncrement();
+    }
+  }
+  
+  Layout::FEIterator::~FEIterator() {
+    if (m_state != STATE_COMPLETE) {
+      IteratorUnlock(m_current);
+    }
+    
+    if (m_target) {
+      m_target->Obliterate_Unlock();
+    }
+  }
+  
+  const Layout::FECallback &Layout::FEIterator::Get() const {
+    return *m_current;
+  }
+  
+  bool Layout::FEIterator::Complete() const {
+    return m_state == STATE_COMPLETE;
+  }
+  
+  void Layout::FEIterator::Next() {
+    EventMultiset::iterator last = m_current;
+    ++m_current;
+    
+    if (m_current == m_last) {
+      IndexNext();
+    }
+    
+    if (m_state != STATE_COMPLETE) {
+      m_current->LockFlagIncrement();
+    }
+    
+    IteratorUnlock(last);
+  }
+  
+  void Layout::FEIterator::IteratorUnlock(EventMultiset::iterator itr) {
+    itr->LockFlagDecrement();
+    if (!itr->LockFlagGet() && itr->DestroyFlagGet()) {
+      // TIME TO DESTROY
+      Layout *layout = m_target;
+      if (m_state == STATE_DIVE || m_state == STATE_BUBBLE) {
+        layout = m_dives[m_diveIndex];
+      }
+      
+      const EventTypeBase *event = m_event;
+      if (m_state == STATE_DIVE) {
+        event = event->GetDive();
+      } else if (m_state == STATE_BUBBLE) {
+        event = event->GetBubble();
+      }
+      
+      layout->EventDestroy(layout->m_events.find(event), itr);
+    }
+  }
+  
+  void Layout::FEIterator::IndexNext() {
+    while (true) {
+      if (m_state == STATE_DIVE) {
+        if (m_diveIndex == 0) {
+          m_state = STATE_MAIN;
+        } else {
+          --m_diveIndex;
+        }
+      } else if (m_state == STATE_MAIN) {
+        if (m_dives.empty()) {
+          m_state = STATE_COMPLETE;
+          return;
+        } else {
+          m_state = STATE_BUBBLE; // m_diveIndex is still 0
+        }
+      } else if (m_state == STATE_BUBBLE) {
+        if (m_diveIndex == (int)m_dives.size() - 1) {
+          m_state = STATE_COMPLETE;
+          return;
+        } else {
+          ++m_diveIndex;
+        }
+      }
+      
+      Layout *layout = LayoutGet();
+      const EventTypeBase *event = EventGet();
+      
+      // TODO: can probably be optimized by not doing a ton of lookups
+      if (layout->m_events.count(event)) {
+        // Sweet! We actually have events here
+        m_current = layout->m_events[event].begin();
+        m_last = layout->m_events[event].end();
+        return;
+      }
+    }
+  }
+  
+  Layout *Layout::FEIterator::LayoutGet() {
+    if (m_state == STATE_DIVE || m_state == STATE_BUBBLE) {
+      return m_dives[m_diveIndex];
+    } else {
+      return m_target;
+    }
+  }
+  
+  const EventTypeBase *Layout::FEIterator::EventGet() {
+    if (m_state == STATE_DIVE) {
+      return m_event->GetDive();
+    } else if (m_state == STATE_BUBBLE) {
+      return m_event->GetBubble();
+    } else {
+      return m_event;
+    }
+  }
+  
+  bool Layout::FrameOrderSorter::operator()(const Layout *lhs, const Layout *rhs) const {
     if (lhs->GetStrata() != rhs->GetStrata())
       return lhs->GetStrata() < rhs->GetStrata();
     if (lhs->GetLayer() != rhs->GetLayer())
@@ -1241,290 +1197,63 @@ namespace Frames {
     // they're the same, but we want a consistent sort that won't result in Z-fighting
     return lhs < rhs;
   }
-
-  bool operator==(const Layout::EventHandler &lhs, const Layout::EventHandler &rhs) { return memcmp(&lhs.c, &rhs.c, sizeof(lhs.c)) == 0; }
-
-  // eventery
-
-  FRAMES_FRAMEEVENT_DEFINE(Layout, Move, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-  FRAMES_FRAMEEVENT_DEFINE(Layout, Size, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseOver, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseMove, (const Point &pt), (EventHandle *handle, const Point &pt), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX, pt));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseMoveOutside, (const Point &pt), (EventHandle *handle, const Point &pt), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX, pt));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseOut, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseLeftUp, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseLeftUpOutside, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseLeftDown, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseLeftClick, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseMiddleUp, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseMiddleUpOutside, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseMiddleDown, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseMiddleClick, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseRightUp, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseRightUpOutside, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseRightDown, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseRightClick, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
-
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseButtonUp, (int button), (EventHandle *handle, int button), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX, button));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseButtonUpOutside, (int button), (EventHandle *handle, int button), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX, button));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseButtonDown, (int button), (EventHandle *handle, int button), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX, button));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseButtonClick, (int button), (EventHandle *handle, int button), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX, button));
-
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, MouseWheel, (int delta), (EventHandle *handle, int delta), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX, delta));
-
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, KeyDown, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX, kev));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, KeyType, (const std::string &text), (EventHandle *event, const std::string &text), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX, text));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, KeyRepeat, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX, kev));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout, KeyUp, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX, kev));
-
-  void Layout::INTERNAL_EventAttach(EventId id, const EventHandler &handler, float order) {
-    m_events[id].insert(std::make_pair(order, handler)); // kapowza!
-    EventAttached(id);
-  }
-  bool Layout::INTERNAL_EventDetach(EventId id, const EventHandler &handler, float order) {
-    // somewhat more complex, we need to actually find the handler
-    std::map<EventId, std::multimap<float, EventHandler> >::iterator itr = m_events.find(id);
-    if (itr == m_events.end()) {
-      return false;
-    }
-
-    std::multimap<float, EventHandler> &tab = itr->second;
-
-    // this can be done more efficiently if order isn't nan, but worry about that later
-    for (std::multimap<float, EventHandler>::iterator ev = tab.begin(); ev != tab.end(); ++ev) {
-      if (ev->second == handler && (isnan(order) || ev->first == order)) {
-        if (m_event_locked) {
-          ev->second.MarkErased();
-          m_event_buffered = true;
-        } else {
-          tab.erase(ev);
-
-          if (tab.empty()) {
-            m_events.erase(id);
-          }
-        }
-
-        EventDetached(id);
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  bool Layout::Event_Lock() {
-    bool storage = m_event_locked;
-    m_event_locked = true;
-    return storage;
-  }
-
-  void Layout::Event_Unlock(bool original) {
-    FRAMES_LAYOUT_CHECK(m_event_locked, "Unlocking frame event when already unlocked, internal error");
-    m_event_locked = original;
-    if (!m_event_locked && m_event_buffered) {
-      // in theory we could be more efficient by storing which events need to be taken care of, but ATM this really isn't a priority - buffering events will be rare
-      for (std::map<EventId, EventMap>::iterator itr = m_events.begin(); itr != m_events.end(); ) {
-        for (EventMap::iterator eitr = itr->second.begin(); eitr != itr->second.end(); ) {
-          if (eitr->second.IsErased()) {
-            EventMap::iterator ritr = eitr;
-            ++eitr;
-            itr->second.erase(ritr);
-          } else {
-            ++eitr;
-          }
-        }
-
-        if (itr->second.empty()) {
-          std::map<EventId, EventMap>::iterator ritr = itr;
-          ++itr;
-          m_events.erase(ritr);
-        } else {
-          ++itr;
-        }
-      }
-
-      // No EventRemoved events since we're not *actually* removing any events, just cleaning up a data structure
-
-      m_event_buffered = false;
-    }
-  }
-
-  bool Layout::Obliterate_Lock() {
-    bool storage = m_obliterate_locked;
-    m_obliterate_locked = true;
-    return storage;
-  }
-
-  void Layout::Obliterate_Unlock(bool original) {
-    FRAMES_LAYOUT_CHECK(m_obliterate_locked, "Unlocking frame obliterate when already unlocked, internal error");
-    m_obliterate_locked = original;
-    if (!m_obliterate_locked && m_obliterate_buffered) {
-      Obliterate(); // kaboom!
-    }
-  }
-
-  #define LFEH_CALL_CREATION(params, pushertype, call) \
-    void Layout::LuaFrameEventHandler::Call params const { \
-        CallSetup(L, handle); \
-    \
-        int parametercount = (*reinterpret_cast<typename LayoutHandlerMunger<void pushertype>::T>(pusher)) call; \
-    \
-        if (lua_pcall(L, parametercount + 2, 0, -(parametercount + 4))) { \
-          /* Error! */ \
-          lua_pop(L, 1); \
-        } \
-    \
-        CallTeardown(L); \
-      }
-
-  LFEH_CALL_CREATION((EventHandle *handle), (), (L));
-  LFEH_CALL_CREATION((EventHandle *handle, int value), (int), (L, value));
-  LFEH_CALL_CREATION((EventHandle *handle, const std::string &text), (const std::string &), (L, text));
-  LFEH_CALL_CREATION((EventHandle *handle, const Point &point), (const Point &), (L, point));
-  LFEH_CALL_CREATION((EventHandle *handle, const KeyEvent &keyevent), (const KeyEvent &), (L, keyevent));
-
-  void Layout::LuaFrameEventHandler::CallSetup(lua_State *L, EventHandle *eh) const {
-    // Create the handler table
-    lua_newtable(L);
-    // Stack: ... handle
-
-    // Set it up as our metatable
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehmt");
-    lua_setmetatable(L, -2);
-    // Stack: ... handle
-
-    // Register it properly
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
-    lua_pushvalue(L, -2);
-    lua_pushlightuserdata(L, eh);
-    lua_rawset(L, -3);
-    // Stack: ... handle Frames_ehl
-
-    // Prep our error handler
-    layout->GetEnvironment()->Lua_PushErrorHandler(L);
-    // Stack: ... handle Frames_ehl errhandle
-
-    // Now get our function call ready
-    // Get the function call itself
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
-    lua_rawgeti(L, -1, idx);
-    lua_remove(L, -2);
-    // Stack: ... handle Frames_ehl errhandle function
-
-    // Add the table
-    layout->l_push(L);
-    // Stack: ... handle Frames_ehl errhandle function frame
-
-    // Add our handler table
-    lua_pushvalue(L, -5);
-    // Stack: ... handle Frames_ehl errhandle function frame handle
-  }
-
-  void Layout::LuaFrameEventHandler::CallTeardown(lua_State *L) const {
-    // Stack: ... handle Frames_ehl errhandle
-
-    // Toss the error handler
-    lua_pop(L, 1);
-
-    // Clear out the frame lookup
-    lua_pushvalue(L, -2);
-    lua_pushnil(L);
-    lua_rawset(L, -3);
-    lua_pop(L, 1);
-    // Stack: ... handle
-
-    // And throw away the handle! :D
-    lua_pop(L, 1);
-  }
-
-  bool operator<(const Layout::LuaFrameEventHandler &lhs, const Layout::LuaFrameEventHandler &rhs) {
-    if (lhs.idx != rhs.idx) return lhs.idx < rhs.idx;
-    if (lhs.L != rhs.L) return lhs.L < rhs.L;
-    return 0;
-  }
-
-  // for remove, I need to be able to look it up via event idx priority
-  // actually really I need to have a refcounted point
-  template<typename Prototype> void Layout::l_EventAttach(lua_State *L, EventId event, int idx, float priority, typename LayoutHandlerMunger<Prototype>::T pusher) {
-    // Need to wrap up L and idx into a structure
-    // Then insert that structure
-    LuaFrameEventMap::iterator itr = m_lua_events.insert(std::make_pair(LuaFrameEventHandler(L, idx, this, reinterpret_cast<Utility::intfptr_t>(pusher)), 0)).first;
-    ++(itr->second);
-    INTERNAL_EventAttach(event, EventHandler(Delegate<typename Utility::FunctionPrefix<EventHandle *, Prototype>::T>(&itr->first, &LuaFrameEventHandler::Call), &itr->first), priority);
-  }
-
-  template<typename Prototype> bool Layout::l_EventDetach(lua_State *L, EventId event, int idx, float priority) {
-    // try to find the element
-    LuaFrameEventMap::iterator itr = m_lua_events.find(LuaFrameEventHandler(L, idx, this, 0));  // fake pusher index, but that isn't compared anyway
-    if (itr == m_lua_events.end()) {
-      return false;
-    }
-
-    return l_EventDetach(L, itr, event, EventHandler(Delegate<typename Utility::FunctionPrefix<EventHandle *, Prototype>::T>(&itr->first, &LuaFrameEventHandler::Call), &itr->first), priority);
-  }
-  bool Layout::l_EventDetach(lua_State *L, LuaFrameEventMap::iterator itr, EventId event, EventHandler handler, float priority) {
-    Environment::LuaStackChecker checker(L, GetEnvironment());
-
-    if (INTERNAL_EventDetach(event, handler, priority)) {
-      if (--(itr->second) == 0) {
-        // want to eliminate it entirely
-        m_lua_events.erase(itr);
-      }
-
-      // Success! Go decrement the count
-      // Right now we're assuming we don't have access to upvalues, but in reality we might. Maybe make this faster later?
-      int idx = itr->first.idx;
-      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfev");
-      lua_rawgeti(L, -1, idx);
-      if (lua_tonumber(L, -1) != 1) {
-        // stack: ... _cfev ct
-        lua_pushnumber(L, lua_tonumber(L, -1) - 1);
-        // stack: ... _cfev ct ct-1
-        lua_rawseti(L, -3, idx);
-        // stack: ... _cfev ct
-        lua_pop(L, 2);
-        // stack: ...
-      } else {
-        // our final decrement, clean things up
-        lua_pop(L, 1);
-
-        // stack: ... _cfev
-
-        lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfev");
-
-        // grab the value from the frame event table
-        lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
-        lua_rawgeti(L, -1, idx);
-
-        // stack: ... _cfev _rfev _fev value
-
-        // clear out the reverse event table
-        lua_pushnil(L);
-        // stack: ... _cfev _rfev _fev value nil
-        lua_rawset(L, -4);
-
-        // stack: ... _cfev _rfev _fev
-
-        // clear out the forward event table
-        luaL_unref(L, -1, idx);
-
-        // clear out the frame count table
-        lua_pushnil(L);
-        lua_rawseti(L, -3, idx);
-
-        // empty
-        lua_pop(L, 3);
-
-        // stack: ...
-      }
-
-      return true;
+  
+  void Layout::EventDestroy(EventLookup::iterator eventTable, EventMultiset::iterator toBeRemoved) {
+    if (toBeRemoved->LockFlagGet()) {
+      toBeRemoved->DestroyFlagSet();
     } else {
-      return false;
+      toBeRemoved->Teardown();
+      eventTable->second.erase(toBeRemoved);
+      if (eventTable->second.empty()) {
+        // we know nobody's got it locked, so . . .
+        m_events.erase(eventTable);
+      }
+    }
+  }
+  
+  void Layout::luaF_ClearEvents_Recursive(lua_State *L) {
+    // Take out all our event handlers
+    for (EventLookup::iterator itr = m_events.begin(); itr != m_events.end(); ) {
+      EventLookup::iterator next = itr;
+      ++next;
+      
+      for (EventMultiset::iterator eitr = itr->second.begin(); eitr != itr->second.end(); ) {
+        EventMultiset::iterator enext = eitr;
+        ++enext;
+        
+        bool nextend = (enext == itr->second.end());
+        
+        if (eitr->LuaIs() && eitr->LuaEnvironmentEqual(L)) {
+          EventDestroy(itr, eitr);
+        }
+        
+        eitr = enext;
+        
+        // The entire event multiset may have vanished out from underneath us.
+        // TODO maybe adapt the existing event iterators to make this less horrifying?
+        if (nextend) {
+          break;
+        }
+      }
+      
+      itr = next;
+    }
+    
+    // get children to clear events as well
+    for (ChildrenList::iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
+      (*itr)->luaF_ClearEvents_Recursive(L);
+    }
+  }
+
+  void Layout::Obliterate_Lock() {
+    ++m_obliterate_lock;
+  }
+
+  void Layout::Obliterate_Unlock() {
+    FRAMES_LAYOUT_CHECK(m_obliterate_lock, "Unlocking frame obliterate when already unlocked, internal error");
+    --m_obliterate_lock;
+    if (!m_obliterate_lock && m_obliterate_buffered) {
+      Obliterate(); // kaboom!
     }
   }
 
@@ -1636,6 +1365,118 @@ namespace Frames {
     return 1;
   }
 
+  /*static*/ int Layout::l_EventAttach(lua_State *L) {
+    l_checkparams(L, 3, 4);
+    
+    // Stack: layout eventhandle handler (priority)
+    
+    Layout *self = l_checkframe<Layout>(L, 1);
+    const EventTypeBase *event = l_checkevent(L, 2);
+    float priority = (float)luaL_optnumber(L, 4, 0.f);
+    
+    int handler = LUA_NOREF;
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfevh");
+    lua_pushvalue(L, 3);
+    lua_rawget(L, -2);
+    if (!lua_isnil(L, -1)) {
+      // Found element, need to retrieve ID and increment refcount
+      // Stack: ... _rfevh handleid
+      handler = lua_tointeger(L, -1);
+      lua_pop(L, 2);
+      
+      // Stack: ...
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfevh");
+      lua_rawgeti(L, -1, handler);
+      lua_pushinteger(L, lua_tointeger(L, -1) + 1);
+      lua_remove(L, -2);
+      lua_rawseti(L, -2, handler);
+      lua_pop(L, 1);
+      
+      // Stack: ...
+    } else {
+      // Didn't find element, need to insert element
+      // Set _fevh lookup
+      // Stack: ... _rfevh nil
+      lua_pop(L, 1);
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fevh");
+      // Stack: ... _rfevh _fevh
+      lua_pushvalue(L, 3);
+      // Stack: ... _rfevh _fevh function
+      handler = luaL_ref(L, -2);
+      lua_pop(L, 1);
+      // Stack: ... _rfevh
+      
+      // Set _rfevh lookup
+      lua_pushvalue(L, 3);
+      lua_pushinteger(L, handler);
+      lua_rawset(L, -3);
+      lua_pop(L, 1);
+      // Stack: ...
+      
+      // Insert into _cfevh
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfevh");
+      lua_pushinteger(L, 1);
+      lua_rawseti(L, -2, handler);
+      lua_pop(L, 1);
+      // Stack: ...
+    }
+    
+    // now we have all valid parameters!
+    // get the base lua environment
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua");
+    lua_State *L_base = (lua_State *)lua_touserdata(L, -1);
+    lua_pop(L, 1);
+  
+    self->m_events[event].insert(FECallback::CreateLua(L_base, handler, priority));
+    self->EventAttached(event);
+   
+    return 0;
+  }
+  
+  /*static*/ int Layout::l_EventDetach(lua_State *L) {
+    l_checkparams(L, 3, 4);
+    
+    // Stack: layout eventhandle handler (priority)
+    
+    Layout *self = l_checkframe<Layout>(L, 1);
+    const EventTypeBase *event = l_checkevent(L, 2);
+    float priority = (float)luaL_optnumber(L, 4, Utility::Undefined);
+    
+    int handler = LUA_NOREF;
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfevh");
+    lua_pushvalue(L, 3);
+    lua_rawget(L, -2);
+    if (lua_isnil(L, -1)) {
+      // well okay I guess we're done (not bothering to clean up stack)
+      return 0;
+    }
+    
+    lua_tointeger(L, -1);
+    lua_pop(L, 2);
+    
+    if (!self->m_events.count(event)) {
+      return 0;
+    }
+    
+    // get the base lua environment
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua");
+    lua_State *L_base = (lua_State *)lua_touserdata(L, -1);
+    lua_pop(L, 1);
+    
+    const std::multiset<FECallback, FECallback::Sorter> &eventSet = self->m_events.find(event)->second;
+    
+    // TODO: Make this faster if it ever becomes a bottleneck!
+    for (std::multiset<FECallback, FECallback::Sorter>::iterator itr = eventSet.begin(); itr != eventSet.end(); ++itr) {
+      if (!itr->DestroyFlagGet() && itr->LuaHandleEqual(L_base, handler) && (Utility::IsUndefined(priority) || itr->PriorityGet() == priority)) {
+        self->EventDestroy(self->m_events.find(event), itr);
+        self->EventDetached(event);
+        return 0;
+      }
+    }
+    
+    return 0;
+  }
+    
   /*static*/ int Layout::l_DebugDumpLayout(lua_State *L)  {
     l_checkparams(L, 1);
     Layout *self = l_checkframe<Layout>(L, 1);

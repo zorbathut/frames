@@ -1,4 +1,11 @@
 
+* Change l_ to luaF_
+* what kind of quotes am I using for includes >:(
+* really need a global assert function
+* Rename to Frame
+* Deal with notepad++ wanting to look inside my build directories
+* Better global register setup
+
 * #define CreateTagged(...) CreateTagged_imp(__FILE__, __LINE__, __VA_ARGS__)
 
 * event for focus change?

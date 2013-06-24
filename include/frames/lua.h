@@ -6,7 +6,20 @@
 #include <lua.hpp>
 #include <lauxlib.h>
 
+#include <string>
+
 namespace Frames {
+  class Point;
+  class KeyEvent;
+  class EventTypeBase;
+  
+  // luaF_push is intended to be extended by end users! Add more overloads as you see fit to conform to your event schema.
+  void luaF_push(lua_State *L, int x);
+  void luaF_push(lua_State *L, double x);
+  void luaF_push(lua_State *L, const std::string &x);
+  void luaF_push(lua_State *L, const Point &pt);
+  void luaF_push(lua_State *L, const KeyEvent &kev);
+  
   template <typename T> T *l_checkframe_fromregistry(lua_State *L, int index, int registry) {
     luaL_checktype(L, index, LUA_TTABLE);
     lua_pushvalue(L, index);
@@ -58,6 +71,24 @@ namespace Frames {
     if (lgt < mn || lgt > mx) {
       luaL_error(L, "Incorrect number of parameters %d (expecting between %d and %d)", lgt, mn, mx);
     }
+  }
+  
+  inline const EventTypeBase *l_checkevent(lua_State *L, int index) {
+    if (index < 0) index += lua_gettop(L) + 1;
+    
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
+    lua_pushvalue(L, index);
+    lua_rawget(L, -2);
+    
+    const EventTypeBase *ebf = (const EventTypeBase *)lua_touserdata(L, -1);
+    
+    if (!ebf) {
+      luaL_error(L, "Not a valid frame event handle");
+    }
+    
+    lua_pop(L, 2);
+    
+    return ebf;
   }
 }
 

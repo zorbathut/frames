@@ -67,7 +67,7 @@ namespace Frames {
       m_over = updated; // NOTE: ORDER IS IMPORTANT. Either MouseOut or MouseOver can destroy frames. We need to set m_over *first*, in case either of our calls destroy the new frame and m_over needs to be cleared!
 
       if (last) {
-        last->EventMouseOutTrigger();
+        last->EventTrigger(Event::MouseOut);
       }
 
       mouseover = true;
@@ -75,18 +75,18 @@ namespace Frames {
 
     // Do our mousemove messages
     if (m_over) {
-      m_over->EventMouseMoveTrigger(Point(x, y));
+      m_over->EventTrigger(Event::MouseMove, Point(x, y));
     }
 
     // Do our mousemoveout messages
     for (std::map<int, Layout *>::const_iterator itr = m_buttonDown.begin(); itr != m_buttonDown.end(); ++itr) {
       if (itr->second && itr->second != m_over) {
-        itr->second->EventMouseMoveOutsideTrigger(Point(x, y));
+        itr->second->EventTrigger(Event::MouseMoveoutside, Point(x, y));
       }
     }
 
     if (mouseover && m_over) {
-      m_over->EventMouseOverTrigger();
+      m_over->EventTrigger(Event::MouseOver);
     }
   }
 
@@ -99,13 +99,13 @@ namespace Frames {
     if (m_over) {
       m_buttonDown[button] = m_over;
 
-      m_over->EventMouseButtonDownTrigger(button);
+      m_over->EventTrigger(Event::MouseButtonDown, button);
       if (button == 0) {
-        m_over->EventMouseLeftDownTrigger();
+        m_over->EventTrigger(Event::MouseLeftDown);
       } else if (button == 1) {
-        m_over->EventMouseRightDownTrigger();
+        m_over->EventTrigger(Event::MouseRightDown);
       } else if (button == 2) {
-        m_over->EventMouseMiddleDownTrigger();
+        m_over->EventTrigger(Event::MouseMiddleDown);
       }
 
       return true;
@@ -119,26 +119,27 @@ namespace Frames {
 
     if (m_over) {
       consumed = true;
-      m_over->EventMouseButtonUpTrigger(button);
+      
+      m_over->EventTrigger(Event::MouseButtonUp, button);
       if (m_over) {
         if (button == 0) {
-          m_over->EventMouseLeftUpTrigger();
+          m_over->EventTrigger(Event::MouseLeftUp);
         } else if (button == 1) {
-          m_over->EventMouseRightUpTrigger();
+          m_over->EventTrigger(Event::MouseRightUp);
         } else if (button == 2) {
-          m_over->EventMouseMiddleUpTrigger();
+          m_over->EventTrigger(Event::MouseMiddleUp);
         }
       }
 
       if (m_over && m_buttonDown[button] == m_over) {
-        m_over->EventMouseButtonClickTrigger(button);
+        m_over->EventTrigger(Event::MouseButtonClick, button);
         if (m_over) {
           if (button == 0) {
-            m_over->EventMouseLeftClickTrigger();
+            m_over->EventTrigger(Event::MouseLeftClick);
           } else if (button == 1) {
-            m_over->EventMouseRightClickTrigger();
+            m_over->EventTrigger(Event::MouseRightClick);
           } else if (button == 2) {
-            m_over->EventMouseMiddleClickTrigger();
+            m_over->EventTrigger(Event::MouseMiddleClick);
           }
         }
       }
@@ -146,14 +147,15 @@ namespace Frames {
 
     Layout *mbd = m_buttonDown[button];
     if (mbd && mbd != m_over) {
-      mbd->EventMouseButtonUpOutsideTrigger(button);
+      mbd->EventTrigger(Event::MouseButtonUpoutside, button);
+
       if (mbd) {
         if (button == 0) {
-          mbd->EventMouseLeftUpOutsideTrigger();
+          mbd->EventTrigger(Event::MouseLeftUpoutside);
         } else if (button == 1) {
-          mbd->EventMouseRightUpOutsideTrigger();
+          mbd->EventTrigger(Event::MouseRightUpoutside);
         } else if (button == 2) {
-          mbd->EventMouseMiddleUpOutsideTrigger();
+          mbd->EventTrigger(Event::MouseMiddleUpoutside);
         }
       }
     }
@@ -169,7 +171,7 @@ namespace Frames {
   bool Environment::KeyDown(const KeyEvent &key) {
     m_lastEvent = key;
     if (m_focus) {
-      m_focus->EventKeyDownTrigger(key);
+      m_focus->EventTrigger(Event::KeyDown, key);
       return true;
     }
     return false;
@@ -177,7 +179,7 @@ namespace Frames {
 
   bool Environment::KeyType(const std::string &type) {
     if (m_focus) {
-      m_focus->EventKeyTypeTrigger(type);
+      m_focus->EventTrigger(Event::KeyType, type);
       return true;
     }
     return false;
@@ -186,7 +188,7 @@ namespace Frames {
   bool Environment::KeyRepeat(const KeyEvent &key) {
     m_lastEvent = key;
     if (m_focus) {
-      m_focus->EventKeyRepeatTrigger(key);
+      m_focus->EventTrigger(Event::KeyRepeat, key);
       return true;
     }
     return false;
@@ -195,7 +197,7 @@ namespace Frames {
   bool Environment::KeyUp(const KeyEvent &key) {
     m_lastEvent = key;
     if (m_focus) {
-      m_focus->EventKeyUpTrigger(key);
+      m_focus->EventTrigger(Event::KeyUp, key);
       return true;
     }
     return false;
@@ -291,6 +293,9 @@ namespace Frames {
       lua_pushcclosure(L, l_errorDefault, 2);
     }
 
+    // ==================
+    // FUNCTION METATABLES
+    
     // insert our framespec metatable table
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_mt");
     if (lua_isnil(L, -1)) {
@@ -299,7 +304,20 @@ namespace Frames {
     }
     lua_pop(L, 1);
 
-    // insert our registry table - luatable to lightuserdata. Split up by type, so we can do type checking and handle MI pointer conversion. Maybe make this optional? I think MI can be handled differently.
+    // insert the EventHandler metatable - this used to require Frames_ehl to be inserted first! (doesn't now because it doesn't do anything)
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehmt");
+    if (lua_isnil(L, -1)) {
+      // TODO: Actually create the EHMT
+      //EventHandle::INTERNAL_l_CreateMetatable(L);
+      lua_newtable(L);  // make this go away
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_ehmt");
+    }
+    lua_pop(L, 1);
+    
+    // ==================
+    //  FRAME REGISTRY
+    
+    // insert our frame registry table - luatable to lightuserdata. Split up by type, so we can do type checking and handle MI pointer conversion. Maybe make this optional? I think MI can be handled differently.
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
@@ -307,7 +325,7 @@ namespace Frames {
     }
     lua_pop(L, 1);
 
-    // insert our reverse registry table - lightuserdata to luatable. Does not need to be split up by type, we'll always be pushing it as a Layout*.
+    // insert our frame reverse registry table - lightuserdata to luatable. Does not need to be split up by type, we'll always be pushing it as a Layout*.
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
@@ -315,46 +333,47 @@ namespace Frames {
     }
     lua_pop(L, 1);
 
-    // insert our environment registry table - lightuserdata to error handle.
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_env");
+    // ==================
+    //  FRAME EVENT HANDLERS
+    
+    // insert our frame event handler table - registry ID to event callback. Managed with luaL_ref
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fevh");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_env");
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_fevh");
     }
     lua_pop(L, 1);
 
-    // insert our frame event table - registry ID to event callback
+    // insert our reverse frame event handler table - event callback to registry ID
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfevh");
+    if (lua_isnil(L, -1)) {
+      lua_newtable(L);
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_rfevh");
+    }
+    lua_pop(L, 1);
+
+    // insert our frame event handler count table - registry ID to refcount
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfevh");
+    if (lua_isnil(L, -1)) {
+      lua_newtable(L);
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_cfevh");
+    }
+    lua_pop(L, 1);
+    
+    // ==================
+    //  FRAME EVENTS
+    
+    // insert our frame event ID table - table to lightuserdata pointer
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
       lua_setfield(L, LUA_REGISTRYINDEX, "Frames_fev");
     }
     lua_pop(L, 1);
-
-    // insert our reverse frame event table - event callback to registry ID
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfev");
-    if (lua_isnil(L, -1)) {
-      lua_newtable(L);
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_rfev");
-    }
-    lua_pop(L, 1);
-
-    // insert our frame event count table - registry ID to refcount
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfev");
-    if (lua_isnil(L, -1)) {
-      lua_newtable(L);
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_cfev");
-    }
-    lua_pop(L, 1);
-
-    // insert the "root" lua environment
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua");
-    if (lua_isnil(L, -1)) {
-      lua_pushlightuserdata(L, L); // lol
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_lua");
-    }
-    lua_pop(L, 1);
-
+    
+    // ==================
+    //  FRAME EVENT HANDLES
+    
     // insert the EventHandler lookup table - table to lightuserdata pointer
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
     if (lua_isnil(L, -1)) {
@@ -362,12 +381,23 @@ namespace Frames {
       lua_setfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
     }
     lua_pop(L, 1);
-
-    // insert the EventHandler metatable - this has to happen after Frames_ehl has been inserted!
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehmt");
+    
+    // ==================
+    //  FRAME MISC
+    
+    // insert our environment registry table - lightuserdata to error handle.
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_env");
     if (lua_isnil(L, -1)) {
-      EventHandle::INTERNAL_l_CreateMetatable(L);
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_ehmt");
+      lua_newtable(L);
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_env");
+    }
+    lua_pop(L, 1);
+    
+    // insert the "root" lua environment
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua");
+    if (lua_isnil(L, -1)) {
+      lua_pushlightuserdata(L, L); // lol
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_lua");
     }
     lua_pop(L, 1);
 
@@ -387,7 +417,7 @@ namespace Frames {
     lua_pop(L, 1);
 
     // we'll need this for Root
-    RegisterLuaFrame<Layout>(L);
+    LuaRegisterFrameLookup<Layout>(L);
 
     // And insert the Root member into the frames
     lua_getglobal(L, "Frames");
@@ -402,13 +432,161 @@ namespace Frames {
     lua_pop(L, 3);  // the nil/root still on the stack, the Frames global, and the error handler
 
     m_lua_environments.insert(L);
+    
+    // Register our built-in frames
+    LuaRegisterFrame<Frame>(L);
+    LuaRegisterFrame<Text>(L);
+    LuaRegisterFrame<Texture>(L);
+    LuaRegisterFrame<Mask>(L);
+    LuaRegisterFrame<Raw>(L);
+    
+    // Register our built-in frame events
+    LuaRegisterEvent(L, &Event::Move);
+    LuaRegisterEvent(L, &Event::Size);
+
+    LuaRegisterEvent(L, &Event::MouseOver);
+    LuaRegisterEvent(L, &Event::MouseMove);
+    LuaRegisterEvent(L, &Event::MouseMoveoutside);
+    LuaRegisterEvent(L, &Event::MouseOut);
+
+    LuaRegisterEvent(L, &Event::MouseLeftUp);
+    LuaRegisterEvent(L, &Event::MouseLeftUpoutside);
+    LuaRegisterEvent(L, &Event::MouseLeftDown);
+    LuaRegisterEvent(L, &Event::MouseLeftClick);
+
+    LuaRegisterEvent(L, &Event::MouseMiddleUp);
+    LuaRegisterEvent(L, &Event::MouseMiddleUpoutside);
+    LuaRegisterEvent(L, &Event::MouseMiddleDown);
+    LuaRegisterEvent(L, &Event::MouseMiddleClick);
+
+    LuaRegisterEvent(L, &Event::MouseRightUp);
+    LuaRegisterEvent(L, &Event::MouseRightUpoutside);
+    LuaRegisterEvent(L, &Event::MouseRightDown);
+    LuaRegisterEvent(L, &Event::MouseRightClick);
+
+    LuaRegisterEvent(L, &Event::MouseButtonUp);
+    LuaRegisterEvent(L, &Event::MouseButtonUpoutside);
+    LuaRegisterEvent(L, &Event::MouseButtonDown);
+    LuaRegisterEvent(L, &Event::MouseButtonClick);
+
+    LuaRegisterEvent(L, &Event::MouseWheel);
+
+    LuaRegisterEvent(L, &Event::KeyDown);
+    LuaRegisterEvent(L, &Event::KeyType);
+    LuaRegisterEvent(L, &Event::KeyRepeat);
+    LuaRegisterEvent(L, &Event::KeyUp);
+      
+    LuaRegisterEvent(L, &Event::Render);
+  }
+  
+  void Environment::LuaRegisterEvent(lua_State *L, EventTypeBase *feb) {
+    LuaStackChecker lsc(L, this);
+    
+    lua_getfield(L, LUA_GLOBALSINDEX, "Frames");
+    if (lua_isnil(L, -1)) {
+      lua_pop(L, 1);
+      lua_newtable(L);
+      lua_pushvalue(L, -1);
+      lua_setfield(L, LUA_GLOBALSINDEX, "Frames");
+    }
+    
+    lua_getfield(L, -1, "Event");
+    if (lua_isnil(L, -1)) {
+      lua_pop(L, 1);
+      lua_newtable(L);
+      lua_pushvalue(L, -1);
+      lua_setfield(L, -3, "Event");
+    }
+    lua_remove(L, -2);
+    
+    // ... Event
+    
+    const char *name = feb->GetName();
+    int chunkstart = 0;
+    int chunkend = 1;
+    while (name[chunkend]) {
+      while (name[chunkend] && !isupper(name[chunkend])) {
+        ++chunkend;
+      }
+      
+      if (!name[chunkend]) {
+        break;
+      }
+      
+      // ... Event
+      
+      lua_pushlstring(L, name + chunkstart, chunkend - chunkstart);
+      lua_rawget(L, -2);
+      if (lua_isnil(L, -1)) {
+        // ... Event nil
+        lua_pop(L, 1);
+        // ... Event
+        lua_newtable(L);
+        lua_pushlstring(L, name + chunkstart, chunkend - chunkstart);
+        lua_pushvalue(L, -2);
+        // ... Event container Name container
+        lua_rawset(L, -4);
+        // ... Event container
+      }
+      // ... Event container
+      lua_remove(L, -2);
+      // ... container
+      chunkstart = chunkend;
+      ++chunkend;
+    }
+    
+    // ... Parent
+    
+    lua_pushlstring(L, name + chunkstart, chunkend - chunkstart);
+    lua_rawget(L, -2);
+    if (!lua_isnil(L, -1)) {
+      // Already registered? Maybe! TODO check to see if this is the right item, scream if it's not
+      lua_pop(L, 2);
+      return;
+    }
+    lua_pop(L, 1);
+    
+    lua_pushlstring(L, name + chunkstart, chunkend - chunkstart);
+    
+    // ... Parent name
+    
+    lua_newuserdata(L, 0);
+    
+    // ... Parent name handle
+    
+    lua_pushvalue(L, -1);
+    
+    // ... Parent name handle handle
+    
+    lua_insert(L, -4);
+    
+    // ... handle Parent name handle
+    
+    lua_rawset(L, -3);
+    
+    // ... handle Parent
+    
+    // handle is inserted in the public hierarchy!
+    
+    lua_pop(L, 1);
+    
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
+    lua_insert(L, -2);
+    
+    // ... Frames_fev handle
+    
+    lua_pushlightuserdata(L, feb);
+    lua_rawset(L, -3);
+    
+    // ... Frames_fev
+    
+    lua_pop(L, 1);
   }
 
   void Environment::LuaUnregister(lua_State *L) {
     LuaStackChecker lsc(L, this);
 
-    // First, we need to kill off the lua event system. This *can* allocate (and probably shouldn't, todo).
-    m_root->l_ClearLuaEvents_Recursive(L);
+    m_root->luaF_ClearEvents_Recursive(L);
 
     // It's somewhat unclear if this should be O(n) in the number of frames in the frames environment, or O(n) in the number of frames in the lua environment
     // We're doing lua environment for now, partially just because it's easier.
@@ -568,15 +746,7 @@ namespace Frames {
 
     m_lua_environments.erase(L); // and we're done!
   }
-
-  void Environment::LuaRegisterFramesBuiltin(lua_State *L) {
-    RegisterLuaFrameCreation<Frame>(L);
-    RegisterLuaFrameCreation<Text>(L);
-    RegisterLuaFrameCreation<Texture>(L);
-    RegisterLuaFrameCreation<Mask>(L);
-    RegisterLuaFrameCreation<Raw>(L);
-  }
-
+  
   Environment::Performance::Performance(Environment *env, float r, float g, float b) : m_env(env) { // handle left uninitialized intentionally
     if (m_env->GetConfiguration().performance) {
       m_handle = m_env->GetConfiguration().performance->Push(r, g, b);

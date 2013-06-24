@@ -7,6 +7,8 @@
 #include <GL/GLew.h>
 
 namespace Frames {
+  FRAMES_FRAMEEVENT_DEFINE(Render, ());
+  
   Raw *Raw::CreateBare(Layout *parent) {
     return new Raw(parent);
   }
@@ -23,11 +25,7 @@ namespace Frames {
 
   /*static*/ void Raw::l_RegisterFunctions(lua_State *L) {
     Frame::l_RegisterFunctions(L);
-
-    FRAMES_FRAMEEVENT_L_REGISTER(L, GetStaticType(), Render, &Layout::l_EventPusher_Default);
   }
-
-  FRAMES_FRAMEEVENT_DEFINE(Raw, Render, (), (EventHandle *handle), (FRAMES_FRAMEEVENT_DEFINE_PARAMETER_PREFIX));
 
   void Raw::RenderElement(Renderer *renderer) const {
     Frame::RenderElement(renderer);
@@ -38,8 +36,9 @@ namespace Frames {
 
     // TODO: alpha?
 
-    const_cast<Raw*>(this)->EventRenderTrigger(); // Yeah, this is ugly, but we're not about to rig up an entire new event system for const elements, and it's not like it would help anyway.
+    // Yeah, this is ugly, but we're not about to rig up an entire new event system for const elements, and it's not like it would help anyway.
     // This particular restriction *has* to be enforced by just telling users not to screw it up.
+    const_cast<Raw*>(this)->EventTrigger(Event::Render);
 
     renderer->StatePop();
   }

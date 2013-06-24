@@ -6,6 +6,8 @@
 #include "frames/frame.h"
 
 namespace Frames {
+  FRAMES_FRAMEEVENT_DECLARE(Render, ());
+
   class Raw : public Frame {
     friend class Environment;
 
@@ -15,9 +17,7 @@ namespace Frames {
 
     static const char *GetStaticType();
     virtual const char *GetType() const { return GetStaticType(); }
-
-    FRAMES_FRAMEEVENT_DECLARE(Render, (), (EventHandle *event));
-
+    
   protected:
     virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); Frame::l_Register(L); }
 

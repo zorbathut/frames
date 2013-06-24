@@ -63,7 +63,7 @@ namespace Frames {
     return 1;
   }
 
-  template <typename T> void Environment::RegisterLuaFrame(lua_State *L) {
+  template <typename T> void Environment::LuaRegisterFrameLookup(lua_State *L) {
     LuaStackChecker lsc(L, this);
 
     // First, we need to see if we even need to do all this registration foofery
@@ -118,28 +118,28 @@ namespace Frames {
     }
 
     // Pull out the various event tables
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fevh");
     if (lua_isnil(L, -1)) {
       LogError("Frames not yet registered to Lua environment");
       lua_pop(L, 3);
       return;
     }
 
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfev");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfevh");
     if (lua_isnil(L, -1)) {
       LogError("Frames not yet registered to Lua environment");
       lua_pop(L, 4);
       return;
     }
 
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfev");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfevh");
     if (lua_isnil(L, -1)) {
       LogError("Frames not yet registered to Lua environment");
       lua_pop(L, 5);
       return;
     }
 
-    // Stack: ... Frames_mt Frames_rg Frames_fev Frames_rfev Frames_cfev
+    // Stack: ... Frames_mt Frames_rg Frames_fevh Frames_rfevh Frames_cfevh
 
     // Now it's time to rig up the actual metatable that we plan to create
 
@@ -149,27 +149,28 @@ namespace Frames {
     // This will be our function lookup
     lua_newtable(L);
 
-    // Stack: ... Frames_mt Frames_rg Frames_fev Frames_rfev Frames_cfev metatable indexes
+    // Stack: ... Frames_mt Frames_rg Frames_fevh Frames_rfevh Frames_cfevh metatable indexes
     // This goes back to Layout::l_RegisterFunction - if this layout is changed, that function may need to be changed
+    // l_RegisterFunctions used to want a lot of these parameters so it could efficiently set up upvalues. Right now, we don't really care. This can probably be cleaned up quite a bit.
     T::l_RegisterFunctions(L);
 
     // Attach it as the index accessor
     lua_setfield(L, -2, "__index");
 
-    // Stack: ... Frames_mt Frames_rg Frames_fev Frames_rfev Frames_cfev metatable
+    // Stack: ... Frames_mt Frames_rg Frames_fevh Frames_rfevh Frames_cfevh metatable
 
     // Register the metatable
     lua_setfield(L, -6, T::GetStaticType());
 
-    // Stack: ... Frames_mt Frames_rg Frames_fev Frames_rfev Frames_cfev
+    // Stack: ... Frames_mt Frames_rg Frames_fevh Frames_rfevh Frames_cfevh
 
     lua_pop(L, 5);
   }
 
-  template <typename T> void Environment::RegisterLuaFrameCreation(lua_State *L) {
+  template <typename T> void Environment::LuaRegisterFrame(lua_State *L) {
     LuaStackChecker lsc(L, this);
 
-    RegisterLuaFrame<T>(L);
+    LuaRegisterFrameLookup<T>(L);
 
     // We need to insert our creation function
     lua_getglobal(L, "Frames");

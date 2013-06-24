@@ -4,7 +4,8 @@
 #define FRAMES_LAYOUT
 
 #include "frames/delegate.h"
-#include "frames/event_declaration.h"
+#include "frames/event.h"
+#include "frames/lua.h"
 #include "frames/input.h"
 #include "frames/noncopyable.h"
 #include "frames/point.h"
@@ -23,64 +24,194 @@ namespace Frames {
   class Rect;
   class Renderer;
   class Layout;
+  
+  FRAMES_FRAMEEVENT_DECLARE(Move, ());
+  FRAMES_FRAMEEVENT_DECLARE(Size, ());
 
-  // This class is passed as a parameter to every event handler.
-  // It's the method for requesting non-event-type-specific event information or modifying behavior about the event.
-  class EventHandle {
-  public:
-    EventHandle(const EventHandle &ev);
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseOver, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMove, (const Point &pt));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMoveoutside, (const Point &pt));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseOut, ());
 
-    Layout *GetTarget() const { return m_target; }
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUp, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUpoutside, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftDown, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftClick, ());
 
-    // Enabled when it's exited Sink mode, disabled again when entering bubble.
-    // If triggered, prevents future events for this message.
-    bool CanFinalize() const { return m_finalize_can; }
-    void Finalize();
-    bool GetFinalize() const { return m_finalize; }
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUp, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUpoutside, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleDown, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleClick, ());
 
-    // INTERNAL ONLY BELOW THIS LINE, we'll improve this later
-    static EventHandle INTERNAL_Initialize(Layout *layout);
-    void INTERNAL_SetCanFinalize(bool finalizeable) { m_finalize_can = finalizeable; }
-    static void INTERNAL_l_CreateMetatable(lua_State *L);
-  private:
-    EventHandle();
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUp, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUpoutside, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightDown, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightClick, ());
 
-    Layout *m_target;
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUp, (int button));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUpoutside, (int button));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonDown, (int button));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonClick, (int button));
 
-    bool m_finalize;
-    bool m_finalize_can;
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseWheel, (int delta));
 
-    static int l_GetTarget(lua_State *L);
-    static int l_CanFinalize(lua_State *L);
-    static int l_Finalize(lua_State *L);
-    static int l_GetFinalize(lua_State *L);
-  };
-
-  template<typename F> struct LayoutHandlerMunger;
-  template<> struct LayoutHandlerMunger<void ()> { typedef int (*T)(lua_State *); };
-  template<typename P1> struct LayoutHandlerMunger<void (P1)> { typedef int (*T)(lua_State *, P1); };
-  template<typename P1, typename P2> struct LayoutHandlerMunger<void (P1, P2)> { typedef int (*T)(lua_State *, P1, P2); };
-  template<typename P1, typename P2, typename P3> struct LayoutHandlerMunger<void (P1, P2, P3)> { typedef int (*T)(lua_State *, P1, P2, P3); };
-  template<typename P1, typename P2, typename P3, typename P4> struct LayoutHandlerMunger<void (P1, P2, P3, P4)> { typedef int (*T)(lua_State *, P1, P2, P3, P4); };
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyDown, (const KeyEvent &kev));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyType, (const std::string &text));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyRepeat, (const KeyEvent &kev));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyUp, (const KeyEvent &kev));
 
   typedef intptr_t EventId;
 
   class Layout : Noncopyable {
   private:
     friend class Environment;
-    template<typename> friend class INTERNAL_EventHandlerCaller;
-    template<typename> friend class INTERNAL_EventDispatch;
-    template<typename> friend class INTERNAL_EventDispatchBubble;
+    
+    struct FrameOrderSorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
+    
+    // Event system
+    
+    // Must function properly when copied by value!
+    struct FECallback {
+    public:
+      // NOTE: this works because delegate is POD
+      FECallback() : m_type(TYPE_INVALID), m_priority(0), m_destroy(false), m_lock(0) { }
+      ~FECallback() { }
+      
+      template<typename T> static FECallback CreateNative(Delegate<T> din, float priority) {
+        BOOST_STATIC_ASSERT(sizeof(Delegate<T>) == sizeof(Delegate<void ()>));
+        
+        FECallback rv;
+        rv.m_priority = priority;
+        
+        rv.m_type = TYPE_NATIVE;
+        memcpy(rv.c.nativeDelegate, &din, sizeof(din)); // TODO: this is probably slower than necessary, but type aliasing makes it a nightmare otherwise
+        
+        return rv;
+      }
+      
+      static FECallback CreateLua(lua_State *L, int handle, float priority) {
+        FECallback rv;
+        rv.m_priority = priority;
+        
+        rv.m_type = TYPE_LUA;
+        rv.c.lua.L = L;
+        rv.c.lua.handle = handle;
+        
+        return rv;
+      }
 
-    struct LuaFrameEventHandler;
-    struct Sorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
+      struct Sorter {
+        bool operator()(const FECallback &lhs, const FECallback &rhs) const;
+      };
+      
+      void Call(EventHandle *eh) const {
+        if (m_type == TYPE_NATIVE) {
+          // TODO: This is *definitely* slower than necessary. Fix this!
+          Delegate<void (EventHandle *)> dg;
+          memcpy(&dg, c.nativeDelegate, sizeof(dg));
+          dg(eh);
+        } else if (m_type == TYPE_LUA) {
+          int stackfront = luaF_prepare(eh);
+          luaF_call(stackfront);
+        }
+      }
+      
+      template <typename P1> void Call(EventHandle *eh, P1 p1) const {
+        if (m_type == TYPE_NATIVE) {
+          // TODO: This is *definitely* slower than necessary. Fix this!
+          Delegate<void (EventHandle *, P1)> dg;
+          memcpy(&dg, c.nativeDelegate, sizeof(dg));
+          dg(eh, p1);
+        } else if (m_type == TYPE_LUA) {
+          int stackfront = luaF_prepare(eh);
+          luaF_push(c.lua.L, p1);
+          luaF_call(stackfront);
+        }
+      }
+      
+      bool NativeIs() const { return m_type == TYPE_NATIVE; }
+      template<typename T> bool NativeCallbackEqual(Delegate<T> din) const {
+        return NativeIs() && memcmp(&din, c.nativeDelegate, sizeof(din)) == 0;
+      }
+      
+      bool LuaIs() const { return m_type == TYPE_LUA; }
+      bool LuaEnvironmentEqual(lua_State *L) const {
+        return LuaIs() && c.lua.L == L;
+      }
+      bool LuaHandleEqual(lua_State *L, int handle) const {
+        return LuaIs() && c.lua.L == L && c.lua.handle == handle;
+      }
+      
+      float PriorityGet() const { return m_priority; }
+      
+      bool DestroyFlagGet() const { return m_destroy; }
+      void DestroyFlagSet() const { m_destroy = true; }
+      
+      bool LockFlagGet() const { return m_lock; }
+      void LockFlagIncrement() const { ++m_lock; }  // must store result and pass it to LockFlagDecrement
+      void LockFlagDecrement() const { --m_lock; }
+      
+      void Teardown() const;  // cleans up the underlying resources, if any. Not the same as a destructor! This isn't RAII for efficiency reasons.
+      
+    private:
+      enum { TYPE_ERASED, TYPE_INVALID, TYPE_NATIVE, TYPE_LUA } m_type;
+      
+      // the delegate itself - this is not the right type, it is casted appropriately by Call
+      union {
+        char nativeDelegate[sizeof(Delegate<void ()>)];
+        struct {
+          lua_State *L;
+          int handle;
+        } lua;
+      } c;
 
-  protected:
-    class EventHandler;
-
+      float m_priority;
+      
+      // "mutable" because they don't contribute to the sorting, so we need them to be modifiable even when used as multiset key
+      mutable bool m_destroy;
+      mutable int m_lock;
+      
+      // Lua infrastructure
+      int luaF_prepare(EventHandle *eh) const;  // prepares the function pointer and early parameters
+      void luaF_call(int stackfront) const;
+    };
+    
+    typedef std::multiset<FECallback, FECallback::Sorter> EventMultiset;
+    typedef std::map<const EventTypeBase *, std::multiset<FECallback, FECallback::Sorter> > EventLookup;
+    
+    class FEIterator {
+    public:
+      FEIterator();
+      FEIterator(Layout *target, const EventTypeBase *event);
+      FEIterator(const FEIterator &itr);
+      void operator=(const FEIterator &itr);
+      ~FEIterator();
+      
+      const FECallback &Get() const;
+      bool Complete() const;
+      void Next();
+      
+    private:
+      void IteratorUnlock(EventMultiset::iterator itr); // iterator may be invalidated by this function
+      void IndexNext();
+      
+      Layout *LayoutGet();
+      const EventTypeBase *EventGet();
+      
+      enum State { STATE_DIVE, STATE_MAIN, STATE_BUBBLE, STATE_COMPLETE };
+      State m_state;
+      
+      std::vector<Layout *> m_dives;
+      int m_diveIndex;
+      
+      Layout *m_target;
+      const EventTypeBase *m_event;
+      
+      EventMultiset::iterator m_current;
+      EventMultiset::iterator m_last;
+    };
+    
   public:
-    typedef std::multimap<float, EventHandler> EventMap;
-
     static const char *GetStaticType();
     virtual const char *GetType() const { return GetStaticType(); }
 
@@ -100,42 +231,6 @@ namespace Frames {
     Layout *GetFrameUnder(int x, int y);
 
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
-    // Events?
-
-    FRAMES_FRAMEEVENT_DECLARE(Move, (), (EventHandle *event));
-    FRAMES_FRAMEEVENT_DECLARE(Size, (), (EventHandle *event));
-
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseOver, (), (EventHandle *event));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMove, (const Point &pt), (EventHandle *event, const Point &pt));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMoveOutside, (const Point &pt), (EventHandle *event, const Point &pt));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseOut, (), (EventHandle *event));
-
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUp, (), (EventHandle *event));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUpOutside, (), (EventHandle *event));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftDown, (), (EventHandle *event));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftClick, (), (EventHandle *event));
-
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUp, (), (EventHandle *event));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUpOutside, (), (EventHandle *event));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleDown, (), (EventHandle *event));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleClick, (), (EventHandle *event));
-
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUp, (), (EventHandle *event));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUpOutside, (), (EventHandle *event));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightDown, (), (EventHandle *event));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightClick, (), (EventHandle *event));
-
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUp, (int button), (EventHandle *event, int button));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUpOutside, (int button), (EventHandle *event, int button));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonDown, (int button), (EventHandle *event, int button));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonClick, (int button), (EventHandle *event, int button));
-
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseWheel, (int delta), (EventHandle *event, int delta));
-
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyDown, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyType, (const std::string &text), (EventHandle *event, const std::string &text));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyRepeat, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev));
-    FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyUp, (const KeyEvent &kev), (EventHandle *event, const KeyEvent &kev));
 
     const char *GetNameStatic() const { return m_name_static; }
     void SetNameStatic(const char *name) { m_name_static = name; }  // WARNING: This does not make a copy! The const char* must have a lifetime longer than this frame.
@@ -146,8 +241,15 @@ namespace Frames {
     const std::string &GetNameDynamic() const { return m_name_dynamic; }
     void SetNameDynamic(const std::string &name) { m_name_dynamic = name; }
 
-    typedef std::set<Layout *, Sorter> ChildrenList;
+    typedef std::set<Layout *, FrameOrderSorter> ChildrenList;
     const ChildrenList &GetChildren() { return m_children; }
+    
+    // Events
+    template <typename Parameters> void EventAttach(const EventType<Parameters> &event, typename EventType<Parameters>::TypeDelegate handler, float priority = 0.0);
+    template <typename Parameters> void EventDetach(const EventType<Parameters> &event, typename EventType<Parameters>::TypeDelegate handler, float priority = Utility::Undefined);
+    
+    inline void EventTrigger(const EventType<void ()> &event);
+    template <typename P1> void EventTrigger(const EventType<void (P1)> &event, typename Utility::MakeConstRef<P1>::T p1);
 
     Environment *GetEnvironment() const { return m_env; }
 
@@ -204,13 +306,12 @@ namespace Frames {
     virtual void RenderElement(Renderer *renderer) const { };
     virtual void RenderElementPost(Renderer *renderer) const { };
 
-    // Event-related
-    bool HasEvent(EventId id) const;
-    
     // make sure you call these down if you override them
-    virtual void EventAttached(EventId id);
-    virtual void EventDetached(EventId id);
-
+    bool EventHookedIs(const EventTypeBase &event) const;
+        
+    virtual void EventAttached(const EventTypeBase *id);
+    virtual void EventDetached(const EventTypeBase *id);
+    
     // Lua
     virtual void l_Register(lua_State *L) const { l_RegisterWorker(L, GetStaticType()); } // see Layout::l_Register for what yours should look like
     void l_RegisterWorker(lua_State *L, const char *name) const;
@@ -218,86 +319,8 @@ namespace Frames {
     static void l_RegisterFunctions(lua_State *L);
 
     static void l_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *));
-    template<typename Prototype> static void l_RegisterEvent(lua_State *L, const char *owner, const char *nameAttach, const char *nameDetach, EventId eventId, typename LayoutHandlerMunger<Prototype>::T pusher);
-
-    template<typename Prototype> static int l_RegisterEventAttach(lua_State *L);
-    template<typename Prototype> static int l_RegisterEventDetach(lua_State *L);
-
-    void l_ClearLuaEvents(lua_State *lua);
-    void l_ClearLuaEvents_Recursive(lua_State *lua);
-
-    static int l_EventPusher_Default(lua_State *L);
-    static int l_EventPusher_Default(lua_State *L, int p1);
-    static int l_EventPusher_Default(lua_State *L, const std::string &pt);
-    static int l_EventPusher_Default(lua_State *L, const Point &pt);
-    static int l_EventPusher_Default(lua_State *L, const KeyEvent &pt);
-
-    static int l_EventPusher_Button(lua_State *L, int button);
-
-    // Various internal-only functionality
-    void INTERNAL_EventAttach(EventId id, const EventHandler &handler, float order);
-    bool INTERNAL_EventDetach(EventId id, const EventHandler &handler, float order);
-
-    class EventHandler {
-    public:
-      // NOTE: this works because delegate is POD
-      EventHandler() { }
-      template<typename T> EventHandler(Delegate<T> din) : m_type(TYPE_NATIVE), m_lua(0) {
-        typedef Delegate<T> dintype;
-        BOOST_STATIC_ASSERT(sizeof(dintype) == sizeof(Delegate<void ()>));
-
-        *reinterpret_cast<dintype *>(c.m_delegate) = din;
-      }
-      template<typename T> EventHandler(Delegate<T> din, const LuaFrameEventHandler *lua) : m_type(TYPE_LUA), m_lua(lua) {
-        typedef Delegate<T> dintype;
-        BOOST_STATIC_ASSERT(sizeof(dintype) == sizeof(Delegate<void ()>));
-
-        *reinterpret_cast<dintype *>(c.m_delegate) = din;
-      }
-      ~EventHandler() { }
-
-      template<typename T1> void Call(T1 t1) const {
-        if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1)> *>(c.m_delegate))(t1);
-      }
-
-      template<typename T1, typename T2> void Call(T1 t1, T2 t2) const {
-        if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2)> *>(c.m_delegate))(t1, t2);
-      }
-
-      template<typename T1, typename T2, typename T3> void Call(T1 t1, T2 t2, T3 t3) const {
-        if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2, T3)> *>(c.m_delegate))(t1, t2, t3);
-      }
-
-      template<typename T1, typename T2, typename T3, typename T4> void Call(T1 t1, T2 t2, T3 t3, T4 t4) const {
-        if (!IsErased()) (*reinterpret_cast<const Delegate<void (T1, T2, T3, T4)> *>(c.m_delegate))(t1, t2, t3, t4);
-      }
-
-      bool IsNative() const { return m_type == TYPE_NATIVE; }
-
-      bool IsLua() const { return m_type == TYPE_LUA; }
-      const LuaFrameEventHandler *GetLua() const { return m_lua; }
-
-      bool IsErased() const { return m_type == TYPE_ERASED; }
-      void MarkErased() { /* TODO: make sure it is not yet erased */ m_type = TYPE_ERASED; m_lua = 0; }
-
-    private:
-      union {
-        char m_delegate[sizeof(Delegate<void ()>)];
-      } c;
-
-      enum { TYPE_ERASED, TYPE_NATIVE, TYPE_LUA } m_type;
-
-      union {
-        const LuaFrameEventHandler *m_lua;
-      };
-      
-      friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);
-    };
 
   private:
-    friend bool operator==(const EventHandler &lhs, const EventHandler &rhs);
-    friend struct EventhandlerInfo;
-
     void Render(Renderer *renderer) const;
 
     // Layout engine
@@ -355,48 +378,21 @@ namespace Frames {
     const char *m_name_static;
     int m_name_id;
     std::string m_name_dynamic;
-
+    
     // Event system
-    std::map<EventId, EventMap> m_events;
-    bool m_event_locked;
-    bool m_event_buffered;
-    bool Event_Lock(); // must store the result of this to pass back into Unlock
-    void Event_Unlock(bool original);
+    EventLookup m_events;
+    void EventDestroy(EventLookup::iterator eventTable, EventMultiset::iterator toBeRemoved);
+    
+    void luaF_ClearEvents_Recursive(lua_State *L);
 
-    // Obliterate buffering (sort of related to the event system)
-    bool m_obliterate_locked;
+    // Obliterate buffering (sort of related to the event system) - todo make this take up less space
+    int m_obliterate_lock;
     bool m_obliterate_buffered;
-    bool Obliterate_Lock(); // must store the result of this to pass back into Unlock
-    void Obliterate_Unlock(bool original); // note that, after calling this function, the frame might eat itself
+    void Obliterate_Lock();
+    void Obliterate_Unlock(); // note that, after calling this function, the frame might eat itself
 
     // Global environment
     Environment *m_env;
-
-    // Lua frame event system
-    struct LuaFrameEventHandler {
-      LuaFrameEventHandler(lua_State *L, int idx, Layout *layout, Utility::intfptr_t pusher) : L(L), layout(layout), pusher(pusher), idx(idx) { };
-      lua_State *L;
-      Layout *layout; // we need this so we can push the right frame in
-      Utility::intfptr_t pusher; // this is cast to whatever other function type may be necessary
-      int idx;
-      
-      void Call(EventHandle *handle) const;
-      void Call(EventHandle *handle, int p1) const;
-      void Call(EventHandle *handle, const std::string &text) const;
-      void Call(EventHandle *handle, const Point &pt) const;
-      void Call(EventHandle *handle, const KeyEvent &ke) const;
-
-    private:
-      void CallSetup(lua_State *L, EventHandle *eh) const;
-      void CallTeardown(lua_State *L) const;
-    };
-    friend bool operator<(const LuaFrameEventHandler &lhs, const LuaFrameEventHandler &rhs);
-    typedef std::map<LuaFrameEventHandler, int> LuaFrameEventMap; // second parameter is refcount
-    template<typename Prototype> void l_EventAttach(lua_State *L, EventId event, int idx, float priority, typename LayoutHandlerMunger<Prototype>::T pusher);
-    template<typename Prototype> bool l_EventDetach(lua_State *L, EventId event, int idx, float priority);
-    bool l_EventDetach(lua_State *L, LuaFrameEventMap::iterator itr, EventId event, EventHandler handler, float priority);
-    LuaFrameEventMap m_lua_events;
-    // NOTE: refcount is just for our internal refcounting! we need to change the global count every time this goes up or down
 
     // Lua bindings
     static int l_GetLeft(lua_State *L);
@@ -413,7 +409,10 @@ namespace Frames {
     static int l_GetName(lua_State *L);
     static int l_GetNameFull(lua_State *L);
     static int l_GetType(lua_State *L);
-
+    
+    static int l_EventAttach(lua_State *L);
+    static int l_EventDetach(lua_State *L);
+    
     static int l_DebugDumpLayout(lua_State *L);
   };
 
@@ -426,5 +425,7 @@ namespace Frames {
 
   #define CreateTagged(args...) CreateTagged_imp(__FILE__, __LINE__, ## args)
 }
+
+#include "frames/layout_template_inline.h"
 
 #endif
