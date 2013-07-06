@@ -942,10 +942,11 @@ namespace Frame {
     return lhs.m_priority < rhs.m_priority;
   }
   
-  void Layout::FECallback::Teardown() const {
+  void Layout::FECallback::Teardown(Environment *env) const {
     if (m_type == TYPE_LUA) {
       // Derefcount, cleanup
       lua_State *L = c.lua.L;
+      Environment::LuaStackChecker lsc(L, env);
       
       // stack: ...
       
@@ -963,7 +964,7 @@ namespace Frame {
         lua_pop(L, 1);
         lua_pushnil(L);
         lua_rawseti(L, -2, c.lua.handle);
-        lua_pop(L, 2);
+        lua_pop(L, 1);
         // cleaned up, but still working
         
         // we need to clean up the forward lookup next, but keep a handle around so we can clean up the reverse lookup
@@ -1202,7 +1203,7 @@ namespace Frame {
     if (toBeRemoved->LockFlagGet()) {
       toBeRemoved->DestroyFlagSet();
     } else {
-      toBeRemoved->Teardown();
+      toBeRemoved->Teardown(m_env);
       eventTable->second.erase(toBeRemoved);
       if (eventTable->second.empty()) {
         // we know nobody's got it locked, so . . .

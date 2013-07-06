@@ -151,7 +151,7 @@ namespace Frame {
       void LockFlagIncrement() const { ++m_lock; }  // must store result and pass it to LockFlagDecrement
       void LockFlagDecrement() const { --m_lock; }
       
-      void Teardown() const;  // cleans up the underlying resources, if any. Not the same as a destructor! This isn't RAII for efficiency reasons.
+      void Teardown(Environment *env) const;  // cleans up the underlying resources, if any. Not the same as a destructor! This isn't RAII for efficiency reasons. Environment provided for debug hooks.
       
     private:
       enum { TYPE_ERASED, TYPE_INVALID, TYPE_NATIVE, TYPE_LUA } m_type;
