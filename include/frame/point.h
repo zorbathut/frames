@@ -3,7 +3,7 @@
 #ifndef FRAME_POINT
 #define FRAME_POINT
 
-#include "frames/utility.h"
+#include "frame/utility.h"
 
 namespace Frame {
   struct Point {

@@ -1,5 +1,5 @@
 
-#include "frames/stream.h"
+#include "frame/stream.h"
 
 namespace Frame {
   StreamFile *StreamFile::Create(const std::string &fname) {

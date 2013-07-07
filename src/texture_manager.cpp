@@ -1,9 +1,9 @@
 
-#include "frames/texture_manager.h"
+#include "frame/texture_manager.h"
 
-#include "frames/configuration.h"
-#include "frames/environment.h"
-#include "frames/texture_config.h"
+#include "frame/configuration.h"
+#include "frame/environment.h"
+#include "frame/texture_config.h"
 
 namespace Frame {
   TextureBacking::TextureBacking(Environment *env) :

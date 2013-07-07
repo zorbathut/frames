@@ -1,17 +1,17 @@
 
-#include "frames/environment.h"
-#include "frames/environment_register.h"
+#include "frame/environment.h"
+#include "frame/environment_register.h"
 
-#include "frames/frame.h"
-#include "frames/renderer.h"
-#include "frames/text_manager.h"
-#include "frames/texture_manager.h"
+#include "frame/frame.h"
+#include "frame/renderer.h"
+#include "frame/text_manager.h"
+#include "frame/texture_manager.h"
 
 // these exist just for the lua init
-#include "frames/text.h"
-#include "frames/texture.h"
-#include "frames/mask.h"
-#include "frames/raw.h"
+#include "frame/text.h"
+#include "frame/texture.h"
+#include "frame/mask.h"
+#include "frame/raw.h"
 
 #include <GL/gl.h>
 

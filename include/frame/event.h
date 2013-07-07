@@ -1,9 +1,9 @@
 #ifndef FRAME_EVENT
 #define FRAME_EVENT
 
-#include "frames/utility.h"
-#include "frames/noncopyable.h"
-#include "frames/delegate.h"
+#include "frame/utility.h"
+#include "frame/noncopyable.h"
+#include "frame/delegate.h"
 
 #include <lua.hpp>
 

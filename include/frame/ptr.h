@@ -3,7 +3,7 @@
 #ifndef FRAME_PTR
 #define FRAME_PTR
 
-#include "frames/noncopyable.h"
+#include "frame/noncopyable.h"
 
 namespace Frame {
   template <typename T> class Ptr {

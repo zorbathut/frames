@@ -3,7 +3,7 @@
 #ifndef FRAME_ENVIRONMENT_REGISTER
 #define FRAME_ENVIRONMENT_REGISTER
 
-#include "frames/environment.h"
+#include "frame/environment.h"
 
 #include "lua.hpp"
 

@@ -3,7 +3,7 @@
 #ifndef FRAME_NONCOPYABLE
 #define FRAME_NONCOPYABLE
 
-#include "frames/config.h"
+#include "frame/config.h"
 
 #ifdef FRAME_BOOST_ENABLED
 #include <boost/noncopyable.hpp>

@@ -1,8 +1,8 @@
 
-#include "frames/lua.h"
+#include "frame/lua.h"
 
-#include "frames/point.h"
-#include "frames/input.h"
+#include "frame/point.h"
+#include "frame/input.h"
 
 namespace Frame {
   void luaF_push(lua_State *L, int x) {

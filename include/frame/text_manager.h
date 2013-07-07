@@ -12,10 +12,10 @@
 
 #include <boost/bimap.hpp>
 
-#include "frames/color.h"
-#include "frames/noncopyable.h"
-#include "frames/ptr.h"
-#include "frames/rect.h"
+#include "frame/color.h"
+#include "frame/noncopyable.h"
+#include "frame/ptr.h"
+#include "frame/rect.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H

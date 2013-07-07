@@ -3,7 +3,7 @@
 #ifndef FRAME_RECT
 #define FRAME_RECT
 
-#include "frames/point.h"
+#include "frame/point.h"
 
 namespace Frame {
   struct Rect {

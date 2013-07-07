@@ -1,10 +1,10 @@
 
-#include "frames/renderer.h"
+#include "frame/renderer.h"
 
-#include "frames/environment.h"
-#include "frames/rect.h"
-#include "frames/texture_manager.h"
-#include "frames/utility.h"
+#include "frame/environment.h"
+#include "frame/rect.h"
+#include "frame/texture_manager.h"
+#include "frame/utility.h"
 
 #include "boost/static_assert.hpp"
 

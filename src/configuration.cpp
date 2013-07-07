@@ -1,10 +1,10 @@
 
-#include "frames/configuration.h"
+#include "frame/configuration.h"
 
-#include "frames/environment.h"
-#include "frames/loader.h"
-#include "frames/stream.h"
-#include "frames/texture_config.h"
+#include "frame/environment.h"
+#include "frame/loader.h"
+#include "frame/stream.h"
+#include "frame/texture_config.h"
 
 #include <cstdio>
 #include <cstring>

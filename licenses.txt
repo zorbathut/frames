@@ -1,1 +1,1 @@
-Frames includes Don Clugston's Fast Delegate library. Its license requires that I provide you with a link to the license text: http://www.codeproject.com/info/cpol10.aspx
+Frame includes Don Clugston's Fast Delegate library. Its license requires that I provide you with a link to the license text: http://www.codeproject.com/info/cpol10.aspx

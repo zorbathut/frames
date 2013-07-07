@@ -3,9 +3,9 @@
 #ifndef FRAME_TEXT
 #define FRAME_TEXT
 
-#include "frames/frame.h"
+#include "frame/frame.h"
 
-#include "frames/text_manager.h"
+#include "frame/text_manager.h"
 
 namespace Frame {
   class Text : public Frame {

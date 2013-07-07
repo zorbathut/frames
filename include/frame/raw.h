@@ -3,7 +3,7 @@
 #ifndef FRAME_RAW
 #define FRAME_RAW
 
-#include "frames/frame.h"
+#include "frame/frame.h"
 
 namespace Frame {
   FRAME_FRAMEEVENT_DECLARE(Render, ());

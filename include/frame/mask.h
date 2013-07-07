@@ -3,7 +3,7 @@
 #ifndef FRAME_MASK
 #define FRAME_MASK
 
-#include "frames/frame.h"
+#include "frame/frame.h"
 
 namespace Frame {
   class Mask : public Frame {

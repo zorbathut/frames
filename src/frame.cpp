@@ -1,9 +1,9 @@
 
-#include "frames/frame.h"
+#include "frame/frame.h"
 
-#include "frames/environment.h"
-#include "frames/lua.h"
-#include "frames/renderer.h"
+#include "frame/environment.h"
+#include "frame/lua.h"
+#include "frame/renderer.h"
 
 #include <GL/gl.h>
 

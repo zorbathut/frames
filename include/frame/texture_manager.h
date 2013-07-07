@@ -11,9 +11,9 @@
 
 #include <boost/bimap.hpp>
 
-#include "frames/noncopyable.h"
-#include "frames/ptr.h"
-#include "frames/rect.h"
+#include "frame/noncopyable.h"
+#include "frame/ptr.h"
+#include "frame/rect.h"
 
 namespace Frame {
   class Environment;

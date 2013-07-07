@@ -1,8 +1,8 @@
 
-#include "frames/mask.h"
+#include "frame/mask.h"
 
-#include "frames/rect.h"
-#include "frames/renderer.h"
+#include "frame/rect.h"
+#include "frame/renderer.h"
 
 #include <GL/GLew.h>
 

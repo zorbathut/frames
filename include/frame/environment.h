@@ -3,11 +3,11 @@
 #ifndef FRAME_ENVIRONMENT
 #define FRAME_ENVIRONMENT
 
-#include "frames/configuration.h"
-#include "frames/input.h"
-#include "frames/noncopyable.h"
-#include "frames/point.h"
-#include "frames/utility.h"
+#include "frame/configuration.h"
+#include "frame/input.h"
+#include "frame/noncopyable.h"
+#include "frame/point.h"
+#include "frame/utility.h"
 
 #include <deque>
 #include <vector>

@@ -1,11 +1,11 @@
 
-#include "frames/layout.h"
+#include "frame/layout.h"
 
-#include "frames/environment.h"
-#include "frames/event_definition.h"
-#include "frames/lua.h"
-#include "frames/rect.h"
-#include "frames/renderer.h"
+#include "frame/environment.h"
+#include "frame/event_definition.h"
+#include "frame/lua.h"
+#include "frame/rect.h"
+#include "frame/renderer.h"
 
 #include <math.h> // just for isnan()
 

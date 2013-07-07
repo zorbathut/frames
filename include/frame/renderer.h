@@ -5,8 +5,8 @@
 
 #include <queue>
 
-#include "frames/color.h"
-#include "frames/rect.h"
+#include "frame/color.h"
+#include "frame/rect.h"
 
 namespace Frame {
   // fake opengl typedefs, used so we don't pull the entire header in

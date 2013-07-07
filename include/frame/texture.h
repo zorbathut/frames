@@ -3,8 +3,8 @@
 #ifndef FRAME_TEXTURE
 #define FRAME_TEXTURE
 
-#include "frames/frame.h"
-#include "frames/texture_manager.h"
+#include "frame/frame.h"
+#include "frame/texture_manager.h"
 
 namespace Frame {
   class Texture : public Frame {

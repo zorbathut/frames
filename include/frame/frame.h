@@ -3,8 +3,8 @@
 #ifndef FRAME_FRAME
 #define FRAME_FRAME
 
-#include "frames/color.h"
-#include "frames/layout.h"
+#include "frame/color.h"
+#include "frame/layout.h"
 
 namespace Frame {
   class Frame : public Layout {

@@ -3,13 +3,13 @@
 #ifndef FRAME_LAYOUT
 #define FRAME_LAYOUT
 
-#include "frames/delegate.h"
-#include "frames/event.h"
-#include "frames/lua.h"
-#include "frames/input.h"
-#include "frames/noncopyable.h"
-#include "frames/point.h"
-#include "frames/utility.h"
+#include "frame/delegate.h"
+#include "frame/event.h"
+#include "frame/lua.h"
+#include "frame/input.h"
+#include "frame/noncopyable.h"
+#include "frame/point.h"
+#include "frame/utility.h"
 
 #include "boost/static_assert.hpp"
 
@@ -426,6 +426,6 @@ namespace Frame {
   #define CreateTagged(args...) CreateTagged_imp(__FILE__, __LINE__, ## args)
 }
 
-#include "frames/layout_template_inline.h"
+#include "frame/layout_template_inline.h"
 
 #endif

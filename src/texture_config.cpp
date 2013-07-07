@@ -1,7 +1,7 @@
 
-#include "frames/texture_config.h"
+#include "frame/texture_config.h"
 
-#include "frames/environment.h"
+#include "frame/environment.h"
 
 namespace Frame {
 

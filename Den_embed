@@ -13,7 +13,7 @@ local headers = {}
 local srcfiles = {}
 ursa.token.rule{"files", nil, function () return ursa.system{"find . -type f | sed s*\\\\./**"} end}
 for item in ursa.token{"files"}:gmatch("([^\n]+)") do
-  if item:match("frames/.*%.h") then
+  if item:match("frame/.*%.h") then
     table.insert(headers, ursa.rule{params.prefix .. "/" .. item, item, ursa.util.copy{}})
   elseif item:match("src/.*%.cpp") then
     table.insert(srcfiles, item)
@@ -25,6 +25,6 @@ for k, v in ipairs(srcfiles) do
   table.insert(objs, ursa.rule{params.build .. "/" .. v .. ".o", {v, headers, params.dependencies or {}}, ursa.util.system_template{"#CXX #CXXFLAGS -Wall -Werror -Iinclude -c " .. v .. " -o $TARGET || rm $TARGET"}})
 end
 
-local lib = ursa.rule{params.prefix .. "/lib/libframes.a", objs, ursa.util.system_template{"ar rcs $TARGET $SOURCES"}}
+local lib = ursa.rule{params.prefix .. "/lib/libframe.a", objs, ursa.util.system_template{"ar rcs $TARGET $SOURCES"}}
 
 return {headers = headers, lib = lib}

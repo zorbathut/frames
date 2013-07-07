@@ -1,5 +1,5 @@
 
-#include "frames/loader.h"
+#include "frame/loader.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -8,10 +8,10 @@ extern "C" {
 }
 #include <png.h>
 
-#include "frames/configuration.h"
-#include "frames/environment.h"
-#include "frames/stream.h"
-#include "frames/texture_config.h"
+#include "frame/configuration.h"
+#include "frame/environment.h"
+#include "frame/stream.h"
+#include "frame/texture_config.h"
 
 #include <vector>
 

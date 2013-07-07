@@ -1,11 +1,11 @@
 
-#include "frames/text.h"
+#include "frame/text.h"
 
-#include "frames/environment.h"
-#include "frames/lua.h"
-#include "frames/rect.h"
-#include "frames/renderer.h"
-#include "frames/texture_manager.h"
+#include "frame/environment.h"
+#include "frame/lua.h"
+#include "frame/rect.h"
+#include "frame/renderer.h"
+#include "frame/texture_manager.h"
 
 #include <GL/GLew.h>
 

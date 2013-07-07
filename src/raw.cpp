@@ -1,8 +1,8 @@
 
-#include "frames/raw.h"
+#include "frame/raw.h"
 
-#include "frames/event_definition.h"
-#include "frames/renderer.h"
+#include "frame/event_definition.h"
+#include "frame/renderer.h"
 
 #include <GL/GLew.h>
 

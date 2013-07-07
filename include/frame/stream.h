@@ -4,7 +4,7 @@
 #ifndef FRAME_STREAM
 #define FRAME_STREAM
 
-#include "frames/noncopyable.h"
+#include "frame/noncopyable.h"
 
 #include <string>
 #include <cstdio>
