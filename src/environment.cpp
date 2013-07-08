@@ -57,6 +57,45 @@ namespace Frame {
     m_root->SetHeight(y);
   }
 
+  bool Environment::Input(const InputEvent &ie) {
+    if (ie.GetMetaKnown()) {
+      m_lastEvent.shift = ie.GetMetaShift();
+      m_lastEvent.ctrl = ie.GetMetaCtrl();
+      m_lastEvent.alt = ie.GetMetaAlt();
+    }
+    
+    if (ie.GetMouseposKnown()) {
+      if (ie.GetMouseposValid()) {
+        MouseMove(ie.GetMouseposX(), ie.GetMouseposY());
+      } else {
+        LogError("No support for invalid mousepos yet");
+      }
+    }
+    
+    bool consumed = true;
+    
+    if (ie.GetMode() == InputEvent::MODE_KEYDOWN) {
+      m_lastEvent.key = ie.GetKey();
+      consumed = KeyDown(m_lastEvent);
+    } else if (ie.GetMode() == InputEvent::MODE_KEYUP) {
+      m_lastEvent.key = ie.GetKey();
+      consumed = KeyUp(m_lastEvent);
+    } else if (ie.GetMode() == InputEvent::MODE_KEYREPEAT) {
+      m_lastEvent.key = ie.GetKey();
+      consumed = KeyRepeat(m_lastEvent);
+    } else if (ie.GetMode() == InputEvent::MODE_MOUSEDOWN) {
+      consumed = MouseDown(ie.GetMouseButton());
+    } else if (ie.GetMode() == InputEvent::MODE_MOUSEUP) {
+      consumed = MouseUp(ie.GetMouseButton());
+    } else if (ie.GetMode() == InputEvent::MODE_MOUSEWHEEL) {
+      LogError("No support for mousewheel yet");
+    } else if (ie.GetMode() == InputEvent::MODE_TYPE) {
+      consumed = KeyType(ie.GetType());
+    }
+    
+    return consumed;
+  }
+  
   void Environment::MouseMove(int x, int y) {
     Layout *updated = GetFrameUnder(x, y);
     m_mouse = Point(x, y);

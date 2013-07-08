@@ -30,10 +30,11 @@ namespace Frame {
     Environment(const Configuration &config);
     ~Environment();
 
-    // Update to the state of the world, incoming events
+    // ==== Update to the state of the world, incoming events
     // Bool return values indicate that the event was consumed, if applicable
-    void ResizeRoot(int x, int y);
-
+    bool Input(const InputEvent &ie); // Usable as a single-package class, intended for the OS helper functions or for people who want a single data pathway
+    
+    // Per-piece update functions
     void MouseMove(int x, int y);
     bool MouseDown(int button);
     bool MouseUp(int button);
@@ -41,40 +42,43 @@ namespace Frame {
 
     void MouseClear();  // mouse no longer in the scene at all
 
-    const Point &GetMouse() const { return m_mouse; }
-
     bool KeyDown(const KeyEvent &key);
     bool KeyType(const std::string &type);
     bool KeyRepeat(const KeyEvent &key);
     bool KeyUp(const KeyEvent &key);
 
-    // state as of the current event that's being handled
+    // "Hey, the resolution has been changed/the window has been resized"
+    void ResizeRoot(int x, int y);  
+    
+    // ==== State as of the current event that's being handled
+    const Point &GetMouse() const { return m_mouse; }
     bool IsShift() const;
     bool IsCtrl() const;
     bool IsAlt() const;
     
-    // Focus
+    // ==== Focus
     Layout *GetFocus() { return m_focus; }
     const Layout *GetFocus() const { return m_focus; }
     void SetFocus(Layout *layout);
     void ClearFocus();
 
-    // Rendering
+    // ==== Rendering
     void Render(const Layout *root = 0);
     
-    // Introspection
+    // ==== Introspection
     Layout *GetRoot() { return m_root; }
     Layout *GetFrameUnder(int x, int y);
 
     const Configuration &GetConfiguration() { return m_config; }
 
-    // Scripting languages
+    // ==== Scripting languages
+    // Lua
     void LuaRegister(lua_State *L, bool hasErrorHandle = false); // if error handle is true, top element of the stack will be popped
     template<typename T> void LuaRegisterFrame(lua_State *L); // needed only if you create third-party frames - Frame will automatically register its internal frame types
     void LuaRegisterEvent(lua_State *L, EventTypeBase *feb);
     void LuaUnregister(lua_State *L);
 
-    // Internal only, do not call below this line
+    // ==== Internal only, do not call below this line (TODO make more private)
     TextManager *GetTextManager() { return m_text_manager; }
     TextureManager *GetTextureManager() { return m_texture_manager; }
 
@@ -133,8 +137,7 @@ namespace Frame {
 
     // Root
     Layout *m_root;
-
-    // Input state
+    
     Layout *m_over;
     Layout *m_focus;
     std::map<int, Layout *> m_buttonDown;

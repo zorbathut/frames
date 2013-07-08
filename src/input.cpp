@@ -31,6 +31,7 @@ namespace Frame {
       case X: return "x";
       case Y: return "y";
       case Z: return "z";
+      // Numbers
       case Num0: return "0";
       case Num1: return "1";
       case Num2: return "2";
@@ -41,45 +42,7 @@ namespace Frame {
       case Num7: return "7";
       case Num8: return "8";
       case Num9: return "9";
-      case Escape: return "Escape";
-      case ControlLeft: return "Left Control";
-      case ShiftLeft: return "Left Shift";
-      case AltLeft: return "Left Alt";
-      case SystemLeft: return "Left System";
-      case ControlRight: return "Right Control";
-      case ShiftRight: return "Right Shift";
-      case AltRight: return "Right Alt";
-      case SystemRight: return "Right System";
-      case Menu: return "Menu";
-      case BracketLeft: return "Left Bracket";
-      case BracketRight: return "Right Bracket";
-      case Semicolon: return "Semicolon";
-      case Comma: return "Comma";
-      case Period: return "Period";
-      case Quote: return "Quote";
-      case Slash: return "Slash";
-      case Backslash: return "Backslash";
-      case Tilde: return "Tilde";
-      case Equal: return "Equal";
-      case Dash: return "Dash";
-      case Space: return "Space";
-      case Return: return "Return";
-      case Backspace: return "Backspace";
-      case Tab: return "Tab";
-      case PageUp: return "Page Up";
-      case PageDown: return "Page Down";
-      case End: return "End";
-      case Home: return "Home";
-      case Insert: return "Insert";
-      case Delete: return "Delete";
-      case Add: return "Numpad Add";
-      case Subtract: return "Numpad Subtract";
-      case Multiply: return "Numpad Multiply";
-      case Divide: return "Numpad Divide";
-      case Left: return "Left";
-      case Right: return "Right";
-      case Up: return "Up";
-      case Down: return "Down";
+      // Numpad numerics
       case Numpad0: return "Numpad 0";
       case Numpad1: return "Numpad 1";
       case Numpad2: return "Numpad 2";
@@ -90,6 +53,24 @@ namespace Frame {
       case Numpad7: return "Numpad 7";
       case Numpad8: return "Numpad 8";
       case Numpad9: return "Numpad 9";
+      // Numpad non-numerics
+      case Add: return "Numpad Add";
+      case Subtract: return "Numpad Subtract";
+      case Multiply: return "Numpad Multiply";
+      case Divide: return "Numpad Divide";
+      case Decimal: return "Numpad Decimal";
+      // Editing keys
+      case Left: return "Left";
+      case Right: return "Right";
+      case Up: return "Up";
+      case Down: return "Down";
+      case PageUp: return "Page Up";
+      case PageDown: return "Page Down";
+      case End: return "End";
+      case Home: return "Home";
+      case Insert: return "Insert";
+      case Delete: return "Delete";
+      // F-keys
       case F1: return "F1";
       case F2: return "F2";
       case F3: return "F3";
@@ -105,7 +86,49 @@ namespace Frame {
       case F13: return "F13";
       case F14: return "F14";
       case F15: return "F15";
+      case F16: return "F16";
+      case F17: return "F17";
+      case F18: return "F18";
+      case F19: return "F19";
+      case F20: return "F20";
+      case F21: return "F21";
+      case F22: return "F22";
+      case F23: return "F23";
+      case F24: return "F24";
+      // Meta keys
+      case ControlLeft: return "Left Control";
+      case ShiftLeft: return "Left Shift";
+      case AltLeft: return "Left Alt";
+      case SystemLeft: return "Left System";
+      case ControlRight: return "Right Control";
+      case ShiftRight: return "Right Shift";
+      case AltRight: return "Right Alt";
+      case SystemRight: return "Right System";
+      case MenuLeft: return "Left Menu";
+      case MenuRight: return "Right Menu";
+      case LockCaps: return "Caps Lock";
+      case LockScroll: return "Scroll Lock";
+      case LockNum: return "Num Lock";
+      case Printscreen: return "Printscreen";
       case Pause: return "Pause";
+      // Punctuation
+      case Escape: return "Escape";
+      case BracketLeft: return "Left Bracket";
+      case BracketRight: return "Right Bracket";
+      case Semicolon: return "Semicolon";
+      case Comma: return "Comma";
+      case Period: return "Period";
+      case Quote: return "Quote";
+      case Slash: return "Slash";
+      case Backslash: return "Backslash";
+      case Tilde: return "Tilde";
+      case Equal: return "Equal";
+      case Dash: return "Dash";
+      case Space: return "Space";
+      case Return: return "Return";
+      case Backspace: return "Backspace";
+      case Tab: return "Tab";
+
       default: return "(unknown)";  // TODO: global assert
     }
   }
