@@ -1,10 +1,17 @@
 
 #define _WIN32_WINNT 0x0600 // needed for XBUTTON, MOUSEWHEEL, MOUSEHWHEEL
+#define WINVER 0x0400 // needed for MAPVK_VSC_TO_VK_EX
 
 #include "frame/os_win32.h"
 
+#include <windows.h>
 #include <winuser.h>
-#include <windowsx.h>
+
+#include <cstdio>
+
+#ifndef MAPVK_VSC_TO_VK_EX  // Not in the MingW headers for some reason, so we'll just introduce it here
+#define MAPVK_VSC_TO_VK_EX 3
+#endif
 
 namespace Frame {
 
@@ -20,7 +27,7 @@ namespace Frame {
     Key::INVALID, Key::A, Key::B, Key::C, Key::D, Key::E, Key::F, Key::G, // 0x40 - 0x47
     Key::H, Key::I, Key::J, Key::K, Key::L, Key::M, Key::N, Key::O, // 0x48 - 0x4f
     Key::P, Key::Q, Key::R, Key::S, Key::T, Key::U, Key::V, Key::W, // 0x50 - 0x57
-    Key::X, Key::Y, Key::Z, Key::SystemLeft, Key::SystemRight, Key::INVALID, Key::INVALID, Key::INVALID, // 0x58 - 0x5f
+    Key::X, Key::Y, Key::Z, Key::SystemLeft, Key::SystemRight, Key::Apps, Key::INVALID, Key::INVALID, // 0x58 - 0x5f
     Key::Numpad0, Key::Numpad1, Key::Numpad2, Key::Numpad3, Key::Numpad4, Key::Numpad5, Key::Numpad6, Key::Numpad7,  // 0x60 - 0x67
     Key::Numpad8, Key::Numpad9, Key::Multiply, Key::Add, Key::INVALID, Key::Subtract, Key::Decimal, Key::Divide, // 0x68 - 0x6f
     Key::F1, Key::F2, Key::F3, Key::F4, Key::F5, Key::F6, Key::F7, Key::F8, // 0x70 - 0x77
@@ -29,7 +36,7 @@ namespace Frame {
     Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0x88 - 0x8f
     Key::LockNum, Key::LockScroll, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0x90 - 0x97
     Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0x98 - 0x9f
-    Key::ShiftLeft, Key::ShiftRight, Key::ControlLeft, Key::ControlRight, Key::MenuLeft, Key::MenuRight, Key::INVALID, Key::INVALID, // 0xa0 - 0xa7
+    Key::ShiftLeft, Key::ShiftRight, Key::ControlLeft, Key::ControlRight, Key::AltLeft, Key::AltRight, Key::INVALID, Key::INVALID, // 0xa0 - 0xa7
     Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0xa8 - 0xaf
     Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0xb0 - 0xb7
     Key::INVALID, Key::INVALID, Key::Semicolon, Key::Equal, Key::Comma, Key::Dash, Key::Period, Key::Slash, // 0xb8 - 0xbf
@@ -56,6 +63,9 @@ namespace Frame {
       case WM_KEYDOWN:
       case WM_SYSKEYDOWN:
         if (wParam > 0 && wParam < 256) {
+          if (wParam == VK_SHIFT || wParam == VK_CONTROL || wParam == VK_MENU) {
+            wParam = MapVirtualKey((lParam & 0x00ff0000) >> 16, MAPVK_VSC_TO_VK_EX);
+          }
           InputGatherStandard(window_handle, event);
           Key::Key key = c_keyIndex[wParam];
           if (lParam & (1 << 30)) {
@@ -69,6 +79,9 @@ namespace Frame {
       case WM_KEYUP:
       case WM_SYSKEYUP:
         if (wParam > 0 && wParam < 256) {
+          if (wParam == VK_SHIFT || wParam == VK_CONTROL || wParam == VK_MENU) {
+            wParam = MapVirtualKey((lParam & 0x00ff0000) >> 16, MAPVK_VSC_TO_VK_EX);
+          }
           InputGatherStandard(window_handle, event);
           event->SetModeKeyUp(c_keyIndex[wParam]);
           return true;
@@ -84,14 +97,15 @@ namespace Frame {
         }
         break;
       case WM_CHAR:
-       // windows passes a bunch of nonprintable characters through this way only. thanks windows. thwindows.
         if (wParam == '\r') {
           InputGatherStandard(window_handle, event);
           event->SetModeType("\n");
           return true;
-        } else if (wParam != '\t') {
+        } else if (wParam != '\t' && wParam != '\b' && wParam != '\033') { // windows passes a bunch of nonprintable characters through this way, thanks windows. thwindows.
           InputGatherStandard(window_handle, event);
-          event->SetModeType("\t");
+          std::string typed;
+          typed += (char)wParam; // TODO: utf8ize
+          event->SetModeType(typed);
           return true;
         }
         break;

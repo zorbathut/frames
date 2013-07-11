@@ -104,8 +104,7 @@ namespace Frame {
       case ShiftRight: return "Right Shift";
       case AltRight: return "Right Alt";
       case SystemRight: return "Right System";
-      case MenuLeft: return "Left Menu";
-      case MenuRight: return "Right Menu";
+      case Apps: return "Apps";
       case LockCaps: return "Caps Lock";
       case LockScroll: return "Scroll Lock";
       case LockNum: return "Num Lock";
