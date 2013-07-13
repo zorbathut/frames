@@ -1,7 +1,9 @@
-// OS-specific functionality and helper functions
+// Win32-specific helper and example functions
+// If these functions don't do quite what you want, you are encouraged to make copies of them and modify them.
+// These are intended for the common case and as example code for more complicated things.
 
-#ifndef FRAME_OS
-#define FRAME_OS
+#ifndef FRAME_OSWIN32
+#define FRAME_OSWIN32
 
 #include "frame/input.h"
 
