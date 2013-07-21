@@ -8,6 +8,7 @@
 
 #include <string>
 #include <cstdio>
+#include <vector>
 
 namespace Frame {
   class Stream : Noncopyable {
@@ -33,6 +34,22 @@ namespace Frame {
     ~StreamFile();
 
     std::FILE *m_file;
+  };
+  
+  class StreamBuffer : public Stream {
+  public:
+    static StreamBuffer *Create(const std::vector<unsigned char> &data);
+
+    virtual int Read(unsigned char *target, int bytes);
+    virtual bool Seek(int offset);
+    virtual bool Seekable() const;
+
+  private:
+    StreamBuffer(const std::vector<unsigned char> &data);
+    ~StreamBuffer();
+
+    std::vector<unsigned char> m_data;
+    int m_index;
   };
 }
 

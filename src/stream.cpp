@@ -1,6 +1,9 @@
 
 #include "frame/stream.h"
 
+#include <algorithm>
+#include <cstring>
+
 namespace Frame {
   StreamFile *StreamFile::Create(const std::string &fname) {
     std::FILE *fil = fopen(fname.c_str(), "rb");
@@ -14,6 +17,28 @@ namespace Frame {
 
   StreamFile::StreamFile(std::FILE *file) : m_file(file) { }
   StreamFile::~StreamFile() { fclose(m_file); }
+  
+  StreamBuffer *StreamBuffer::Create(const std::vector<unsigned char> &data) {
+    return new StreamBuffer(data);
+  }
+
+  int StreamBuffer::Read(unsigned char *target, int bytes) {
+    int bytestoread = std::min(bytes, (int)m_data.size() - m_index);
+    std::memcpy(target, &m_data[m_index], bytestoread);
+    m_index += bytestoread;
+    return bytestoread;
+  }
+  bool StreamBuffer::Seek(int offset) {
+    if (offset < 0 || offset > (int)m_data.size()) {
+      return false;
+    }
+    m_index = offset;
+    return true;
+  }
+  bool StreamBuffer::Seekable() const { return true; }
+
+  StreamBuffer::StreamBuffer(const std::vector<unsigned char> &data) : m_data(data), m_index(0) { }
+  StreamBuffer::~StreamBuffer() { }
 }
 
 
