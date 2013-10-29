@@ -284,11 +284,11 @@ namespace Frame {
     vertex[2].c = color;
     vertex[3].c = color;
     
-    return 2;
+    return true;
   }
 
   void Renderer::SetScissor(const Rect &rect) {
-    glScissor(rect.s.x, m_height - rect.e.y, rect.e.x - rect.s.x, rect.e.y - rect.s.y);
+    glScissor((int)floor(rect.s.x + 0.5f), (int)floor(m_height - rect.e.y + 0.5f), (int)floor(rect.e.x - rect.s.x + 0.5f), (int)floor(rect.e.y - rect.s.y + 0.5f));
   }
 }
 

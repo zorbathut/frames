@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include <GL/GLew.h>
+#include "os_gl.h"
 
 namespace Frame {
   class Environment;

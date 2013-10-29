@@ -192,7 +192,7 @@ namespace Frame {
       m_size(16),
       m_wordwrap(false),
       m_color_text(1, 1, 1),
-      m_color_selection(0.3, 0.3, 0.5, 0.5),
+      m_color_selection(0.3f, 0.3f, 0.5f, 0.5f),
       m_color_selected(1, 1, 1),
       m_interactive(INTERACTIVE_NONE),
       m_scroll(0, 0),
@@ -249,7 +249,7 @@ namespace Frame {
 
     // First, do the X axis
     if (!m_wordwrap) {
-      cscroll.x = Utility::Clamp(Utility::Clamp(cscroll.x, tpos.x - GetWidth() * 3 / 4, tpos.x - GetWidth() / 4), 0, m_layout->GetParent()->GetFullWidth() - GetWidth());
+      cscroll.x = Utility::Clamp(Utility::Clamp(cscroll.x, tpos.x - GetWidth() * 3 / 4, tpos.x - GetWidth() / 4), 0.f, m_layout->GetParent()->GetFullWidth() - GetWidth());
     } else {
       cscroll.x = 0;
     }
@@ -562,7 +562,7 @@ namespace Frame {
     luaF_checkparams(L, 2);
     Text *self = luaF_checkframe<Text>(L, 1);
 
-    self->SetSize(luaL_checknumber(L, 2));
+    self->SetSize((float)luaL_checknumber(L, 2));
 
     return 0;
   }
@@ -581,7 +581,7 @@ namespace Frame {
     Text *self = luaF_checkframe<Text>(L, 1);
 
     luaL_checktype(L, 2, LUA_TBOOLEAN); // sigh
-    self->SetWordwrap(lua_toboolean(L, 2));
+    self->SetWordwrap(lua_toboolean(L, 2) != 0);
 
     return 0;
   }
@@ -599,7 +599,7 @@ namespace Frame {
     luaF_checkparams(L, 4, 5);
     Text *self = luaF_checkframe<Text>(L, 1);
 
-    self->SetColor(Color(luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_optnumber(L, 5, 1.f)));
+    self->SetColor(Color((float)luaL_checknumber(L, 2), (float)luaL_checknumber(L, 3), (float)luaL_checknumber(L, 4), (float)luaL_optnumber(L, 5, 1.f)));
 
     return 0;
   }
@@ -658,7 +658,7 @@ namespace Frame {
     luaF_checkparams(L, 2);
     Text *self = luaF_checkframe<Text>(L, 1);
 
-    self->SetCursor(luaL_checknumber(L, 2));
+    self->SetCursor(luaL_checkinteger(L, 2));
 
     return 0;
   }
@@ -679,7 +679,7 @@ namespace Frame {
     if (lua_gettop(L) == 1) {
       self->SetSelection();
     } else if(lua_gettop(L) == 3) {
-      self->SetSelection(luaL_checknumber(L, 2), luaL_checknumber(L, 3));
+      self->SetSelection(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
     } else {
       luaL_error(L, "Incorrect number of parameters, expecting 1 or 3");
     }
@@ -707,7 +707,7 @@ namespace Frame {
     luaF_checkparams(L, 3);
     Text *self = luaF_checkframe<Text>(L, 1);
 
-    self->SetScroll(Point(luaL_checknumber(L, 2), luaL_checknumber(L, 3)));
+    self->SetScroll(Point((float)luaL_checknumber(L, 2), (float)luaL_checknumber(L, 3)));
 
     return 0;
   }
@@ -726,7 +726,7 @@ namespace Frame {
     luaF_checkparams(L, 4, 5);
     Text *self = luaF_checkframe<Text>(L, 1);
 
-    self->SetColorSelection(Color(luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_optnumber(L, 5, 1.f)));
+    self->SetColorSelection(Color((float)luaL_checknumber(L, 2), (float)luaL_checknumber(L, 3), (float)luaL_checknumber(L, 4), (float)luaL_optnumber(L, 5, 1.f)));
 
     return 0;
   }
@@ -749,7 +749,7 @@ namespace Frame {
     luaF_checkparams(L, 4, 5);
     Text *self = luaF_checkframe<Text>(L, 1);
 
-    self->SetColorSelected(Color(luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_optnumber(L, 5, 1.f)));
+    self->SetColorSelected(Color((float)luaL_checknumber(L, 2), (float)luaL_checknumber(L, 3), (float)luaL_checknumber(L, 4), (float)luaL_optnumber(L, 5, 1.f)));
 
     return 0;
   }

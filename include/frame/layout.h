@@ -21,7 +21,7 @@ struct lua_State;
 
 namespace Frame {
   class Environment;
-  class Rect;
+  struct Rect;
   class Renderer;
   class Layout;
   
@@ -147,7 +147,7 @@ namespace Frame {
       bool DestroyFlagGet() const { return m_destroy; }
       void DestroyFlagSet() const { m_destroy = true; }
       
-      bool LockFlagGet() const { return m_lock; }
+      bool LockFlagGet() const { return m_lock != 0; }
       void LockFlagIncrement() const { ++m_lock; }  // must store result and pass it to LockFlagDecrement
       void LockFlagDecrement() const { --m_lock; }
       
@@ -228,7 +228,7 @@ namespace Frame {
 
     Layout *GetParent() const { return m_parent; }
 
-    Layout *GetFrameUnder(int x, int y);
+    Layout *GetFrameUnder(float x, float y);
 
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
 
@@ -299,7 +299,7 @@ namespace Frame {
     // This is for further-down classes, not so useful for users
     void SetFullMouseMasking(bool mask) { m_fullMouseMasking = mask; }
     bool GetFullMouseMasking() { return m_fullMouseMasking; }
-    virtual bool TestMouseMasking(int x, int y) { return true; }
+    virtual bool TestMouseMasking(float x, float y) { return true; }
 
     void Obliterate(); // prep for destruction along with all children
 
@@ -417,13 +417,13 @@ namespace Frame {
   };
 
   // Debug code
-  #define FRAME_LAYOUT_ASSERT(x, errstring, args...) (__builtin_expect(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, ## args))))
-  #define FRAME_LAYOUT_CHECK(x, errstring, args...) (__builtin_expect(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, ## args))))
+  #define FRAME_LAYOUT_ASSERT(x, errstring, ...) (FRAME_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, __VA_ARGS__))))
+  #define FRAME_LAYOUT_CHECK(x, errstring, ...) (FRAME_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, __VA_ARGS__))))
 
-  #define FRAME_ERROR(args...) GetEnvironment()->LogError(Utility::Format(args))
-  #define FRAME_DEBUG(args...) GetEnvironment()->LogDebug(Utility::Format(args))
+  #define FRAME_ERROR(...) GetEnvironment()->LogError(Utility::Format(__VA_ARGS__))
+  #define FRAME_DEBUG(...) GetEnvironment()->LogDebug(Utility::Format(__VA_ARGS__))
 
-  #define CreateTagged(args...) CreateTagged_imp(__FILE__, __LINE__, ## args)
+  #define CreateTagged(...) CreateTagged_imp(__FILE__, __LINE__, __VA_ARGS__)
 }
 
 #include "frame/layout_template_inline.h"

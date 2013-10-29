@@ -21,7 +21,7 @@ namespace Frame {
     return "Mask";
   }
 
-  bool Mask::TestMouseMasking(int x, int y) {
+  bool Mask::TestMouseMasking(float x, float y) {
     return x >= GetLeft() && y >= GetTop() && x < GetRight() && y < GetBottom();
   }
 

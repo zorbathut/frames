@@ -1,1 +1,23 @@
+# Ursa build files
 .ursa*
+
+# Cmake build files
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake
+
+# Output files
+lib/*
+
+# Unixlike-targets
+Makefile
+
+# Windows targets
+*.vcxproj
+*.vcxproj.filters
+*.sln
+*.sdf
+*.opensdf
+*.suo
+Win32
+frame.dir

@@ -55,7 +55,7 @@ namespace Frame {
     GetCursorPos(&mouse);
     ScreenToClient(window, &mouse);
     event->SetMouseposMove(mouse.x, mouse.y);
-    event->SetMeta(GetKeyState(VK_SHIFT) & 0x80, GetKeyState(VK_CONTROL) & 0x80, GetKeyState(VK_MENU) & 0x80);
+    event->SetMeta((GetKeyState(VK_SHIFT) & 0x80) != 0, (GetKeyState(VK_CONTROL) & 0x80) != 0, (GetKeyState(VK_MENU) & 0x80) != 0);
   }
   
   bool InputGatherWin32(InputEvent *event, HWND window_handle, UINT message, WPARAM wParam, LPARAM lParam) {

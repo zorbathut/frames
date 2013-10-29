@@ -23,7 +23,7 @@ namespace Frame {
         if(done && !noresize)
           buf.resize(buf.size() * 2);
         va_start(args, bort);
-        done = std::vsnprintf(&(buf[0]), buf.size() - 1,  bort, args);
+        done = vsnprintf(&(buf[0]), buf.size() - 1,  bort, args);
         if(done >= (int)buf.size()) {
           buf.resize(done + 2);
           done = -1;

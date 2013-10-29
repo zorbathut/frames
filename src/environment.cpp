@@ -53,8 +53,8 @@ namespace Frame {
   }
 
   void Environment::ResizeRoot(int x, int y) {
-    m_root->SetWidth(x);
-    m_root->SetHeight(y);
+    m_root->SetWidth((float)x);
+    m_root->SetHeight((float)y);
   }
 
   bool Environment::Input(const InputEvent &ie) {
@@ -96,7 +96,11 @@ namespace Frame {
     return consumed;
   }
   
-  void Environment::MouseMove(int x, int y) {
+  void Environment::MouseMove(int ix, int iy) {
+    // convert to internal floatingpoint
+    float x = (float)ix;
+    float y = (float)iy;
+
     Layout *updated = GetFrameUnder(x, y);
     m_mouse = Point(x, y);
 
@@ -267,7 +271,7 @@ namespace Frame {
   }
 
   void Environment::Render(const Layout *root) {
-    Performance perf(this, 0.3, 0.5, 0.3);
+    Performance perf(this, 0.3f, 0.5f, 0.3f);
 
     if (!root) {
       root = m_root;
@@ -294,27 +298,27 @@ namespace Frame {
     }
 
     {
-      Performance perf(this, 0.5, 0.8, 0.5);
+      Performance perf(this, 0.5f, 0.8f, 0.5f);
 
       {
-        Performance perf(this, 0.4, 0.2, 0.2);
-        m_renderer->Begin(m_root->GetWidth(), m_root->GetHeight());
+        Performance perf(this, 0.4f, 0.2f, 0.2f);
+        m_renderer->Begin((int)m_root->GetWidth(), (int)m_root->GetHeight());
       }
 
       {
-        Performance perf(this, 0.8, 0.6, 0.6);
+        Performance perf(this, 0.8f, 0.6f, 0.6f);
         root->Render(m_renderer);
       }
 
       {
-        Performance perf(this, 0.4, 0.2, 0.2);
+        Performance perf(this, 0.4f, 0.2f, 0.2f);
         m_renderer->End();
       }
     }
   }
 
-  Layout *Environment::GetFrameUnder(int x, int y) {
-    // de-invalidate
+  Layout *Environment::GetFrameUnder(float x, float y) {
+    // TODO: de-invalidate
     return m_root->GetFrameUnder(x, y);
   }
 

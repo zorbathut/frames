@@ -63,7 +63,7 @@ namespace Frame {
           m_env->LayoutStack_Push(this, axis, pt);
           m_env->LayoutStack_Error();
           m_env->LayoutStack_Pop();
-          axa.cached = 0./0.; // generate a real NaN
+          axa.cached = std::numeric_limits<float>::quiet_NaN(); // this one really isn't a number, it's not just a sentinel value
         }
         return axa.cached;
       }
@@ -85,7 +85,7 @@ namespace Frame {
           m_env->LayoutStack_Push(this, axis, pt);
           m_env->LayoutStack_Error();
           m_env->LayoutStack_Pop();
-          axb.cached = 0./0.; // generate a real NaN
+          axb.cached = std::numeric_limits<float>::quiet_NaN(); // this one really isn't a number, it's not just a sentinel value
         }
         return axb.cached;
       }
@@ -148,7 +148,7 @@ namespace Frame {
         m_env->LayoutStack_Push(this, axis);
         m_env->LayoutStack_Error();
         m_env->LayoutStack_Pop();
-        ax.size_cached = 0./0.; // generate a real NaN
+        ax.size_cached = std::numeric_limits<float>::quiet_NaN(); // this one really isn't a number, it's not just a sentinel value
       }
       return ax.size_cached;
     }
@@ -179,7 +179,7 @@ namespace Frame {
     return ax.size_default;
   }
 
-  Layout *Layout::GetFrameUnder(int x, int y) {
+  Layout *Layout::GetFrameUnder(float x, float y) {
     if (!GetVisible()) return 0; // nope
 
     if (m_fullMouseMasking && !TestMouseMasking(x, y)) return 0;

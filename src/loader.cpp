@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 extern "C" {
-#include "jpeglib/jpeglib.h"
+#include "jpeglib.h"
 }
 #include <png.h>
 

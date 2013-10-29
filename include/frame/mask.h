@@ -17,7 +17,7 @@ namespace Frame {
     virtual const char *GetType() const { return GetStaticType(); }
 
   protected:
-    virtual bool TestMouseMasking(int x, int y);
+    virtual bool TestMouseMasking(float x, float y);
 
     virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, GetStaticType()); Frame::luaF_Register(L); }
 

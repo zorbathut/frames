@@ -9,6 +9,8 @@
 #include <boost/type_traits/add_lvalue_reference.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
+#include "frame/config_cc.h"
+
 namespace Frame {
   enum Axis { X, Y }; // axes
 
@@ -36,9 +38,14 @@ namespace Frame {
       return Undefined + Processing;
     }
 
-    std::string Format(const char *bort, ...) __attribute__((format(printf,1,2)));
+    std::string Format(const char *bort, ...) FRAME_ATTRIBUTE_PRINTF(1, 2);
 
     inline float Clamp(float current, float min, float max) {
+      if (current < min) return min;
+      if (current > max) return max;
+      return current;
+    }
+    inline int Clamp(int current, int min, int max) {
       if (current < min) return min;
       if (current > max) return max;
       return current;

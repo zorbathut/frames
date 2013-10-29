@@ -15,7 +15,7 @@ namespace Frame {
   typedef float GLfloat;
 
   class Environment;
-  class Rect;
+  struct Rect;
   class TextureBacking;
   class TextureChunk;
 

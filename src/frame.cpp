@@ -168,8 +168,8 @@ namespace Frame {
       lxe = (tx == LUA_TNUMBER);
       lye = (ty == LUA_TNUMBER);
 
-      *xt = lua_tonumber(L, *cindex);
-      *yt = lua_tonumber(L, *cindex + 1);
+      *xt = (float)lua_tonumber(L, *cindex);
+      *yt = (float)lua_tonumber(L, *cindex + 1);
 
       (*cindex) += 2;
     }
@@ -240,7 +240,7 @@ namespace Frame {
     luaF_checkparams(L, 2);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->SetWidth(luaL_checknumber(L, 2));
+    self->SetWidth((float)luaL_checknumber(L, 2));
 
     return 0;
   }
@@ -249,7 +249,7 @@ namespace Frame {
     luaF_checkparams(L, 2);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->SetHeight(luaL_checknumber(L, 2));
+    self->SetHeight((float)luaL_checknumber(L, 2));
 
     return 0;
   }
@@ -276,7 +276,7 @@ namespace Frame {
     luaF_checkparams(L, 2);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->SetLayer(luaL_checknumber(L, 2));
+    self->SetLayer((float)luaL_checknumber(L, 2));
 
     return 0;
   }
@@ -294,7 +294,7 @@ namespace Frame {
     luaF_checkparams(L, 2);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->SetStrata(luaL_checknumber(L, 2));
+    self->SetStrata((float)luaL_checknumber(L, 2));
 
     return 0;
   }
@@ -313,7 +313,7 @@ namespace Frame {
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
     luaL_checktype(L, 2, LUA_TBOOLEAN); // sigh
-    self->SetVisible(lua_toboolean(L, 2));
+    self->SetVisible(lua_toboolean(L, 2) != 0);
 
     return 0;
   }
@@ -331,7 +331,7 @@ namespace Frame {
     luaF_checkparams(L, 2);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->SetAlpha(luaL_checknumber(L, 2));
+    self->SetAlpha((float)luaL_checknumber(L, 2));
 
     return 0;
   }
@@ -349,7 +349,7 @@ namespace Frame {
     luaF_checkparams(L, 4, 5);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->SetBackground(Color(luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4), luaL_optnumber(L, 5, 1.f)));
+    self->SetBackground(Color((float)luaL_checknumber(L, 2), (float)luaL_checknumber(L, 3), (float)luaL_checknumber(L, 4), (float)luaL_optnumber(L, 5, 1.f)));
 
     return 0;
   }
@@ -372,7 +372,7 @@ namespace Frame {
     luaF_checkparams(L, 2);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->SetFocus(lua_toboolean(L, 2));
+    self->SetFocus(lua_toboolean(L, 2) != 0);
 
     return 0;
   }

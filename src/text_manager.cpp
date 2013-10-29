@@ -190,7 +190,7 @@ namespace Frame {
   CharacterInfo::CharacterInfo(FontInfoPtr parent, float size, int character) : m_parent(parent), m_offset_x(0), m_offset_y(0), m_advance(0), m_is_newline(false), m_is_wordbreak(false) {
     // LET'S DO THIS THING
     m_is_newline = (character == '\n');
-    m_is_wordbreak = std::isspace(character);
+    m_is_wordbreak = (isspace(character) != 0);
 
     FT_Face face = parent->GetFace(size);
 
@@ -204,9 +204,9 @@ namespace Frame {
     if (FT_Get_Glyph(face->glyph, &glyph))
       return;
 
-    m_advance = (int)std::floor(face->glyph->advance.x / 64.f + 0.5f);
+    m_advance = (float)(int)std::floor((float)face->glyph->advance.x / 64.f + 0.5f);  // this should probably be cleaned up - how *do* we want to deal with pixel subsampling?
 
-    if (std::isspace(character))
+    if (isspace(character))
       return; // we don't need bitmaps for whitespace characters
 
     if (FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 0))
@@ -220,7 +220,7 @@ namespace Frame {
             parent->GetTexture()
       );
 
-      m_offset_x = bmp->left;
+      m_offset_x = (float)bmp->left;
       m_offset_y = -bmp->top + face->size->metrics.ascender / 64.f;
     }
 
@@ -262,7 +262,7 @@ namespace Frame {
 
         tx = 0;
         ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
-        ty = (int)std::floor(ty + 0.5f);
+        ty = (float)(int)std::floor(ty + 0.5f); // again we're back to the pixel subsampling nightmare
         
         continue;
       }
@@ -294,7 +294,7 @@ namespace Frame {
             // If the word is too long and this character is too long, then we just plop it down anyway because we don't have a realistic choice.
             tx = 0;
             ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
-            ty = (int)std::floor(ty + 0.5f);
+            ty = (float)(int)std::floor(ty + 0.5f);
 
             m_coordinates.push_back(Point(tx, ty));
             tx += chr->GetAdvance();
@@ -308,7 +308,7 @@ namespace Frame {
           currentWordStartX = 0;
           tx = 0;
           ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
-          ty = (int)std::floor(ty + 0.5f);
+          ty = (float)(int)std::floor(ty + 0.5f);
           m_lines.push_back(currentWordStartIndex);
 
           for (int j = currentWordStartIndex; j < (int)m_coordinates.size(); ++j) {
@@ -352,12 +352,12 @@ namespace Frame {
   void TextLayout::Render(Renderer *renderer, const Color &color, Rect bounds, Point offset) {
     // clamp the bounds to the pixel grid to avoid text blurring
     // probably shouldn't do this if we're using distance field rendering
-    bounds.s.x = (int)std::floor(bounds.s.x + 0.5f);
-    bounds.s.y = (int)std::floor(bounds.s.y + 0.5f);
-    bounds.e.x = (int)std::floor(bounds.e.x + 0.5f);
-    bounds.e.y = (int)std::floor(bounds.e.y + 0.5f);
-    offset.x = (int)std::floor(offset.x + 0.5f);
-    offset.y = (int)std::floor(offset.y + 0.5f);
+    bounds.s.x = (float)(int)std::floor(bounds.s.x + 0.5f);
+    bounds.s.y = (float)(int)std::floor(bounds.s.y + 0.5f);
+    bounds.e.x = (float)(int)std::floor(bounds.e.x + 0.5f);
+    bounds.e.y = (float)(int)std::floor(bounds.e.y + 0.5f);
+    offset.x = (float)(int)std::floor(offset.x + 0.5f);
+    offset.y = (float)(int)std::floor(offset.y + 0.5f);
 
     // todo: maybe precache this stuff so it becomes a memcpy?
     renderer->SetTexture(m_parent->GetTexture().get());
@@ -372,7 +372,7 @@ namespace Frame {
       if (character->GetTexture()) {
         Point origin = Point(bounds.s.x + m_coordinates[i].x - offset.x, bounds.s.y + m_coordinates[i].y - offset.y);
         
-        if (Renderer::WriteCroppedTexRect(vertex, Rect(origin, origin + Point(character->GetTexture()->GetWidth(), character->GetTexture()->GetHeight())), character->GetTexture()->GetBounds(), color, bounds)) {
+        if (Renderer::WriteCroppedTexRect(vertex, Rect(origin, origin + Point((float)character->GetTexture()->GetWidth(), (float)character->GetTexture()->GetHeight())), character->GetTexture()->GetBounds(), color, bounds)) {
           cquad++;
         }
       }

@@ -3,14 +3,13 @@
 #ifndef FRAME_LUA
 #define FRAME_LUA
 
-#include <lua.hpp>
-#include <lauxlib.h>
+#include "os_lua.h"
 
 #include <string>
 
 namespace Frame {
-  class Point;
-  class KeyEvent;
+  struct Point;
+  struct KeyEvent;
   class EventTypeBase;
   
   // luaF_push is intended to be extended by end users! Add more overloads as you see fit to conform to your event schema.

@@ -5,7 +5,7 @@
 
 #include "frame/environment.h"
 
-#include "lua.hpp"
+#include "os_lua.h"
 
 #include <windows.h>
 

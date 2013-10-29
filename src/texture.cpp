@@ -28,8 +28,8 @@ namespace Frame {
     m_texture_id = id;
     m_texture = GetEnvironment()->GetTextureManager()->TextureFromId(id);
     
-    SetWidthDefault(m_texture->GetWidth());
-    SetHeightDefault(m_texture->GetHeight());
+    SetWidthDefault((float)m_texture->GetWidth());
+    SetHeightDefault((float)m_texture->GetHeight());
   }
 
   /*static*/ void Texture::luaF_RegisterFunctions(lua_State *L) {
@@ -109,11 +109,11 @@ namespace Frame {
     Texture *self = luaF_checkframe<Texture>(L, 1);
 
     Color color(1, 1, 1, 1);
-    color.r = luaL_checknumber(L, 2);
-    color.g = luaL_checknumber(L, 3);
-    color.b = luaL_checknumber(L, 4);
+    color.r = (float)luaL_checknumber(L, 2);
+    color.g = (float)luaL_checknumber(L, 3);
+    color.b = (float)luaL_checknumber(L, 4);
     if (lua_gettop(L) == 5) {
-      color.a = luaL_checknumber(L, 5);
+      color.a = (float)luaL_checknumber(L, 5);
     }
 
     self->m_tint = color;

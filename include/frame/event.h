@@ -5,7 +5,7 @@
 #include "frame/noncopyable.h"
 #include "frame/delegate.h"
 
-#include <lua.hpp>
+#include "os_lua.h"
 
 namespace Frame {
   class Layout;
