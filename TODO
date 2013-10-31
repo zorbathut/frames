@@ -1,7 +1,6 @@
 
 === BUILDING
 
-* Fix remaining warnings
 * Build sandbox with Cmake
 * Start unit test framework
 * Start testing stuff
