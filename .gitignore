@@ -20,4 +20,7 @@ Makefile
 *.opensdf
 *.suo
 Win32
+Debug
+Release
 frame.dir
+sandbox.dir
