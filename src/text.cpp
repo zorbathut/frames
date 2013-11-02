@@ -7,7 +7,7 @@
 #include "frame/renderer.h"
 #include "frame/texture_manager.h"
 
-#include <GL/GLew.h>
+#include "frame/os_gl.h"
 
 namespace Frame {
   Text *Text::CreateBare(Layout *parent) {

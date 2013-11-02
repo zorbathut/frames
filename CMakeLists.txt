@@ -11,17 +11,23 @@ add_definitions(-D_CRT_SECURE_NO_WARNINGS) # Someday we'll want to disable this,
 
 # TODO: make these optional
 include_directories("extern/boost_1_54_0")
-include_directories("extern/freetype-2.3.12/include")
+include_directories("extern/freetype-2.3.12/win32/include")
 include_directories("extern/glew-1.10.0/include")
-include_directories("extern/jpeg-9/win32")
-include_directories("extern/libpng-1.4.3")
-include_directories("extern/lua-5.1.5/src")
+include_directories("extern/jpeg-9/win32/include")
+include_directories("extern/libpng-1.4.3/win32/include")
+include_directories("extern/lua-5.1.5/win32/include")
 include_directories("extern/lua-5.1.5/etc") # needed for lua51.hpp
 include_directories("extern/SDL2-2.0.1/win32/include")
 include_directories("extern/zlib-1.2.8/win32/include")
 
-link_directories("extern/SDL2-2.0.1/win32/lib")
+link_directories("extern/freetype-2.3.12/win32/lib")
 link_directories("extern/glew-1.10.0/lib/Release/Win32")
+link_directories("extern/jpeg-9/win32/lib")
+link_directories("extern/libpng-1.4.3/win32/lib")
+link_directories("extern/lua-5.1.5/win32/lib")
+link_directories("extern/SDL2-2.0.1/win32/lib")
+link_directories("extern/zlib-1.2.8/win32/lib")
+
 
 file(GLOB_RECURSE HEADERS "include/*.h")
 
@@ -36,4 +42,10 @@ target_link_libraries(sandbox SDL2main)
 target_link_libraries(sandbox winmm)
 target_link_libraries(sandbox version)
 target_link_libraries(sandbox imm32)
+target_link_libraries(sandbox libpng14)
+target_link_libraries(sandbox jpeg)
+target_link_libraries(sandbox lua51)
+target_link_libraries(sandbox glew32s)
+target_link_libraries(sandbox freetype2312)
+target_link_libraries(sandbox zlib)
 

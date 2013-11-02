@@ -8,7 +8,7 @@
 
 #include "boost/static_assert.hpp"
 
-#include <GL/glew.h>
+#include "frame/os_gl.h"
 
 #include <vector>
 #include <algorithm>

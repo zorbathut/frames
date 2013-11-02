@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include <GL/glew.h>
+#include "os_gl.h"
 
 #include <boost/bimap.hpp>
 

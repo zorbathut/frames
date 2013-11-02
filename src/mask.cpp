@@ -4,7 +4,7 @@
 #include "frame/rect.h"
 #include "frame/renderer.h"
 
-#include <GL/GLew.h>
+#include "frame/os_gl.h"
 
 namespace Frame {
   Mask *Mask::CreateBare(Layout *parent) {

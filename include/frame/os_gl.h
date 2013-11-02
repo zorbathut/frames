@@ -3,6 +3,8 @@
 #ifndef FRAME_OS_GL
 #define FRAME_OS_GL
 
+#define GLEW_STATIC
+
 #include <GL/GLew.h>
 
 #endif

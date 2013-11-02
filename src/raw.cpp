@@ -4,7 +4,7 @@
 #include "frame/event_definition.h"
 #include "frame/renderer.h"
 
-#include <GL/GLew.h>
+#include "frame/os_gl.h"
 
 namespace Frame {
   FRAME_FRAMEEVENT_DEFINE(Render, ());

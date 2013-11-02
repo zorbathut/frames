@@ -1,23 +1,30 @@
 
 === BUILDING
 
-* Build sandbox with Cmake
 * Start unit test framework
+  * Screenshot and compare/save
+  * Worry about error codes later
 * Start testing stuff
+  * Frame positioning/background
+  * Frame layering
+  * Frame strata
+  * Mask functionality
+  * Text basic
+  * Text wordwrap
+  * Text scroll
 
 * Back to cygwin port
 
-=== MSVC PORT
-
-* isnan/_isnan
+* Simple examples
+  * SDL/GL
+  * Win32/GL
 
 === PROGRESSION
 
 * really need a global assert function
 * Deal with notepad++ wanting to look inside my build directories
 * Better global register setup
-
-* #define CreateTagged(...) CreateTagged_imp(__FILE__, __LINE__, __VA_ARGS__)
+* improve C API
 
 * DX support
 
