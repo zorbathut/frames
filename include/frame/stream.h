@@ -24,6 +24,7 @@ namespace Frame {
   class StreamFile : public Stream {
   public:
     static StreamFile *Create(const std::string &fname);
+    ~StreamFile();
 
     virtual int Read(unsigned char *target, int bytes);
     virtual bool Seek(int offset);
@@ -31,7 +32,6 @@ namespace Frame {
 
   private:
     StreamFile(std::FILE *file);
-    ~StreamFile();
 
     std::FILE *m_file;
   };
@@ -39,6 +39,7 @@ namespace Frame {
   class StreamBuffer : public Stream {
   public:
     static StreamBuffer *Create(const std::vector<unsigned char> &data);
+    ~StreamBuffer();
 
     virtual int Read(unsigned char *target, int bytes);
     virtual bool Seek(int offset);
@@ -46,7 +47,6 @@ namespace Frame {
 
   private:
     StreamBuffer(const std::vector<unsigned char> &data);
-    ~StreamBuffer();
 
     std::vector<unsigned char> m_data;
     int m_index;

@@ -19,14 +19,16 @@
   * SDL/GL
   * Win32/GL
 
-* Figure out git layout
-  * stable (tbd)
-  * test
-  * nightly (tbd)
-  * dev
-  * version branches?
-  * semantic versioning
-* Deployment
+* Deployment script
+  * Tag
+  * Branch
+    * test if appropriate
+    * stable if appropriate
+    * vX branch
+    * vX.Y branch
+  * Build cmake project files
+  * Build libraries
+  * Package
 
 === PROGRESSION
 
