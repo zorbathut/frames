@@ -10,23 +10,23 @@ add_definitions(-D_WIN32)
 add_definitions(-D_CRT_SECURE_NO_WARNINGS) # Someday we'll want to disable this, look for real problems, and then turn this right back on again.
 
 # TODO: make these optional
-include_directories("extern/boost_1_54_0")
-include_directories("extern/freetype-2.3.12/win32/include")
-include_directories("extern/glew-1.10.0/include")
-include_directories("extern/jpeg-9/win32/include")
-include_directories("extern/libpng-1.4.3/win32/include")
-include_directories("extern/lua-5.1.5/win32/include")
-include_directories("extern/lua-5.1.5/etc") # needed for lua51.hpp
-include_directories("extern/SDL2-2.0.1/win32/include")
-include_directories("extern/zlib-1.2.8/win32/include")
+include_directories("deps/boost_1_54_0")
+include_directories("deps/freetype-2.3.12/win32/include")
+include_directories("deps/glew-1.10.0/include")
+include_directories("deps/jpeg-9/win32/include")
+include_directories("deps/libpng-1.4.3/win32/include")
+include_directories("deps/lua-5.1.5/win32/include")
+include_directories("deps/lua-5.1.5/etc") # needed for lua51.hpp
+include_directories("deps/SDL2-2.0.1/win32/include")
+include_directories("deps/zlib-1.2.8/win32/include")
 
-link_directories("extern/freetype-2.3.12/win32/lib")
-link_directories("extern/glew-1.10.0/lib/Release/Win32")
-link_directories("extern/jpeg-9/win32/lib")
-link_directories("extern/libpng-1.4.3/win32/lib")
-link_directories("extern/lua-5.1.5/win32/lib")
-link_directories("extern/SDL2-2.0.1/win32/lib")
-link_directories("extern/zlib-1.2.8/win32/lib")
+link_directories("deps/freetype-2.3.12/win32/lib")
+link_directories("deps/glew-1.10.0/lib/Release/Win32")
+link_directories("deps/jpeg-9/win32/lib")
+link_directories("deps/libpng-1.4.3/win32/lib")
+link_directories("deps/lua-5.1.5/win32/lib")
+link_directories("deps/SDL2-2.0.1/win32/lib")
+link_directories("deps/zlib-1.2.8/win32/lib")
 
 
 file(GLOB_RECURSE HEADERS "include/*.h")

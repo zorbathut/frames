@@ -19,6 +19,15 @@
   * SDL/GL
   * Win32/GL
 
+* Figure out git layout
+  * stable (tbd)
+  * test
+  * nightly (tbd)
+  * dev
+  * version branches?
+  * semantic versioning
+* Deployment
+
 === PROGRESSION
 
 * really need a global assert function
