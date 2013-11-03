@@ -1,14 +1,14 @@
 
-#include "frame/text_manager.h"
+#include "frames/text_manager.h"
 
-#include "frame/configuration.h"
-#include "frame/environment.h"
-#include "frame/renderer.h"
-#include "frame/stream.h"
-#include "frame/texture_config.h"
-#include "frame/texture_manager.h"
+#include "frames/configuration.h"
+#include "frames/environment.h"
+#include "frames/renderer.h"
+#include "frames/stream.h"
+#include "frames/texture_config.h"
+#include "frames/texture_manager.h"
 
-namespace Frame {
+namespace Frames {
   // =======================================
   // FONTINFO
 

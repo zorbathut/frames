@@ -1,15 +1,15 @@
 
-#include "frame/layout.h"
+#include "frames/layout.h"
 
-#include "frame/environment.h"
-#include "frame/event_definition.h"
-#include "frame/lua.h"
-#include "frame/rect.h"
-#include "frame/renderer.h"
+#include "frames/environment.h"
+#include "frames/event_definition.h"
+#include "frames/lua.h"
+#include "frames/rect.h"
+#include "frames/renderer.h"
 
 #include <math.h> // just for isnan()
 
-namespace Frame {
+namespace Frames {
   FRAME_FRAMEEVENT_DEFINE(Move, ());
   FRAME_FRAMEEVENT_DEFINE(Size, ());
 
@@ -448,7 +448,12 @@ namespace Frame {
     m_env->DestroyingLayout(this);
   }
 
-  void Layout::SetPoint(Axis axis, float mypt, const Layout *link, float linkpt, float offset) {
+  void Layout::SetPoint(Axis axis, float mypt, const Layout *link, float linkpt, float offset /*= 0.f*/) {
+    if (link && link->m_env != m_env) {
+      FRAME_LAYOUT_CHECK(false, "Attempted to constrain a frame to a frame from another environment");
+      return;
+    }
+
     AxisData &ax = m_axes[axis];
 
     AxisData::Connector &axa = ax.connections[0];
@@ -511,6 +516,7 @@ namespace Frame {
     bool axbu = Utility::IsUndefined(axb.point_mine);
 
     if (!Utility::IsUndefined(ax.size_set) && (!axau || !axbu)) {
+      FRAME_LAYOUT_CHECK(link, "Frame overconstrained - attempted to assign a second point to a frame axis that already contained a size and one point.");
       return;
     }
 
@@ -594,12 +600,77 @@ namespace Frame {
     if (!Utility::IsUndefined(axb.point_mine)) {
       ClearPoint(axis, axb.point_mine);
     }
+
+    ClearSize(axis);
+  }
+
+  void Layout::ClearAllPoints() {
+    ClearAllPoints(X);
+    ClearAllPoints(Y);
+  }
+
+  // SetPoint adapters
+  // All the anchor versions just transform themselves into no-anchor versions first
+  void Layout::SetPoint(Anchor myanchor, const Layout *link, Anchor theiranchor) {
+    SetPoint(c_anchorLookup[myanchor].x, c_anchorLookup[myanchor].y, link, c_anchorLookup[theiranchor].x, c_anchorLookup[theiranchor].y);
+  }
+  void Layout::SetPoint(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
+    SetPoint(c_anchorLookup[myanchor].x, c_anchorLookup[myanchor].y, link, c_anchorLookup[theiranchor].x, c_anchorLookup[theiranchor].y, xofs, yofs);
+  }
+  
+  void Layout::SetPoint(Anchor myanchor, const Layout *link, float theirx, float theiry) {
+    SetPoint(c_anchorLookup[myanchor].x, c_anchorLookup[myanchor].y, link, theirx, theiry);
+  }
+  void Layout::SetPoint(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
+    SetPoint(c_anchorLookup[myanchor].x, c_anchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
+  }
+
+  void Layout::SetPoint(float myx, float myy, const Layout *link, Anchor theiranchor) {
+    SetPoint(myx, myy, link, c_anchorLookup[theiranchor].x, c_anchorLookup[theiranchor].y);
+  }
+  void Layout::SetPoint(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
+    SetPoint(myx, myy, link, c_anchorLookup[theiranchor].x, c_anchorLookup[theiranchor].y, xofs, yofs);
+  }
+
+  void Layout::SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry) {
+    FRAME_LAYOUT_CHECK(link, "SetPoint requires offsets when linking to origin.");
+    FRAME_LAYOUT_CHECK(IsNil(myx) == IsNil(theirx), "SetPoint provided with only one anchor position for X axis");
+    FRAME_LAYOUT_CHECK(IsNil(myy) == IsNil(theiry), "SetPoint provided with only one anchor position for Y axis");
+    FRAME_LAYOUT_CHECK(!IsNil(myx) || !IsNil(myy), "SetPoint not provided with any anchor axes");
+
+    if (!IsNil(myx)) {
+      SetPoint(X, myx, link, theirx);
+    }
+
+    if (!IsNil(myy)) {
+      SetPoint(Y, myy, link, theiry);
+    }
+  }
+  void Layout::SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
+    FRAME_LAYOUT_CHECK(!IsNil(myx) || !IsNil(myy), "SetPoint not provided with any anchor axes");
+    if (link) {
+      FRAME_LAYOUT_CHECK(IsNil(myx) == IsNil(theirx) && IsNil(myx) == IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
+      FRAME_LAYOUT_CHECK(IsNil(myy) == IsNil(theiry) && IsNil(myy) == IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
+    } else {
+      FRAME_LAYOUT_CHECK(IsNil(theirx) && IsNil(theiry), "SetPoint must have nil target anchor points when linking to origin.");
+      FRAME_LAYOUT_CHECK(IsNil(myx) == IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
+      FRAME_LAYOUT_CHECK(IsNil(myy) == IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
+    }
+
+    if (!IsNil(myx)) {
+      SetPoint(X, myx, link, theirx, xofs);
+    }
+
+    if (!IsNil(myy)) {
+      SetPoint(Y, myy, link, theiry, yofs);
+    }
   }
 
   void Layout::SetSize(Axis axis, float size) {
     AxisData &ax = m_axes[axis];
 
     if (!Utility::IsUndefined(ax.connections[0].point_mine) && !Utility::IsUndefined(ax.connections[1].point_mine)) {
+      FRAME_LAYOUT_CHECK(false, "Frame overconstrained - attempted to assign a size to a frame axis that already contained two points.");
       return;
     }
 
@@ -626,7 +697,7 @@ namespace Frame {
     }
   }
 
-  void Layout::ClearLayout() {
+  void Layout::ClearConstraints() {
     ClearSize(X);
     ClearSize(Y);
 
@@ -855,7 +926,7 @@ namespace Frame {
   }
 
   void Layout::Obliterate_Detach() {
-    ClearLayout();  // kill my layout
+    ClearConstraints();  // kill my layout to unlink things
 
     // OBLITERATE ALL CHILDREN.
     for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {

@@ -2,7 +2,7 @@
 #define _WIN32_WINNT 0x0600 // needed for XBUTTON, MOUSEWHEEL, MOUSEHWHEEL
 #define WINVER 0x0400 // needed for MAPVK_VSC_TO_VK_EX
 
-#include "frame/os_win32.h"
+#include "frames/os_win32.h"
 
 #include <windows.h>
 #include <winuser.h>
@@ -13,7 +13,7 @@
 #define MAPVK_VSC_TO_VK_EX 3
 #endif
 
-namespace Frame {
+namespace Frames {
 
   static const Key::Key c_keyIndex[] = {
     Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0x00 - 0x07

@@ -1,10 +1,10 @@
 
-#include "frame/stream.h"
+#include "frames/stream.h"
 
 #include <algorithm>
 #include <cstring>
 
-namespace Frame {
+namespace Frames {
   StreamFile *StreamFile::Create(const std::string &fname) {
     std::FILE *fil = fopen(fname.c_str(), "rb");
     if (!fil) return 0;

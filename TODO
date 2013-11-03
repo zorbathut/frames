@@ -1,11 +1,7 @@
 
 === BUILDING
 
-* Start unit test framework
-  * Screenshot and compare/save
-  * Worry about error codes later
 * Start testing stuff
-  * Frame positioning/background
   * Frame layering
   * Frame strata
   * Mask functionality

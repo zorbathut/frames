@@ -1,14 +1,14 @@
 
-#include "frame/texture.h"
+#include "frames/texture.h"
 
-#include "frame/environment.h"
-#include "frame/lua.h"
-#include "frame/renderer.h"
-#include "frame/texture_manager.h"
+#include "frames/environment.h"
+#include "frames/lua.h"
+#include "frames/renderer.h"
+#include "frames/texture_manager.h"
 
-#include "frame/os_gl.h"
+#include "frames/os_gl.h"
 
-namespace Frame {
+namespace Frames {
   Texture *Texture::CreateBare(Layout *parent) {
     return new Texture(parent);
   }

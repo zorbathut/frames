@@ -1,13 +1,13 @@
 
-#include "frame/frame.h"
+#include "frames/frame.h"
 
-#include "frame/environment.h"
-#include "frame/lua.h"
-#include "frame/renderer.h"
+#include "frames/environment.h"
+#include "frames/lua.h"
+#include "frames/renderer.h"
 
 #include <GL/gl.h>
 
-namespace Frame {
+namespace Frames {
   Frame *Frame::CreateBare(Layout *parent) {
     return new Frame(parent);
   }

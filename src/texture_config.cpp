@@ -1,9 +1,9 @@
 
-#include "frame/texture_config.h"
+#include "frames/texture_config.h"
 
-#include "frame/environment.h"
+#include "frames/environment.h"
 
-namespace Frame {
+namespace Frames {
 
   int TextureConfig::GetBPP(Type type) {
     if (type == MODE_RGBA) {

@@ -1,17 +1,17 @@
 
-#include "frame/configuration.h"
+#include "frames/configuration.h"
 
-#include "frame/environment.h"
-#include "frame/loader.h"
-#include "frame/stream.h"
-#include "frame/texture_config.h"
+#include "frames/environment.h"
+#include "frames/loader.h"
+#include "frames/stream.h"
+#include "frames/texture_config.h"
 
 #include <cstdio>
 #include <cstring>
 
 #include <windows.h>
 
-namespace Frame {
+namespace Frames {
   Configuration::Configuration() : logger(0), textureFromId(0), streamFromId(0), pathFromId(0), textureFromStream(0), clipboard(0), performance(0) { };
 
   void Configuration::Logger::LogError(const std::string &log) {

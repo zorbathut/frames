@@ -1,6 +1,6 @@
 
-#include "frame/color.h"
+#include "frames/color.h"
 
-namespace Frame {
+namespace Frames {
 }
 

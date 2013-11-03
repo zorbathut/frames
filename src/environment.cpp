@@ -1,21 +1,21 @@
 
-#include "frame/environment.h"
-#include "frame/environment_register.h"
+#include "frames/environment.h"
+#include "frames/environment_register.h"
 
-#include "frame/frame.h"
-#include "frame/renderer.h"
-#include "frame/text_manager.h"
-#include "frame/texture_manager.h"
+#include "frames/frame.h"
+#include "frames/renderer.h"
+#include "frames/text_manager.h"
+#include "frames/texture_manager.h"
 
 // these exist just for the lua init
-#include "frame/text.h"
-#include "frame/texture.h"
-#include "frame/mask.h"
-#include "frame/raw.h"
+#include "frames/text.h"
+#include "frames/texture.h"
+#include "frames/mask.h"
+#include "frames/raw.h"
 
 #include <GL/gl.h>
 
-namespace Frame {
+namespace Frames {
   Environment::Environment() {
     Configuration config;
     Init(config);
@@ -452,10 +452,10 @@ namespace Frame {
     lua_pop(L, 1);  // toot
 
     // insert our global table
-    lua_getfield(L, LUA_GLOBALSINDEX, "Frame");
+    lua_getfield(L, LUA_GLOBALSINDEX, "Frames");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
-      lua_setfield(L, LUA_GLOBALSINDEX, "Frame");
+      lua_setfield(L, LUA_GLOBALSINDEX, "Frames");
     }
     lua_pop(L, 1);
 
@@ -463,7 +463,7 @@ namespace Frame {
     LuaRegisterFrameLookup<Layout>(L);
 
     // And insert the Root member into the frames
-    lua_getglobal(L, "Frame");
+    lua_getglobal(L, "Frames");
 
     // Don't overwrite the old one (this is important - our error compensation for trying to push a frame into Lua from an unregistered Frame environment will register it, and swapping out Frame.Root without warning is really really bad!)
     lua_getfield(L, -1, "Root");
@@ -525,12 +525,12 @@ namespace Frame {
   void Environment::LuaRegisterEvent(lua_State *L, EventTypeBase *feb) {
     LuaStackChecker lsc(L, this);
     
-    lua_getfield(L, LUA_GLOBALSINDEX, "Frame");
+    lua_getfield(L, LUA_GLOBALSINDEX, "Frames");
     if (lua_isnil(L, -1)) {
       lua_pop(L, 1);
       lua_newtable(L);
       lua_pushvalue(L, -1);
-      lua_setfield(L, LUA_GLOBALSINDEX, "Frame");
+      lua_setfield(L, LUA_GLOBALSINDEX, "Frames");
     }
     
     lua_getfield(L, -1, "Event");

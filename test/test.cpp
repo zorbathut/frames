@@ -2,12 +2,12 @@
 #include <gtest/gtest.h>
 
 #include <SDL.h>
-#include <frame/os_gl.h>
-#include <frame/environment.h>
-#include <frame/frame.h>
-#include <frame/stream.h>
-#include <frame/loader.h>
-#include <frame/texture_config.h>
+#include <frames/os_gl.h>
+#include <frames/environment.h>
+#include <frames/frame.h>
+#include <frames/stream.h>
+#include <frames/loader.h>
+#include <frames/texture_config.h>
 
 #include <png.h>
 
@@ -54,7 +54,8 @@ private:
 class TestEnvironment {
 public:
   TestEnvironment() : m_env(0) {
-    m_env = new Frame::Environment();
+    m_env = new Frames::Environment();
+    m_env->ResizeRoot(s_width, s_height); // set this up so we can check coordinates
   }
 
   ~TestEnvironment() {
@@ -62,16 +63,16 @@ public:
     delete m_env;
   }
 
-  Frame::Environment *operator*() {
+  Frames::Environment *operator*() {
     return m_env;
   }
-  Frame::Environment *operator->() {
+  Frames::Environment *operator->() {
     return m_env;
   }
 
 private:
   TestSDLEnvironment m_sdl; // mostly taken care of with constructor/destructor
-  Frame::Environment *m_env;
+  Frames::Environment *m_env;
 };
 
 void TestSnapshot(TestEnvironment &env) {
@@ -81,7 +82,7 @@ void TestSnapshot(TestEnvironment &env) {
   env->ResizeRoot(s_width, s_height);
   env->Render();
 
-  std::string testName = Frame::Utility::Format("test/ref/%s_%s", ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name(), ::testing::UnitTest::GetInstance()->current_test_info()->name());
+  std::string testName = Frames::Utility::Format("test/ref/%s_%s", ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name(), ::testing::UnitTest::GetInstance()->current_test_info()->name());
 
   static std::string s_testNameLast = "";
   static int s_testIdLast = 0;
@@ -91,9 +92,9 @@ void TestSnapshot(TestEnvironment &env) {
     s_testIdLast = 0;
   }
 
-  std::string testFilePrefix = Frame::Utility::Format("%s_%d", testName.c_str(), s_testIdLast++);
+  std::string testFilePrefix = Frames::Utility::Format("%s_%d", testName.c_str(), s_testIdLast++);
   std::string testFileName = testFilePrefix + ".png";
-  std::string failureFileName = testFilePrefix + "_failure.png";
+  std::string failureFileName = testFilePrefix + "_result.png";
 
   // We now have our test filename
 
@@ -115,13 +116,13 @@ void TestSnapshot(TestEnvironment &env) {
   // Grab our source file (or try to)
   std::vector<unsigned char> reference;
   {
-    Frame::StreamFile *stream = Frame::StreamFile::Create(testFileName);
+    Frames::StreamFile *stream = Frames::StreamFile::Create(testFileName);
     if (stream)
     {
-      Frame::TextureConfig tex = Frame::Loader::PNG::Load(*env, stream);
-      EXPECT_EQ(tex.GetMode(), Frame::TextureConfig::RAW);
-      EXPECT_EQ(tex.Raw_GetType(), Frame::TextureConfig::MODE_RGBA);
-      EXPECT_EQ(Frame::TextureConfig::GetBPP(Frame::TextureConfig::MODE_RGBA), 4);
+      Frames::TextureConfig tex = Frames::Loader::PNG::Load(*env, stream);
+      EXPECT_EQ(tex.GetMode(), Frames::TextureConfig::RAW);
+      EXPECT_EQ(tex.Raw_GetType(), Frames::TextureConfig::MODE_RGBA);
+      EXPECT_EQ(Frames::TextureConfig::GetBPP(Frames::TextureConfig::MODE_RGBA), 4);
       EXPECT_EQ(tex.Raw_GetStride(), tex.GetWidth() * 4);
       reference.resize(tex.GetWidth() * tex.GetHeight() * 4);
       memcpy(reference.data(), tex.Raw_GetData(), tex.GetWidth() * tex.GetHeight() * 4);
@@ -176,77 +177,83 @@ void TestSnapshot(TestEnvironment &env) {
 TEST(Layout, SetBackground) {
   TestEnvironment env;
 
-  Frame::Frame *frame = Frame::Frame::CreateTagged(env->GetRoot());
-  frame->SetBackground(Frame::Color(1.f, 0.f, 0.f, 0.5f));
-  
+  Frames::Frame *frame = Frames::Frame::CreateTagged(env->GetRoot());
+  frame->SetBackground(Frames::Color(1.f, 0.f, 0.f, 0.5f));
+  TestSnapshot(env);
+
+  frame->SetBackground(Frames::Color(1.f, 1.f, 1.f, 1.0f));
+  TestSnapshot(env);
+
+  frame->SetBackground(Frames::Color(0.f, 1.f, 0.f, 0.2f));
+  TestSnapshot(env);
+
+  frame->SetBackground(Frames::Color(0.2f, 0.3f, 0.7f, 0.8f));
   TestSnapshot(env);
 };
 
-/*
-int main(int argc, char** argv){
-  if (SDL_Init(SDL_INIT_VIDEO) == -1) {
-    std::printf("%s", SDL_GetError());
-    return 1;
-  }
+TEST(Layout, SetPoint) {
+  TestEnvironment env;
 
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+  Frames::Frame *red = Frames::Frame::CreateTagged(env->GetRoot());
+  red->SetBackground(Frames::Color(1.f, 0.f, 0.f, 0.5f)); // Partially transparent so we can see frame intersections
 
-  SDL_Window *win = SDL_CreateWindow("Frame test harness", 100, 100, 1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+  red->SetPoint(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT);
+  red->SetPoint(Frames::BOTTOMRIGHT, env->GetRoot(), Frames::BOTTOMRIGHT);
+  EXPECT_EQ(red->GetLeft(), 0);
+  EXPECT_EQ(red->GetRight(), s_width);
+  EXPECT_EQ(red->GetTop(), 0);
+  EXPECT_EQ(red->GetBottom(), s_height);
+
+  TestSnapshot(env);
+
+  red->ClearAllPoints();
+  red->SetPoint(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT);
+  red->SetPoint(Frames::BOTTOMRIGHT, env->GetRoot(), Frames::CENTER);
+
+  Frames::Frame *green = Frames::Frame::CreateTagged(env->GetRoot());
+  green->SetBackground(Frames::Color(0.f, 1.f, 0.f, 0.5f));
+  green->SetPoint(Frames::CENTER, env->GetRoot(), 0.75f, 0.75f);
+  green->SetPoint(Frames::TOPRIGHT, env->GetRoot(), Frames::CENTERRIGHT);
+
+  Frames::Frame *blue = Frames::Frame::CreateTagged(env->GetRoot());
+  blue->SetBackground(Frames::Color(0.f, 0.f, 1.f, 0.5f));
+  blue->SetPoint(Frames::BOTTOMLEFT, env->GetRoot(), Frames::CENTER);
+  blue->SetPoint(Frames::TOPRIGHT, env->GetRoot(), Frames::TOPRIGHT);
+
+  Frames::Frame *gray = Frames::Frame::CreateTagged(env->GetRoot());
+  gray->SetBackground(Frames::Color(0.5f, 0.5f, 0.5f, 0.5f));
+  gray->SetWidth((float)s_width / 2);
+  gray->SetHeight((float)s_height / 2);
+  gray->SetPoint(Frames::CENTER, 0, Frames::Nil, Frames::Nil, (float)s_width / 4, (float)s_height / 4 * 3);
+
+  TestSnapshot(env);
+
+  red->ClearConstraints();
+  green->ClearConstraints();
+  blue->ClearConstraints();
+  gray->ClearConstraints();
+
+  red->SetPoint(Frames::LEFT, env->GetRoot(), Frames::LEFT);
+  green->SetPoint(Frames::LEFT, env->GetRoot(), Frames::LEFT);
+  blue->SetPoint(Frames::LEFT, env->GetRoot(), Frames::LEFT);
+  gray->SetPoint(Frames::LEFT, env->GetRoot(), Frames::LEFT);
+
+  red->SetPoint(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
+  green->SetPoint(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
+  blue->SetPoint(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
+  gray->SetPoint(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
+
+  red->SetPoint(Frames::TOP, env->GetRoot(), Frames::TOP);
+  red->SetHeight(100.f);
+
+  green->SetPoint(Frames::TOP, red, Frames::BOTTOM);
+  green->SetHeight(100.f);
+
+  blue->SetPoint(Frames::TOP, green, Frames::BOTTOM);
+  blue->SetHeight(100.f);
+
+  gray->SetPoint(Frames::TOP, blue, Frames::BOTTOM);
+  gray->SetHeight(100.f);
   
-  if (!win) {
-    std::printf("%s", SDL_GetError());
-    return 1;
-  }
-  
-  // Create an OpenGL context associated with the window.
-  {
-    SDL_GLContext glcontext = SDL_GL_CreateContext(win);
-
-    glewInit();
-
-    Frame::Environment *env = new Frame::Environment();
-
-    env->ResizeRoot(1280, 720);
-
-    {
-      Frame::Frame *redrect = Frame::Frame::CreateTagged(env->GetRoot());
-      redrect->SetBackground(Frame::Color(1, 0, 0));
-      redrect->SetPoint(Frame::Axis::X, 0, env->GetRoot(), 0.4f, 0);
-      redrect->SetPoint(Frame::Axis::X, 1, env->GetRoot(), 0.6f, 0);
-      redrect->SetPoint(Frame::Axis::Y, 0, env->GetRoot(), 0.4f, 0);
-      redrect->SetPoint(Frame::Axis::Y, 1, env->GetRoot(), 0.6f, 0);
-    }
-
-    bool quit = false;
-    while (!quit)
-    {
-      {
-        SDL_Event e;
-        while (SDL_PollEvent(&e)){
-          //If user closes he window
-          if (e.type == SDL_QUIT)
-            quit = true;
-        }
-      }
-
-      glClearColor(0, 0, 0, 1);
-      glClear(GL_COLOR_BUFFER_BIT);
-
-      env->Render();
-
-      SDL_GL_SwapWindow(win);
-    }
-
-    delete env;
-
-    SDL_GL_DeleteContext(glcontext);
-  }
-    
-  SDL_DestroyWindow(win);
-
-  SDL_Quit();
-
-  return 0;
-}
-*/
+  TestSnapshot(env);
+};

@@ -1,12 +1,12 @@
 
-#include "frame/raw.h"
+#include "frames/raw.h"
 
-#include "frame/event_definition.h"
-#include "frame/renderer.h"
+#include "frames/event_definition.h"
+#include "frames/renderer.h"
 
-#include "frame/os_gl.h"
+#include "frames/os_gl.h"
 
-namespace Frame {
+namespace Frames {
   FRAME_FRAMEEVENT_DEFINE(Render, ());
   
   Raw *Raw::CreateBare(Layout *parent) {

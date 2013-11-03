@@ -1,12 +1,12 @@
 
-#include "frame/mask.h"
+#include "frames/mask.h"
 
-#include "frame/rect.h"
-#include "frame/renderer.h"
+#include "frames/rect.h"
+#include "frames/renderer.h"
 
-#include "frame/os_gl.h"
+#include "frames/os_gl.h"
 
-namespace Frame {
+namespace Frames {
   Mask *Mask::CreateBare(Layout *parent) {
     return new Mask(parent);
   }
