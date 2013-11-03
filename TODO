@@ -2,8 +2,6 @@
 === BUILDING
 
 * Start testing stuff
-  * Frame layering
-  * Frame strata
   * Mask functionality
   * Text basic
   * Text wordwrap
