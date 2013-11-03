@@ -378,6 +378,8 @@ namespace Frames {
     // TODO: come up with a better panic button for this? if we have no parent or environment then we have no way to do debug logging
     FRAME_LAYOUT_CHECK(layout || env, "Layout not given parent or environment");
 
+    m_constructionOrder = m_env->RegisterFrame();
+
     m_env->MarkInvalidated(this); // We'll need to resolve this before we go
 
     if (layout) {
@@ -1267,7 +1269,7 @@ namespace Frames {
     if (lhs->GetLayer() != rhs->GetLayer())
       return lhs->GetLayer() < rhs->GetLayer();
     // they're the same, but we want a consistent sort that won't result in Z-fighting
-    return lhs < rhs;
+    return lhs->m_constructionOrder < rhs->m_constructionOrder;
   }
   
   void Layout::EventDestroy(EventLookup::iterator eventTable, EventMultiset::iterator toBeRemoved) {

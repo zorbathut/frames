@@ -378,6 +378,7 @@ namespace Frames {
     // Layer/parenting engine
     float m_layer;
     float m_strata;
+    unsigned int m_constructionOrder; // This is used to create consistent results when frames are Z-conflicting
     Layout *m_parent;
     bool m_visible;
     ChildrenList m_children;

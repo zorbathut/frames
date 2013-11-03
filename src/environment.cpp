@@ -801,6 +801,13 @@ namespace Frames {
     }
   }
 
+  unsigned int Environment::RegisterFrame() {
+    if (m_counter == -1) {
+      LogError("Frame counter exceeded 4 billion, this maybe should be increased to a 64-bit integer");
+    }
+    return m_counter++;
+  }
+
   void Environment::Init(const Configuration &config) {
     m_config_logger_owned = 0;
     m_config_tfi_owned = 0;
@@ -840,6 +847,8 @@ namespace Frames {
       m_config_clipboard_owned = new Configuration::Clipboard();
       m_config.clipboard = m_config_clipboard_owned;
     }
+
+    m_counter = 0;
 
     m_root = new Layout(0, this);
     m_root->SetNameStatic("Root");

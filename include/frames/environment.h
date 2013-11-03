@@ -98,6 +98,10 @@ namespace Frames {
     friend class Layout;
     friend class Frame;
 
+    // Unique ID code
+    unsigned int RegisterFrame();
+    unsigned int m_counter;
+
     // Utility functions and parameters
     void Init(const Configuration &config);
     template<typename T> void LuaRegisterFrameLookup(lua_State *L);
