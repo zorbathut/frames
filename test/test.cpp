@@ -257,3 +257,39 @@ TEST(Layout, SetPoint) {
   
   TestSnapshot(env);
 };
+
+TEST(Layout, Layer) {
+  TestEnvironment env;
+
+  const int testFrameCount = 20;
+  Frames::Frame *frames[testFrameCount];
+  const float order[testFrameCount] = { 0, 6, 3.14159f, 3, 5, 9, 12, -5, 0, 0, 3.14159f, 2, 2, 2, 5000, 4999, 5001, 0, 3, 3.14159f };  // Numbers are not magic in any way, just trying to provide an interesting cross-section
+  {
+    Frames::Layout *anchor = env->GetRoot();
+    for (int i = 0; i < testFrameCount; ++i) {
+      frames[i] = Frames::Frame::CreateTagged(env->GetRoot());
+      frames[i]->SetWidth(400.f);
+      frames[i]->SetHeight(400.f);
+      frames[i]->SetBackground(Frames::Color((float)i / testFrameCount, (float)i / testFrameCount, (float)i / testFrameCount, 0.2f));
+      frames[i]->SetPoint(Frames::TOPLEFT, anchor, Frames::TOPLEFT, 10.f, 10.f);
+      frames[i]->SetLayer(order[i]);
+      anchor = frames[i];
+    }
+  }
+
+  TestSnapshot(env);
+
+  // Re-order to do a new test
+  for (int i = 0; i < testFrameCount; ++i) {
+    frames[i]->SetLayer(order[(i + 3) % testFrameCount]);
+  }
+
+  TestSnapshot(env);
+
+  // Test strata
+  for (int i = 0; i < testFrameCount; ++i) {
+    frames[i]->SetStrata((float)(i % 2));
+  }
+
+  TestSnapshot(env);
+}

@@ -749,7 +749,7 @@ namespace Frames {
       return;
     }
 
-    // We take ourselves out of our parents' list so we can change our layer without fucking up the sort
+    // We take ourselves out of our parents' list so we can change our layer without breaking the sort
     if (m_parent) {
       m_parent->m_children.erase(this);
     }
@@ -766,7 +766,7 @@ namespace Frames {
       return;
     }
 
-    // We take ourselves out of our parents' list so we can change our layer without fucking up the sort
+    // We take ourselves out of our parents' list so we can change our strata without breaking the sort
     if (m_parent) {
       m_parent->m_children.erase(this);
     }
