@@ -47,8 +47,8 @@
 
 // Modified for the Frame library to drop delegates into our own namespace, with a global search/replace to change FastDelegate into Delegate, and a similar one to change MakeDelegate into DelegateMake
 
-#ifndef FRAME_FASTDELEGATE_H // FRAME MODIFICATION
-#define FRAME_FASTDELEGATE_H // FRAME MODIFICATION
+#ifndef FRAMES_FASTDELEGATE_H // FRAME MODIFICATION
+#define FRAMES_FASTDELEGATE_H // FRAME MODIFICATION
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000

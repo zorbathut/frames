@@ -1,7 +1,7 @@
  // The Environment registration
 
-#ifndef FRAME_ENVIRONMENT_REGISTER
-#define FRAME_ENVIRONMENT_REGISTER
+#ifndef FRAMES_ENVIRONMENT_REGISTER
+#define FRAMES_ENVIRONMENT_REGISTER
 
 #include "frames/environment.h"
 
@@ -68,7 +68,7 @@ namespace Frames {
 
     // First, we need to see if we even need to do all this registration foofery
     // Yeah, that's right, I called it "foofery"
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_mt");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_mt");
     if (lua_isnil(L, -1)) {
       LogError("Frame not yet registered to Lua environment");
       lua_pop(L, 1);
@@ -85,20 +85,20 @@ namespace Frames {
     // toss the nil, we don't need it
     lua_pop(L, 1);
 
-    // Stack: ... Frame_mt
+    // Stack: ... Frames_mt
 
     // Make the RG and RRG tables
     // There are bits in here that could theoretically be done more efficiently, but it's not worth the added complexity to save a few cycles here
     
     // Pull out the RG
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rg");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
     if (lua_isnil(L, -1)) {
       LogError("Frame not yet registered to Lua environment");
       lua_pop(L, 2);
       return;
     }
 
-    // Stack: ... Frame_mt Frame_rg
+    // Stack: ... Frames_mt Frames_rg
     
     // See if we've already got a registry table. Used for correlating Lua tables with lightuserdata, we don't need to put anything in it yet
     lua_getfield(L, -1, T::GetStaticType());
@@ -118,28 +118,28 @@ namespace Frames {
     }
 
     // Pull out the various event tables
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_fevh");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fevh");
     if (lua_isnil(L, -1)) {
       LogError("Frame not yet registered to Lua environment");
       lua_pop(L, 3);
       return;
     }
 
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rfevh");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfevh");
     if (lua_isnil(L, -1)) {
       LogError("Frame not yet registered to Lua environment");
       lua_pop(L, 4);
       return;
     }
 
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_cfevh");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfevh");
     if (lua_isnil(L, -1)) {
       LogError("Frame not yet registered to Lua environment");
       lua_pop(L, 5);
       return;
     }
 
-    // Stack: ... Frame_mt Frame_rg Frame_fevh Frame_rfevh Frame_cfevh
+    // Stack: ... Frames_mt Frames_rg Frames_fevh Frames_rfevh Frames_cfevh
 
     // Now it's time to rig up the actual metatable that we plan to create
 
@@ -149,7 +149,7 @@ namespace Frames {
     // This will be our function lookup
     lua_newtable(L);
 
-    // Stack: ... Frame_mt Frame_rg Frame_fevh Frame_rfevh Frame_cfevh metatable indexes
+    // Stack: ... Frames_mt Frames_rg Frames_fevh Frames_rfevh Frames_cfevh metatable indexes
     // This goes back to Layout::luaF_RegisterFunction - if this layout is changed, that function may need to be changed
     // luaF_RegisterFunctions used to want a lot of these parameters so it could efficiently set up upvalues. Right now, we don't really care. This can probably be cleaned up quite a bit.
     T::luaF_RegisterFunctions(L);
@@ -157,12 +157,12 @@ namespace Frames {
     // Attach it as the index accessor
     lua_setfield(L, -2, "__index");
 
-    // Stack: ... Frame_mt Frame_rg Frame_fevh Frame_rfevh Frame_cfevh metatable
+    // Stack: ... Frames_mt Frames_rg Frames_fevh Frames_rfevh Frames_cfevh metatable
 
     // Register the metatable
     lua_setfield(L, -6, T::GetStaticType());
 
-    // Stack: ... Frame_mt Frame_rg Frame_fevh Frame_rfevh Frame_cfevh
+    // Stack: ... Frames_mt Frames_rg Frames_fevh Frames_rfevh Frames_cfevh
 
     lua_pop(L, 5);
   }
@@ -197,7 +197,7 @@ namespace Frames {
     // Add the upvalue parameter
 
     // Pull out the RG
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rg");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
     if (lua_isnil(L, -1)) {
       LogError("Frame not yet registered to Lua environment");
       lua_pop(L, 2);
@@ -211,13 +211,13 @@ namespace Frames {
       return;
     }
 
-    // Stack: ... globalFrame Frame_rg Layoutlookup
+    // Stack: ... globalFrame Frames_rg Layoutlookup
 
     // Insert function
     lua_pushcclosure(L, &luaF_frameCreate<T>, 1);
     lua_setfield(L, -3, T::GetStaticType());
 
-    // Stack: ... globalFrame Frame_rg
+    // Stack: ... globalFrame Frames_rg
 
     // Clean up and we're done
     lua_pop(L, 2);

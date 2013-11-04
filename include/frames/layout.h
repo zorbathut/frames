@@ -1,7 +1,7 @@
 // The Layout class
 
-#ifndef FRAME_LAYOUT
-#define FRAME_LAYOUT
+#ifndef FRAMES_LAYOUT
+#define FRAMES_LAYOUT
 
 #include "frames/delegate.h"
 #include "frames/event.h"
@@ -25,40 +25,40 @@ namespace Frames {
   class Renderer;
   class Layout;
   
-  FRAME_FRAMEEVENT_DECLARE(Move, ());
-  FRAME_FRAMEEVENT_DECLARE(Size, ());
+  FRAMES_FRAMEEVENT_DECLARE(Move, ());
+  FRAMES_FRAMEEVENT_DECLARE(Size, ());
 
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseOver, ());
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseMove, (const Point &pt));
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseMoveoutside, (const Point &pt));
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseOut, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseOver, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMove, (const Point &pt));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMoveoutside, (const Point &pt));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseOut, ());
 
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUp, ());
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUpoutside, ());
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftDown, ());
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftClick, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUp, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUpoutside, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftDown, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftClick, ());
 
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUp, ());
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUpoutside, ());
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleDown, ());
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleClick, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUp, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUpoutside, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleDown, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleClick, ());
 
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUp, ());
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUpoutside, ());
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseRightDown, ());
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseRightClick, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUp, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUpoutside, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightDown, ());
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightClick, ());
 
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUp, (int button));
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUpoutside, (int button));
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonDown, (int button));
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonClick, (int button));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUp, (int button));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUpoutside, (int button));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonDown, (int button));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonClick, (int button));
 
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(MouseWheel, (int delta));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseWheel, (int delta));
 
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(KeyDown, (const KeyEvent &kev));
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(KeyType, (const std::string &text));
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(KeyRepeat, (const KeyEvent &kev));
-  FRAME_FRAMEEVENT_DECLARE_BUBBLE(KeyUp, (const KeyEvent &kev));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyDown, (const KeyEvent &kev));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyType, (const std::string &text));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyRepeat, (const KeyEvent &kev));
+  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyUp, (const KeyEvent &kev));
 
   typedef intptr_t EventId;
 
@@ -433,11 +433,11 @@ namespace Frames {
   };
 
   // Debug code
-  #define FRAME_LAYOUT_ASSERT(x, errstring, ...) (FRAME_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, __VA_ARGS__))))
-  #define FRAME_LAYOUT_CHECK(x, errstring, ...) (FRAME_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, __VA_ARGS__))))
+  #define FRAMES_LAYOUT_ASSERT(x, errstring, ...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, __VA_ARGS__))))
+  #define FRAMES_LAYOUT_CHECK(x, errstring, ...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, __VA_ARGS__))))
 
-  #define FRAME_ERROR(...) GetEnvironment()->LogError(Utility::Format(__VA_ARGS__))
-  #define FRAME_DEBUG(...) GetEnvironment()->LogDebug(Utility::Format(__VA_ARGS__))
+  #define FRAMES_ERROR(...) GetEnvironment()->LogError(Utility::Format(__VA_ARGS__))
+  #define FRAMES_DEBUG(...) GetEnvironment()->LogDebug(Utility::Format(__VA_ARGS__))
 
   #define CreateTagged(...) CreateTagged_imp(__FILE__, __LINE__, __VA_ARGS__)
 }

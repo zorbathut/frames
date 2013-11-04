@@ -1,9 +1,9 @@
 // Template functions for Layout
 
-#ifndef FRAME_LAYOUT_TEMPLATE_INLINE
-#define FRAME_LAYOUT_TEMPLATE_INLINE
+#ifndef FRAMES_LAYOUT_TEMPLATE_INLINE
+#define FRAMES_LAYOUT_TEMPLATE_INLINE
 
-#ifndef FRAME_LAYOUT
+#ifndef FRAMES_LAYOUT
 #error Do not include layout_template_inline.h independently!
 #endif
 

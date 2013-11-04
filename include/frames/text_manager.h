@@ -1,7 +1,7 @@
 // Texture/font coordinator
 
-#ifndef FRAME_TEXT_MANAGER
-#define FRAME_TEXT_MANAGER
+#ifndef FRAMES_TEXT_MANAGER
+#define FRAMES_TEXT_MANAGER
 
 #include <map>
 #include <set>

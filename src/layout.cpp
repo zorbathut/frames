@@ -10,40 +10,40 @@
 #include <math.h> // just for isnan()
 
 namespace Frames {
-  FRAME_FRAMEEVENT_DEFINE(Move, ());
-  FRAME_FRAMEEVENT_DEFINE(Size, ());
+  FRAMES_FRAMEEVENT_DEFINE(Move, ());
+  FRAMES_FRAMEEVENT_DEFINE(Size, ());
 
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseOver, ());
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseMove, (const Point &pt));
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseMoveoutside, (const Point &pt));
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseOut, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseOver, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMove, (const Point &pt));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMoveoutside, (const Point &pt));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseOut, ());
 
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftUp, ());
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftUpoutside, ());
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftDown, ());
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftClick, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftUp, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftUpoutside, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftDown, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftClick, ());
 
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleUp, ());
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleUpoutside, ());
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleDown, ());
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleClick, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleUp, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleUpoutside, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleDown, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleClick, ());
 
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseRightUp, ());
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseRightUpoutside, ());
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseRightDown, ());
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseRightClick, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseRightUp, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseRightUpoutside, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseRightDown, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseRightClick, ());
 
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonUp, (int button));
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonUpoutside, (int button));
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonDown, (int button));
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonClick, (int button));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonUp, (int button));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonUpoutside, (int button));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonDown, (int button));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonClick, (int button));
 
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(MouseWheel, (int delta));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseWheel, (int delta));
 
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(KeyDown, (const KeyEvent &kev));
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(KeyType, (const std::string &text));
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(KeyRepeat, (const KeyEvent &kev));
-  FRAME_FRAMEEVENT_DEFINE_BUBBLE(KeyUp, (const KeyEvent &kev));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(KeyDown, (const KeyEvent &kev));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(KeyType, (const std::string &text));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(KeyRepeat, (const KeyEvent &kev));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(KeyUp, (const KeyEvent &kev));
   
   BOOST_STATIC_ASSERT(sizeof(EventId) == sizeof(intptr_t));
   BOOST_STATIC_ASSERT(sizeof(EventId) == sizeof(void *));
@@ -197,10 +197,10 @@ namespace Frames {
   }
 
   void Layout::luaF_push(lua_State *L) const {
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rrg");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
 
     if (lua_isnil(L, -1)) {
-      FRAME_ERROR("Attempting to push frame into environment without Frame registered");
+      FRAMES_ERROR("Attempting to push frame into environment without Frame registered");
       return; // sure, it's nil, we'll just leave the nil in there
     }
 
@@ -225,12 +225,12 @@ namespace Frames {
 
       // let's verify that our environment has been registered properly
       // maybe in the future we should just automatically register?
-      lua_getfield(L, LUA_REGISTRYINDEX, "Frame_env");
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_env");
       lua_pushlightuserdata(L, m_env);
       lua_rawget(L, -2);
       if (lua_isnil(L, -1)) {
         // fffff
-        FRAME_ERROR("Frame environment not registered with this lua environment");
+        FRAMES_ERROR("Frame environment not registered with this lua environment");
 
         // Let's try to register it - this is probably the best recovery we can hope for, otherwise we're opening up some security holes
         m_env->LuaRegister(L);
@@ -244,38 +244,38 @@ namespace Frames {
       lua_pushlightuserdata(L, (void*)this);
       lua_pushvalue(L, -2);
 
-      // stack: ... Frame_rrg newtab luserdata newtab
+      // stack: ... Frames_rrg newtab luserdata newtab
 
       // push the pair into the lookup table
       lua_rawset(L, -4);
 
-      // stack: ... Frame_rrg newtab
+      // stack: ... Frames_rrg newtab
 
-      // Now we can kill Frame_rrg
+      // Now we can kill Frames_rrg
       lua_remove(L, -2);
 
       // stack: ... newtab
 
       // Next, let's set the metatable to the one that's stored
-      lua_getfield(L, LUA_REGISTRYINDEX, "Frame_mt");
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_mt");
       lua_getfield(L, -1, GetType());
 
       if (lua_isnil(L, -1)) {
         // fffff
-        FRAME_ERROR("Attempting to push unregistered frame type %s", GetType());
+        FRAMES_ERROR("Attempting to push unregistered frame type %s", GetType());
       } // guess we'll just go with it, though
 
       lua_setmetatable(L, -3);
 
-      // stack: ... newtab Frame_mt
+      // stack: ... newtab Frames_mt
 
-      // Pop Frame_mt
+      // Pop Frames_mt
       lua_pop(L, 1);
       
-      // Push Frame_rg
-      lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rg");
+      // Push Frames_rg
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
 
-      // stack: ... newtab Frame_rg
+      // stack: ... newtab Frames_rg
       // Now we call our deep virtual register function - this leaves the stack at the same level
       {
         Environment::LuaStackChecker lsc(L, m_env);
@@ -334,17 +334,17 @@ namespace Frames {
   }
 
   void Layout::DebugDumpLayout() const {
-    FRAME_DEBUG("Dump for layout %s", GetNameFull().c_str());
-    FRAME_DEBUG("  XAXIS:");
-    FRAME_DEBUG("    Connector 0 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[0].point_mine, (int)m_axes[X].connections[0].link, m_axes[X].connections[0].point_link, m_axes[X].connections[0].offset, m_axes[X].connections[0].cached);
-    FRAME_DEBUG("    Connector 1 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[1].point_mine, (int)m_axes[X].connections[1].link, m_axes[X].connections[1].point_link, m_axes[X].connections[1].offset, m_axes[X].connections[0].cached);
-    FRAME_DEBUG("    Size %f (def %f), cache %f", m_axes[X].size_set, m_axes[X].size_default, m_axes[X].size_cached);
-    FRAME_DEBUG("    Linkcount %d", m_axes[X].children.size());
-    FRAME_DEBUG("  YAXIS:");
-    FRAME_DEBUG("    Connector 0 from %f to %08x:%f offset %f, cache %f", m_axes[Y].connections[0].point_mine, (int)m_axes[Y].connections[0].link, m_axes[Y].connections[0].point_link, m_axes[Y].connections[0].offset, m_axes[Y].connections[0].cached);
-    FRAME_DEBUG("    Connector 1 from %f to %08x:%f offset %f, cache %f", m_axes[Y].connections[1].point_mine, (int)m_axes[Y].connections[1].link, m_axes[Y].connections[1].point_link, m_axes[Y].connections[1].offset, m_axes[Y].connections[0].cached);
-    FRAME_DEBUG("    Size %f (def %f), cache %f", m_axes[Y].size_set, m_axes[Y].size_default, m_axes[Y].size_cached);
-    FRAME_DEBUG("    Linkcount %d", m_axes[Y].children.size());
+    FRAMES_DEBUG("Dump for layout %s", GetNameFull().c_str());
+    FRAMES_DEBUG("  XAXIS:");
+    FRAMES_DEBUG("    Connector 0 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[0].point_mine, (int)m_axes[X].connections[0].link, m_axes[X].connections[0].point_link, m_axes[X].connections[0].offset, m_axes[X].connections[0].cached);
+    FRAMES_DEBUG("    Connector 1 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[1].point_mine, (int)m_axes[X].connections[1].link, m_axes[X].connections[1].point_link, m_axes[X].connections[1].offset, m_axes[X].connections[0].cached);
+    FRAMES_DEBUG("    Size %f (def %f), cache %f", m_axes[X].size_set, m_axes[X].size_default, m_axes[X].size_cached);
+    FRAMES_DEBUG("    Linkcount %d", m_axes[X].children.size());
+    FRAMES_DEBUG("  YAXIS:");
+    FRAMES_DEBUG("    Connector 0 from %f to %08x:%f offset %f, cache %f", m_axes[Y].connections[0].point_mine, (int)m_axes[Y].connections[0].link, m_axes[Y].connections[0].point_link, m_axes[Y].connections[0].offset, m_axes[Y].connections[0].cached);
+    FRAMES_DEBUG("    Connector 1 from %f to %08x:%f offset %f, cache %f", m_axes[Y].connections[1].point_mine, (int)m_axes[Y].connections[1].link, m_axes[Y].connections[1].point_link, m_axes[Y].connections[1].offset, m_axes[Y].connections[0].cached);
+    FRAMES_DEBUG("    Size %f (def %f), cache %f", m_axes[Y].size_set, m_axes[Y].size_default, m_axes[Y].size_cached);
+    FRAMES_DEBUG("    Linkcount %d", m_axes[Y].children.size());
   }
 
   Layout::Layout(Layout *layout, Environment *env) :
@@ -373,10 +373,10 @@ namespace Frames {
     }
 
     if (layout && env) {
-      FRAME_LAYOUT_CHECK(layout->GetEnvironment() == env, "Layout's explicit parent and environment do not match");
+      FRAMES_LAYOUT_CHECK(layout->GetEnvironment() == env, "Layout's explicit parent and environment do not match");
     }
     // TODO: come up with a better panic button for this? if we have no parent or environment then we have no way to do debug logging
-    FRAME_LAYOUT_CHECK(layout || env, "Layout not given parent or environment");
+    FRAMES_LAYOUT_CHECK(layout || env, "Layout not given parent or environment");
 
     m_constructionOrder = m_env->RegisterFrame();
 
@@ -389,12 +389,12 @@ namespace Frames {
 
   Layout::~Layout() {
     // We shouldn't reach this point until all references to us have vanished, so, kapow!
-    FRAME_LAYOUT_CHECK(Utility::IsUndefined(m_axes[X].connections[0].point_mine), "Layout destroyed while still connected");
-    FRAME_LAYOUT_CHECK(Utility::IsUndefined(m_axes[X].connections[1].point_mine), "Layout destroyed while still connected");
-    FRAME_LAYOUT_CHECK(Utility::IsUndefined(m_axes[Y].connections[0].point_mine), "Layout destroyed while still connected");
-    FRAME_LAYOUT_CHECK(Utility::IsUndefined(m_axes[Y].connections[1].point_mine), "Layout destroyed while still connected");
-    FRAME_LAYOUT_CHECK(!m_parent, "Layout destroyed while still connected");
-    FRAME_LAYOUT_CHECK(m_children.empty(), "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(Utility::IsUndefined(m_axes[X].connections[0].point_mine), "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(Utility::IsUndefined(m_axes[X].connections[1].point_mine), "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(Utility::IsUndefined(m_axes[Y].connections[0].point_mine), "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(Utility::IsUndefined(m_axes[Y].connections[1].point_mine), "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(!m_parent, "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(m_children.empty(), "Layout destroyed while still connected");
 
     // Clear ourselves out of the resolved todo
     if (!m_resolved) {
@@ -414,35 +414,35 @@ namespace Frames {
     for (std::set<lua_State *>::const_iterator itr = m_env->m_lua_environments.begin(); itr != m_env->m_lua_environments.end(); ++itr) {
       lua_State *L = *itr;
 
-      lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rrg");
-      lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rg");
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
 
       lua_pushlightuserdata(L, this);
       lua_pushlightuserdata(L, this);
 
       lua_rawget(L, -4);
 
-      // Stack: ... Frame_rrg Frame_rg userdata table
+      // Stack: ... Frames_rrg Frames_rg userdata table
 
       lua_pushnil(L);
-      // Stack: ... Frame_rrg Frame_rg userdata table key
+      // Stack: ... Frames_rrg Frames_rg userdata table key
       while (lua_next(L, -4) != 0) {
         // we're just blowing through all types, it's easier and this is likely not a speed issue
-        // Stack: ... Frame_rrg Frame_rg userdata table key value
+        // Stack: ... Frames_rrg Frames_rg userdata table key value
         lua_pushvalue(L, -3);
         lua_pushnil(L);
         lua_rawset(L, -3);
 
         lua_pop(L, 1);
-        // Stack: ... Frame_rrg Frame_rg userdata table key
+        // Stack: ... Frames_rrg Frames_rg userdata table key
       }
 
-      // Stack: ... Frame_rrg Frame_rg userdata table
+      // Stack: ... Frames_rrg Frames_rg userdata table
       lua_pop(L, 1);
       lua_pushnil(L);
       lua_rawset(L, -4);
 
-      // Stack: ... Frame_rrg Frame_rg
+      // Stack: ... Frames_rrg Frames_rg
       lua_pop(L, 2);
     }
 
@@ -452,7 +452,7 @@ namespace Frames {
 
   void Layout::SetPoint(Axis axis, float mypt, const Layout *link, float linkpt, float offset /*= 0.f*/) {
     if (link && link->m_env != m_env) {
-      FRAME_LAYOUT_CHECK(false, "Attempted to constrain a frame to a frame from another environment");
+      FRAMES_LAYOUT_CHECK(false, "Attempted to constrain a frame to a frame from another environment");
       return;
     }
 
@@ -518,7 +518,7 @@ namespace Frames {
     bool axbu = Utility::IsUndefined(axb.point_mine);
 
     if (!Utility::IsUndefined(ax.size_set) && (!axau || !axbu)) {
-      FRAME_LAYOUT_CHECK(link, "Frame overconstrained - attempted to assign a second point to a frame axis that already contained a size and one point.");
+      FRAMES_LAYOUT_CHECK(link, "Frame overconstrained - attempted to assign a second point to a frame axis that already contained a size and one point.");
       return;
     }
 
@@ -635,10 +635,10 @@ namespace Frames {
   }
 
   void Layout::SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry) {
-    FRAME_LAYOUT_CHECK(link, "SetPoint requires offsets when linking to origin.");
-    FRAME_LAYOUT_CHECK(IsNil(myx) == IsNil(theirx), "SetPoint provided with only one anchor position for X axis");
-    FRAME_LAYOUT_CHECK(IsNil(myy) == IsNil(theiry), "SetPoint provided with only one anchor position for Y axis");
-    FRAME_LAYOUT_CHECK(!IsNil(myx) || !IsNil(myy), "SetPoint not provided with any anchor axes");
+    FRAMES_LAYOUT_CHECK(link, "SetPoint requires offsets when linking to origin.");
+    FRAMES_LAYOUT_CHECK(IsNil(myx) == IsNil(theirx), "SetPoint provided with only one anchor position for X axis");
+    FRAMES_LAYOUT_CHECK(IsNil(myy) == IsNil(theiry), "SetPoint provided with only one anchor position for Y axis");
+    FRAMES_LAYOUT_CHECK(!IsNil(myx) || !IsNil(myy), "SetPoint not provided with any anchor axes");
 
     if (!IsNil(myx)) {
       SetPoint(X, myx, link, theirx);
@@ -649,14 +649,14 @@ namespace Frames {
     }
   }
   void Layout::SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
-    FRAME_LAYOUT_CHECK(!IsNil(myx) || !IsNil(myy), "SetPoint not provided with any anchor axes");
+    FRAMES_LAYOUT_CHECK(!IsNil(myx) || !IsNil(myy), "SetPoint not provided with any anchor axes");
     if (link) {
-      FRAME_LAYOUT_CHECK(IsNil(myx) == IsNil(theirx) && IsNil(myx) == IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
-      FRAME_LAYOUT_CHECK(IsNil(myy) == IsNil(theiry) && IsNil(myy) == IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
+      FRAMES_LAYOUT_CHECK(IsNil(myx) == IsNil(theirx) && IsNil(myx) == IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
+      FRAMES_LAYOUT_CHECK(IsNil(myy) == IsNil(theiry) && IsNil(myy) == IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
     } else {
-      FRAME_LAYOUT_CHECK(IsNil(theirx) && IsNil(theiry), "SetPoint must have nil target anchor points when linking to origin.");
-      FRAME_LAYOUT_CHECK(IsNil(myx) == IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
-      FRAME_LAYOUT_CHECK(IsNil(myy) == IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
+      FRAMES_LAYOUT_CHECK(IsNil(theirx) && IsNil(theiry), "SetPoint must have nil target anchor points when linking to origin.");
+      FRAMES_LAYOUT_CHECK(IsNil(myx) == IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
+      FRAMES_LAYOUT_CHECK(IsNil(myy) == IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
     }
 
     if (!IsNil(myx)) {
@@ -672,7 +672,7 @@ namespace Frames {
     AxisData &ax = m_axes[axis];
 
     if (!Utility::IsUndefined(ax.connections[0].point_mine) && !Utility::IsUndefined(ax.connections[1].point_mine)) {
-      FRAME_LAYOUT_CHECK(false, "Frame overconstrained - attempted to assign a size to a frame axis that already contained two points.");
+      FRAMES_LAYOUT_CHECK(false, "Frame overconstrained - attempted to assign a size to a frame axis that already contained two points.");
       return;
     }
 
@@ -727,12 +727,12 @@ namespace Frames {
     }
 
     if (!layout) {
-      FRAME_LAYOUT_CHECK(false, ":SetParent() attempted with null parent");
+      FRAMES_LAYOUT_CHECK(false, ":SetParent() attempted with null parent");
       return;
     }
 
     if (layout && m_env != layout->GetEnvironment()) {
-      FRAME_LAYOUT_CHECK(false, ":SetParent() attempted across environment boundaries");
+      FRAMES_LAYOUT_CHECK(false, ":SetParent() attempted across environment boundaries");
       return;
     }
 
@@ -842,11 +842,11 @@ namespace Frames {
 
   void Layout::luaF_RegisterWorker(lua_State *L, const char *name) const {
     Environment::LuaStackChecker lsc(L, m_env);
-    // Incoming: ... newtab Frame_rg
+    // Incoming: ... newtab Frames_rg
 
     lua_getfield(L, -1, name);
 
-    FRAME_LAYOUT_ASSERT(!lua_isnil(L, -1), "Attempted to register frame as %s without that type being registered in Lua", name);
+    FRAMES_LAYOUT_ASSERT(!lua_isnil(L, -1), "Attempted to register frame as %s without that type being registered in Lua", name);
     if (lua_isnil(L, -1)) {
       lua_pop(L, 1);
       return;
@@ -883,7 +883,7 @@ namespace Frames {
 
   /*static*/ void Layout::luaF_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *)) {
     // From Environment::RegisterLuaFrame
-    // Stack: ... Frame_mt Frame_rg Frame_fevh Frame_rfevh Frame_cfevh metatable indexes
+    // Stack: ... Frames_mt Frames_rg Frames_fevh Frames_rfevh Frames_cfevh metatable indexes
     lua_getfield(L, -6, owner);
     lua_pushcclosure(L, func, 1);
     lua_setfield(L, -2, name);
@@ -971,12 +971,12 @@ namespace Frames {
     const AxisData &ax = m_axes[axis];
 
     if (ax.connections[0].link == layout) {
-      FRAME_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->GetNameFull().c_str(), GetNameFull().c_str(), axis ? 'Y' : 'X', ax.connections[0].point_mine);
+      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->GetNameFull().c_str(), GetNameFull().c_str(), axis ? 'Y' : 'X', ax.connections[0].point_mine);
       ClearPoint(axis, ax.connections[0].point_mine);
     }
 
     if (ax.connections[1].link == layout) {
-      FRAME_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->GetNameFull().c_str(), GetNameFull().c_str(), axis ? 'Y' : 'X', ax.connections[1].point_mine);
+      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->GetNameFull().c_str(), GetNameFull().c_str(), axis ? 'Y' : 'X', ax.connections[1].point_mine);
       ClearPoint(axis, ax.connections[1].point_mine);
     }
   }
@@ -1023,7 +1023,7 @@ namespace Frames {
       
       // stack: ...
       
-      lua_getfield(L, LUA_REGISTRYINDEX, "Frame_cfevh");
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfevh");
       lua_rawgeti(L, -1, c.lua.handle);
       if (lua_tointeger(L, -1) > 1) {
         // don't dealloc, just update
@@ -1041,17 +1041,17 @@ namespace Frames {
         // cleaned up, but still working
         
         // we need to clean up the forward lookup next, but keep a handle around so we can clean up the reverse lookup
-        lua_getfield(L, LUA_REGISTRYINDEX, "Frame_fevh");
+        lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fevh");
         lua_rawgeti(L, -1, c.lua.handle);
-        // ... Frame_fevh func
+        // ... Frames_fevh func
         luaL_unref(L, -2, c.lua.handle);
         lua_remove(L, -2);
         // ... func
         
-        lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rfevh");
+        lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfevh");
         lua_insert(L, -2);
         lua_pushnil(L);
-        // ... Frame_rfevh func nil
+        // ... Frames_rfevh func nil
         lua_rawset(L, -3);
         lua_pop(L, 1);
         // cleaned up! really!
@@ -1068,7 +1068,7 @@ namespace Frames {
     eh->GetTarget()->GetEnvironment()->Lua_PushErrorHandler(L);
     
     // get function
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_fevh");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fevh");
     lua_rawgeti(L, -1, c.lua.handle);
     lua_remove(L, -2);
     
@@ -1324,7 +1324,7 @@ namespace Frames {
   }
 
   void Layout::Obliterate_Unlock() {
-    FRAME_LAYOUT_CHECK(m_obliterate_lock, "Unlocking frame obliterate when already unlocked, internal error");
+    FRAMES_LAYOUT_CHECK(m_obliterate_lock, "Unlocking frame obliterate when already unlocked, internal error");
     --m_obliterate_lock;
     if (!m_obliterate_lock && m_obliterate_buffered) {
       Obliterate(); // kaboom!
@@ -1449,7 +1449,7 @@ namespace Frames {
     float priority = (float)luaL_optnumber(L, 4, 0.f);
     
     int handler = LUA_NOREF;
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rfevh");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfevh");
     lua_pushvalue(L, 3);
     lua_rawget(L, -2);
     if (!lua_isnil(L, -1)) {
@@ -1459,7 +1459,7 @@ namespace Frames {
       lua_pop(L, 2);
       
       // Stack: ...
-      lua_getfield(L, LUA_REGISTRYINDEX, "Frame_cfevh");
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfevh");
       lua_rawgeti(L, -1, handler);
       lua_pushinteger(L, lua_tointeger(L, -1) + 1);
       lua_remove(L, -2);
@@ -1472,7 +1472,7 @@ namespace Frames {
       // Set _fevh lookup
       // Stack: ... _rfevh nil
       lua_pop(L, 1);
-      lua_getfield(L, LUA_REGISTRYINDEX, "Frame_fevh");
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fevh");
       // Stack: ... _rfevh _fevh
       lua_pushvalue(L, 3);
       // Stack: ... _rfevh _fevh function
@@ -1488,7 +1488,7 @@ namespace Frames {
       // Stack: ...
       
       // Insert into _cfevh
-      lua_getfield(L, LUA_REGISTRYINDEX, "Frame_cfevh");
+      lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfevh");
       lua_pushinteger(L, 1);
       lua_rawseti(L, -2, handler);
       lua_pop(L, 1);
@@ -1497,7 +1497,7 @@ namespace Frames {
     
     // now we have all valid parameters!
     // get the base lua environment
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_lua");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua");
     lua_State *L_base = (lua_State *)lua_touserdata(L, -1);
     lua_pop(L, 1);
   
@@ -1517,7 +1517,7 @@ namespace Frames {
     float priority = (float)luaL_optnumber(L, 4, Utility::Undefined);
     
     int handler = LUA_NOREF;
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rfevh");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfevh");
     lua_pushvalue(L, 3);
     lua_rawget(L, -2);
     if (lua_isnil(L, -1)) {
@@ -1533,7 +1533,7 @@ namespace Frames {
     }
     
     // get the base lua environment
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_lua");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua");
     lua_State *L_base = (lua_State *)lua_touserdata(L, -1);
     lua_pop(L, 1);
     

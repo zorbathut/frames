@@ -1,7 +1,7 @@
 // Smart pointer
 
-#ifndef FRAME_PTR
-#define FRAME_PTR
+#ifndef FRAMES_PTR
+#define FRAMES_PTR
 
 #include "frames/noncopyable.h"
 

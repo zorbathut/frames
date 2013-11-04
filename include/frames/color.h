@@ -1,7 +1,7 @@
 // The Color class
 
-#ifndef FRAME_COLOR
-#define FRAME_COLOR
+#ifndef FRAMES_COLOR
+#define FRAMES_COLOR
 
 namespace Frames {
   class Color {

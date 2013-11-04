@@ -1,7 +1,7 @@
 // The Environment class
 
-#ifndef FRAME_ENVIRONMENT
-#define FRAME_ENVIRONMENT
+#ifndef FRAMES_ENVIRONMENT
+#define FRAMES_ENVIRONMENT
 
 #include "frames/configuration.h"
 #include "frames/input.h"

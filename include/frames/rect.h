@@ -1,7 +1,7 @@
 // Rect class
 
-#ifndef FRAME_RECT
-#define FRAME_RECT
+#ifndef FRAMES_RECT
+#define FRAMES_RECT
 
 #include "frames/point.h"
 

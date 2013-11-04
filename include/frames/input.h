@@ -1,7 +1,7 @@
 // Input enums and structs
 
-#ifndef FRAME_INPUT
-#define FRAME_INPUT
+#ifndef FRAMES_INPUT
+#define FRAMES_INPUT
 
 #include <string>
 

@@ -1,7 +1,7 @@
 // The Text class
 
-#ifndef FRAME_TEXT
-#define FRAME_TEXT
+#ifndef FRAMES_TEXT
+#define FRAMES_TEXT
 
 #include "frames/frame.h"
 

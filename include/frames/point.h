@@ -1,7 +1,7 @@
 // Point class
 
-#ifndef FRAME_POINT
-#define FRAME_POINT
+#ifndef FRAMES_POINT
+#define FRAMES_POINT
 
 namespace Frames {
   struct Point {

@@ -340,20 +340,20 @@ namespace Frames {
     // FUNCTION METATABLES
     
     // insert our framespec metatable table
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_mt");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_mt");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frame_mt");
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_mt");
     }
     lua_pop(L, 1);
 
-    // insert the EventHandler metatable - this used to require Frame_ehl to be inserted first! (doesn't now because it doesn't do anything)
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_ehmt");
+    // insert the EventHandler metatable - this used to require Frames_ehl to be inserted first! (doesn't now because it doesn't do anything)
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehmt");
     if (lua_isnil(L, -1)) {
       // TODO: Actually create the EHMT
       //EventHandle::INTERNAL_l_CreateMetatable(L);
       lua_newtable(L);  // make this go away
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frame_ehmt");
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_ehmt");
     }
     lua_pop(L, 1);
     
@@ -361,18 +361,18 @@ namespace Frames {
     //  FRAME REGISTRY
     
     // insert our frame registry table - luatable to lightuserdata. Split up by type, so we can do type checking and handle MI pointer conversion. Maybe make this optional? I think MI can be handled differently.
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rg");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frame_rg");
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_rg");
     }
     lua_pop(L, 1);
 
     // insert our frame reverse registry table - lightuserdata to luatable. Does not need to be split up by type, we'll always be pushing it as a Layout*.
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rrg");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frame_rrg");
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
     }
     lua_pop(L, 1);
 
@@ -380,26 +380,26 @@ namespace Frames {
     //  FRAME EVENT HANDLERS
     
     // insert our frame event handler table - registry ID to event callback. Managed with luaL_ref
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_fevh");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fevh");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frame_fevh");
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_fevh");
     }
     lua_pop(L, 1);
 
     // insert our reverse frame event handler table - event callback to registry ID
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rfevh");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfevh");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frame_rfevh");
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_rfevh");
     }
     lua_pop(L, 1);
 
     // insert our frame event handler count table - registry ID to refcount
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_cfevh");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_cfevh");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frame_cfevh");
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_cfevh");
     }
     lua_pop(L, 1);
     
@@ -407,10 +407,10 @@ namespace Frames {
     //  FRAME EVENTS
     
     // insert our frame event ID table - table to lightuserdata pointer
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_fev");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frame_fev");
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_fev");
     }
     lua_pop(L, 1);
     
@@ -418,10 +418,10 @@ namespace Frames {
     //  FRAME EVENT HANDLES
     
     // insert the EventHandler lookup table - table to lightuserdata pointer
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_ehl");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frame_ehl");
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
     }
     lua_pop(L, 1);
     
@@ -429,23 +429,23 @@ namespace Frames {
     //  FRAME MISC
     
     // insert our environment registry table - lightuserdata to error handle.
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_env");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_env");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frame_env");
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_env");
     }
     lua_pop(L, 1);
     
     // insert the "root" lua environment
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_lua");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_lua");
     if (lua_isnil(L, -1)) {
       lua_pushlightuserdata(L, L); // lol
-      lua_setfield(L, LUA_REGISTRYINDEX, "Frame_lua");
+      lua_setfield(L, LUA_REGISTRYINDEX, "Frames_lua");
     }
     lua_pop(L, 1);
 
     // and now insert *us* into the env table
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_env");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_env");
     lua_pushlightuserdata(L, this);
     lua_pushvalue(L, -3);
     lua_rawset(L, -3);
@@ -613,15 +613,15 @@ namespace Frames {
     
     lua_pop(L, 1);
     
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_fev");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
     lua_insert(L, -2);
     
-    // ... Frame_fev handle
+    // ... Frames_fev handle
     
     lua_pushlightuserdata(L, feb);
     lua_rawset(L, -3);
     
-    // ... Frame_fev
+    // ... Frames_fev
     
     lua_pop(L, 1);
   }
@@ -639,10 +639,10 @@ namespace Frames {
     // So do we a little extra work, and use some extra CPU cycles, here to prevent changes.
 
     // Grab the lightuserdata to luatable lookup
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rrg");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
 
     // Grab the luatable to lightuserdata lookup
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rg");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
 
     if (lua_isnil(L, -1) || lua_isnil(L, -2)) {
       lua_pop(L, 2);
@@ -657,9 +657,9 @@ namespace Frames {
     // If you somehow find that unregistering is a bottleneck let me know and we'll fix it.
 
     lua_pushnil(L); // first key
-    // for this loop, the stack is ... Frame_rrg Frame_rg key/frameuserdata 
+    // for this loop, the stack is ... Frames_rrg Frames_rg key/frameuserdata 
     while (lua_next(L, -3) != 0) {
-      // stack: ... Frame_rrg Frame_rg key/frameuserdata frametable
+      // stack: ... Frames_rrg Frames_rg key/frameuserdata frametable
       // See if this is our environment. If it's possible for things to not be Layouts, we may need to tweak this later.
       Layout *layout = (Layout *)lua_touserdata(L, -2);
       if (layout->GetEnvironment() == this) {
@@ -667,9 +667,9 @@ namespace Frames {
         // First, we want to plow through the forward registry and strip it as necessary
 
         lua_pushnil(L);
-        // for this loop, the stack is ... Frame_rrg Frame_rg key/frameuserdata frametable forwardkey
+        // for this loop, the stack is ... Frames_rrg Frames_rg key/frameuserdata frametable forwardkey
         while (lua_next(L, -4) != 0) {
-          // stack: ... Frame_rrg Frame_rg key/frameuserdata frametable forwardkey lookuptable
+          // stack: ... Frames_rrg Frames_rg key/frameuserdata frametable forwardkey lookuptable
 
           // just straight-up set it to nil
           lua_pushvalue(L, -3);
@@ -682,15 +682,15 @@ namespace Frames {
         }
 
         // current stack:
-        // stack: ... Frame_rrg Frame_rg key/frameuserdata frametable
+        // stack: ... Frames_rrg Frames_rg key/frameuserdata frametable
 
         // set the reverse registry to false
         lua_pushvalue(L, -2);
         lua_pushboolean(L, false);
-        // stack: ... Frame_rrg Frame_rg key/frameuserdata frametable frameuserdata false
+        // stack: ... Frames_rrg Frames_rg key/frameuserdata frametable frameuserdata false
         lua_rawset(L, -6);
 
-        // stack: ... Frame_rrg Frame_rg key/frameuserdata frametable
+        // stack: ... Frames_rrg Frames_rg key/frameuserdata frametable
         // Finally, increment our count
         ct++;
       }
@@ -699,9 +699,9 @@ namespace Frames {
       lua_pop(L, 1);
     }
 
-    // stack: ... Frame_rrg Frame_rg
+    // stack: ... Frames_rrg Frames_rg
     lua_pop(L, 1);
-    // stack: ... Frame_rrg
+    // stack: ... Frames_rrg
 
     int passes = 0;
 
@@ -718,34 +718,34 @@ namespace Frames {
 
       // this is a weird loop
       while (true) {
-        // stack: ... Frame_rrg key/frameuserdata frametable
+        // stack: ... Frames_rrg key/frameuserdata frametable
 
         if (lua_isboolean(L, -1)) {
           // this should be removed, but first, we need to reserve the next element. but we don't need the boolean anymore!
-          // stack: ... Frame_rrg key/frameuserdata true
+          // stack: ... Frames_rrg key/frameuserdata true
           lua_pop(L, 1);
 
-          // stack: ... Frame_rrg key/frameuserdata
+          // stack: ... Frames_rrg key/frameuserdata
           lua_pushvalue(L, -1);
 
-          // stack: ... Frame_rrg key/frameuserdata key/frameuserdata
+          // stack: ... Frames_rrg key/frameuserdata key/frameuserdata
           if (lua_next(L, -3) == 0) {
             // push two nils in place instead, just to preserve the ordering
             lua_pushnil(L);
             lua_pushnil(L);
           }
 
-          // stack: ... Frame_rrg key/frameuserdata nextkey nextvalue
+          // stack: ... Frames_rrg key/frameuserdata nextkey nextvalue
           lua_pushvalue(L, -3);
 
-          // stack: ... Frame_rrg key/frameuserdata nextkey nextvalue key/frameuserdata
+          // stack: ... Frames_rrg key/frameuserdata nextkey nextvalue key/frameuserdata
           lua_remove(L, -4);
 
-          // stack: ... Frame_rrg nextkey nextvalue key/frameuserdata
+          // stack: ... Frames_rrg nextkey nextvalue key/frameuserdata
           
           // now zero it out in rrg
           lua_pushnil(L);
-          // stack: ... Frame_rrg nextkey nextvalue key/frameuserdata nil
+          // stack: ... Frames_rrg nextkey nextvalue key/frameuserdata nil
           lua_rawset(L, -5);
 
           // decrement ct
@@ -754,18 +754,18 @@ namespace Frames {
           // now we just have nextkey/nextvalue hanging around, almost done
           if (lua_isnil(L, -1) || !ct) {
             // we're actually done
-            // stack: ... Frame_rrg key/frameuserdata frametable
+            // stack: ... Frames_rrg key/frameuserdata frametable
             lua_pop(L, 2);
-            // stack: ... Frame_rrg
+            // stack: ... Frames_rrg
             break;
           }
         } else {
           // this shouldn't be removed
           // incrementing is easy
           lua_pop(L, 1);
-          // stack: ... Frame_rrg key/frameuserdata
+          // stack: ... Frames_rrg key/frameuserdata
           if (!lua_next(L, -2)) {
-            // stack: ... Frame_rrg key/frameuserdata frametable
+            // stack: ... Frames_rrg key/frameuserdata frametable
             break;
           }
         }
@@ -941,7 +941,7 @@ namespace Frames {
   }
 
   void Environment::Lua_PushErrorHandler(lua_State *L) {
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_env");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_env");
     lua_pushlightuserdata(L, this);
     lua_rawget(L, -2);
     lua_remove(L, -2);

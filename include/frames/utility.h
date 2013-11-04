@@ -1,7 +1,7 @@
 // Utility functions and items
 
-#ifndef FRAME_UTILITY
-#define FRAME_UTILITY
+#ifndef FRAMES_UTILITY
+#define FRAMES_UTILITY
 
 #include <string>
 
@@ -76,7 +76,7 @@ namespace Frames {
       return Undefined + Processing + Nil;
     }
 
-    std::string Format(const char *bort, ...) FRAME_ATTRIBUTE_PRINTF(1, 2);
+    std::string Format(const char *bort, ...) FRAMES_ATTRIBUTE_PRINTF(1, 2);
 
     inline float Clamp(float current, float min, float max) {
       if (current < min) return min;

@@ -1,7 +1,7 @@
 // Renderer core
 
-#ifndef FRAME_RENDERER
-#define FRAME_RENDERER
+#ifndef FRAMES_RENDERER
+#define FRAMES_RENDERER
 
 #include <stack>
 #include <vector>

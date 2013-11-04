@@ -2,8 +2,8 @@
 // If these functions don't do quite what you want, you are encouraged to make copies of them and modify them.
 // These are intended for the common case and as example code for more complicated things.
 
-#ifndef FRAME_OSWIN32
-#define FRAME_OSWIN32
+#ifndef FRAMES_OSWIN32
+#define FRAMES_OSWIN32
 
 #include "frames/input.h"
 

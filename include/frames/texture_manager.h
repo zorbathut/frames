@@ -1,7 +1,7 @@
 // Texture coordinator
 
-#ifndef FRAME_TEXTURE_MANAGER
-#define FRAME_TEXTURE_MANAGER
+#ifndef FRAMES_TEXTURE_MANAGER
+#define FRAMES_TEXTURE_MANAGER
 
 #include <string>
 #include <map>

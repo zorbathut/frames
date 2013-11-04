@@ -1,9 +1,9 @@
-#ifndef FRAME_CONFIG
-#define FRAME_CONFIG
+#ifndef FRAMES_CONFIG
+#define FRAMES_CONFIG
 
 #include "frames/config_cc.h"
 
 // Config flags and settings
-#define FRAME_BOOST_ENABLED
+#define FRAMES_BOOST_ENABLED
 
 #endif

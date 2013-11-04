@@ -1,7 +1,7 @@
 // Loaders for various 
 
-#ifndef FRAME_LOADER
-#define FRAME_LOADER
+#ifndef FRAMES_LOADER
+#define FRAMES_LOADER
 
 namespace Frames {
   class Environment;

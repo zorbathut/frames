@@ -1,7 +1,7 @@
 // The Texture class
 
-#ifndef FRAME_TEXTURE
-#define FRAME_TEXTURE
+#ifndef FRAMES_TEXTURE
+#define FRAMES_TEXTURE
 
 #include "frames/frame.h"
 #include "frames/texture_manager.h"

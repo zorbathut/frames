@@ -1,7 +1,7 @@
 // The Mask class
 
-#ifndef FRAME_MASK
-#define FRAME_MASK
+#ifndef FRAMES_MASK
+#define FRAMES_MASK
 
 #include "frames/frame.h"
 

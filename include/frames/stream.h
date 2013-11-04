@@ -1,8 +1,8 @@
 
 // Input streams
 
-#ifndef FRAME_STREAM
-#define FRAME_STREAM
+#ifndef FRAMES_STREAM
+#define FRAMES_STREAM
 
 #include "frames/noncopyable.h"
 

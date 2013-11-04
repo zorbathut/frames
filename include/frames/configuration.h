@@ -1,7 +1,7 @@
 // The Configuration class
 
-#ifndef FRAME_CONFIGURATION
-#define FRAME_CONFIGURATION
+#ifndef FRAMES_CONFIGURATION
+#define FRAMES_CONFIGURATION
 
 #include <string>
 

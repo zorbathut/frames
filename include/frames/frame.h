@@ -1,7 +1,7 @@
 // The Frame class
 
-#ifndef FRAME_FRAME
-#define FRAME_FRAME
+#ifndef FRAMES_FRAME
+#define FRAMES_FRAME
 
 #include "frames/color.h"
 #include "frames/layout.h"

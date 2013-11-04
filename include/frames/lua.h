@@ -1,7 +1,7 @@
 // Lua binding utilities
 
-#ifndef FRAME_LUA
-#define FRAME_LUA
+#ifndef FRAMES_LUA
+#define FRAMES_LUA
 
 #include "os_lua.h"
 
@@ -54,7 +54,7 @@ namespace Frames {
   template <typename T> T *luaF_checkframe_external(lua_State *L, int index) {
     if (index < 0) index += lua_gettop(L) + 1;
 
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_rg");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
     lua_getfield(L, -1, T::GetStaticType());
 
     T *result = luaF_checkframe_fromregistry<T>(L, index, lua_gettop(L));
@@ -75,7 +75,7 @@ namespace Frames {
   inline const EventTypeBase *luaF_checkevent(lua_State *L, int index) {
     if (index < 0) index += lua_gettop(L) + 1;
     
-    lua_getfield(L, LUA_REGISTRYINDEX, "Frame_fev");
+    lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
     lua_pushvalue(L, index);
     lua_rawget(L, -2);
     
