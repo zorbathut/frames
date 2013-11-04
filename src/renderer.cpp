@@ -145,9 +145,19 @@ namespace Frames {
     }
   }
 
-  void Renderer::ScissorPush(const Rect &rect) {
+  void Renderer::ScissorPush(Rect rect) {
     if (m_scissor.empty()) {
       glEnable(GL_SCISSOR_TEST);
+    } else {
+      // Create the intersection of scissors
+      rect.s.x = max(rect.s.x, m_scissor.top().s.x);
+      rect.s.y = max(rect.s.y, m_scissor.top().s.y);
+      rect.e.x = min(rect.e.x, m_scissor.top().e.x);
+      rect.e.y = min(rect.e.y, m_scissor.top().e.y);
+      if (rect.s.x >= rect.e.x || rect.s.y >= rect.e.y) {
+        // degenerate scissor, don't render anything (todo: *actually* don't render anything?)
+        rect = Rect(0.f, 0.f, 0.f, 0.f);
+      }
     }
 
     m_scissor.push(rect);
@@ -161,7 +171,7 @@ namespace Frames {
     if (m_scissor.empty()) {
       glDisable(GL_SCISSOR_TEST);
     } else {
-      SetScissor(m_scissor.back());
+      SetScissor(m_scissor.top());
     }
   }
 

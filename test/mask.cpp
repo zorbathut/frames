@@ -108,7 +108,7 @@ TEST(Mask, Nested) {
   middleMask->SetWidth(600);
   middleMask->SetHeight(400);
 
-  Frames::Frame *inner = Frames::Frame::CreateTagged(outerMask);
+  Frames::Frame *inner = Frames::Frame::CreateTagged(middleMask);
   inner->SetPoint(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT);
   inner->SetPoint(Frames::BOTTOMRIGHT, env->GetRoot(), Frames::BOTTOMRIGHT);
   inner->SetBackground(Frames::Color(1.f, 1.f, 1.f, 0.5f));

@@ -3,7 +3,8 @@
 #ifndef FRAME_RENDERER
 #define FRAME_RENDERER
 
-#include <queue>
+#include <stack>
+#include <vector>
 
 #include "frames/color.h"
 #include "frames/rect.h"
@@ -40,7 +41,7 @@ namespace Frames {
     void SetTexture(TextureChunk *tex);
     void SetTexture(TextureBacking *tex);
 
-    void ScissorPush(const Rect &rect);
+    void ScissorPush(Rect rect);
     void ScissorPop();
 
     void StatePush();
@@ -72,7 +73,7 @@ namespace Frames {
     GLuint m_currentTexture;
 
     void SetScissor(const Rect &rect);
-    std::queue<Rect> m_scissor;
+    std::stack<Rect> m_scissor;
 
     std::vector<float> m_alpha; // we'll only really allocate it once
   };
