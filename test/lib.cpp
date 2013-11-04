@@ -48,6 +48,17 @@ int TestSDLEnvironment::GetHeight() const {
   return m_height;
 }
 
+void TestSDLEnvironment::Swap() {
+  SDL_GL_SwapWindow(m_win);
+}
+
+void TestSDLEnvironment::HandleEvents() {
+  SDL_Event event;
+  while (SDL_PollEvent(&event)) {
+    // We actually just ignore all events
+  }
+}
+
 TestEnvironment::TestEnvironment() : m_env(0) {
   m_env = new Frames::Environment();
   m_env->ResizeRoot(GetWidth(), GetHeight()); // set this up so we can check coordinates
@@ -155,4 +166,16 @@ void TestSnapshot(TestEnvironment &env) {
 
   EXPECT_EQ(pixels.size(), reference.size());
   EXPECT_TRUE(pixels == reference);
+}
+
+void HaltAndRender(TestEnvironment &env) {
+  while (true) {
+    // Do the render
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    env->ResizeRoot(env.GetWidth(), env.GetHeight());
+    env->Render();
+    env.Swap();
+    env.HandleEvents();
+  }
 }
