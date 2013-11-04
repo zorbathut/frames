@@ -434,13 +434,23 @@ namespace Frames {
   };
 
   // Debug code
-  #define FRAMES_LAYOUT_ASSERT(x, errstring, ...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, __VA_ARGS__))))
-  #define FRAMES_LAYOUT_CHECK(x, errstring, ...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, __VA_ARGS__))))
+  #ifdef _MSC_VER
+    #define FRAMES_LAYOUT_ASSERT(x, errstring, ...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, __VA_ARGS__))))
+    #define FRAMES_LAYOUT_CHECK(x, errstring, ...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, __VA_ARGS__))))
 
-  #define FRAMES_ERROR(...) GetEnvironment()->LogError(Utility::Format(__VA_ARGS__))
-  #define FRAMES_DEBUG(...) GetEnvironment()->LogDebug(Utility::Format(__VA_ARGS__))
+    #define FRAMES_ERROR(...) GetEnvironment()->LogError(Utility::Format(__VA_ARGS__))
+    #define FRAMES_DEBUG(...) GetEnvironment()->LogDebug(Utility::Format(__VA_ARGS__))
 
-  #define CreateTagged(...) CreateTagged_imp(__FILE__, __LINE__, __VA_ARGS__)
+    #define CreateTagged(...) CreateTagged_imp(__FILE__, __LINE__, __VA_ARGS__)
+  #else
+    #define FRAMES_LAYOUT_ASSERT(x, errstring, args...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, ## args))))
+    #define FRAMES_LAYOUT_CHECK(x, errstring, args...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, ## args))))
+
+    #define FRAMES_ERROR(args...) GetEnvironment()->LogError(Utility::Format(args))
+    #define FRAMES_DEBUG(args...) GetEnvironment()->LogDebug(Utility::Format(args))
+
+    #define CreateTagged(args...) CreateTagged_imp(__FILE__, __LINE__, ## args)
+  #endif
 }
 
 #include "frames/layout_template_inline.h"

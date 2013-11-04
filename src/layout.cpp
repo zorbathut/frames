@@ -9,6 +9,8 @@
 
 #include <math.h> // just for isnan()
 
+#include <limits>
+
 namespace Frames {
   FRAMES_FRAMEEVENT_DEFINE(Move, ());
   FRAMES_FRAMEEVENT_DEFINE(Size, ());
