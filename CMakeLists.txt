@@ -44,7 +44,7 @@ target_link_libraries(frames lua51)
 target_link_libraries(frames freetype2312)
 target_link_libraries(frames zlib)
 
-add_executable(test "test/lib.cpp" "test/lib.h" "test/frame.cpp")
+add_executable(test "test/lib.cpp" "test/lib.h" "test/frame.cpp" "test/mask.cpp")
 target_link_libraries(test frames)
 target_link_libraries(test SDL2)
 target_link_libraries(test winmm)
