@@ -60,7 +60,9 @@ void TestSDLEnvironment::HandleEvents() {
 }
 
 TestEnvironment::TestEnvironment() : m_env(0) {
-  m_env = new Frames::Environment();
+  Frames::Configuration config;
+  config.fontDefaultId = "test/LindenHill.otf";
+  m_env = new Frames::Environment(config);
   m_env->ResizeRoot(GetWidth(), GetHeight()); // set this up so we can check coordinates
 }
 

@@ -86,7 +86,6 @@ namespace Frames {
     TextureBackingPtr m_texture;
 
     Environment *m_env;
-    Stream *m_stream;
 
     std::vector<unsigned char> m_face_data; // stores the font file in memory to make truetype loading a bit easier
 

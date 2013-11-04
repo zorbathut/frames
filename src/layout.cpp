@@ -404,10 +404,8 @@ namespace Frames {
     // Take out all our event handlers
     while (!m_events.empty()) {
       EventLookup::iterator eventTable = m_events.begin();
-      
-      while (!eventTable->second.empty()) {
-        EventDestroy(eventTable, eventTable->second.begin()); // kaboom!
-      }
+      EventDestroy(eventTable, eventTable->second.begin()); // kaboom!
+      // this potentially invalidates our eventTable iterator so now we need to go and do it all again
     }
 
     // Clean up all appropriate lua environments
@@ -588,6 +586,16 @@ namespace Frames {
     }
 
     // If we didn't actually clear anything, no sweat, no need to invalidate
+  }
+
+  void Layout::ClearPoint(Anchor anchor) {
+    if (!IsNil(c_anchorLookup[anchor].x)) {
+      ClearPoint(X, c_anchorLookup[anchor].x);
+    }
+
+    if (!IsNil(c_anchorLookup[anchor].y)) {
+      ClearPoint(Y, c_anchorLookup[anchor].y);
+    }
   }
 
   void Layout::ClearAllPoints(Axis axis) {

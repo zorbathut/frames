@@ -12,17 +12,19 @@ namespace Frames {
   // =======================================
   // FONTINFO
 
-  FontInfo::FontInfo(Environment *env, Stream *stream) : m_env(env), m_stream(0), m_face_size(0) {
+  FontInfo::FontInfo(Environment *env, Stream *stream) : m_env(env), m_face_size(0) {
     // Hacky fallback for now: read the entire stream to a vector, then we just point to the vector. Later we'll do actual stream reading.
-    while (true) {
-      const int BUFFERSIZE = 32768;
-      unsigned char buffer[BUFFERSIZE];
-      int read = stream->Read(buffer, BUFFERSIZE);
-      if (read) {
-        m_face_data.insert(m_face_data.end(), buffer, buffer + read);
-      }
-      if (read != BUFFERSIZE) {
-        break;
+    if (stream) {
+      while (true) {
+        const int BUFFERSIZE = 32768;
+        unsigned char buffer[BUFFERSIZE];
+        int read = stream->Read(buffer, BUFFERSIZE);
+        if (read) {
+          m_face_data.insert(m_face_data.end(), buffer, buffer + read);
+        }
+        if (read != BUFFERSIZE) {
+          break;
+        }
       }
     }
 
@@ -41,7 +43,6 @@ namespace Frames {
     }
 
     m_env->GetTextManager()->Internal_Shutdown_Font(this);
-    delete m_stream;  // alright, right now this does nothing, but it'll be useful once we actually do stream reading
   }
 
   TextInfoPtr FontInfo::GetTextInfo(float size, const std::string &text) {
@@ -446,10 +447,11 @@ namespace Frames {
     if (!m_fonts.left.count(font)) {
       Stream *stream = m_env->GetConfiguration().streamFromId->Create(m_env, font);
       if (!stream) {
-        return 0;
+        m_env->LogError(Utility::Format("Unable to find font \"%s\"", font.c_str()));
+        m_fonts.insert(boost::bimap<std::string, FontInfo *>::value_type(font, new FontInfo(m_env, 0)));
+      } else {
+        m_fonts.insert(boost::bimap<std::string, FontInfo *>::value_type(font, new FontInfo(m_env, stream)));
       }
-
-      m_fonts.insert(boost::bimap<std::string, FontInfo *>::value_type(font, new FontInfo(m_env, stream)));
     }
 
     return m_fonts.left.find(font)->second->GetTextInfo(size, text);

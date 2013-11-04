@@ -269,6 +269,7 @@ namespace Frames {
     // while Layout isn't mutable, things that inherit from Layout might be
     void SetPoint(Axis axis, float mypt, const Layout *link, float theirpt, float offset = 0.f);
     void ClearPoint(Axis axis, float mypt);
+    void ClearPoint(Anchor anchor);
     void ClearAllPoints(Axis axis);
     void ClearAllPoints();
 
