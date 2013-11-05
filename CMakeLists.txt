@@ -15,7 +15,7 @@ add_definitions(-D_CRT_SECURE_NO_WARNINGS) # Someday we'll want to disable this,
 # TODO: make these optional
 include_directories("deps/boost_1_54_0")
 include_directories("deps/freetype-2.3.12/win32/include")
-include_directories("deps/glew-1.10.0/include")
+include_directories("deps/glew-1.10.0/win32/include")
 include_directories("deps/jpeg-9/win32/include")
 include_directories("deps/libpng-1.4.3/win32/include")
 include_directories("deps/lua-5.1.5/win32/include")
@@ -24,7 +24,7 @@ include_directories("deps/zlib-1.2.8/win32/include")
 include_directories("deps/gtest-1.7.0/win32/include")
 
 link_directories("deps/freetype-2.3.12/win32/lib")
-link_directories("deps/glew-1.10.0/lib/Release/Win32")
+link_directories("deps/glew-1.10.0/win32/lib")
 link_directories("deps/jpeg-9/win32/lib")
 link_directories("deps/libpng-1.4.3/win32/lib")
 link_directories("deps/lua-5.1.5/win32/lib")
