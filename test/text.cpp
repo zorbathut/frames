@@ -10,7 +10,7 @@ TEST(Text, Basic) {
 
   const int c_tests = 7;
 
-  const int sizes[c_tests] = { 12, 18, 24, 36, 48, 72, 96 };
+  const float sizes[c_tests] = { 12, 18, 24, 36, 48, 72, 96 };
   const char *text[c_tests] = {
     "Five hexing wizard bots jump quickly.",
     "Pack my box with five dozen liquor jugs.",
