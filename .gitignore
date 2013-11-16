@@ -24,3 +24,6 @@ Debug
 Release
 frame.dir
 sandbox.dir
+
+# Mingw targets
+*.exe

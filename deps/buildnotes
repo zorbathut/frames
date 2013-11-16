@@ -1,0 +1,11 @@
+(In theory, this file is about building the dependencies on different platforms. In practice, it's mostly about mingw.)
+
+Building on mingw tends to be really nightmarish. Here's a magic invocation that sometimes works:
+
+CC=/cygdrive/c/mingw/bin/gcc.exe CXX=/cygdrive/c/mingw/bin/g++.exe ./configure --build=i686-pc-mingw32 --disable-dependency-tracking
+
+(note: I do not generally recommend trying to build through mingw)
+
+Individual library notes:
+
+lua: build with "make generic", will need to modify src/Makefile to reference the right compiler. remember to make clean if you screw it up the first time or you'll get a subtly broken build
