@@ -926,7 +926,7 @@ namespace Frames {
       ax.connections[0].cached = Utility::Undefined;
       ax.connections[1].cached = Utility::Undefined;
 
-      for (ChildrenList::const_iterator itr = ax.children.begin(); itr != ax.children.end(); ++itr) {
+      for (AxisData::ChildrenList::const_iterator itr = ax.children.begin(); itr != ax.children.end(); ++itr) {
         (*itr)->Invalidate(axis);
       }
 
