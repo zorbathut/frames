@@ -1,20 +1,24 @@
 
 === BUILDING
 
+* Deployment script
+  * tag
+    * Tag
+    * Branch
+      * test if appropriate
+      * stable if appropriate
+      * vX branch
+      * vX.Y branch
+  * generate
+    * Build cmake project files
+  * build
+    * Build libraries
+  * deploy
+    * Package
+
 * Simple examples
   * SDL/GL
   * Win32/GL
-
-* Deployment script
-  * Tag
-  * Branch
-    * test if appropriate
-    * stable if appropriate
-    * vX branch
-    * vX.Y branch
-  * Build cmake project files
-  * Build libraries
-  * Package
 
 === PROGRESSION
 
