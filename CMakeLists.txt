@@ -66,6 +66,6 @@ target_link_libraries(test optimized gtest)
 target_link_libraries(test optimized gtest_main)
 
 # Compiler-specific stuff
-if (MSVC100) # VS11 has spotty support for tr1::tuple and this breaks google test. Also, for some reason, VS11 uses the MSVC100 define. Go figure.
+if (MSVC11) # VS11 has spotty support for tr1::tuple and this breaks google test.
   set_property( TARGET test APPEND PROPERTY COMPILE_DEFINITIONS _VARIADIC_MAX=10 )
 endif()
