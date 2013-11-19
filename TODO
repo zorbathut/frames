@@ -1,6 +1,8 @@
 
 === BUILDING
 
+* gtest for all platforms
+
 * Deployment script
   * tag
     * Tag

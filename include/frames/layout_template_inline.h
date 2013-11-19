@@ -19,7 +19,7 @@ namespace Frames {
       return;
     }
     
-    const std::multiset<FECallback, FECallback::Sorter> &eventSet = m_events.find(&event)->second;
+    std::multiset<FECallback, FECallback::Sorter> &eventSet = m_events.find(&event)->second;
     
     // TODO: Make this faster if it ever becomes a bottleneck!
     for (std::multiset<FECallback, FECallback::Sorter>::iterator itr = eventSet.begin(); itr != eventSet.end(); ++itr) {

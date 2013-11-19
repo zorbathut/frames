@@ -14,6 +14,8 @@
 
 #include <cstdio>
 
+const std::string path = "../../test";
+
 TestSDLEnvironment::TestSDLEnvironment() : m_win(0), m_glContext(0) {
   EXPECT_EQ(SDL_Init(SDL_INIT_VIDEO), 0);
 
@@ -59,9 +61,16 @@ void TestSDLEnvironment::HandleEvents() {
   }
 }
 
+class Prepender : public Frames::Configuration::PathFromId {
+  std::string Process(Frames::Environment *env, const std::string &id) {
+    return path + "/" + id;
+  }
+};
+
 TestEnvironment::TestEnvironment() : m_env(0) {
   Frames::Configuration config;
-  config.fontDefaultId = "test/LindenHill.otf";
+  config.pathFromId = new Prepender();  // I'm pretty sure this leaks. TODO we really need a better way to make this work.
+  config.fontDefaultId = "LindenHill.otf";
   m_env = new Frames::Environment(config);
   m_env->ResizeRoot(GetWidth(), GetHeight()); // set this up so we can check coordinates
 }
@@ -78,7 +87,7 @@ void TestSnapshot(TestEnvironment &env) {
   env->ResizeRoot(env.GetWidth(), env.GetHeight());
   env->Render();
 
-  std::string testName = Frames::Utility::Format("test/ref/%s_%s", ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name(), ::testing::UnitTest::GetInstance()->current_test_info()->name());
+  std::string testName = Frames::Utility::Format("%s/ref/%s_%s", path.c_str(), ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name(), ::testing::UnitTest::GetInstance()->current_test_info()->name());
 
   static std::string s_testNameLast = "";
   static int s_testIdLast = 0;
@@ -98,7 +107,7 @@ void TestSnapshot(TestEnvironment &env) {
   std::vector<unsigned char> pixels; pixels.resize(4 * env.GetWidth() * env.GetHeight());
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  glReadPixels(0, 0, env.GetWidth(), env.GetHeight(), GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+  glReadPixels(0, 0, env.GetWidth(), env.GetHeight(), GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
   EXPECT_EQ(glGetError(), GL_NO_ERROR);
 
   // Annoyingly, OpenGL reads coordinates in math quadrant order, not scanline order like the rest of the civilized computer world
@@ -121,7 +130,7 @@ void TestSnapshot(TestEnvironment &env) {
       EXPECT_EQ(Frames::TextureConfig::GetBPP(Frames::TextureConfig::MODE_RGBA), 4);
       EXPECT_EQ(tex.Raw_GetStride(), tex.GetWidth() * 4);
       reference.resize(tex.GetWidth() * tex.GetHeight() * 4);
-      memcpy(reference.data(), tex.Raw_GetData(), tex.GetWidth() * tex.GetHeight() * 4);
+      memcpy(&reference[0], tex.Raw_GetData(), tex.GetWidth() * tex.GetHeight() * 4);
       delete stream;
     }
   }
@@ -154,10 +163,10 @@ void TestSnapshot(TestEnvironment &env) {
 
     std::vector<unsigned char *> rows;
     for (int i = 0; i < env.GetHeight(); ++i) {
-      rows.push_back(pixels.data() + i * env.GetWidth() * 4);
+      rows.push_back(&pixels[0] + i * env.GetWidth() * 4);
     }
 
-    png_write_image(png_ptr, rows.data());
+    png_write_image(png_ptr, &rows[0]);
 
     png_write_end(png_ptr, NULL);
 

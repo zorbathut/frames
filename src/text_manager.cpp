@@ -30,7 +30,7 @@ namespace Frames {
 
     delete stream;
 
-    if (FT_New_Memory_Face(m_env->GetTextManager()->GetFreetype(), m_face_data.data(), m_face_data.size(), 0, &m_face)) {
+    if (m_face_data.empty() || FT_New_Memory_Face(m_env->GetTextManager()->GetFreetype(), &m_face_data[0], m_face_data.size(), 0, &m_face)) {
       m_env->LogError("Can't load Freetype face");
     }
     

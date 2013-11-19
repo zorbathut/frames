@@ -37,7 +37,7 @@ TEST(Text, Basic) {
 
   for (int i = 0; i < c_tests; ++i) {
     if (i % 2 == 0) {
-      frames[i]->SetFont("test/geo_1.ttf");
+      frames[i]->SetFont("geo_1.ttf");
     }
   }
 

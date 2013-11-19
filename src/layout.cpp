@@ -1547,7 +1547,7 @@ namespace Frames {
     lua_State *L_base = (lua_State *)lua_touserdata(L, -1);
     lua_pop(L, 1);
     
-    const std::multiset<FECallback, FECallback::Sorter> &eventSet = self->m_events.find(event)->second;
+    std::multiset<FECallback, FECallback::Sorter> &eventSet = self->m_events.find(event)->second;
     
     // TODO: Make this faster if it ever becomes a bottleneck!
     for (std::multiset<FECallback, FECallback::Sorter>::iterator itr = eventSet.begin(); itr != eventSet.end(); ++itr) {
