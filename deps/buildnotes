@@ -1,11 +1,26 @@
-(In theory, this file is about building the dependencies on different platforms. In practice, it's mostly about mingw.)
+==== Platform notes:
 
-Building on mingw tends to be really nightmarish. Here's a magic invocation that sometimes works:
+== msvc: Note that libraries must be built without SSL2 in order to link with msvc9 and msvc10.
+
+== mingw: Building on mingw tends to be really nightmarish. Here's a magic invocation that sometimes works:
 
 CC=/cygdrive/c/mingw/bin/gcc.exe CXX=/cygdrive/c/mingw/bin/g++.exe ./configure --build=i686-pc-mingw32 --disable-dependency-tracking
 
 (note: I do not generally recommend trying to build through mingw)
 
-Individual library notes:
+==== Individual library notes:
 
-lua: build with "make generic", will need to modify src/Makefile to reference the right compiler. remember to make clean if you screw it up the first time or you'll get a subtly broken build
+== lua/mingw: build with "make generic", will need to modify src/Makefile to reference the right compiler. remember to make clean if you screw it up the first time or you'll get a subtly broken build
+
+== lua/win32: Use luavs.bat, but replace the main block with:
+
+cd src
+%MYCOMPILE% /arch:SSE l*.c
+del lua.obj luac.obj
+lib /nologo /out:lua51.lib l*.obj
+del *.obj *.manifest
+cd ..
+
+== jpeg/win32: the build-in configuration enables Whole Program Optimization which not only restricts the output to a specific MSVC version, but a specific MSVC patch. As jpeg isn't performance-sensitive in Frames this has been disabled. If you want to rebuild the library you might be able to get some performance out of turning it back on.
+
+== zlib/win32: Modify the makefile.msc to incldue /arch:SSE and /GS- then build.

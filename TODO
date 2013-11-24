@@ -1,6 +1,8 @@
 
 === BUILDING
 
+* figure out how to make msvc2010 link(ish)
+* figure out how to make msvc2008 link(ish)
 * gtest for all platforms
 
 * Deployment script
@@ -21,6 +23,8 @@
 * Simple examples
   * SDL/GL
   * Win32/GL
+
+* DLL support for remaining projects, fix up MSVC settings
 
 === PROGRESSION
 

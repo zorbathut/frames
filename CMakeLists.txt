@@ -9,9 +9,20 @@ include_directories("include")
 
 if(MINGW)
   set(PLATFORM mingw)
+  set(PLATFORMCXX mingw)
 elseif(WIN32)
   set(PLATFORM win32)
   set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS _CRT_SECURE_NO_WARNINGS) # Suppress all those annoying "insecure function" warnings on MSVC
+  
+  if(MSVC90)
+    set(PLATFORMCXX win32_9)
+  elseif(MSVC10)
+    set(PLATFORMCXX win32_10)
+  elseif(MSVC11)
+    set(PLATFORMCXX win32_11)
+  elseif(MSVC12)
+    set(PLATFORMCXX win32_12)
+  endif()
 endif()
 
 # TODO: make these optional
@@ -23,7 +34,6 @@ include_directories("deps/libpng-1.4.3/${PLATFORM}/include")
 include_directories("deps/lua-5.1.5/${PLATFORM}/include")
 include_directories("deps/SDL2-2.0.1/${PLATFORM}/include")
 include_directories("deps/zlib-1.2.8/${PLATFORM}/include")
-include_directories("deps/gtest-1.7.0/${PLATFORM}/include")
 
 link_directories("deps/freetype-2.3.12/${PLATFORM}/lib")
 link_directories("deps/glew-1.10.0/${PLATFORM}/lib")
@@ -32,7 +42,10 @@ link_directories("deps/libpng-1.4.3/${PLATFORM}/lib")
 link_directories("deps/lua-5.1.5/${PLATFORM}/lib")
 link_directories("deps/SDL2-2.0.1/${PLATFORM}/lib")
 link_directories("deps/zlib-1.2.8/${PLATFORM}/lib")
-link_directories("deps/gtest-1.7.0/${PLATFORM}/lib")
+
+# Used only for testing, thankfully
+include_directories("deps/gtest-1.7.0/${PLATFORMCXX}/include")
+link_directories("deps/gtest-1.7.0/${PLATFORMCXX}/lib")
 
 file(GLOB_RECURSE HEADERS "include/*.h")
 
@@ -60,10 +73,8 @@ target_link_libraries(test SDL2)
 target_link_libraries(test winmm)
 target_link_libraries(test version)
 target_link_libraries(test imm32)
-target_link_libraries(test debug gtestd)
-target_link_libraries(test debug gtest_maind)
-target_link_libraries(test optimized gtest)
-target_link_libraries(test optimized gtest_main)
+target_link_libraries(test gtest)
+target_link_libraries(test gtest_main)
 
 # Compiler-specific stuff
 if (MSVC11) # VS11 has spotty support for tr1::tuple and this breaks google test.
