@@ -1,6 +1,8 @@
 
 === BUILDING
 
+* Replace cmake with premake
+
 * Deployment script
   * tag
     * Tag
