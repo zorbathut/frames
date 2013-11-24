@@ -1,10 +1,6 @@
 
 === BUILDING
 
-* figure out how to make msvc2010 link(ish)
-* figure out how to make msvc2008 link(ish)
-* gtest for all platforms
-
 * Deployment script
   * tag
     * Tag
@@ -13,10 +9,11 @@
       * stable if appropriate
       * vX branch
       * vX.Y branch
-  * generate
-    * Build cmake project files
-  * build
-    * Build libraries
+  X generate
+    X Build cmake project files
+    * Clean for enduser usage (remove those wacky cmake projects)
+  X build
+    X Build libraries
   * deploy
     * Package
 
