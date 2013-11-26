@@ -1,7 +1,10 @@
 
 === BUILDING
 
-* Replace cmake with premake
+* premake debug build
+  * gtest debug build
+
+* fix crash
 
 * Deployment script
   * tag
@@ -18,6 +21,8 @@
     X Build libraries
   * deploy
     * Package
+
+* premake msvc10/msvc11
 
 * Simple examples
   * SDL/GL
