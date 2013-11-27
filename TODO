@@ -1,11 +1,6 @@
 
 === BUILDING
 
-* premake debug build
-  * gtest debug build
-
-* fix crash
-
 * Deployment script
   * tag
     * Tag
@@ -21,14 +16,15 @@
     X Build libraries
   * deploy
     * Package
-
-* premake msvc10/msvc11
-
+  
 * Simple examples
   * SDL/GL
   * Win32/GL
 
-* DLL support for remaining projects, fix up MSVC settings
+* premake debug build
+  * gtest debug build
+
+* fix crash
 
 === PROGRESSION
 

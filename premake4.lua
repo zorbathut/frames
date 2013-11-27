@@ -91,7 +91,7 @@ solution "Frames"
     location(path)
     targetdir("bin/" .. slug .. "/test")
     files "test/*.cpp"
-    links {"frames", "SDL2", "winmm", "version", "imm32", "gtest", "gtest_main"}
+    links {"frames", "SDL2", "winmm", "version", "imm32"}
     
     -- These should really be part of frames, but premake doesn't deal with them properly in that case
     links {"glew32s", "opengl32", "jpeg"}
@@ -100,4 +100,11 @@ solution "Frames"
     elseif platform == "mingw" then
       links {"png14", "lua", "freetype", "z", "pthread", "gdi32", "ole32", "oleaut32", "uuid"}
     end
+    
+    configuration "Debug"
+      links {"gtestd", "gtest_maind"}
+    
+    configuration "Release"
+      links {"gtest", "gtest_main"}
+  
   
