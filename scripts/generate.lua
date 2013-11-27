@@ -5,7 +5,7 @@
 
 require "scripts/lib/platforms"
 
-os.execute("rm -rf projects")
+os.execute("rm -rf projects lib bin")
 
 for k, v in pairs(projects) do
   --local path = v.path and ("PATH=\"%s\""):format(v.path) or ""
