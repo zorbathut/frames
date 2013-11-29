@@ -1,5 +1,11 @@
 
 === BUILDING
+  
+* Simple examples
+  * Win32/GL
+
+* premake debug build
+  * gtest debug build
 
 * Deployment script
   * tag
@@ -11,20 +17,15 @@
       * vX.Y branch
   X generate
     X Build cmake project files
-    * Clean for enduser usage (remove those wacky cmake projects)
   X build
     X Build libraries
   * deploy
     * Package
-  
-* Simple examples
-  * SDL/GL
-  * Win32/GL
-
-* premake debug build
-  * gtest debug build
 
 * fix crash
+
+* Simple examples
+  * SDL/GL
 
 === PROGRESSION
 

@@ -27,8 +27,6 @@ TestSDLEnvironment::TestSDLEnvironment() : m_win(0), m_glContext(0) {
 
   m_glContext = SDL_GL_CreateContext(m_win);
   EXPECT_TRUE(m_glContext != 0);
-
-  glewInit();
 }
 
 TestSDLEnvironment::~TestSDLEnvironment() {

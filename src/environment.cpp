@@ -809,6 +809,8 @@ namespace Frames {
   }
 
   void Environment::Init(const Configuration &config) {
+    glewInit(); // easier to handle it on our own, and we won't be creating environments often enough for this to be a performance hit
+
     m_config_logger_owned = 0;
     m_config_tfi_owned = 0;
     m_config_sfi_owned = 0;

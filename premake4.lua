@@ -31,7 +31,7 @@ end
 local path = "projects/" .. slug
 
 solution "Frames"
-  configurations { --[["Debug",]] "Release" }
+  configurations { "Debug", "Release" }
   
   -- Paths
   location(path)
@@ -70,6 +70,18 @@ solution "Frames"
     defines { "_VARIADIC_MAX=10" } -- MSVC11 has sketchy support for tr1::tuple; this is required for google test to work
   end
   
+  local function linkWithFrames()
+    links {"frames", "SDL2", "winmm", "version", "imm32"}
+  
+    -- These should really be part of frames, but premake doesn't deal with them properly in that case
+    links {"glew32s", "opengl32", "jpeg"}
+    if platform == "win32" then
+      links {"libpng14", "lua51", "freetype2312", "zlib"}
+    elseif platform == "mingw" then
+      links {"png14", "lua", "freetype", "z", "pthread", "gdi32", "ole32", "oleaut32", "uuid"}
+    end
+  end
+  
   -- Build config
   flags { "Symbols" } -- always create debug symbols
 
@@ -83,6 +95,7 @@ solution "Frames"
     location(path)
     targetdir("lib/" .. slug)
     files "src/*.cpp"
+    files "include/frames/*.h"
 
   -- Test
   project "test"
@@ -91,20 +104,21 @@ solution "Frames"
     location(path)
     targetdir("bin/" .. slug .. "/test")
     files "test/*.cpp"
-    links {"frames", "SDL2", "winmm", "version", "imm32"}
     
-    -- These should really be part of frames, but premake doesn't deal with them properly in that case
-    links {"glew32s", "opengl32", "jpeg"}
-    if platform == "win32" then
-      links {"libpng14", "lua51", "freetype2312", "zlib"}
-    elseif platform == "mingw" then
-      links {"png14", "lua", "freetype", "z", "pthread", "gdi32", "ole32", "oleaut32", "uuid"}
-    end
+    linkWithFrames()
     
     configuration "Debug"
       links {"gtestd", "gtest_maind"}
     
     configuration "Release"
       links {"gtest", "gtest_main"}
-  
-  
+
+  project "win32_ogl"
+    kind "WindowedApp"
+    language "C++"
+    location(path)
+    targetdir("bin/" .. slug .. "/samples")
+    files "samples/bootstrap/win32_ogl.cpp"
+    flags "WinMain"
+
+    linkWithFrames()
