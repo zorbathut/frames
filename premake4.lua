@@ -60,16 +60,22 @@ solution "Frames"
   }
   
   -- Platform-specific tweaks
-  if platform == "win32" then
-    defines { "_CRT_SECURE_NO_WARNINGS" } -- Annoying warning on MSVC that wants use of MSVC-specific functions
-  elseif platform == "mingw" then
+  configuration "vs*"
+    defines "_CRT_SECURE_NO_WARNINGS" -- Annoying warning on MSVC that wants use of MSVC-specific functions
+  
+  if platform == "mingw" then
     defines { "_WIN32" } -- Doesn't seem to be provided by default on cygwin
   end
   
-  if slug == "msvc11" then
-    defines { "_VARIADIC_MAX=10" } -- MSVC11 has sketchy support for tr1::tuple; this is required for google test to work
-  end
+  -- Build config
+  flags { "Symbols" } -- always create debug symbols
   
+  configuration "Debug"
+    targetsuffix "d"
+
+  configuration "Release"
+    flags { "Optimize" }  
+
   local function linkWithFrames()
     links {"frames", "SDL2", "winmm", "version", "imm32"}
   
@@ -82,12 +88,6 @@ solution "Frames"
     end
   end
   
-  -- Build config
-  flags { "Symbols" } -- always create debug symbols
-
-  configuration "Release"
-    flags { "Optimize" }  
-
   -- Frames
   project "frames"
     kind "StaticLib"
@@ -106,6 +106,9 @@ solution "Frames"
     files "test/*.cpp"
     
     linkWithFrames()
+    
+    configuration "vs2012"
+      defines "_VARIADIC_MAX=10" -- MSVC11 has sketchy support for tr1::tuple; this is required for google test to work
     
     configuration "Debug"
       links {"gtestd", "gtest_maind"}

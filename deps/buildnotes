@@ -1,6 +1,6 @@
 ==== Platform notes:
 
-== msvc: Note that libraries must be built without SSL2 in order to link with msvc9 and msvc10.
+== msvc: Note that libraries must be built without SSL2 in order to link with msvc9 and msvc10. They should also be built with the Multi-threaded DLL runtime library.
 
 == mingw: Building on mingw tends to be really nightmarish. Here's a magic invocation that sometimes works:
 
@@ -24,3 +24,5 @@ cd ..
 == jpeg/win32: the build-in configuration enables Whole Program Optimization which not only restricts the output to a specific MSVC version, but a specific MSVC patch. As jpeg isn't performance-sensitive in Frames this has been disabled. If you want to rebuild the library you might be able to get some performance out of turning it back on.
 
 == zlib/win32: Modify the makefile.msc to incldue /arch:SSE and /GS- then build.
+
+== SDL/*: SDL has a buggy chkstk implementation. It is unclear why. Deleting its _chkstk definition is required to make it work properly. Also, at least under win32, it's set to build a .dll.

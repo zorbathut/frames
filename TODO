@@ -1,12 +1,6 @@
 
 === BUILDING
   
-* Simple examples
-  * Win32/GL
-
-* premake debug build
-  * gtest debug build
-
 * Deployment script
   * tag
     * Tag
@@ -21,8 +15,6 @@
     X Build libraries
   * deploy
     * Package
-
-* fix crash
 
 * Simple examples
   * SDL/GL
