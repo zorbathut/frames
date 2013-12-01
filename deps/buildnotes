@@ -25,4 +25,4 @@ cd ..
 
 == zlib/win32: Modify the makefile.msc to incldue /arch:SSE and /GS- then build.
 
-== SDL/*: SDL has a buggy chkstk implementation. It is unclear why. Deleting its _chkstk definition is required to make it work properly. Also, at least under win32, it's set to build a .dll.
+== SDL/win32: SDL has a buggy chkstk implementation under win32. It is unclear why. Deleting its _chkstk definition is required to make it work properly. Also, at least under win32, it's set to build a .dll by default, and should be changed to a static library.
