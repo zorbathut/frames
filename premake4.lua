@@ -63,12 +63,12 @@ solution "Frames"
   configuration "vs*"
     defines "_CRT_SECURE_NO_WARNINGS" -- Annoying warning on MSVC that wants use of MSVC-specific functions
   
-  if platform == "mingw" then
-    defines { "_WIN32" } -- Doesn't seem to be provided by default on cygwin
-  end
+  configuration {"gmake" and "windows"}
+    defines "_WIN32" -- Doesn't seem to be provided by default on cygwin
   
   -- Build config
-  flags { "Symbols" } -- always create debug symbols
+  configuration "*"
+    flags { "Symbols" } -- always create debug symbols
   
   configuration "Debug"
     targetsuffix "d"
@@ -77,15 +77,20 @@ solution "Frames"
     flags { "Optimize" }  
 
   local function linkWithFrames()
+    configuration {}
+    
     links {"frames", "SDL2", "winmm", "version", "imm32"}
   
     -- These should really be part of frames, but premake doesn't deal with them properly in that case
     links {"glew32s", "opengl32", "jpeg"}
-    if platform == "win32" then
+    
+    configuration "vs*"
       links {"libpng14", "lua51", "freetype2312", "zlib"}
-    elseif platform == "mingw" then
+      
+    configuration "gmake"
       links {"png14", "lua", "freetype", "z", "pthread", "gdi32", "ole32", "oleaut32", "uuid"}
-    end
+      
+    configuration {}
   end
   
   -- Frames
@@ -105,16 +110,19 @@ solution "Frames"
     targetdir("bin/" .. slug .. "/test")
     files "test/*.cpp"
     
-    linkWithFrames()
-    
     configuration "vs2012"
       defines "_VARIADIC_MAX=10" -- MSVC11 has sketchy support for tr1::tuple; this is required for google test to work
     
-    configuration "Debug"
+    configuration {"Debug", "vs*"}
       links {"gtestd", "gtest_maind"}
+      
+    configuration {"Debug", "not vs*"}
+      links {"gtest", "gtest_main"}
     
     configuration "Release"
       links {"gtest", "gtest_main"}
+      
+    linkWithFrames() -- must be after gtest because of the braindamaged way gcc links with libraries
 
   project "win32_ogl"
     kind "WindowedApp"
