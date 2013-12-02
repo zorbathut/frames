@@ -110,7 +110,7 @@ solution "Frames"
     targetdir("bin/" .. slug .. "/test")
     files "test/*.cpp"
     
-    configuration "vs2008"
+    configuration {"vs2008", "Debug"}
       linkoptions "/NODEFAULTLIB:msvcrt" -- I think this is a result of not having special debug builds for everything. Might be fixed when those are added.
       
     configuration "vs2012"

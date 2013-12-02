@@ -9,7 +9,7 @@ os.execute("rm -rf deploy && mkdir deploy")
 
 os.execute("cp -r `ls | grep -v deploy` deploy")
 
-os.execute("rm -rf deploy/Den* deploy/TODO deploy/projects deploy/bin deploy/lib")
+os.execute("rm -rf deploy/Den* deploy/TODO deploy/projects deploy/bin deploy/lib deploy/*.zip")
 
 os.execute("cd deploy && scripts/generate.lua")
 
@@ -17,6 +17,8 @@ os.execute("cd deploy && scripts/generate.lua")
 os.execute("cp -r deploy/projects deploy/projectsbackup")
 
 os.execute("cd deploy && scripts/build.lua")
+
+os.execute("cd deploy && scripts/test.lua")
 
 -- retrieve the projects
 os.execute("rm -rf deploy/projects && mv deploy/projectsbackup deploy/projects")
