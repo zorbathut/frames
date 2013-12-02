@@ -110,6 +110,9 @@ solution "Frames"
     targetdir("bin/" .. slug .. "/test")
     files "test/*.cpp"
     
+    configuration "vs2008"
+      linkoptions "/NODEFAULTLIB:msvcrt" -- I think this is a result of not having special debug builds for everything. Might be fixed when those are added.
+      
     configuration "vs2012"
       defines "_VARIADIC_MAX=10" -- MSVC11 has sketchy support for tr1::tuple; this is required for google test to work
     
