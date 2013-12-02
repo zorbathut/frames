@@ -29,6 +29,9 @@ os.execute("rm -rf deploy/lib/*/*.idb")
 -- remove binary output - we'll make this a little more careful if we have deployable executables
 os.execute("rm -rf deploy/bin")
 
+-- seems to need a second of delay here, probably for cygwin's slightly glitchy filesystem handling to catch up
+os.execute("sleep 1")
+
 -- compress the whole shebang
 os.execute("mv deploy frames-`git describe | sed s/v//`")
 os.execute("zip -r -9 frames-`git describe | sed s/v//`.zip frames-`git describe | sed s/v//`")
