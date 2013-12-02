@@ -14,8 +14,6 @@
 
 #include <cstdio>
 
-const std::string path = "../../test";
-
 TestSDLEnvironment::TestSDLEnvironment() : m_win(0), m_glContext(0) {
   EXPECT_EQ(SDL_Init(SDL_INIT_VIDEO), 0);
 
@@ -59,15 +57,8 @@ void TestSDLEnvironment::HandleEvents() {
   }
 }
 
-class Prepender : public Frames::Configuration::PathFromId {
-  std::string Process(Frames::Environment *env, const std::string &id) {
-    return path + "/" + id;
-  }
-};
-
 TestEnvironment::TestEnvironment() : m_env(0) {
   Frames::Configuration config;
-  config.pathFromId = new Prepender();  // I'm pretty sure this leaks. TODO we really need a better way to make this work.
   config.fontDefaultId = "LindenHill.otf";
   m_env = new Frames::Environment(config);
   m_env->ResizeRoot(GetWidth(), GetHeight()); // set this up so we can check coordinates
@@ -85,7 +76,7 @@ void TestSnapshot(TestEnvironment &env) {
   env->ResizeRoot(env.GetWidth(), env.GetHeight());
   env->Render();
 
-  std::string testName = Frames::Utility::Format("%s/ref/%s_%s", path.c_str(), ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name(), ::testing::UnitTest::GetInstance()->current_test_info()->name());
+  std::string testName = Frames::Utility::Format("ref/%s_%s", ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name(), ::testing::UnitTest::GetInstance()->current_test_info()->name());
 
   static std::string s_testNameLast = "";
   static int s_testIdLast = 0;

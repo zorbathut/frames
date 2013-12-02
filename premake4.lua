@@ -109,6 +109,7 @@ solution "Frames"
     location(path)
     targetdir("bin/" .. slug .. "/test")
     files "test/*.cpp"
+    debugdir "test"
     
     configuration {"vs2008", "Debug"}
       linkoptions "/NODEFAULTLIB:msvcrt" -- I think this is a result of not having special debug builds for everything. Might be fixed when those are added.
@@ -133,6 +134,7 @@ solution "Frames"
     location(path)
     targetdir("bin/" .. slug .. "/samples")
     files "samples/bootstrap/win32_ogl.cpp"
+    debugdir "samples/bootstrap"
     flags "WinMain"
 
     linkWithFrames()
