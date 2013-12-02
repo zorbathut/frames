@@ -18,21 +18,26 @@ os.execute("cp -r deploy/projects deploy/projectsbackup")
 
 os.execute("cd deploy && scripts/build.lua")
 
-os.execute("cd deploy && scripts/test.lua")
-
--- retrieve the projects
+-- retrieve the original projects
 os.execute("rm -rf deploy/projects && mv deploy/projectsbackup deploy/projects")
 
 -- remove .idb's
 os.execute("rm -rf deploy/lib/*/*.idb")
 
+-- run all tests
+local testfailed = os.execute("cd deploy && scripts/test.lua")
+
+-- move to new location
+os.execute("mv deploy frames-`git describe | sed s/v//`")
+
+-- compress the whole shebang with binaries
+os.execute("zip -r -9 frames-`git describe | sed s/v//`-bin.zip frames-`git describe | sed s/v//`")
+
 -- remove binary output - we'll make this a little more careful if we have deployable executables
 os.execute("rm -rf deploy/bin")
 
--- seems to need a second of delay here, probably for cygwin's slightly glitchy filesystem handling to catch up
-os.execute("sleep 1")
-
--- compress the whole shebang
-os.execute("mv deploy frames-`git describe | sed s/v//`")
+-- create the final deployable
 os.execute("zip -r -9 frames-`git describe | sed s/v//`.zip frames-`git describe | sed s/v//`")
 os.execute("rm -rf frames-`git describe | sed s/v//`")
+
+os.exit(testfailed and 1 or 0)
