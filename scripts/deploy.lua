@@ -29,5 +29,5 @@ os.execute("rm -rf deploy/bin")
 
 -- compress the whole shebang
 os.execute("mv deploy frames-`git describe | sed s/v//`")
-os.execute("zip -r -9 ../frames-`git describe | sed s/v//`.zip frames-`git describe | sed s/v//`")
+os.execute("zip -r -9 frames-`git describe | sed s/v//`.zip frames-`git describe | sed s/v//`")
 os.execute("rm -rf frames-`git describe | sed s/v//`")
