@@ -31,13 +31,13 @@ local testfailed = os.execute("cd deploy && scripts/test.lua")
 os.execute("mv deploy frames-`git describe | sed s/v//`")
 
 -- compress the whole shebang with binaries
-os.execute("zip -r -9 frames-`git describe | sed s/v//`-bin.zip frames-`git describe | sed s/v//`")
+os.execute("zip -r -9 -q frames-`git describe | sed s/v//`-bin.zip frames-`git describe | sed s/v//`")
 
 -- remove binary output - we'll make this a little more careful if we have deployable executables
 os.execute("rm -rf deploy/bin")
 
 -- create the final deployable
-os.execute("zip -r -9 frames-`git describe | sed s/v//`.zip frames-`git describe | sed s/v//`")
+os.execute("zip -r -9 -q frames-`git describe | sed s/v//`.zip frames-`git describe | sed s/v//`")
 os.execute("rm -rf frames-`git describe | sed s/v//`")
 
 os.exit(testfailed and 1 or 0)
