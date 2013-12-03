@@ -69,6 +69,7 @@ solution "Frames"
   -- Build config
   configuration "*"
     flags { "Symbols" } -- always create debug symbols
+    flags { "StaticRuntime" } -- dynamic linking is such a pain
   
   configuration "Debug"
     targetsuffix "d"
