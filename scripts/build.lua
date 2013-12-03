@@ -5,6 +5,14 @@
 
 require "scripts/lib/platforms"
 
-for k, v in pairs(projects) do
+local typ = ...
+
+local src = projects
+if typ then
+  src = {}
+  src[typ] = projects[typ]
+end
+
+for k, v in pairs(src) do
   os.execute(("cd projects/%s && %s"):format(k, v.build))
 end
