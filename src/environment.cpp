@@ -809,8 +809,14 @@ namespace Frames {
   }
 
   void Environment::Init(const Configuration &config) {
-    glewInit(); // easier to handle it on our own, and we won't be creating environments often enough for this to be a performance hit
+    // init pointers to zero
+    m_over = 0;
+    m_focus = 0;
 
+    m_renderer = 0;
+    m_text_manager = 0;
+    m_texture_manager = 0;
+    
     m_config_logger_owned = 0;
     m_config_tfi_owned = 0;
     m_config_sfi_owned = 0;
@@ -849,14 +855,14 @@ namespace Frames {
       m_config_clipboard_owned = new Configuration::Clipboard();
       m_config.clipboard = m_config_clipboard_owned;
     }
+    
+    // easier to handle it on our own, and we won't be creating environments often enough for this to be a performance hit
+    glewInit();
 
     m_counter = 0;
 
     m_root = new Layout(0, this);
     m_root->SetNameStatic("Root");
-
-    m_over = 0;
-    m_focus = 0;
 
     m_renderer = new Renderer(this);
     m_text_manager = new TextManager(this);
