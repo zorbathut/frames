@@ -63,9 +63,10 @@ solution "Frames"
   configuration "vs*"
     defines "_CRT_SECURE_NO_WARNINGS" -- Annoying warning on MSVC that wants use of MSVC-specific functions
   
-  configuration {"gmake and windows"}
+  configuration {"gmake", "windows"}
     defines "_WIN32" -- Doesn't seem to be provided by default on cygwin
     flags { "StaticRuntime" } -- dynamic linking is such a pain
+    linkoptions "-static" -- above option doesn't seem to do this?
   
   -- Build config
   configuration "*"
