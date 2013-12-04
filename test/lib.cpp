@@ -17,6 +17,12 @@
 TestSDLEnvironment::TestSDLEnvironment() : m_win(0), m_glContext(0) {
   EXPECT_EQ(SDL_Init(SDL_INIT_VIDEO), 0);
 
+  SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+  SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+
   m_win = SDL_CreateWindow("Frames test harness", 100, 100, 1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
   EXPECT_TRUE(m_win != NULL);
 
