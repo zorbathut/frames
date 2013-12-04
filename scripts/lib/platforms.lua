@@ -19,6 +19,6 @@ projects = {
   mingw = {
     generator = "gmake",
     --path = "/cygdrive/c/mingw/bin",
-    build = "PATH=/cygdrive/c/mingw/bin mingw32-make -j12 config=debug && PATH=/cygdrive/c/mingw/bin mingw32-make -j12 config=release",
+    build = "PATH=/cygdrive/c/mingw/bin mingw32-make -j12 config=debug && PATH=/cygdrive/c/mingw/bin mingw32-make -j12 config=release && cp `which pthreadGC2.dll` bin/mingw/test",
   },
 }
