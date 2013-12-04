@@ -4,6 +4,7 @@
 -- This is not a good solution and will be fixed when it becomes more important.
 
 require "scripts/lib/platforms"
+require "scripts/lib/util"
 
 os.execute("rm -rf projects lib bin")
 

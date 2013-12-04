@@ -3,6 +3,8 @@
 -- NOTE: This script currently makes a pile of unwarranted assumptions about the build environment.
 -- This is not a good solution and will be fixed when it becomes more important.
 
+require "scripts/lib/util"
+
 local version = io.open("version", "rb"):read("*line")
 
 os.execute("rm -rf Den* scripts version TODO")
