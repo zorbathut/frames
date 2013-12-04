@@ -13,8 +13,10 @@
     X Build cmake project files
   X build
     X Build libraries
-  * deploy
-    * Package
+  X deploy
+    X Package
+
+* SDL_WINDOW_HIDDEN on tests
 
 * Simple examples
   * SDL/GL
