@@ -5,7 +5,7 @@
 
 local version = io.open("version", "rb"):read("*line")
 
-os.execute("rm -rf Den* scripts bin version")
+os.execute("rm -rf Den* scripts version TODO")
 
 os.execute(("mkdir frames-%s && mv * frames-%s"):format(version, version))
 
