@@ -29,6 +29,15 @@ do
   end
 end
 
+do
+  local gitfil = io.popen("git branch", "r")
+  local output = gitfil:read("*all")
+  if not output:find("* dev\n") then
+    print("Error - not on dev branch!")
+    assert(false)
+  end
+end
+
 local major, minor, patch, suffix = ver:match("(%d+).(%d+).(%d+)(-?.*)")
 if suffix == "" then
   suffix = nil
@@ -62,3 +71,5 @@ end
 
 os.execute("git tag v" .. ver .. " -m \"Version " .. ver .. "\"")
 os.execute("git push --tags")
+
+os.execute("git checkout dev")
