@@ -38,7 +38,7 @@ do
   end
 end
 
-local major, minor, patch, suffix = ver:match("(%d+).(%d+).(%d+)(-?.*)")
+local major, minor, patch, suffix = ver:match("^(%d+).(%d+).(%d+)(-?.*)$")
 if suffix == "" then
   suffix = nil
 end
