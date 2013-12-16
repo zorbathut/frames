@@ -1,0 +1,7 @@
+scripts/generate.lua
+scripts/generateDocs.lua
+rm -f *.zip version
+zip -r generate.zip `ls | grep -v doc`
+zip -r testdata.zip test
+zip -r docs.zip doc/Frames* doc/html
+git describe | sed 's/^v//' > version

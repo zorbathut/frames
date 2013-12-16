@@ -1,0 +1,7 @@
+for f in `/usr/bin/find | grep zip`
+do
+  unzip $f
+done
+rm *.zip
+rm -rf label_exp*
+scripts/deploy.lua

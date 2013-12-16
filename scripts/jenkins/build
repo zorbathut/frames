@@ -1,0 +1,5 @@
+unzip generate.zip
+rm generate.zip
+scripts/build.lua $1
+zip -r test-$1.zip bin/$1/test
+zip -r lib-$1.zip lib/$1
