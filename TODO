@@ -1,25 +1,12 @@
 
 === BUILDING
-  
-* Deployment script
-  * tag
-    * Tag
-    * Branch
-      * test if appropriate
-      * stable if appropriate
-      * vX branch
-      * vX.Y branch
-  X generate
-    X Build cmake project files
-  X build
-    X Build libraries
-  X deploy
-    X Package
 
-* SDL_WINDOW_HIDDEN on tests
+* Documentation
 
 * Simple examples
   * SDL/GL
+
+* Official release?
 
 === PROGRESSION
 

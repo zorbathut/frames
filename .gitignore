@@ -3,3 +3,5 @@
 /projects/*
 /deploy/*
 /frames-*.zip
+/doc/html/*
+/doc/*.chm
