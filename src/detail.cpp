@@ -31,12 +31,14 @@ namespace Frames {
       Point(0.5f, 1.f),  // CENTERBOTTOM
       Point(1.f, 1.f),  // BOTTOMRIGHT
       Point(1.f, 1.f),  // RIGHTBOTTOM
-      Point(0.f, Nil),  // LEFT
-      Point(0.5f, Nil),  // CENTERX
-      Point(1.f, Nil),  // RIGHT
-      Point(Nil, 0.f),  // TOP
-      Point(Nil, 0.5f),  // CENTERY
-      Point(Nil, 1.f),  // BOTTOM
+
+      // These constants are supposed to be Nil, but they're hardcoded to fix constant initialization order issues on some compilers. Can be fixed by putting them in a single file, in theory.
+      Point(0.f, detail::Reinterpret<float>(0xFFF00DFF)),  // LEFT
+      Point(0.5f, detail::Reinterpret<float>(0xFFF00DFF)),  // CENTERX
+      Point(1.f, detail::Reinterpret<float>(0xFFF00DFF)),  // RIGHT
+      Point(detail::Reinterpret<float>(0xFFF00DFF), 0.f),  // TOP
+      Point(detail::Reinterpret<float>(0xFFF00DFF), 0.5f),  // CENTERY
+      Point(detail::Reinterpret<float>(0xFFF00DFF), 1.f),  // BOTTOM
     };
 
     std::string Format(const char *bort, ...) {
