@@ -1,5 +1,5 @@
 
-#include "frames/utility.h"
+#include "frames/detail.h"
 
 #include "boost/static_assert.hpp"
 
@@ -11,34 +11,34 @@
 BOOST_STATIC_ASSERT(sizeof(float) == sizeof(int));
 
 namespace Frames {
-  const Point c_anchorLookup[ANCHOR_COUNT] = {
-    Point(0.f, 0.f),  // TOPLEFT
-    Point(0.f, 0.f),  // LEFTTOP
-    Point(0.5f, 0.f),  // TOPCENTER
-    Point(0.5f, 0.f),  // CENTERTOP
-    Point(1.f, 0.f),  // TOPRIGHT
-    Point(1.f, 0.f),  // RIGHTTOP
-    Point(0.f, 0.5f),  // CENTERLEFT
-    Point(0.f, 0.5f),  // LEFTCENTER
-    Point(0.5f, 0.5f),  // CENTER
-    Point(0.5f, 0.5f),  // CENTERCENTER
-    Point(1.f, 0.5f),  // CENTERRIGHT
-    Point(1.f, 0.5f),  // RIGHTCENTER
-    Point(0.f, 1.f),  // BOTTOMLEFT
-    Point(0.f, 1.f),  // LEFTBOTTOM
-    Point(0.5f, 1.f),  // BOTTOMCENTER
-    Point(0.5f, 1.f),  // CENTERBOTTOM
-    Point(1.f, 1.f),  // BOTTOMRIGHT
-    Point(1.f, 1.f),  // RIGHTBOTTOM
-    Point(0.f, Nil),  // LEFT
-    Point(0.5f, Nil),  // CENTERX
-    Point(1.f, Nil),  // RIGHT
-    Point(Nil, 0.f),  // TOP
-    Point(Nil, 0.5f),  // CENTERY
-    Point(Nil, 1.f),  // BOTTOM
-  };
-
   namespace Utility {
+    const Point c_anchorLookup[ANCHOR_COUNT] = {
+      Point(0.f, 0.f),  // TOPLEFT
+      Point(0.f, 0.f),  // LEFTTOP
+      Point(0.5f, 0.f),  // TOPCENTER
+      Point(0.5f, 0.f),  // CENTERTOP
+      Point(1.f, 0.f),  // TOPRIGHT
+      Point(1.f, 0.f),  // RIGHTTOP
+      Point(0.f, 0.5f),  // CENTERLEFT
+      Point(0.f, 0.5f),  // LEFTCENTER
+      Point(0.5f, 0.5f),  // CENTER
+      Point(0.5f, 0.5f),  // CENTERCENTER
+      Point(1.f, 0.5f),  // CENTERRIGHT
+      Point(1.f, 0.5f),  // RIGHTCENTER
+      Point(0.f, 1.f),  // BOTTOMLEFT
+      Point(0.f, 1.f),  // LEFTBOTTOM
+      Point(0.5f, 1.f),  // BOTTOMCENTER
+      Point(0.5f, 1.f),  // CENTERBOTTOM
+      Point(1.f, 1.f),  // BOTTOMRIGHT
+      Point(1.f, 1.f),  // RIGHTBOTTOM
+      Point(0.f, Nil),  // LEFT
+      Point(0.5f, Nil),  // CENTERX
+      Point(1.f, Nil),  // RIGHT
+      Point(Nil, 0.f),  // TOP
+      Point(Nil, 0.5f),  // CENTERY
+      Point(Nil, 1.f),  // BOTTOM
+    };
+
     std::string Format(const char *bort, ...) {
       // NOTE: this function isn't particularly efficient, but is used only for debug output anyway
       std::vector<char> buf(1000);

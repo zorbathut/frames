@@ -1,7 +1,7 @@
 #ifndef FRAMES_EVENT
 #define FRAMES_EVENT
 
-#include "frames/utility.h"
+#include "frames/detail.h"
 #include "frames/noncopyable.h"
 #include "frames/delegate.h"
 

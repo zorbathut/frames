@@ -591,12 +591,12 @@ namespace Frames {
   }
 
   void Layout::ClearPoint(Anchor anchor) {
-    if (!IsNil(c_anchorLookup[anchor].x)) {
-      ClearPoint(X, c_anchorLookup[anchor].x);
+    if (!Utility::IsNil(Utility::c_anchorLookup[anchor].x)) {
+      ClearPoint(X, Utility::c_anchorLookup[anchor].x);
     }
 
-    if (!IsNil(c_anchorLookup[anchor].y)) {
-      ClearPoint(Y, c_anchorLookup[anchor].y);
+    if (!Utility::IsNil(Utility::c_anchorLookup[anchor].y)) {
+      ClearPoint(Y, Utility::c_anchorLookup[anchor].y);
     }
   }
 
@@ -624,56 +624,56 @@ namespace Frames {
   // SetPoint adapters
   // All the anchor versions just transform themselves into no-anchor versions first
   void Layout::SetPoint(Anchor myanchor, const Layout *link, Anchor theiranchor) {
-    SetPoint(c_anchorLookup[myanchor].x, c_anchorLookup[myanchor].y, link, c_anchorLookup[theiranchor].x, c_anchorLookup[theiranchor].y);
+    SetPoint(Utility::c_anchorLookup[myanchor].x, Utility::c_anchorLookup[myanchor].y, link, Utility::c_anchorLookup[theiranchor].x, Utility::c_anchorLookup[theiranchor].y);
   }
   void Layout::SetPoint(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
-    SetPoint(c_anchorLookup[myanchor].x, c_anchorLookup[myanchor].y, link, c_anchorLookup[theiranchor].x, c_anchorLookup[theiranchor].y, xofs, yofs);
+    SetPoint(Utility::c_anchorLookup[myanchor].x, Utility::c_anchorLookup[myanchor].y, link, Utility::c_anchorLookup[theiranchor].x, Utility::c_anchorLookup[theiranchor].y, xofs, yofs);
   }
   
   void Layout::SetPoint(Anchor myanchor, const Layout *link, float theirx, float theiry) {
-    SetPoint(c_anchorLookup[myanchor].x, c_anchorLookup[myanchor].y, link, theirx, theiry);
+    SetPoint(Utility::c_anchorLookup[myanchor].x, Utility::c_anchorLookup[myanchor].y, link, theirx, theiry);
   }
   void Layout::SetPoint(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
-    SetPoint(c_anchorLookup[myanchor].x, c_anchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
+    SetPoint(Utility::c_anchorLookup[myanchor].x, Utility::c_anchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
   }
 
   void Layout::SetPoint(float myx, float myy, const Layout *link, Anchor theiranchor) {
-    SetPoint(myx, myy, link, c_anchorLookup[theiranchor].x, c_anchorLookup[theiranchor].y);
+    SetPoint(myx, myy, link, Utility::c_anchorLookup[theiranchor].x, Utility::c_anchorLookup[theiranchor].y);
   }
   void Layout::SetPoint(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
-    SetPoint(myx, myy, link, c_anchorLookup[theiranchor].x, c_anchorLookup[theiranchor].y, xofs, yofs);
+    SetPoint(myx, myy, link, Utility::c_anchorLookup[theiranchor].x, Utility::c_anchorLookup[theiranchor].y, xofs, yofs);
   }
 
   void Layout::SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry) {
     FRAMES_LAYOUT_CHECK(link, "SetPoint requires offsets when linking to origin.");
-    FRAMES_LAYOUT_CHECK(IsNil(myx) == IsNil(theirx), "SetPoint provided with only one anchor position for X axis");
-    FRAMES_LAYOUT_CHECK(IsNil(myy) == IsNil(theiry), "SetPoint provided with only one anchor position for Y axis");
-    FRAMES_LAYOUT_CHECK(!IsNil(myx) || !IsNil(myy), "SetPoint not provided with any anchor axes");
+    FRAMES_LAYOUT_CHECK(Utility::IsNil(myx) == Utility::IsNil(theirx), "SetPoint provided with only one anchor position for X axis");
+    FRAMES_LAYOUT_CHECK(Utility::IsNil(myy) == Utility::IsNil(theiry), "SetPoint provided with only one anchor position for Y axis");
+    FRAMES_LAYOUT_CHECK(!Utility::IsNil(myx) || !Utility::IsNil(myy), "SetPoint not provided with any anchor axes");
 
-    if (!IsNil(myx)) {
+    if (!Utility::IsNil(myx)) {
       SetPoint(X, myx, link, theirx);
     }
 
-    if (!IsNil(myy)) {
+    if (!Utility::IsNil(myy)) {
       SetPoint(Y, myy, link, theiry);
     }
   }
   void Layout::SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
-    FRAMES_LAYOUT_CHECK(!IsNil(myx) || !IsNil(myy), "SetPoint not provided with any anchor axes");
+    FRAMES_LAYOUT_CHECK(!Utility::IsNil(myx) || !Utility::IsNil(myy), "SetPoint not provided with any anchor axes");
     if (link) {
-      FRAMES_LAYOUT_CHECK(IsNil(myx) == IsNil(theirx) && IsNil(myx) == IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
-      FRAMES_LAYOUT_CHECK(IsNil(myy) == IsNil(theiry) && IsNil(myy) == IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
+      FRAMES_LAYOUT_CHECK(Utility::IsNil(myx) == Utility::IsNil(theirx) && Utility::IsNil(myx) == Utility::IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
+      FRAMES_LAYOUT_CHECK(Utility::IsNil(myy) == Utility::IsNil(theiry) && Utility::IsNil(myy) == Utility::IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
     } else {
-      FRAMES_LAYOUT_CHECK(IsNil(theirx) && IsNil(theiry), "SetPoint must have nil target anchor points when linking to origin.");
-      FRAMES_LAYOUT_CHECK(IsNil(myx) == IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
-      FRAMES_LAYOUT_CHECK(IsNil(myy) == IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
+      FRAMES_LAYOUT_CHECK(Utility::IsNil(theirx) && Utility::IsNil(theiry), "SetPoint must have nil target anchor points when linking to origin.");
+      FRAMES_LAYOUT_CHECK(Utility::IsNil(myx) == Utility::IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
+      FRAMES_LAYOUT_CHECK(Utility::IsNil(myy) == Utility::IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
     }
 
-    if (!IsNil(myx)) {
+    if (!Utility::IsNil(myx)) {
       SetPoint(X, myx, link, theirx, xofs);
     }
 
-    if (!IsNil(myy)) {
+    if (!Utility::IsNil(myy)) {
       SetPoint(Y, myy, link, theiry, yofs);
     }
   }

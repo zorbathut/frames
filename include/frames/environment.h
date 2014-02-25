@@ -1,11 +1,13 @@
+// Environment class
+
 #ifndef FRAMES_ENVIRONMENT
 #define FRAMES_ENVIRONMENT
 
 #include "frames/configuration.h"
+#include "frames/detail.h"
 #include "frames/input.h"
 #include "frames/noncopyable.h"
 #include "frames/point.h"
-#include "frames/utility.h"
 
 #include <deque>
 #include <vector>

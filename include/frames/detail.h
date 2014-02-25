@@ -1,7 +1,7 @@
-// Utility functions and items
+// Implementation details
 
-#ifndef FRAMES_UTILITY
-#define FRAMES_UTILITY
+#ifndef FRAMES_DETAIL
+#define FRAMES_DETAIL
 
 #include <string>
 
@@ -10,65 +10,31 @@
 #include <boost/type_traits/remove_reference.hpp>
 
 #include "frames/config_cc.h"
+#include "frames/const.h"
 #include "frames/point.h"
 
 namespace Frames {
-  enum Axis { X, Y }; // axes
-  enum Anchor {
-    TOPLEFT,
-    LEFTTOP,
-    TOPCENTER,
-    CENTERTOP,
-    TOPRIGHT,
-    RIGHTTOP,
-    CENTERLEFT,
-    LEFTCENTER,
-    CENTER,
-    CENTERCENTER,
-    CENTERRIGHT,
-    RIGHTCENTER,
-    BOTTOMLEFT,
-    LEFTBOTTOM,
-    BOTTOMCENTER,
-    CENTERBOTTOM,
-    BOTTOMRIGHT,
-    RIGHTBOTTOM,
-    LEFT,
-    CENTERX,
-    RIGHT,
-    TOP,
-    CENTERY,
-    BOTTOM,
-    ANCHOR_COUNT,
-  }; // axes
-
-  extern const Point c_anchorLookup[ANCHOR_COUNT];
-
   namespace Utility {
+    extern const Point c_anchorLookup[ANCHOR_COUNT];
+
     template<typename T, typename U> T Reinterpret(U u) {
       union { T t; U u; } uni;
       uni.u = u;
       return uni.t;
     }
-  }
-
-  const unsigned int Nil_bitmask = 0xFFF00DFF;
-  const float Nil = Utility::Reinterpret<float>(Nil_bitmask);
-  inline bool IsNil(float x) {
-    return Utility::Reinterpret<unsigned int>(x) == Nil_bitmask;
-  }
-
-  namespace Utility {
-    const unsigned int Undefined_bitmask = 0xFFDEADFF;
-    const float Undefined = Reinterpret<float>(Undefined_bitmask);
-    inline bool IsUndefined(float x) {
-      return Reinterpret<unsigned int>(x) == Undefined_bitmask;
+    
+    inline bool IsNil(float x) {
+      return Utility::Reinterpret<unsigned int>(x) == Utility::Reinterpret<unsigned int>(Nil);
     }
 
-    const unsigned int Processing_bitmask = 0xFFCAFEFF;
-    const float Processing = Reinterpret<float>(Processing_bitmask);
+    const float Undefined = Reinterpret<float>(0xFFDEADFF);
+    inline bool IsUndefined(float x) {
+      return Reinterpret<unsigned int>(x) == Utility::Reinterpret<unsigned int>(Undefined);
+    }
+
+    const float Processing = Reinterpret<float>(0xFFCAFEFF);
     inline bool IsProcessing(float x) {
-      return Reinterpret<unsigned int>(x) == Processing_bitmask;
+      return Reinterpret<unsigned int>(x) == Utility::Reinterpret<unsigned int>(Processing);
     }
 
     // not intended to be called by anything, just makes GCC shut up
