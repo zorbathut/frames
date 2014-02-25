@@ -6,7 +6,16 @@
 require "scripts/lib/platforms"
 require "scripts/lib/util"
 
-os.execute("rm -rf projects lib bin")
+local typ = ...
+
+local src = projects
+if typ then
+  src = {}
+  src[typ] = projects[typ]
+  os.execute(string.format("rm -rf projects/%s lib/%s bin/%s", typ, typ, typ))
+else
+  os.execute("rm -rf projects lib bin")
+end
 
 for k, v in pairs(projects) do
   --local path = v.path and ("PATH=\"%s\""):format(v.path) or ""
