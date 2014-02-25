@@ -1,5 +1,3 @@
-// The Environment class
-
 #ifndef FRAMES_ENVIRONMENT
 #define FRAMES_ENVIRONMENT
 
@@ -24,6 +22,11 @@ namespace Frames {
   class TextureManager;
   class EventTypeBase;
 
+  /// Coordinator class for almost all Frames state. Every Frames-using program will contain at least one Environment.
+  /**
+  A Frames::Environment is a self-contained Frames instance. It handles input, owns a hierarchy of \ref Frame "Frames", manages resources, and contains all the configuration data needed to use Frames. Every Frames-using program will contain at least one Environment.
+  
+  While Environment is not locked to any individual thread, it is fundamentally single-threaded. It is undefined behavior to call any Environment function, or any function on a Frame owned by an Environment, while any other such function is being run in another thread. However, multiple Environments can be used in parallel without issue. In most cases, it is also valid to call an Environment or Frame function while handling an event dispatch.*/
   class Environment : Noncopyable {
   public:
     Environment();  // init to default
