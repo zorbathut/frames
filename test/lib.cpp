@@ -63,9 +63,20 @@ void TestSDLEnvironment::HandleEvents() {
   }
 }
 
+class TestLogger : public Frames::Configuration::Logger {
+  virtual void LogError(const std::string &log) {
+    printf("[ERR] %s", log.c_str());
+    GTEST_FAIL();
+  }
+  virtual void LogDebug(const std::string &log) {
+    printf("[DBG] %s", log.c_str());
+  }
+};
+
 TestEnvironment::TestEnvironment() : m_env(0) {
   Frames::Configuration config;
   config.fontDefaultId = "LindenHill.otf";
+  config.logger = new TestLogger();
   m_env = new Frames::Environment(config);
   m_env->ResizeRoot(GetWidth(), GetHeight()); // set this up so we can check coordinates
 }
