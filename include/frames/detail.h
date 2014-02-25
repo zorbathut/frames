@@ -14,7 +14,7 @@
 #include "frames/point.h"
 
 namespace Frames {
-  namespace Utility {
+  namespace detail {
     extern const Point c_anchorLookup[ANCHOR_COUNT];
 
     template<typename T, typename U> T Reinterpret(U u) {
@@ -24,17 +24,17 @@ namespace Frames {
     }
     
     inline bool IsNil(float x) {
-      return Utility::Reinterpret<unsigned int>(x) == Utility::Reinterpret<unsigned int>(Nil);
+      return detail::Reinterpret<unsigned int>(x) == detail::Reinterpret<unsigned int>(Nil);
     }
 
     const float Undefined = Reinterpret<float>(0xFFDEADFF);
     inline bool IsUndefined(float x) {
-      return Reinterpret<unsigned int>(x) == Utility::Reinterpret<unsigned int>(Undefined);
+      return Reinterpret<unsigned int>(x) == detail::Reinterpret<unsigned int>(Undefined);
     }
 
     const float Processing = Reinterpret<float>(0xFFCAFEFF);
     inline bool IsProcessing(float x) {
-      return Reinterpret<unsigned int>(x) == Utility::Reinterpret<unsigned int>(Processing);
+      return Reinterpret<unsigned int>(x) == detail::Reinterpret<unsigned int>(Processing);
     }
 
     // not intended to be called by anything, just makes GCC shut up
@@ -80,7 +80,7 @@ namespace Frames {
     
     template<typename IT> struct MakeConstRef { typedef typename boost::add_lvalue_reference<typename boost::add_const<typename boost::remove_reference<IT>::type>::type>::type T; };
 
-    typedef intptr_t intfptr_t; // tested in utility.cpp
+    typedef intptr_t intfptr_t; // tested in detail.cpp
   };
 }
 

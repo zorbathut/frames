@@ -246,10 +246,10 @@ namespace Frames {
     
     // Events
     template <typename Parameters> void EventAttach(const EventType<Parameters> &event, typename EventType<Parameters>::TypeDelegate handler, float priority = 0.0);
-    template <typename Parameters> void EventDetach(const EventType<Parameters> &event, typename EventType<Parameters>::TypeDelegate handler, float priority = Utility::Undefined);
+    template <typename Parameters> void EventDetach(const EventType<Parameters> &event, typename EventType<Parameters>::TypeDelegate handler, float priority = detail::Undefined);
     
     inline void EventTrigger(const EventType<void ()> &event);
-    template <typename P1> void EventTrigger(const EventType<void (P1)> &event, typename Utility::MakeConstRef<P1>::T p1);
+    template <typename P1> void EventTrigger(const EventType<void (P1)> &event, typename detail::MakeConstRef<P1>::T p1);
 
     Environment *GetEnvironment() const { return m_env; }
 
@@ -347,12 +347,12 @@ namespace Frames {
     void Obliterate_Extract_From(Axis axis, const Layout *layout);
     void Resolve();
     struct AxisData {
-      AxisData() : size_cached(Utility::Undefined), size_set(Utility::Undefined), size_default(40) { };
+      AxisData() : size_cached(detail::Undefined), size_set(detail::Undefined), size_default(40) { };
 
       mutable float size_cached;
 
       struct Connector {
-        Connector() : link(0), point_mine(Utility::Undefined), point_link(Utility::Undefined), offset(Utility::Undefined), cached(Utility::Undefined) { };
+        Connector() : link(0), point_mine(detail::Undefined), point_link(detail::Undefined), offset(detail::Undefined), cached(detail::Undefined) { };
 
         const Layout *link;
         float point_mine;
@@ -435,19 +435,19 @@ namespace Frames {
 
   // Debug code
   #ifdef _MSC_VER
-    #define FRAMES_LAYOUT_ASSERT(x, errstring, ...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, __VA_ARGS__))))
-    #define FRAMES_LAYOUT_CHECK(x, errstring, ...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, __VA_ARGS__))))
+    #define FRAMES_LAYOUT_ASSERT(x, errstring, ...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(detail::Format(errstring, __VA_ARGS__))))
+    #define FRAMES_LAYOUT_CHECK(x, errstring, ...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(detail::Format(errstring, __VA_ARGS__))))
 
-    #define FRAMES_ERROR(...) GetEnvironment()->LogError(Utility::Format(__VA_ARGS__))
-    #define FRAMES_DEBUG(...) GetEnvironment()->LogDebug(Utility::Format(__VA_ARGS__))
+    #define FRAMES_ERROR(...) GetEnvironment()->LogError(detail::Format(__VA_ARGS__))
+    #define FRAMES_DEBUG(...) GetEnvironment()->LogDebug(detail::Format(__VA_ARGS__))
 
     #define CreateTagged(...) CreateTagged_imp(__FILE__, __LINE__, __VA_ARGS__)
   #else
-    #define FRAMES_LAYOUT_ASSERT(x, errstring, args...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, ## args))))
-    #define FRAMES_LAYOUT_CHECK(x, errstring, args...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(Utility::Format(errstring, ## args))))
+    #define FRAMES_LAYOUT_ASSERT(x, errstring, args...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(detail::Format(errstring, ## args))))
+    #define FRAMES_LAYOUT_CHECK(x, errstring, args...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(detail::Format(errstring, ## args))))
 
-    #define FRAMES_ERROR(args...) GetEnvironment()->LogError(Utility::Format(args))
-    #define FRAMES_DEBUG(args...) GetEnvironment()->LogDebug(Utility::Format(args))
+    #define FRAMES_ERROR(args...) GetEnvironment()->LogError(detail::Format(args))
+    #define FRAMES_DEBUG(args...) GetEnvironment()->LogDebug(detail::Format(args))
 
     #define CreateTagged(args...) CreateTagged_imp(__FILE__, __LINE__, ## args)
   #endif

@@ -27,7 +27,7 @@ namespace Frames {
     lhs.y -= rhs.y;
   }
 
-  namespace Utility {
+  namespace detail {
     // prototyped
     float Clamp(float current, float min, float max);
 

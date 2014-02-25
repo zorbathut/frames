@@ -47,8 +47,8 @@ namespace Frames {
     EventType(const char *name) : EventTypeBase(name) { };
     EventType(const char *name, const EventType<Parameters> *dive, const EventType<Parameters> *bubble) : EventTypeBase(name, dive, bubble) { };
     
-    typedef typename Utility::FunctionPrefix<EventHandle*, Parameters>::T TypeHandler;
-    typedef Delegate<typename Utility::FunctionPrefix<EventHandle*, Parameters>::T> TypeDelegate;
+    typedef typename detail::FunctionPrefix<EventHandle*, Parameters>::T TypeHandler;
+    typedef Delegate<typename detail::FunctionPrefix<EventHandle*, Parameters>::T> TypeDelegate;
   };
 
   #define FRAMES_FRAMEEVENT_DECLARE(eventname, paramlist) \

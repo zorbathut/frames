@@ -226,8 +226,8 @@ namespace Frames {
     }
 
     // set up boundaries
-    verts[0].p = Utility::Clamp(screen.s, bounds.s, bounds.e);
-    verts[2].p = Utility::Clamp(screen.e, bounds.s, bounds.e);
+    verts[0].p = detail::Clamp(screen.s, bounds.s, bounds.e);
+    verts[2].p = detail::Clamp(screen.e, bounds.s, bounds.e);
 
     // spread it out
     verts[1].p.x = verts[2].p.x;

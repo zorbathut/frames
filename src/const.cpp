@@ -4,5 +4,5 @@
 #include "frames/detail.h"
 
 namespace Frames {
-  const float Nil = Utility::Reinterpret<float>(0xFFF00DFF);
+  const float Nil = detail::Reinterpret<float>(0xFFF00DFF);
 }

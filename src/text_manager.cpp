@@ -72,7 +72,7 @@ namespace Frames {
       FT_Request_Size(m_face, &rec);
       m_face_size = size;
 
-      //m_env->LogDebug(Utility::Format("Generated size %f, requested %d/%d, lineheight is %f, calculated from %d/%d", size, rec.width, rec.height, GetLineHeightFirst(size), m_face->size->metrics.ascender, m_face->size->metrics.descender));
+      //m_env->LogDebug(detail::Format("Generated size %f, requested %d/%d, lineheight is %f, calculated from %d/%d", size, rec.width, rec.height, GetLineHeightFirst(size), m_face->size->metrics.ascender, m_face->size->metrics.descender));
     }
 
     return m_face;
@@ -396,7 +396,7 @@ namespace Frames {
 
   int TextLayout::GetCharacterFromCoordinate(const Point &pt) const {
     // yeah we're just going to go mad right here
-    Point lpt = Utility::Clamp(pt, Point(0, 0), Point(m_width, m_fullHeight));
+    Point lpt = detail::Clamp(pt, Point(0, 0), Point(m_width, m_fullHeight));
     int line = std::min(int(lpt.y / GetParent()->GetParent()->GetLineHeight(GetParent()->GetSize())), (int)m_lines.size());
 
     int s = 0;
@@ -447,7 +447,7 @@ namespace Frames {
     if (!m_fonts.left.count(font)) {
       Stream *stream = m_env->GetConfiguration().streamFromId->Create(m_env, font);
       if (!stream) {
-        m_env->LogError(Utility::Format("Unable to find font \"%s\"", font.c_str()));
+        m_env->LogError(detail::Format("Unable to find font \"%s\"", font.c_str()));
         m_fonts.insert(boost::bimap<std::string, FontInfo *>::value_type(font, new FontInfo(m_env, 0)));
       } else {
         m_fonts.insert(boost::bimap<std::string, FontInfo *>::value_type(font, new FontInfo(m_env, stream)));

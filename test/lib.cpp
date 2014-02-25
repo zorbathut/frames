@@ -82,7 +82,7 @@ void TestSnapshot(TestEnvironment &env) {
   env->ResizeRoot(env.GetWidth(), env.GetHeight());
   env->Render();
 
-  std::string testName = Frames::Utility::Format("ref/%s_%s", ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name(), ::testing::UnitTest::GetInstance()->current_test_info()->name());
+  std::string testName = Frames::detail::Format("ref/%s_%s", ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name(), ::testing::UnitTest::GetInstance()->current_test_info()->name());
 
   static std::string s_testNameLast = "";
   static int s_testIdLast = 0;
@@ -92,7 +92,7 @@ void TestSnapshot(TestEnvironment &env) {
     s_testIdLast = 0;
   }
 
-  std::string testFilePrefix = Frames::Utility::Format("%s_%d", testName.c_str(), s_testIdLast++);
+  std::string testFilePrefix = Frames::detail::Format("%s_%d", testName.c_str(), s_testIdLast++);
   std::string testFileName = testFilePrefix + ".png";
   std::string failureFileName = testFilePrefix + "_result.png";
 

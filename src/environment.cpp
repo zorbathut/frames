@@ -135,7 +135,7 @@ namespace Frames {
 
   bool Environment::MouseDown(int button) {
     if (m_buttonDown[button]) {
-      LogError(Utility::Format("Received a mouse down message for button %d while in the middle of a click. Fabricating fake MouseUp message in order to preserve ordering guarantees.", button));
+      LogError(detail::Format("Received a mouse down message for button %d while in the middle of a click. Fabricating fake MouseUp message in order to preserve ordering guarantees.", button));
       MouseUp(button);
     }
 
@@ -778,11 +778,11 @@ namespace Frames {
     }
     
     if (ct) {
-      LogError(Utility::Format("Failed to clean up when doing a full unregister, %d remaining", ct));
+      LogError(detail::Format("Failed to clean up when doing a full unregister, %d remaining", ct));
     }
 
     if (passes > 1) {
-      LogError(Utility::Format("Failed to clean up in a single pass, took %d", passes));
+      LogError(detail::Format("Failed to clean up in a single pass, took %d", passes));
     }
 
     lua_pop(L, 1);
@@ -888,7 +888,7 @@ namespace Frames {
   }
 
   void Environment::LayoutStack_Push(const Layout *layout, Axis axis) {
-    LayoutStack_Entry entry = {layout, axis, Utility::Undefined};
+    LayoutStack_Entry entry = {layout, axis, detail::Undefined};
     m_layoutStack.push_back(entry);
   }
 
@@ -902,23 +902,23 @@ namespace Frames {
       return;
     }
 
-    LogError(Utility::Format("Layout loop dependency detected, axis %c:", (m_layoutStack[0].axis == X) ? 'X' : 'Y'));
+    LogError(detail::Format("Layout loop dependency detected, axis %c:", (m_layoutStack[0].axis == X) ? 'X' : 'Y'));
     for (int i = m_layoutStack.size(); i > 0; --i) {
       LayoutStack_Entry entry = m_layoutStack[i - 1];
-      if (Utility::IsUndefined(entry.point))
-        LogError(Utility::Format("  %s: size", entry.layout->GetNameFull().c_str()));
+      if (detail::IsUndefined(entry.point))
+        LogError(detail::Format("  %s: size", entry.layout->GetNameFull().c_str()));
       else if (entry.point == 0 && entry.axis == X)
-        LogError(Utility::Format("  %s: LEFT", entry.layout->GetNameFull().c_str()));
+        LogError(detail::Format("  %s: LEFT", entry.layout->GetNameFull().c_str()));
       else if (entry.point == 0 && entry.axis == Y)
-        LogError(Utility::Format("  %s: TOP", entry.layout->GetNameFull().c_str()));
+        LogError(detail::Format("  %s: TOP", entry.layout->GetNameFull().c_str()));
       else if (entry.point == 0.5)
-        LogError(Utility::Format("  %s: CENTER", entry.layout->GetNameFull().c_str()));
+        LogError(detail::Format("  %s: CENTER", entry.layout->GetNameFull().c_str()));
       else if (entry.point == 1 && entry.axis == X)
-        LogError(Utility::Format("  %s: RIGHT", entry.layout->GetNameFull().c_str()));
+        LogError(detail::Format("  %s: RIGHT", entry.layout->GetNameFull().c_str()));
       else if (entry.point == 1 && entry.axis == Y)
-        LogError(Utility::Format("  %s: BOTTOM", entry.layout->GetNameFull().c_str()));
+        LogError(detail::Format("  %s: BOTTOM", entry.layout->GetNameFull().c_str()));
       else
-        LogError(Utility::Format("  %s: %f", entry.layout->GetNameFull().c_str(), entry.point));
+        LogError(detail::Format("  %s: %f", entry.layout->GetNameFull().c_str(), entry.point));
     }
   }
 
@@ -944,7 +944,7 @@ namespace Frames {
 
   Environment::LuaStackChecker::~LuaStackChecker() {
     if (m_depth != lua_gettop(m_L)) {
-      m_env->LogError(Utility::Format("Lua stack size mismatch (%d -> %d)", m_depth, lua_gettop(m_L)));
+      m_env->LogError(detail::Format("Lua stack size mismatch (%d -> %d)", m_depth, lua_gettop(m_L)));
     }
   }
 

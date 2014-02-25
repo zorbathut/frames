@@ -106,7 +106,7 @@ namespace Frames {
       m_select = m_cursor = position;
     }
 
-    m_cursor = Utility::Clamp(m_cursor, 0, m_text.size());
+    m_cursor = detail::Clamp(m_cursor, 0, m_text.size());
 
     ScrollToCursor();
   }
@@ -117,8 +117,8 @@ namespace Frames {
 
   void Text::SetSelection(int start, int end) {
     // clamp to sane values
-    start = Utility::Clamp(start, 0, m_text.size());  // UNICODE TODO
-    end = Utility::Clamp(end, 0, m_text.size());  // UNICODE TODO
+    start = detail::Clamp(start, 0, m_text.size());  // UNICODE TODO
+    end = detail::Clamp(end, 0, m_text.size());  // UNICODE TODO
     if (start == end) {
       m_select = m_cursor = start;
     } else if (m_cursor == start) {
@@ -249,7 +249,7 @@ namespace Frames {
 
     // First, do the X axis
     if (!m_wordwrap) {
-      cscroll.x = Utility::Clamp(Utility::Clamp(cscroll.x, tpos.x - GetWidth() * 3 / 4, tpos.x - GetWidth() / 4), 0.f, m_layout->GetParent()->GetFullWidth() - GetWidth());
+      cscroll.x = detail::Clamp(detail::Clamp(cscroll.x, tpos.x - GetWidth() * 3 / 4, tpos.x - GetWidth() / 4), 0.f, m_layout->GetParent()->GetFullWidth() - GetWidth());
     } else {
       cscroll.x = 0;
     }
@@ -257,7 +257,7 @@ namespace Frames {
     // Next, do the Y axis
     float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
     if (GetHeight() >= lineheight) {
-      cscroll.y = Utility::Clamp(cscroll.y, tpos.y + lineheight - GetHeight(), tpos.y);
+      cscroll.y = detail::Clamp(cscroll.y, tpos.y + lineheight - GetHeight(), tpos.y);
     } else {
       cscroll.y = tpos.y + (lineheight - GetHeight()) / 2;
     }
@@ -462,7 +462,7 @@ namespace Frames {
       }
 
       if (hascursor) {
-        newcursor = Utility::Clamp(newcursor, 0, m_text.size());
+        newcursor = detail::Clamp(newcursor, 0, m_text.size());
         if (ev.shift) {
           SetSelection(m_select, newcursor);
           SetCursor(newcursor);

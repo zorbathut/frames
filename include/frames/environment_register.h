@@ -35,18 +35,18 @@ namespace Frames {
       lua_Debug ar;
       if (lua_getstack(L, 1, &ar)) {
         lua_getinfo(L, "Snl", &ar);
-        id += Utility::Format("%s:", ar.short_src);
+        id += detail::Format("%s:", ar.short_src);
         if (ar.currentline > 0)
-          id += Utility::Format("%d:", ar.currentline);
+          id += detail::Format("%d:", ar.currentline);
         if (*ar.namewhat != '\0') {
-          id += Utility::Format(" in function %s", ar.name);
+          id += detail::Format(" in function %s", ar.name);
         } else {
           if (*ar.what == 'm') {
             id += " in main chunk";
           } else if (*ar.what == 'C' || *ar.what == 't') {
             id += " ?";
           } else {
-            id += Utility::Format(" in function <%s:%d>", ar.short_src, ar.linedefined);
+            id += detail::Format(" in function <%s:%d>", ar.short_src, ar.linedefined);
           }
         }
       } else {

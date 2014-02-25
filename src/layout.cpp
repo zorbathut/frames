@@ -60,8 +60,8 @@ namespace Frames {
     // Check our caches
     const AxisData::Connector &axa = ax.connections[0];
     if (axa.point_mine == pt) {
-      if (!Utility::IsUndefined(axa.cached)) {
-        if (Utility::IsProcessing(axa.cached)) {
+      if (!detail::IsUndefined(axa.cached)) {
+        if (detail::IsProcessing(axa.cached)) {
           m_env->LayoutStack_Push(this, axis, pt);
           m_env->LayoutStack_Error();
           m_env->LayoutStack_Pop();
@@ -71,7 +71,7 @@ namespace Frames {
       }
       if (axa.link) {
         m_env->LayoutStack_Push(this, axis, pt);
-        axa.cached = Utility::Processing; // seed it with processing so we'll exit if this turns out to be an infinite loop
+        axa.cached = detail::Processing; // seed it with processing so we'll exit if this turns out to be an infinite loop
         axa.cached = axa.link->GetPoint(axis, axa.point_link) + axa.offset;
         m_env->LayoutStack_Pop();
         return axa.cached;
@@ -82,8 +82,8 @@ namespace Frames {
 
     const AxisData::Connector &axb = ax.connections[1];
     if (axb.point_mine == pt) {
-      if (!Utility::IsUndefined(axb.cached)) {
-        if (Utility::IsProcessing(axa.cached)) {
+      if (!detail::IsUndefined(axb.cached)) {
+        if (detail::IsProcessing(axa.cached)) {
           m_env->LayoutStack_Push(this, axis, pt);
           m_env->LayoutStack_Error();
           m_env->LayoutStack_Pop();
@@ -93,7 +93,7 @@ namespace Frames {
       }
       if (axb.link) {
         m_env->LayoutStack_Push(this, axis, pt);
-        axb.cached = Utility::Processing; // seed it with processing so we'll exit if this turns out to be an infinite loop
+        axb.cached = detail::Processing; // seed it with processing so we'll exit if this turns out to be an infinite loop
         axb.cached = axb.link->GetPoint(axis, axb.point_link) + axb.offset;
         m_env->LayoutStack_Pop();
         return axb.cached;
@@ -116,14 +116,14 @@ namespace Frames {
 
     // Find a valid vertex - we'll only be using one
     const AxisData::Connector *connect;
-    if (Utility::IsUndefined(axa.point_mine)) {
+    if (detail::IsUndefined(axa.point_mine)) {
       connect = &axb;
     } else {
       connect = &axa;
     }
 
     // 0 vertices, size
-    if (Utility::IsUndefined(connect->point_mine)) {
+    if (detail::IsUndefined(connect->point_mine)) {
       m_env->LayoutStack_Push(this, axis, pt);
       float rv = pt * GetSize(axis);
       m_env->LayoutStack_Pop();
@@ -145,8 +145,8 @@ namespace Frames {
     const AxisData &ax = m_axes[axis];
 
     // Check our cache
-    if (!Utility::IsUndefined(ax.size_cached)) {
-      if (Utility::IsProcessing(ax.size_cached)) {
+    if (!detail::IsUndefined(ax.size_cached)) {
+      if (detail::IsProcessing(ax.size_cached)) {
         m_env->LayoutStack_Push(this, axis);
         m_env->LayoutStack_Error();
         m_env->LayoutStack_Pop();
@@ -156,7 +156,7 @@ namespace Frames {
     }
 
     // Check an explicit setting
-    if (!Utility::IsUndefined(ax.size_set)) {
+    if (!detail::IsUndefined(ax.size_set)) {
       ax.size_cached = ax.size_set;
       return ax.size_set;
     }
@@ -164,10 +164,10 @@ namespace Frames {
     // Let's see if we have two known points
     const AxisData::Connector &axa = ax.connections[0];
     const AxisData::Connector &axb = ax.connections[1];
-    if (!Utility::IsUndefined(axa.point_mine) && !Utility::IsUndefined(axb.point_mine)) {
+    if (!detail::IsUndefined(axa.point_mine) && !detail::IsUndefined(axb.point_mine)) {
       // Woo! We can calculate from here
       m_env->LayoutStack_Push(this, axis);
-      ax.size_cached = Utility::Processing; // seed it with processing so we'll exit if this turns out to be an infinite loop
+      ax.size_cached = detail::Processing; // seed it with processing so we'll exit if this turns out to be an infinite loop
       float a = GetPoint(axis, axa.point_mine);
       float b = GetPoint(axis, axb.point_mine);
       m_env->LayoutStack_Pop();
@@ -311,17 +311,17 @@ namespace Frames {
 
     if (m_name_id != -1) {
       if (delimiter) name += ":";
-      name += Utility::Format("%d", m_name_id);
+      name += detail::Format("%d", m_name_id);
       delimiter = true;
     }
 
     if (!delimiter) {
       // well okay then
-      name += Utility::Format("%p", this);
+      name += detail::Format("%p", this);
       delimiter = true;
     }
 
-    name = Utility::Format("[%s %s]", GetType(), name.c_str());
+    name = detail::Format("[%s %s]", GetType(), name.c_str());
 
     return name;
   }
@@ -391,10 +391,10 @@ namespace Frames {
 
   Layout::~Layout() {
     // We shouldn't reach this point until all references to us have vanished, so, kapow!
-    FRAMES_LAYOUT_CHECK(Utility::IsUndefined(m_axes[X].connections[0].point_mine), "Layout destroyed while still connected");
-    FRAMES_LAYOUT_CHECK(Utility::IsUndefined(m_axes[X].connections[1].point_mine), "Layout destroyed while still connected");
-    FRAMES_LAYOUT_CHECK(Utility::IsUndefined(m_axes[Y].connections[0].point_mine), "Layout destroyed while still connected");
-    FRAMES_LAYOUT_CHECK(Utility::IsUndefined(m_axes[Y].connections[1].point_mine), "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(detail::IsUndefined(m_axes[X].connections[0].point_mine), "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(detail::IsUndefined(m_axes[X].connections[1].point_mine), "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(detail::IsUndefined(m_axes[Y].connections[0].point_mine), "Layout destroyed while still connected");
+    FRAMES_LAYOUT_CHECK(detail::IsUndefined(m_axes[Y].connections[1].point_mine), "Layout destroyed while still connected");
     FRAMES_LAYOUT_CHECK(!m_parent, "Layout destroyed while still connected");
     FRAMES_LAYOUT_CHECK(m_children.empty(), "Layout destroyed while still connected");
 
@@ -466,7 +466,7 @@ namespace Frames {
       }
 
       // If we've been used, then we need to invalidate
-      if (!Utility::IsUndefined(axa.cached)) {
+      if (!detail::IsUndefined(axa.cached)) {
         Invalidate(axis);
       }
 
@@ -494,7 +494,7 @@ namespace Frames {
       }
 
       // If we've been used, then we need to invalidate
-      if (!Utility::IsUndefined(axb.cached)) {
+      if (!detail::IsUndefined(axb.cached)) {
         Invalidate(axis);
       }
 
@@ -514,10 +514,10 @@ namespace Frames {
       return;
     }
 
-    bool axau = Utility::IsUndefined(axa.point_mine);
-    bool axbu = Utility::IsUndefined(axb.point_mine);
+    bool axau = detail::IsUndefined(axa.point_mine);
+    bool axbu = detail::IsUndefined(axb.point_mine);
 
-    if (!Utility::IsUndefined(ax.size_set) && (!axau || !axbu)) {
+    if (!detail::IsUndefined(ax.size_set) && (!axau || !axbu)) {
       FRAMES_LAYOUT_CHECK(link, "Frame overconstrained - attempted to assign a second point to a frame axis that already contained a size and one point.");
       return;
     }
@@ -553,7 +553,7 @@ namespace Frames {
 
     AxisData::Connector &axa = ax.connections[0];
     if (axa.point_mine == mypt) {
-      if (!Utility::IsUndefined(axa.cached)) {
+      if (!detail::IsUndefined(axa.cached)) {
         Invalidate(axis);
       }
 
@@ -562,16 +562,16 @@ namespace Frames {
       }
 
       axa.link = 0;
-      axa.point_mine = Utility::Undefined;
-      axa.point_link = Utility::Undefined;
-      axa.offset = Utility::Undefined;
+      axa.point_mine = detail::Undefined;
+      axa.point_link = detail::Undefined;
+      axa.offset = detail::Undefined;
 
       return;
     }
 
     AxisData::Connector &axb = ax.connections[1];
     if (axb.point_mine == mypt) {
-      if (!Utility::IsUndefined(axb.cached)) {
+      if (!detail::IsUndefined(axb.cached)) {
         Invalidate(axis);
       }
 
@@ -580,9 +580,9 @@ namespace Frames {
       }
 
       axb.link = 0;
-      axb.point_mine = Utility::Undefined;
-      axb.point_link = Utility::Undefined;
-      axb.offset = Utility::Undefined;
+      axb.point_mine = detail::Undefined;
+      axb.point_link = detail::Undefined;
+      axb.offset = detail::Undefined;
 
       return;
     }
@@ -591,12 +591,12 @@ namespace Frames {
   }
 
   void Layout::ClearPoint(Anchor anchor) {
-    if (!Utility::IsNil(Utility::c_anchorLookup[anchor].x)) {
-      ClearPoint(X, Utility::c_anchorLookup[anchor].x);
+    if (!detail::IsNil(detail::c_anchorLookup[anchor].x)) {
+      ClearPoint(X, detail::c_anchorLookup[anchor].x);
     }
 
-    if (!Utility::IsNil(Utility::c_anchorLookup[anchor].y)) {
-      ClearPoint(Y, Utility::c_anchorLookup[anchor].y);
+    if (!detail::IsNil(detail::c_anchorLookup[anchor].y)) {
+      ClearPoint(Y, detail::c_anchorLookup[anchor].y);
     }
   }
 
@@ -604,12 +604,12 @@ namespace Frames {
     AxisData &ax = m_axes[axis];
 
     AxisData::Connector &axa = ax.connections[0];
-    if (!Utility::IsUndefined(axa.point_mine)) {
+    if (!detail::IsUndefined(axa.point_mine)) {
       ClearPoint(axis, axa.point_mine);
     }
 
     AxisData::Connector &axb = ax.connections[1];
-    if (!Utility::IsUndefined(axb.point_mine)) {
+    if (!detail::IsUndefined(axb.point_mine)) {
       ClearPoint(axis, axb.point_mine);
     }
 
@@ -624,56 +624,56 @@ namespace Frames {
   // SetPoint adapters
   // All the anchor versions just transform themselves into no-anchor versions first
   void Layout::SetPoint(Anchor myanchor, const Layout *link, Anchor theiranchor) {
-    SetPoint(Utility::c_anchorLookup[myanchor].x, Utility::c_anchorLookup[myanchor].y, link, Utility::c_anchorLookup[theiranchor].x, Utility::c_anchorLookup[theiranchor].y);
+    SetPoint(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
   }
   void Layout::SetPoint(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
-    SetPoint(Utility::c_anchorLookup[myanchor].x, Utility::c_anchorLookup[myanchor].y, link, Utility::c_anchorLookup[theiranchor].x, Utility::c_anchorLookup[theiranchor].y, xofs, yofs);
+    SetPoint(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
   }
   
   void Layout::SetPoint(Anchor myanchor, const Layout *link, float theirx, float theiry) {
-    SetPoint(Utility::c_anchorLookup[myanchor].x, Utility::c_anchorLookup[myanchor].y, link, theirx, theiry);
+    SetPoint(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry);
   }
   void Layout::SetPoint(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
-    SetPoint(Utility::c_anchorLookup[myanchor].x, Utility::c_anchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
+    SetPoint(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
   }
 
   void Layout::SetPoint(float myx, float myy, const Layout *link, Anchor theiranchor) {
-    SetPoint(myx, myy, link, Utility::c_anchorLookup[theiranchor].x, Utility::c_anchorLookup[theiranchor].y);
+    SetPoint(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
   }
   void Layout::SetPoint(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
-    SetPoint(myx, myy, link, Utility::c_anchorLookup[theiranchor].x, Utility::c_anchorLookup[theiranchor].y, xofs, yofs);
+    SetPoint(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
   }
 
   void Layout::SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry) {
     FRAMES_LAYOUT_CHECK(link, "SetPoint requires offsets when linking to origin.");
-    FRAMES_LAYOUT_CHECK(Utility::IsNil(myx) == Utility::IsNil(theirx), "SetPoint provided with only one anchor position for X axis");
-    FRAMES_LAYOUT_CHECK(Utility::IsNil(myy) == Utility::IsNil(theiry), "SetPoint provided with only one anchor position for Y axis");
-    FRAMES_LAYOUT_CHECK(!Utility::IsNil(myx) || !Utility::IsNil(myy), "SetPoint not provided with any anchor axes");
+    FRAMES_LAYOUT_CHECK(detail::IsNil(myx) == detail::IsNil(theirx), "SetPoint provided with only one anchor position for X axis");
+    FRAMES_LAYOUT_CHECK(detail::IsNil(myy) == detail::IsNil(theiry), "SetPoint provided with only one anchor position for Y axis");
+    FRAMES_LAYOUT_CHECK(!detail::IsNil(myx) || !detail::IsNil(myy), "SetPoint not provided with any anchor axes");
 
-    if (!Utility::IsNil(myx)) {
+    if (!detail::IsNil(myx)) {
       SetPoint(X, myx, link, theirx);
     }
 
-    if (!Utility::IsNil(myy)) {
+    if (!detail::IsNil(myy)) {
       SetPoint(Y, myy, link, theiry);
     }
   }
   void Layout::SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
-    FRAMES_LAYOUT_CHECK(!Utility::IsNil(myx) || !Utility::IsNil(myy), "SetPoint not provided with any anchor axes");
+    FRAMES_LAYOUT_CHECK(!detail::IsNil(myx) || !detail::IsNil(myy), "SetPoint not provided with any anchor axes");
     if (link) {
-      FRAMES_LAYOUT_CHECK(Utility::IsNil(myx) == Utility::IsNil(theirx) && Utility::IsNil(myx) == Utility::IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
-      FRAMES_LAYOUT_CHECK(Utility::IsNil(myy) == Utility::IsNil(theiry) && Utility::IsNil(myy) == Utility::IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
+      FRAMES_LAYOUT_CHECK(detail::IsNil(myx) == detail::IsNil(theirx) && detail::IsNil(myx) == detail::IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
+      FRAMES_LAYOUT_CHECK(detail::IsNil(myy) == detail::IsNil(theiry) && detail::IsNil(myy) == detail::IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
     } else {
-      FRAMES_LAYOUT_CHECK(Utility::IsNil(theirx) && Utility::IsNil(theiry), "SetPoint must have nil target anchor points when linking to origin.");
-      FRAMES_LAYOUT_CHECK(Utility::IsNil(myx) == Utility::IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
-      FRAMES_LAYOUT_CHECK(Utility::IsNil(myy) == Utility::IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
+      FRAMES_LAYOUT_CHECK(detail::IsNil(theirx) && detail::IsNil(theiry), "SetPoint must have nil target anchor points when linking to origin.");
+      FRAMES_LAYOUT_CHECK(detail::IsNil(myx) == detail::IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
+      FRAMES_LAYOUT_CHECK(detail::IsNil(myy) == detail::IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
     }
 
-    if (!Utility::IsNil(myx)) {
+    if (!detail::IsNil(myx)) {
       SetPoint(X, myx, link, theirx, xofs);
     }
 
-    if (!Utility::IsNil(myy)) {
+    if (!detail::IsNil(myy)) {
       SetPoint(Y, myy, link, theiry, yofs);
     }
   }
@@ -681,14 +681,14 @@ namespace Frames {
   void Layout::SetSize(Axis axis, float size) {
     AxisData &ax = m_axes[axis];
 
-    if (!Utility::IsUndefined(ax.connections[0].point_mine) && !Utility::IsUndefined(ax.connections[1].point_mine)) {
+    if (!detail::IsUndefined(ax.connections[0].point_mine) && !detail::IsUndefined(ax.connections[1].point_mine)) {
       FRAMES_LAYOUT_CHECK(false, "Frame overconstrained - attempted to assign a size to a frame axis that already contained two points.");
       return;
     }
 
     // We don't care if we haven't changed
     if (ax.size_set != size) {
-      if (!Utility::IsUndefined(ax.size_cached)) {
+      if (!detail::IsUndefined(ax.size_cached)) {
         Invalidate(axis);
       }
 
@@ -700,12 +700,12 @@ namespace Frames {
     AxisData &ax = m_axes[axis];
 
     // We don't care if we haven't changed
-    if (!Utility::IsUndefined(ax.size_set)) {
-      if (!Utility::IsUndefined(ax.size_cached)) {
+    if (!detail::IsUndefined(ax.size_set)) {
+      if (!detail::IsUndefined(ax.size_cached)) {
         Invalidate(axis);
       }
 
-      ax.size_set = Utility::Undefined;
+      ax.size_set = detail::Undefined;
     }
   }
 
@@ -920,11 +920,11 @@ namespace Frames {
     // see if anything needs invalidating
     const AxisData &ax = m_axes[axis];
 
-    if (!Utility::IsUndefined(ax.size_cached) || !Utility::IsUndefined(ax.connections[0].cached) || !Utility::IsUndefined(ax.connections[1].cached)) {
+    if (!detail::IsUndefined(ax.size_cached) || !detail::IsUndefined(ax.connections[0].cached) || !detail::IsUndefined(ax.connections[1].cached)) {
       // Do these first so we don't get ourselves trapped in an infinite loop
-      ax.size_cached = Utility::Undefined;
-      ax.connections[0].cached = Utility::Undefined;
-      ax.connections[1].cached = Utility::Undefined;
+      ax.size_cached = detail::Undefined;
+      ax.connections[0].cached = detail::Undefined;
+      ax.connections[1].cached = detail::Undefined;
 
       for (AxisData::ChildrenList::const_iterator itr = ax.children.begin(); itr != ax.children.end(); ++itr) {
         (*itr)->Invalidate(axis);
@@ -1524,7 +1524,7 @@ namespace Frames {
     
     Layout *self = luaF_checkframe<Layout>(L, 1);
     const EventTypeBase *event = luaF_checkevent(L, 2);
-    float priority = (float)luaL_optnumber(L, 4, Utility::Undefined);
+    float priority = (float)luaL_optnumber(L, 4, detail::Undefined);
     
     int handler = LUA_NOREF;
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rfevh");
@@ -1551,7 +1551,7 @@ namespace Frames {
     
     // TODO: Make this faster if it ever becomes a bottleneck!
     for (std::multiset<FECallback, FECallback::Sorter>::iterator itr = eventSet.begin(); itr != eventSet.end(); ++itr) {
-      if (!itr->DestroyFlagGet() && itr->LuaHandleEqual(L_base, handler) && (Utility::IsUndefined(priority) || itr->PriorityGet() == priority)) {
+      if (!itr->DestroyFlagGet() && itr->LuaHandleEqual(L_base, handler) && (detail::IsUndefined(priority) || itr->PriorityGet() == priority)) {
         self->EventDestroy(self->m_events.find(event), itr);
         self->EventDetached(event);
         return 0;

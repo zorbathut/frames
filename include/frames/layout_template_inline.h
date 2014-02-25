@@ -14,7 +14,7 @@ namespace Frames {
     EventAttached(&event);
   }
     
-  template <typename Parameters> void Layout::EventDetach(const EventType<Parameters> &event, typename EventType<Parameters>::TypeDelegate handler, float priority /*= Utility::Undefined*/) {
+  template <typename Parameters> void Layout::EventDetach(const EventType<Parameters> &event, typename EventType<Parameters>::TypeDelegate handler, float priority /*= detail::Undefined*/) {
     if (!m_events.count(&event)) {
       return;
     }
@@ -23,7 +23,7 @@ namespace Frames {
     
     // TODO: Make this faster if it ever becomes a bottleneck!
     for (std::multiset<FECallback, FECallback::Sorter>::iterator itr = eventSet.begin(); itr != eventSet.end(); ++itr) {
-      if (!itr->DestroyFlagGet() && itr->NativeCallbackEqual(handler) && (Utility::IsUndefined(priority) || itr->PriorityGet() == priority)) {
+      if (!itr->DestroyFlagGet() && itr->NativeCallbackEqual(handler) && (detail::IsUndefined(priority) || itr->PriorityGet() == priority)) {
         EventDestroy(m_events.find(&event), itr);
         EventDetached(&event);
         return;
@@ -43,7 +43,7 @@ namespace Frames {
     }
   }
   
-  template <typename P1> void Layout::EventTrigger(const EventType<void (P1)> &event, typename Utility::MakeConstRef<P1>::T p1) {
+  template <typename P1> void Layout::EventTrigger(const EventType<void (P1)> &event, typename detail::MakeConstRef<P1>::T p1) {
     if (!m_events.count(&event)) {
       return;
     }
