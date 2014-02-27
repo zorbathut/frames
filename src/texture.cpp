@@ -42,7 +42,7 @@ namespace Frames {
     luaF_RegisterFunction(L, GetStaticType(), "GetTint", luaF_GetTint);
   }
 
-  void Texture::RenderElement(Renderer *renderer) const {
+  void Texture::RenderElement(detail::Renderer *renderer) const {
     Frame::RenderElement(renderer);
 
     if (m_texture) {
@@ -55,7 +55,7 @@ namespace Frames {
       float l = GetLeft();
       float r = GetRight();
 
-      Renderer::Vertex *v = renderer->Request(4);
+      detail::Renderer::Vertex *v = renderer->Request(4);
 
       v[0].p.x = l; v[0].p.y = u;
       v[1].p.x = r; v[1].p.y = u;

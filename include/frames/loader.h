@@ -22,6 +22,6 @@ namespace Frames {
       TextureConfig Load(Environment *env, Stream *stream);
     }
   }
-};
+}
 
 #endif

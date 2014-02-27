@@ -42,7 +42,7 @@ namespace Frames {
     return GetEnvironment()->GetFocus() == this;
   }
 
-  void Frame::RenderElement(Renderer *renderer) const {
+  void Frame::RenderElement(detail::Renderer *renderer) const {
     if (m_bg.a > 0) {
       Color bgc = m_bg * Color(1, 1, 1, renderer->AlphaGet());
 
@@ -53,7 +53,7 @@ namespace Frames {
       float l = GetLeft();
       float r = GetRight();
 
-      Renderer::Vertex *v = renderer->Request(4);
+      detail::Renderer::Vertex *v = renderer->Request(4);
 
       v[0].p.x = l; v[0].p.y = u;
       v[1].p.x = r; v[1].p.y = u;

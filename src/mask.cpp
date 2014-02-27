@@ -29,13 +29,13 @@ namespace Frames {
     Frame::luaF_RegisterFunctions(L);
   }
 
-  void Mask::RenderElement(Renderer *renderer) const {
+  void Mask::RenderElement(detail::Renderer *renderer) const {
     Frame::RenderElement(renderer);
 
     renderer->ScissorPush(GetBounds());
   }
 
-  void Mask::RenderElementPost(Renderer *renderer) const {
+  void Mask::RenderElementPost(detail::Renderer *renderer) const {
     renderer->ScissorPop();
 
     Frame::RenderElementPost(renderer);

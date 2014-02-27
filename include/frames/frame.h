@@ -56,7 +56,7 @@ namespace Frames {
     Frame(Layout *parent);
     virtual ~Frame();
 
-    virtual void RenderElement(Renderer *renderer) const;
+    virtual void RenderElement(detail::Renderer *renderer) const;
 
     void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, GetStaticType()); Layout::luaF_Register(L); }
 

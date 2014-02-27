@@ -11,7 +11,7 @@
 #include <vector>
 
 namespace Frames {
-  class Stream : Noncopyable {
+  class Stream : detail::Noncopyable {
   public:
     Stream() { };
     virtual ~Stream() { };

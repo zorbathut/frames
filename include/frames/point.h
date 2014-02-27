@@ -35,6 +35,6 @@ namespace Frames {
       return Point(Clamp(current.x, min.x, max.x), Clamp(current.y, min.y, max.y));
     }
   }
-};
+}
 
 #endif

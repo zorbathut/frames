@@ -17,19 +17,22 @@
 struct lua_State;
 
 namespace Frames {
+  class EventBase;
   class Frame;
   class Layout;
-  class Renderer;
-  class TextManager;
-  class TextureManager;
-  class EventTypeBase;
+
+  namespace detail {
+    class Renderer;
+    class TextManager;
+    class TextureManager;
+  }
 
   /// Coordinator class for almost all Frames state. Every Frames-using program will contain at least one Environment.
   /**
   A Frames::Environment is a self-contained Frames instance. It handles input, owns a hierarchy of \ref Frame "Frames", manages resources, and contains all the configuration data needed to use Frames. Every Frames-using program will contain at least one Environment.
   
   While Environment is not locked to any individual thread, it is fundamentally single-threaded. It is undefined behavior to call any Environment function, or any function on a Frame owned by an Environment, while any other such function is being run in another thread. However, multiple Environments can be used in parallel without issue. In most cases, it is also valid to call an Environment or Frame function while handling an event dispatch.*/
-  class Environment : Noncopyable {
+  class Environment : detail::Noncopyable {
   public:
     /// Initialize an Environment with default values.
     /**
@@ -91,12 +94,12 @@ namespace Frames {
     // Lua
     void LuaRegister(lua_State *L, bool hasErrorHandle = false); // if error handle is true, top element of the stack will be popped
     template<typename T> void LuaRegisterFrame(lua_State *L); // needed only if you create third-party frames - Frame will automatically register its internal frame types
-    void LuaRegisterEvent(lua_State *L, EventTypeBase *feb);
+    void LuaRegisterEvent(lua_State *L, EventBase *feb);
     void LuaUnregister(lua_State *L);
 
     // ==== Internal only, do not call below this line (TODO make more private)
-    TextManager *GetTextManager() { return m_text_manager; }
-    TextureManager *GetTextureManager() { return m_texture_manager; }
+    detail::TextManager *GetTextManager() { return m_text_manager; }
+    detail::TextureManager *GetTextureManager() { return m_texture_manager; }
 
     void LogError(const std::string &log) { if (m_config.logger) m_config.logger->LogError(log); }
     void LogDebug(const std::string &log) { if (m_config.logger) m_config.logger->LogDebug(log); }
@@ -151,9 +154,9 @@ namespace Frames {
     Configuration::Clipboard *m_config_clipboard_owned;
 
     // Managers
-    Renderer *m_renderer;
-    TextManager *m_text_manager;
-    TextureManager *m_texture_manager;
+    detail::Renderer *m_renderer;
+    detail::TextManager *m_text_manager;
+    detail::TextureManager *m_texture_manager;
 
     // Root
     Layout *m_root;

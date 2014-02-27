@@ -27,7 +27,7 @@ namespace Frames {
     Frame::luaF_RegisterFunctions(L);
   }
 
-  void Raw::RenderElement(Renderer *renderer) const {
+  void Raw::RenderElement(detail::Renderer *renderer) const {
     Frame::RenderElement(renderer);
 
     // We assume that you're not going to be using a RenderElement if you're not planning on attaching rendering to it. TODO: Provide some way to restrict what needs to be cleaned!

@@ -23,6 +23,7 @@ We're probably better off doing computer sanity checks than doing computer repla
   * SDL/GL
 
 * Convert Environment to Create/Destroy functions
+* Figure out how to document Delegate
 
 * Official release?
 

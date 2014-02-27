@@ -33,10 +33,10 @@ namespace Frames {
     Texture(Layout *parent);
     virtual ~Texture();
 
-    virtual void RenderElement(Renderer *renderer) const;
+    virtual void RenderElement(detail::Renderer *renderer) const;
 
     std::string m_texture_id;
-    TextureChunkPtr m_texture;
+    detail::TextureChunkPtr m_texture;
 
     Color m_tint;
 

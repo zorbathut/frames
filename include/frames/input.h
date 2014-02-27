@@ -207,6 +207,6 @@ namespace Frames {
     bool metaCtrl;
     bool metaAlt;
   };
-};
+}
 
 #endif

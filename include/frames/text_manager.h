@@ -23,197 +23,200 @@
 
 namespace Frames {
   class Environment;
-  class Renderer;
   class Stream;
 
-  class TextureBacking;
-  class TextureChunk;
-  typedef Ptr<TextureBacking> TextureBackingPtr;
-  typedef Ptr<TextureChunk> TextureChunkPtr;
+  namespace detail {
+    class TextureBacking;
+    class TextureChunk;
+    typedef Ptr<TextureBacking> TextureBackingPtr;
+    typedef Ptr<TextureChunk> TextureChunkPtr;
 
-  class FontInfo;
-  class TextInfo;
-  class CharacterInfo;
-  class TextLayout;
+    class FontInfo;
+    class TextInfo;
+    class CharacterInfo;
+    class TextLayout;
 
-  typedef Ptr<FontInfo> FontInfoPtr;
-  typedef Ptr<TextInfo> TextInfoPtr;
-  typedef Ptr<CharacterInfo> CharacterInfoPtr;
-  typedef Ptr<TextLayout> TextLayoutPtr;
+    class Renderer;
 
-  // Note: This is all probably a bit overdesigned and needs some cleanup
+    typedef Ptr<FontInfo> FontInfoPtr;
+    typedef Ptr<TextInfo> TextInfoPtr;
+    typedef Ptr<CharacterInfo> CharacterInfoPtr;
+    typedef Ptr<TextLayout> TextLayoutPtr;
 
-  // Includes info on a given font
-  // Contains a lookup table for (size, character) and one for (size, text)
-  // Owns TextInfo and CharacterInfo, is owned by TextManager
-  class FontInfo : public Refcountable<FontInfo> {
-    friend class Refcountable<FontInfo>;
-  public:
-    FontInfo(Environment *env, Stream *stream);
+    // Note: This is all probably a bit overdesigned and needs some cleanup
 
-    TextInfoPtr GetTextInfo(float size, const std::string &text);
-    CharacterInfoPtr GetCharacterInfo(float size, int character); // character is, as usual, a UTF-32 codepoint
+    // Includes info on a given font
+    // Contains a lookup table for (size, character) and one for (size, text)
+    // Owns TextInfo and CharacterInfo, is owned by TextManager
+    class FontInfo : public Refcountable<FontInfo> {
+      friend class Refcountable<FontInfo>;
+    public:
+      FontInfo(Environment *env, Stream *stream);
 
-    FT_Face GetFace(float size);
+      TextInfoPtr GetTextInfo(float size, const std::string &text);
+      CharacterInfoPtr GetCharacterInfo(float size, int character); // character is, as usual, a UTF-32 codepoint
 
-    const TextureBackingPtr &GetTexture() const { return m_texture; }
+      FT_Face GetFace(float size);
 
-    void ShutdownText(TextInfo *tinfo);
-    void ShutdownCharacter(CharacterInfo *cinfo);
+      const TextureBackingPtr &GetTexture() const { return m_texture; }
 
-    float GetLineHeight(float size);
-    float GetLineHeightFirst(float size);
+      void ShutdownText(TextInfo *tinfo);
+      void ShutdownCharacter(CharacterInfo *cinfo);
 
-    float GetKerning(float size, int char1, int char2);
+      float GetLineHeight(float size);
+      float GetLineHeightFirst(float size);
 
-    Environment *GetEnvironment() { return m_env; }
-  private:
-    ~FontInfo();
+      float GetKerning(float size, int char1, int char2);
 
-    boost::bimap<std::pair<float, std::string>, TextInfo *> m_text;
-    boost::bimap<std::pair<float, int>, CharacterInfo *> m_character;
+      Environment *GetEnvironment() { return m_env; }
+    private:
+      ~FontInfo();
 
-    // TODO: clear this out when no longer needed?
-    struct KerningInfo {
-      float size;
-      int char1;
-      int char2;
-      bool operator<(const KerningInfo &rhs) const;
+      boost::bimap<std::pair<float, std::string>, TextInfo *> m_text;
+      boost::bimap<std::pair<float, int>, CharacterInfo *> m_character;
+
+      // TODO: clear this out when no longer needed?
+      struct KerningInfo {
+        float size;
+        int char1;
+        int char2;
+        bool operator<(const KerningInfo &rhs) const;
+      };
+      std::map<KerningInfo, float> m_kerning;
+
+      // it's possible this should be either global or tied to a size, but fuck it
+      TextureBackingPtr m_texture;
+
+      Environment *m_env;
+
+      std::vector<unsigned char> m_face_data; // stores the font file in memory to make truetype loading a bit easier
+
+      float m_face_size;
+      FT_Face m_face;
     };
-    std::map<KerningInfo, float> m_kerning;
 
-    // it's possible this should be either global or tied to a size, but fuck it
-    TextureBackingPtr m_texture;
+    // Includes info on a given (font, size, text) combo
+    // Contains a list of active characters for that text as well as the text's fullwidth
+    // Is owned by FontInfo
+    class TextInfo : public Refcountable<TextInfo> {
+      friend class Refcountable<TextInfo>;
+    public:
+      TextInfo(FontInfoPtr parent, float size, std::string text);
 
-    Environment *m_env;
+      FontInfo *GetParent() const { return m_parent.get(); }
+      TextLayoutPtr GetLayout(float width, bool wordwrap);
 
-    std::vector<unsigned char> m_face_data; // stores the font file in memory to make truetype loading a bit easier
+      float GetFullWidth() const { return m_fullWidth; }
+      const TextureBackingPtr &GetTexture() const { return m_parent->GetTexture(); }
 
-    float m_face_size;
-    FT_Face m_face;
-  };
+      int GetCharacterCount() const { return m_characters.size(); }
+      const CharacterInfoPtr &GetCharacter(int index) const { return m_characters[index]; }
+      float GetKerning(int index) const { return m_kerning[index]; }
+      int GetQuads() const { return m_quads; }
 
-  // Includes info on a given (font, size, text) combo
-  // Contains a list of active characters for that text as well as the text's fullwidth
-  // Is owned by FontInfo
-  class TextInfo : public Refcountable<TextInfo> {
-    friend class Refcountable<TextInfo>;
-  public:
-    TextInfo(FontInfoPtr parent, float size, std::string text);
+      float GetSize() const { return m_size; }
 
-    FontInfo *GetParent() const { return m_parent.get(); }
-    TextLayoutPtr GetLayout(float width, bool wordwrap);
+      void ShutdownLayout(TextLayout *layout);
+    private:
+      ~TextInfo();
 
-    float GetFullWidth() const { return m_fullWidth; }
-    const TextureBackingPtr &GetTexture() const { return m_parent->GetTexture(); }
+      FontInfoPtr m_parent;
 
-    int GetCharacterCount() const { return m_characters.size(); }
-    const CharacterInfoPtr &GetCharacter(int index) const { return m_characters[index]; }
-    float GetKerning(int index) const { return m_kerning[index]; }
-    int GetQuads() const { return m_quads; }
+      boost::bimap<std::pair<float, bool>, TextLayout *> m_layout;
 
-    float GetSize() const { return m_size; }
+      std::vector<CharacterInfoPtr> m_characters;
+      std::vector<float> m_kerning; // difference between character x and character x-1, m_kerning[0] = 0
+      float m_fullWidth;
+      int m_quads;
 
-    void ShutdownLayout(TextLayout *layout);
-  private:
-    ~TextInfo();
+      float m_size;
+    };
 
-    FontInfoPtr m_parent;
+    // Includes info on a given character in a given (font, size) pair
+    // Is owned by FontInfo
+    class CharacterInfo : public Refcountable<CharacterInfo> {
+      friend class Refcountable<CharacterInfo>;
+    public:
+      CharacterInfo(FontInfoPtr parent, float size, int character);
 
-    boost::bimap<std::pair<float, bool>, TextLayout *> m_layout;
+      const TextureChunkPtr &GetTexture() const { return m_texture; }
 
-    std::vector<CharacterInfoPtr> m_characters;
-    std::vector<float> m_kerning; // difference between character x and character x-1, m_kerning[0] = 0
-    float m_fullWidth;
-    int m_quads;
+      float GetOffsetX() const { return m_offset_x; }
+      float GetOffsetY() const { return m_offset_y; }
 
-    float m_size;
-  };
+      float GetAdvance() const { return m_advance; }
 
-  // Includes info on a given character in a given (font, size) pair
-  // Is owned by FontInfo
-  class CharacterInfo : public Refcountable<CharacterInfo> {
-    friend class Refcountable<CharacterInfo>;
-  public:
-    CharacterInfo(FontInfoPtr parent, float size, int character);
+      bool IsNewline() const { return m_is_newline; }
+      bool IsWordbreak() const { return m_is_wordbreak; }
 
-    const TextureChunkPtr &GetTexture() const { return m_texture; }
+    private:
+      ~CharacterInfo();
 
-    float GetOffsetX() const { return m_offset_x; }
-    float GetOffsetY() const { return m_offset_y; }
+      FontInfoPtr m_parent;
 
-    float GetAdvance() const { return m_advance; }
+      TextureChunkPtr m_texture;
 
-    bool IsNewline() const { return m_is_newline; }
-    bool IsWordbreak() const { return m_is_wordbreak; }
+      float m_offset_x;
+      float m_offset_y;
 
-  private:
-    ~CharacterInfo();
+      float m_advance;
 
-    FontInfoPtr m_parent;
+      bool m_is_newline;
+      bool m_is_wordbreak;
+    };
 
-    TextureChunkPtr m_texture;
+    // Includes info on a given (font, size, text, width, wordwrap) quartet
+    // Contains rendering instructions for each character
+    // Is owned by TextInfo
+    class TextLayout : public Refcountable<TextLayout> {
+      friend class Refcountable<TextLayout>;
+    public:
+      TextLayout(TextInfoPtr parent, float width, bool wordwrap);
 
-    float m_offset_x;
-    float m_offset_y;
+      TextInfo *GetParent() const { return m_parent.get(); }
 
-    float m_advance;
+      float GetFullHeight() const { return m_fullHeight; }
 
-    bool m_is_newline;
-    bool m_is_wordbreak;
-  };
+      void Render(Renderer *renderer, const Color &color, Rect bounds, Point offset); // bounds.s.x and bounds.s.y interpreted as starting coordinates, text clamped to stay within bounds. offset is text's skew within those bounds
+      // passed by value because we modify them
 
-  // Includes info on a given (font, size, text, width, wordwrap) quartet
-  // Contains rendering instructions for each character
-  // Is owned by TextInfo
-  class TextLayout : public Refcountable<TextLayout> {
-    friend class Refcountable<TextLayout>;
-  public:
-    TextLayout(TextInfoPtr parent, float width, bool wordwrap);
+      Point GetCoordinateFromCharacter(int character) const;
+      int GetCharacterFromCoordinate(const Point &pt) const;
 
-    TextInfo *GetParent() const { return m_parent.get(); }
+      int GetLineFromCharacter(int character) const;
+      int GetEOLFromLine(int line) const;
 
-    float GetFullHeight() const { return m_fullHeight; }
+    private:
+      ~TextLayout();
 
-    void Render(Renderer *renderer, const Color &color, Rect bounds, Point offset); // bounds.s.x and bounds.s.y interpreted as starting coordinates, text clamped to stay within bounds. offset is text's skew within those bounds
-    // passed by value because we modify them
+      TextInfoPtr m_parent;
+      std::vector<Point> m_coordinates; // contains coordinates for the points in TextInfoPtr
+      std::vector<int> m_lines; // first character of each line
 
-    Point GetCoordinateFromCharacter(int character) const;
-    int GetCharacterFromCoordinate(const Point &pt) const;
+      float m_fullHeight;
+      float m_width;
+    };
 
-    int GetLineFromCharacter(int character) const;
-    int GetEOLFromLine(int line) const;
+    class TextManager : Noncopyable {
+    public:
+      TextManager(Environment *env);
+      ~TextManager();
 
-  private:
-    ~TextLayout();
+      TextInfoPtr GetTextInfo(const std::string &font, float size, const std::string &text);
 
-    TextInfoPtr m_parent;
-    std::vector<Point> m_coordinates; // contains coordinates for the points in TextInfoPtr
-    std::vector<int> m_lines; // first character of each line
+      const FT_Library &GetFreetype() const { return m_ft; }
+    private:
+      // Allows for accessor function calls
+      friend class FontInfo;
 
-    float m_fullHeight;
-    float m_width;
-  };
+      Environment *m_env;
+      FT_Library m_ft;
 
-  class TextManager : Noncopyable {
-  public:
-    TextManager(Environment *env);
-    ~TextManager();
+      boost::bimap<std::string, FontInfo *> m_fonts;
 
-    TextInfoPtr GetTextInfo(const std::string &font, float size, const std::string &text);
-
-    const FT_Library &GetFreetype() const { return m_ft; }
-  private:
-    // Allows for accessor function calls
-    friend class FontInfo;
-
-    Environment *m_env;
-    FT_Library m_ft;
-
-    boost::bimap<std::string, FontInfo *> m_fonts;
-
-    void Internal_Shutdown_Font(FontInfo *font);
-  };
-};
+      void Internal_Shutdown_Font(FontInfo *font);
+    };
+  }
+}
 
 #endif

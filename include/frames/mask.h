@@ -27,8 +27,8 @@ namespace Frames {
     Mask(Layout *parent);
     virtual ~Mask();
 
-    virtual void RenderElement(Renderer *renderer) const;
-    virtual void RenderElementPost(Renderer *renderer) const;
+    virtual void RenderElement(detail::Renderer *renderer) const;
+    virtual void RenderElementPost(detail::Renderer *renderer) const;
   };
 }
 

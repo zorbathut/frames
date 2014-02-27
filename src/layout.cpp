@@ -809,8 +809,8 @@ namespace Frames {
     Obliterate_Extract();
   }
 
-  bool Layout::EventHookedIs(const EventTypeBase &event) const {
-    std::map<const EventTypeBase *, std::multiset<FECallback, FECallback::Sorter> >::const_iterator itr = m_events.find(&event);
+  bool Layout::EventHookedIs(const EventBase &event) const {
+    std::map<const EventBase *, std::multiset<FECallback, FECallback::Sorter> >::const_iterator itr = m_events.find(&event);
     if (itr == m_events.end()) {
       // no handles, we're good
       return false;
@@ -828,7 +828,7 @@ namespace Frames {
     return false;
   }
 
-  void Layout::EventAttached(const EventTypeBase *event) {
+  void Layout::EventAttached(const EventBase *event) {
     if (!m_acceptInput) {
       m_acceptInput =
         EventHookedIs(Event::MouseLeftClick) || EventHookedIs(Event::MouseLeftUp) || EventHookedIs(Event::MouseLeftDown) ||
@@ -839,7 +839,7 @@ namespace Frames {
     }
   }
 
-  void Layout::EventDetached(const EventTypeBase *event) {
+  void Layout::EventDetached(const EventBase *event) {
     if (m_acceptInput) {
       m_acceptInput =
         EventHookedIs(Event::MouseLeftClick) || EventHookedIs(Event::MouseLeftUp) || EventHookedIs(Event::MouseLeftDown) ||
@@ -899,7 +899,7 @@ namespace Frames {
     lua_setfield(L, -2, name);
   }
 
-  void Layout::Render(Renderer *renderer) const {
+  void Layout::Render(detail::Renderer *renderer) const {
     if (m_visible) {
       renderer->AlphaPush(GetAlpha());
       RenderElement(renderer);
@@ -1102,7 +1102,7 @@ namespace Frames {
       
   Layout::FEIterator::FEIterator() : m_state(STATE_COMPLETE), m_diveIndex(0), m_target(0), m_event(0) { };
 
-  Layout::FEIterator::FEIterator(Layout *target, const EventTypeBase *event) : m_state(STATE_DIVE), m_diveIndex(0), m_target(target), m_event(event) { // set to STATE_DIVE so that NextIndex() does the right thing
+  Layout::FEIterator::FEIterator(Layout *target, const EventBase *event) : m_state(STATE_DIVE), m_diveIndex(0), m_target(target), m_event(event) { // set to STATE_DIVE so that NextIndex() does the right thing
     target->Obliterate_Lock();
     
     if (event->GetDive()) {
@@ -1207,7 +1207,7 @@ namespace Frames {
         layout = m_dives[m_diveIndex];
       }
       
-      const EventTypeBase *event = m_event;
+      const EventBase *event = m_event;
       if (m_state == STATE_DIVE) {
         event = event->GetDive();
       } else if (m_state == STATE_BUBBLE) {
@@ -1243,7 +1243,7 @@ namespace Frames {
       }
       
       Layout *layout = LayoutGet();
-      const EventTypeBase *event = EventGet();
+      const EventBase *event = EventGet();
       
       // TODO: can probably be optimized by not doing a ton of lookups
       if (layout->m_events.count(event)) {
@@ -1263,7 +1263,7 @@ namespace Frames {
     }
   }
   
-  const EventTypeBase *Layout::FEIterator::EventGet() {
+  const EventBase *Layout::FEIterator::EventGet() {
     if (m_state == STATE_DIVE) {
       return m_event->GetDive();
     } else if (m_state == STATE_BUBBLE) {
@@ -1455,7 +1455,7 @@ namespace Frames {
     // Stack: layout eventhandle handler (priority)
     
     Layout *self = luaF_checkframe<Layout>(L, 1);
-    const EventTypeBase *event = luaF_checkevent(L, 2);
+    const EventBase *event = luaF_checkevent(L, 2);
     float priority = (float)luaL_optnumber(L, 4, 0.f);
     
     int handler = LUA_NOREF;
@@ -1523,7 +1523,7 @@ namespace Frames {
     // Stack: layout eventhandle handler (priority)
     
     Layout *self = luaF_checkframe<Layout>(L, 1);
-    const EventTypeBase *event = luaF_checkevent(L, 2);
+    const EventBase *event = luaF_checkevent(L, 2);
     float priority = (float)luaL_optnumber(L, 4, detail::Undefined);
     
     int handler = LUA_NOREF;

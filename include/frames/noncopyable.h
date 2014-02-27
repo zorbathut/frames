@@ -10,19 +10,9 @@
 #endif
 
 namespace Frames {
-  #ifdef FRAMES_BOOST_ENABLED
+  namespace detail {
     typedef boost::noncopyable Noncopyable;
-  #else
-    #error this isnt actually tested yet!
-    class Noncopyable {
-     protected:
-        Noncopyable() {}
-        ~Noncopyable() {}
-     private:
-        Noncopyable( const Noncopyable& );
-        const Noncopyable& operator=( const Noncopyable& );
-    };
-  #endif
+  }
 }
 
 #endif

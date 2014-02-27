@@ -10,7 +10,7 @@
 namespace Frames {
   struct Point;
   struct KeyEvent;
-  class EventTypeBase;
+  class EventBase;
   
   // luaF_push is intended to be extended by end users! Add more overloads as you see fit to conform to your event schema.
   void luaF_push(lua_State *L, int x);
@@ -72,14 +72,14 @@ namespace Frames {
     }
   }
   
-  inline const EventTypeBase *luaF_checkevent(lua_State *L, int index) {
+  inline const EventBase *luaF_checkevent(lua_State *L, int index) {
     if (index < 0) index += lua_gettop(L) + 1;
     
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fev");
     lua_pushvalue(L, index);
     lua_rawget(L, -2);
     
-    const EventTypeBase *ebf = (const EventTypeBase *)lua_touserdata(L, -1);
+    const EventBase *ebf = (const EventBase *)lua_touserdata(L, -1);
     
     if (!ebf) {
       luaL_error(L, "Not a valid frame event handle");

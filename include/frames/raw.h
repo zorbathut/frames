@@ -27,7 +27,7 @@ namespace Frames {
     Raw(Layout *parent);
     virtual ~Raw();
 
-    virtual void RenderElement(Renderer *renderer) const;
+    virtual void RenderElement(detail::Renderer *renderer) const;
   };
 }
 

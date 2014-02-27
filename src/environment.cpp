@@ -522,7 +522,7 @@ namespace Frames {
     LuaRegisterEvent(L, &Event::Render);
   }
   
-  void Environment::LuaRegisterEvent(lua_State *L, EventTypeBase *feb) {
+  void Environment::LuaRegisterEvent(lua_State *L, EventBase *feb) {
     LuaStackChecker lsc(L, this);
     
     lua_getfield(L, LUA_GLOBALSINDEX, "Frames");
@@ -864,9 +864,9 @@ namespace Frames {
     m_root = new Layout(0, this);
     m_root->SetNameStatic("Root");
 
-    m_renderer = new Renderer(this);
-    m_text_manager = new TextManager(this);
-    m_texture_manager = new TextureManager(this);
+    m_renderer = new detail::Renderer(this);
+    m_text_manager = new detail::TextManager(this);
+    m_texture_manager = new detail::TextureManager(this);
   }
 
   void Environment::MarkInvalidated(Layout *layout) {

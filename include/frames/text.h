@@ -67,13 +67,13 @@ namespace Frames {
     void UpdateLayout();
     void ScrollToCursor();
 
-    virtual void RenderElement(Renderer *renderer) const;
+    virtual void RenderElement(detail::Renderer *renderer) const;
 
     std::string m_font;
     std::string m_text;
     float m_size;
     bool m_wordwrap;
-    TextLayoutPtr m_layout;
+    detail::TextLayoutPtr m_layout;
 
     Color m_color_text;
     Color m_color_selection;

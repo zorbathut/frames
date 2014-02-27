@@ -22,8 +22,11 @@ struct lua_State;
 namespace Frames {
   class Environment;
   struct Rect;
-  class Renderer;
   class Layout;
+
+  namespace detail {
+    class Renderer;
+  }
   
   FRAMES_FRAMEEVENT_DECLARE(Move, ());
   FRAMES_FRAMEEVENT_DECLARE(Size, ());
@@ -62,7 +65,7 @@ namespace Frames {
 
   typedef intptr_t EventId;
 
-  class Layout : Noncopyable {
+  class Layout : detail::Noncopyable {
   private:
     friend class Environment;
     
@@ -177,12 +180,12 @@ namespace Frames {
     };
     
     typedef std::multiset<FECallback, FECallback::Sorter> EventMultiset;
-    typedef std::map<const EventTypeBase *, std::multiset<FECallback, FECallback::Sorter> > EventLookup;
+    typedef std::map<const EventBase *, std::multiset<FECallback, FECallback::Sorter> > EventLookup;
     
     class FEIterator {
     public:
       FEIterator();
-      FEIterator(Layout *target, const EventTypeBase *event);
+      FEIterator(Layout *target, const EventBase *event);
       FEIterator(const FEIterator &itr);
       void operator=(const FEIterator &itr);
       ~FEIterator();
@@ -196,7 +199,7 @@ namespace Frames {
       void IndexNext();
       
       Layout *LayoutGet();
-      const EventTypeBase *EventGet();
+      const EventBase *EventGet();
       
       enum State { STATE_DIVE, STATE_MAIN, STATE_BUBBLE, STATE_COMPLETE };
       State m_state;
@@ -205,7 +208,7 @@ namespace Frames {
       int m_diveIndex;
       
       Layout *m_target;
-      const EventTypeBase *m_event;
+      const EventBase *m_event;
       
       EventMultiset::iterator m_current;
       EventMultiset::iterator m_last;
@@ -319,14 +322,14 @@ namespace Frames {
 
     void Obliterate(); // prep for destruction along with all children
 
-    virtual void RenderElement(Renderer *renderer) const { };
-    virtual void RenderElementPost(Renderer *renderer) const { };
+    virtual void RenderElement(detail::Renderer *renderer) const { };
+    virtual void RenderElementPost(detail::Renderer *renderer) const { };
 
     // make sure you call these down if you override them
-    bool EventHookedIs(const EventTypeBase &event) const;
+    bool EventHookedIs(const EventBase &event) const;
         
-    virtual void EventAttached(const EventTypeBase *id);
-    virtual void EventDetached(const EventTypeBase *id);
+    virtual void EventAttached(const EventBase *id);
+    virtual void EventDetached(const EventBase *id);
     
     // Lua
     virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, GetStaticType()); } // see Layout::luaF_Register for what yours should look like
@@ -337,7 +340,7 @@ namespace Frames {
     static void luaF_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *));
 
   private:
-    void Render(Renderer *renderer) const;
+    void Render(detail::Renderer *renderer) const;
 
     // Layout engine
     void Invalidate(Axis axis);

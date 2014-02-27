@@ -229,7 +229,7 @@ namespace Frames {
       // PROBLEM
       GetEnvironment()->LogError("Error - attempting to render text without a valid font");
     } else {
-      TextInfoPtr tinfo = GetEnvironment()->GetTextManager()->GetTextInfo(m_font, m_size, m_text);
+      detail::TextInfoPtr tinfo = GetEnvironment()->GetTextManager()->GetTextInfo(m_font, m_size, m_text);
       SetWidthDefault(tinfo->GetFullWidth());
 
       m_layout = tinfo->GetLayout(GetWidth(), m_wordwrap);
@@ -265,7 +265,7 @@ namespace Frames {
     SetScroll(cscroll);
   }
 
-  void Text::RenderElement(Renderer *renderer) const {
+  void Text::RenderElement(detail::Renderer *renderer) const {
     Frame::RenderElement(renderer);
 
     // we'll fix this up further later
@@ -284,7 +284,7 @@ namespace Frames {
         int el = m_layout->GetLineFromCharacter(e);
 
         renderer->SetTexture();
-        Renderer::Vertex *verts = renderer->Request((el - sl + 1) * 4);
+        detail::Renderer::Vertex *verts = renderer->Request((el - sl + 1) * 4);
         int idx = 0;
         for (int i = sl; i <= el; ++i) {
           int ts = std::max(s, i ? (m_layout->GetEOLFromLine(i - 1) + 1) : 0);
@@ -305,7 +305,7 @@ namespace Frames {
 
           rect.e.y += m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
 
-          if (Renderer::WriteCroppedRect(verts + idx, rect, m_color_selection * Color(1, 1, 1, renderer->AlphaGet()), bounds)) {
+          if (detail::Renderer::WriteCroppedRect(verts + idx, rect, m_color_selection * Color(1, 1, 1, renderer->AlphaGet()), bounds)) {
             idx += 4;
           }
         }
@@ -319,13 +319,13 @@ namespace Frames {
       if (m_interactive >= INTERACTIVE_CURSOR && GetFocus()) { // display only if in focus
         // TODO: cull properly when too small
         renderer->SetTexture();
-        Renderer::Vertex *vert = renderer->Request(4);
+        detail::Renderer::Vertex *vert = renderer->Request(4);
         
         Point origin = m_layout->GetCoordinateFromCharacter(m_cursor) - m_scroll;
         origin.x += GetLeft();
         origin.y += GetTop();
         
-        Renderer::WriteCroppedTexRect(vert, Rect(origin, origin + Point(1, m_layout->GetParent()->GetParent()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1, renderer->AlphaGet()), bounds);
+        detail::Renderer::WriteCroppedTexRect(vert, Rect(origin, origin + Point(1, m_layout->GetParent()->GetParent()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1, renderer->AlphaGet()), bounds);
 
         renderer->Return(GL_QUADS);
       }
