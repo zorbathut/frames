@@ -31,8 +31,19 @@ namespace Frames {
   While Environment is not locked to any individual thread, it is fundamentally single-threaded. It is undefined behavior to call any Environment function, or any function on a Frame owned by an Environment, while any other such function is being run in another thread. However, multiple Environments can be used in parallel without issue. In most cases, it is also valid to call an Environment or Frame function while handling an event dispatch.*/
   class Environment : Noncopyable {
   public:
-    Environment();  // init to default
+    /// Initialize an Environment with default values.
+    /**
+    Equivalent to calling Environment(const Configuration &config); with a default-constructed Configuration.*/
+    Environment();
+
+    /// Initialize an Environment with custom values.
+    /**
+    See Configuration for details.*/
     Environment(const Configuration &config);
+
+    /// Completely shuts down an Environment.
+    /**
+    Immediately destroys all child \ref Frame "Frames", cleans up all stored resources and event handles, cleans up any hooks in scripting languages, and so forth.*/
     ~Environment();
 
     // ==== Update to the state of the world, incoming events

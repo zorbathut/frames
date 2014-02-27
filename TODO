@@ -22,6 +22,8 @@ We're probably better off doing computer sanity checks than doing computer repla
 * Simple examples
   * SDL/GL
 
+* Convert Environment to Create/Destroy functions
+
 * Official release?
 
 === PROGRESSION
