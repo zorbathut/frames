@@ -6,16 +6,12 @@
 // not that this helps the defines, but whatever
 namespace Frames {
   #define FRAMES_FRAMEEVENT_DEFINE(eventname, paramlist) \
-    namespace Event { \
-      EventType<void paramlist> eventname(#eventname); \
-    }
+    EventType<void paramlist> eventname(#eventname);
 
   #define FRAMES_FRAMEEVENT_DEFINE_BUBBLE(eventname, paramlist) \
-    namespace Event { \
-      EventType<void paramlist> eventname##Dive(#eventname "Dive"); \
-      EventType<void paramlist> eventname##Bubble(#eventname "Bubble"); \
-      EventType<void paramlist> eventname(#eventname, &eventname##Dive, &eventname##Bubble); \
-    }
+    EventType<void paramlist> eventname##Dive(#eventname "Dive"); \
+    EventType<void paramlist> eventname##Bubble(#eventname "Bubble"); \
+    EventType<void paramlist> eventname(#eventname, &eventname##Dive, &eventname##Bubble);
 }
 
 #endif

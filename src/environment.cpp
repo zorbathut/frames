@@ -110,7 +110,7 @@ namespace Frames {
       m_over = updated; // NOTE: ORDER IS IMPORTANT. Either MouseOut or MouseOver can destroy frames. We need to set m_over *first*, in case either of our calls destroy the new frame and m_over needs to be cleared!
 
       if (last) {
-        last->EventTrigger(Event::MouseOut);
+        last->EventTrigger(Layout::Event::MouseOut);
       }
 
       mouseover = true;
@@ -118,18 +118,18 @@ namespace Frames {
 
     // Do our mousemove messages
     if (m_over) {
-      m_over->EventTrigger(Event::MouseMove, Point(x, y));
+      m_over->EventTrigger(Layout::Event::MouseMove, Point(x, y));
     }
 
     // Do our mousemoveout messages
     for (std::map<int, Layout *>::const_iterator itr = m_buttonDown.begin(); itr != m_buttonDown.end(); ++itr) {
       if (itr->second && itr->second != m_over) {
-        itr->second->EventTrigger(Event::MouseMoveoutside, Point(x, y));
+        itr->second->EventTrigger(Layout::Event::MouseMoveoutside, Point(x, y));
       }
     }
 
     if (mouseover && m_over) {
-      m_over->EventTrigger(Event::MouseOver);
+      m_over->EventTrigger(Layout::Event::MouseOver);
     }
   }
 
@@ -142,13 +142,13 @@ namespace Frames {
     if (m_over) {
       m_buttonDown[button] = m_over;
 
-      m_over->EventTrigger(Event::MouseButtonDown, button);
+      m_over->EventTrigger(Layout::Event::MouseButtonDown, button);
       if (button == 0) {
-        m_over->EventTrigger(Event::MouseLeftDown);
+        m_over->EventTrigger(Layout::Event::MouseLeftDown);
       } else if (button == 1) {
-        m_over->EventTrigger(Event::MouseRightDown);
+        m_over->EventTrigger(Layout::Event::MouseRightDown);
       } else if (button == 2) {
-        m_over->EventTrigger(Event::MouseMiddleDown);
+        m_over->EventTrigger(Layout::Event::MouseMiddleDown);
       }
 
       return true;
@@ -163,26 +163,26 @@ namespace Frames {
     if (m_over) {
       consumed = true;
       
-      m_over->EventTrigger(Event::MouseButtonUp, button);
+      m_over->EventTrigger(Layout::Event::MouseButtonUp, button);
       if (m_over) {
         if (button == 0) {
-          m_over->EventTrigger(Event::MouseLeftUp);
+          m_over->EventTrigger(Layout::Event::MouseLeftUp);
         } else if (button == 1) {
-          m_over->EventTrigger(Event::MouseRightUp);
+          m_over->EventTrigger(Layout::Event::MouseRightUp);
         } else if (button == 2) {
-          m_over->EventTrigger(Event::MouseMiddleUp);
+          m_over->EventTrigger(Layout::Event::MouseMiddleUp);
         }
       }
 
       if (m_over && m_buttonDown[button] == m_over) {
-        m_over->EventTrigger(Event::MouseButtonClick, button);
+        m_over->EventTrigger(Layout::Event::MouseButtonClick, button);
         if (m_over) {
           if (button == 0) {
-            m_over->EventTrigger(Event::MouseLeftClick);
+            m_over->EventTrigger(Layout::Event::MouseLeftClick);
           } else if (button == 1) {
-            m_over->EventTrigger(Event::MouseRightClick);
+            m_over->EventTrigger(Layout::Event::MouseRightClick);
           } else if (button == 2) {
-            m_over->EventTrigger(Event::MouseMiddleClick);
+            m_over->EventTrigger(Layout::Event::MouseMiddleClick);
           }
         }
       }
@@ -190,15 +190,15 @@ namespace Frames {
 
     Layout *mbd = m_buttonDown[button];
     if (mbd && mbd != m_over) {
-      mbd->EventTrigger(Event::MouseButtonUpoutside, button);
+      mbd->EventTrigger(Layout::Event::MouseButtonUpoutside, button);
 
       if (mbd) {
         if (button == 0) {
-          mbd->EventTrigger(Event::MouseLeftUpoutside);
+          mbd->EventTrigger(Layout::Event::MouseLeftUpoutside);
         } else if (button == 1) {
-          mbd->EventTrigger(Event::MouseRightUpoutside);
+          mbd->EventTrigger(Layout::Event::MouseRightUpoutside);
         } else if (button == 2) {
-          mbd->EventTrigger(Event::MouseMiddleUpoutside);
+          mbd->EventTrigger(Layout::Event::MouseMiddleUpoutside);
         }
       }
     }
@@ -214,7 +214,7 @@ namespace Frames {
   bool Environment::KeyDown(const KeyEvent &key) {
     m_lastEvent = key;
     if (m_focus) {
-      m_focus->EventTrigger(Event::KeyDown, key);
+      m_focus->EventTrigger(Layout::Event::KeyDown, key);
       return true;
     }
     return false;
@@ -222,7 +222,7 @@ namespace Frames {
 
   bool Environment::KeyType(const std::string &type) {
     if (m_focus) {
-      m_focus->EventTrigger(Event::KeyType, type);
+      m_focus->EventTrigger(Layout::Event::KeyType, type);
       return true;
     }
     return false;
@@ -231,7 +231,7 @@ namespace Frames {
   bool Environment::KeyRepeat(const KeyEvent &key) {
     m_lastEvent = key;
     if (m_focus) {
-      m_focus->EventTrigger(Event::KeyRepeat, key);
+      m_focus->EventTrigger(Layout::Event::KeyRepeat, key);
       return true;
     }
     return false;
@@ -240,7 +240,7 @@ namespace Frames {
   bool Environment::KeyUp(const KeyEvent &key) {
     m_lastEvent = key;
     if (m_focus) {
-      m_focus->EventTrigger(Event::KeyUp, key);
+      m_focus->EventTrigger(Layout::Event::KeyUp, key);
       return true;
     }
     return false;
@@ -484,42 +484,42 @@ namespace Frames {
     LuaRegisterFrame<Raw>(L);
     
     // Register our built-in frame events
-    LuaRegisterEvent(L, &Event::Move);
-    LuaRegisterEvent(L, &Event::Size);
+    LuaRegisterEvent(L, &Layout::Event::Move);
+    LuaRegisterEvent(L, &Layout::Event::Size);
 
-    LuaRegisterEvent(L, &Event::MouseOver);
-    LuaRegisterEvent(L, &Event::MouseMove);
-    LuaRegisterEvent(L, &Event::MouseMoveoutside);
-    LuaRegisterEvent(L, &Event::MouseOut);
+    LuaRegisterEvent(L, &Layout::Event::MouseOver);
+    LuaRegisterEvent(L, &Layout::Event::MouseMove);
+    LuaRegisterEvent(L, &Layout::Event::MouseMoveoutside);
+    LuaRegisterEvent(L, &Layout::Event::MouseOut);
 
-    LuaRegisterEvent(L, &Event::MouseLeftUp);
-    LuaRegisterEvent(L, &Event::MouseLeftUpoutside);
-    LuaRegisterEvent(L, &Event::MouseLeftDown);
-    LuaRegisterEvent(L, &Event::MouseLeftClick);
+    LuaRegisterEvent(L, &Layout::Event::MouseLeftUp);
+    LuaRegisterEvent(L, &Layout::Event::MouseLeftUpoutside);
+    LuaRegisterEvent(L, &Layout::Event::MouseLeftDown);
+    LuaRegisterEvent(L, &Layout::Event::MouseLeftClick);
 
-    LuaRegisterEvent(L, &Event::MouseMiddleUp);
-    LuaRegisterEvent(L, &Event::MouseMiddleUpoutside);
-    LuaRegisterEvent(L, &Event::MouseMiddleDown);
-    LuaRegisterEvent(L, &Event::MouseMiddleClick);
+    LuaRegisterEvent(L, &Layout::Event::MouseMiddleUp);
+    LuaRegisterEvent(L, &Layout::Event::MouseMiddleUpoutside);
+    LuaRegisterEvent(L, &Layout::Event::MouseMiddleDown);
+    LuaRegisterEvent(L, &Layout::Event::MouseMiddleClick);
 
-    LuaRegisterEvent(L, &Event::MouseRightUp);
-    LuaRegisterEvent(L, &Event::MouseRightUpoutside);
-    LuaRegisterEvent(L, &Event::MouseRightDown);
-    LuaRegisterEvent(L, &Event::MouseRightClick);
+    LuaRegisterEvent(L, &Layout::Event::MouseRightUp);
+    LuaRegisterEvent(L, &Layout::Event::MouseRightUpoutside);
+    LuaRegisterEvent(L, &Layout::Event::MouseRightDown);
+    LuaRegisterEvent(L, &Layout::Event::MouseRightClick);
 
-    LuaRegisterEvent(L, &Event::MouseButtonUp);
-    LuaRegisterEvent(L, &Event::MouseButtonUpoutside);
-    LuaRegisterEvent(L, &Event::MouseButtonDown);
-    LuaRegisterEvent(L, &Event::MouseButtonClick);
+    LuaRegisterEvent(L, &Layout::Event::MouseButtonUp);
+    LuaRegisterEvent(L, &Layout::Event::MouseButtonUpoutside);
+    LuaRegisterEvent(L, &Layout::Event::MouseButtonDown);
+    LuaRegisterEvent(L, &Layout::Event::MouseButtonClick);
 
-    LuaRegisterEvent(L, &Event::MouseWheel);
+    LuaRegisterEvent(L, &Layout::Event::MouseWheel);
 
-    LuaRegisterEvent(L, &Event::KeyDown);
-    LuaRegisterEvent(L, &Event::KeyType);
-    LuaRegisterEvent(L, &Event::KeyRepeat);
-    LuaRegisterEvent(L, &Event::KeyUp);
+    LuaRegisterEvent(L, &Layout::Event::KeyDown);
+    LuaRegisterEvent(L, &Layout::Event::KeyType);
+    LuaRegisterEvent(L, &Layout::Event::KeyRepeat);
+    LuaRegisterEvent(L, &Layout::Event::KeyUp);
       
-    LuaRegisterEvent(L, &Event::Render);
+    LuaRegisterEvent(L, &Raw::Event::Render);
   }
   
   void Environment::LuaRegisterEvent(lua_State *L, EventBase *feb) {

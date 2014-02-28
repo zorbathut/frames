@@ -16,6 +16,7 @@
 #include <vector>
 #include <set>
 #include <map>
+#include <string>
 
 struct lua_State;
 
@@ -27,45 +28,48 @@ namespace Frames {
   namespace detail {
     class Renderer;
   }
-  
-  FRAMES_FRAMEEVENT_DECLARE(Move, ());
-  FRAMES_FRAMEEVENT_DECLARE(Size, ());
-
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseOver, ());
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMove, (const Point &pt));
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMoveoutside, (const Point &pt));
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseOut, ());
-
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUp, ());
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUpoutside, ());
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftDown, ());
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftClick, ());
-
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUp, ());
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUpoutside, ());
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleDown, ());
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleClick, ());
-
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUp, ());
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUpoutside, ());
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightDown, ());
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightClick, ());
-
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUp, (int button));
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUpoutside, (int button));
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonDown, (int button));
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonClick, (int button));
-
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseWheel, (int delta));
-
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyDown, (const KeyEvent &kev));
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyType, (const std::string &text));
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyRepeat, (const KeyEvent &kev));
-  FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyUp, (const KeyEvent &kev));
 
   typedef intptr_t EventId;
 
   class Layout : detail::Noncopyable {
+  public:
+    FRAMES_FRAMEEVENT_DECLARE_BEGIN
+      FRAMES_FRAMEEVENT_DECLARE(Move, ());
+      FRAMES_FRAMEEVENT_DECLARE(Size, ());
+
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseOver, ());
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMove, (const Point &pt));
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMoveoutside, (const Point &pt));
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseOut, ());
+
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUp, ());
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUpoutside, ());
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftDown, ());
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftClick, ());
+
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUp, ());
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUpoutside, ());
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleDown, ());
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleClick, ());
+
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUp, ());
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUpoutside, ());
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightDown, ());
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightClick, ());
+
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUp, (int button));
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUpoutside, (int button));
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonDown, (int button));
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonClick, (int button));
+
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseWheel, (int delta));
+
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyDown, (const KeyEvent &kev));
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyType, (const std::string &text));
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyRepeat, (const KeyEvent &kev));
+      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyUp, (const KeyEvent &kev));
+    FRAMES_FRAMEEVENT_DECLARE_END
+
   private:
     friend class Environment;
     

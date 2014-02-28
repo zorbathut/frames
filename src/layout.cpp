@@ -12,40 +12,40 @@
 #include <limits>
 
 namespace Frames {
-  FRAMES_FRAMEEVENT_DEFINE(Move, ());
-  FRAMES_FRAMEEVENT_DEFINE(Size, ());
+  FRAMES_FRAMEEVENT_DEFINE(Layout::Event::Move, ());
+  FRAMES_FRAMEEVENT_DEFINE(Layout::Event::Size, ());
 
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseOver, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMove, (const Point &pt));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMoveoutside, (const Point &pt));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseOut, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseOver, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseMove, (const Point &pt));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseMoveoutside, (const Point &pt));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseOut, ());
 
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftUp, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftUpoutside, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftDown, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseLeftClick, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseLeftUp, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseLeftUpoutside, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseLeftDown, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseLeftClick, ());
 
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleUp, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleUpoutside, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleDown, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseMiddleClick, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseMiddleUp, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseMiddleUpoutside, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseMiddleDown, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseMiddleClick, ());
 
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseRightUp, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseRightUpoutside, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseRightDown, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseRightClick, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseRightUp, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseRightUpoutside, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseRightDown, ());
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseRightClick, ());
 
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonUp, (int button));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonUpoutside, (int button));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonDown, (int button));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseButtonClick, (int button));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseButtonUp, (int button));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseButtonUpoutside, (int button));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseButtonDown, (int button));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseButtonClick, (int button));
 
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(MouseWheel, (int delta));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseWheel, (int delta));
 
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(KeyDown, (const KeyEvent &kev));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(KeyType, (const std::string &text));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(KeyRepeat, (const KeyEvent &kev));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(KeyUp, (const KeyEvent &kev));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::KeyDown, (const KeyEvent &kev));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::KeyType, (const std::string &text));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::KeyRepeat, (const KeyEvent &kev));
+  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::KeyUp, (const KeyEvent &kev));
   
   BOOST_STATIC_ASSERT(sizeof(EventId) == sizeof(intptr_t));
   BOOST_STATIC_ASSERT(sizeof(EventId) == sizeof(void *));

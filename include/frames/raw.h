@@ -6,9 +6,13 @@
 #include "frames/frame.h"
 
 namespace Frames {
-  FRAMES_FRAMEEVENT_DECLARE(Render, ());
-
   class Raw : public Frame {
+  public:
+    FRAMES_FRAMEEVENT_DECLARE_BEGIN
+      FRAMES_FRAMEEVENT_DECLARE(Render, ());
+    FRAMES_FRAMEEVENT_DECLARE_END
+
+  private:
     friend class Environment;
 
   public:

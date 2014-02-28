@@ -51,17 +51,22 @@ namespace Frames {
     typedef Delegate<typename detail::FunctionPrefix<EventHandle*, Parameters>::T> TypeDelegate;
   };
 
+  #define FRAMES_FRAMEEVENT_DECLARE_BEGIN \
+    class Event { \
+      Event();  /* intentionally left undefined */ \
+      ~Event(); \
+    public:
+
   #define FRAMES_FRAMEEVENT_DECLARE(eventname, paramlist) \
-    namespace Event { \
-      extern EventType<void paramlist> eventname; \
-    }
+    static EventType<void paramlist> eventname;
 
   #define FRAMES_FRAMEEVENT_DECLARE_BUBBLE(eventname, paramlist) \
-    namespace Event { \
-      extern EventType<void paramlist> eventname; \
-      extern EventType<void paramlist> eventname##Dive; \
-      extern EventType<void paramlist> eventname##Bubble; \
-    }
+    static EventType<void paramlist> eventname; \
+    static EventType<void paramlist> eventname##Dive; \
+    static EventType<void paramlist> eventname##Bubble;
+
+  #define FRAMES_FRAMEEVENT_DECLARE_END \
+    };
 }
 
 #endif
