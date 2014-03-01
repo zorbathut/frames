@@ -75,24 +75,24 @@ namespace Frames {
     }
 
     // clear event handlers
-    EventDetach(Event::MouseLeftDown, Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftDown));
-    EventDetach(Event::MouseLeftUp, Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
-    EventDetach(Event::MouseLeftUpoutside, Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
+    EventDetach(Event::MouseLeftDown, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftDown));
+    EventDetach(Event::MouseLeftUp, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftUp));
+    EventDetach(Event::MouseLeftUpoutside, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftUp));
 
-    EventDetach(Event::KeyDown, Delegate<void (EventHandle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
-    EventDetach(Event::KeyRepeat, Delegate<void (EventHandle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
-    EventDetach(Event::KeyType, Delegate<void (EventHandle *, const std::string &)>(this, &Text::EventInternal_KeyType));
+    EventDetach(Event::KeyDown, Delegate<void (Handle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+    EventDetach(Event::KeyRepeat, Delegate<void (Handle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+    EventDetach(Event::KeyType, Delegate<void (Handle *, const std::string &)>(this, &Text::EventInternal_KeyType));
 
     // if necessary, insert event handlers
     if (interactive == INTERACTIVE_SELECT || interactive == INTERACTIVE_CURSOR || interactive == INTERACTIVE_EDIT) {
-      EventAttach(Event::MouseLeftDown, Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftDown));
-      EventAttach(Event::MouseLeftUp, Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
-      EventAttach(Event::MouseLeftUpoutside, Delegate<void (EventHandle *)>(this, &Text::EventInternal_LeftUp));
+      EventAttach(Event::MouseLeftDown, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftDown));
+      EventAttach(Event::MouseLeftUp, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftUp));
+      EventAttach(Event::MouseLeftUpoutside, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftUp));
     
       // These are needed mostly for ctrl-C
-      EventAttach(Event::KeyDown, Delegate<void (EventHandle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
-      EventAttach(Event::KeyRepeat, Delegate<void (EventHandle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
-      EventAttach(Event::KeyType, Delegate<void (EventHandle *, const std::string &)>(this, &Text::EventInternal_KeyType));
+      EventAttach(Event::KeyDown, Delegate<void (Handle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+      EventAttach(Event::KeyRepeat, Delegate<void (Handle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+      EventAttach(Event::KeyType, Delegate<void (Handle *, const std::string &)>(this, &Text::EventInternal_KeyType));
     }
   }
 
@@ -214,12 +214,12 @@ namespace Frames {
     // The function will change the default width and height. Now the size has changed again! So we trigger this function again!
     // Now, luckily, all the stuff it does is highly cached - each lookup is essentially two bimap lookups and a little muckery with smart pointers. So this isn't a catastrophe. But still it's not really ideal.
     // Maybe we should cache the TextInfoPtr?
-    EventAttach(Event::Size, Delegate<void (EventHandle *handle)>(this, &Text::SizeChanged));
+    EventAttach(Event::Size, Delegate<void (Handle *handle)>(this, &Text::SizeChanged));
   };
 
   Text::~Text() { };
   
-  void Text::SizeChanged(EventHandle *handle) {
+  void Text::SizeChanged(Handle *handle) {
     UpdateLayout();
   }
 
@@ -332,20 +332,20 @@ namespace Frames {
     }
   }
 
-  void Text::EventInternal_LeftDown(EventHandle *e) {
+  void Text::EventInternal_LeftDown(Handle *e) {
     int pos = m_layout->GetCharacterFromCoordinate(GetEnvironment()->GetMouse() + m_scroll - Point(GetLeft(), GetTop()));
     SetCursor(pos);
     SetSelection();
 
-    EventAttach(Event::MouseMove, Delegate<void (EventHandle *, const Point &pt)>(this, &Text::EventInternal_Move));
-    EventAttach(Event::MouseMoveoutside, Delegate<void (EventHandle *, const Point &pt)>(this, &Text::EventInternal_Move));
+    EventAttach(Event::MouseMove, Delegate<void (Handle *, const Point &pt)>(this, &Text::EventInternal_Move));
+    EventAttach(Event::MouseMoveoutside, Delegate<void (Handle *, const Point &pt)>(this, &Text::EventInternal_Move));
 
     if (m_interactive >= INTERACTIVE_SELECT) {
       GetEnvironment()->SetFocus(this);
     }
   }
 
-  void Text::EventInternal_LeftUp(EventHandle *e) {
+  void Text::EventInternal_LeftUp(Handle *e) {
     int pos = m_layout->GetCharacterFromCoordinate(GetEnvironment()->GetMouse() + m_scroll - Point(GetLeft(), GetTop()));
 
     // We want to change the cursor position, but still preserve the selection, which takes a little effort
@@ -358,11 +358,11 @@ namespace Frames {
     }
     SetCursor(pos);
 
-    EventDetach(Event::MouseMove, Delegate<void (EventHandle *, const Point &pt)>(this, &Text::EventInternal_Move));
-    EventDetach(Event::MouseMoveoutside, Delegate<void (EventHandle *, const Point &pt)>(this, &Text::EventInternal_Move));
+    EventDetach(Event::MouseMove, Delegate<void (Handle *, const Point &pt)>(this, &Text::EventInternal_Move));
+    EventDetach(Event::MouseMoveoutside, Delegate<void (Handle *, const Point &pt)>(this, &Text::EventInternal_Move));
   }
 
-  void Text::EventInternal_Move(EventHandle *e, const Point &pt) {
+  void Text::EventInternal_Move(Handle *e, const Point &pt) {
     int pos = m_layout->GetCharacterFromCoordinate(pt + m_scroll - Point(GetLeft(), GetTop()));
 
     // We want to change the cursor position, but still preserve the selection, which takes a little effort
@@ -376,7 +376,7 @@ namespace Frames {
     SetCursor(pos);
   }
 
-  void Text::EventInternal_KeyType(EventHandle *e, const std::string &type) {
+  void Text::EventInternal_KeyType(Handle *e, const std::string &type) {
     // First, see if we even can have things enter
     if (m_interactive != INTERACTIVE_EDIT) {
       return;
@@ -392,7 +392,7 @@ namespace Frames {
     SetCursor(ncursor);
     SetSelection();
   }
-  void Text::EventInternal_KeyDownOrRepeat(EventHandle *e, const KeyEvent &ev) {
+  void Text::EventInternal_KeyDownOrRepeat(Handle *e, const KeyEvent &ev) {
     // Things supported for everything interactive
     if (ev.key == Key::A && ev.ctrl) {
       SetSelection(0, m_text.size());

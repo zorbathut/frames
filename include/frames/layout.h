@@ -33,42 +33,42 @@ namespace Frames {
 
   class Layout : detail::Noncopyable {
   public:
-    FRAMES_FRAMEEVENT_DECLARE_BEGIN
-      FRAMES_FRAMEEVENT_DECLARE(Move, ());
-      FRAMES_FRAMEEVENT_DECLARE(Size, ());
+    FRAMES_VERB_DECLARE_BEGIN
+      FRAMES_VERB_DECLARE(Move, ());
+      FRAMES_VERB_DECLARE(Size, ());
 
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseOver, ());
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMove, (const Point &pt));
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMoveoutside, (const Point &pt));
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseOut, ());
+      FRAMES_VERB_DECLARE_BUBBLE(MouseOver, ());
+      FRAMES_VERB_DECLARE_BUBBLE(MouseMove, (const Point &pt));
+      FRAMES_VERB_DECLARE_BUBBLE(MouseMoveoutside, (const Point &pt));
+      FRAMES_VERB_DECLARE_BUBBLE(MouseOut, ());
 
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUp, ());
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftUpoutside, ());
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftDown, ());
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseLeftClick, ());
+      FRAMES_VERB_DECLARE_BUBBLE(MouseLeftUp, ());
+      FRAMES_VERB_DECLARE_BUBBLE(MouseLeftUpoutside, ());
+      FRAMES_VERB_DECLARE_BUBBLE(MouseLeftDown, ());
+      FRAMES_VERB_DECLARE_BUBBLE(MouseLeftClick, ());
 
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUp, ());
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleUpoutside, ());
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleDown, ());
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseMiddleClick, ());
+      FRAMES_VERB_DECLARE_BUBBLE(MouseMiddleUp, ());
+      FRAMES_VERB_DECLARE_BUBBLE(MouseMiddleUpoutside, ());
+      FRAMES_VERB_DECLARE_BUBBLE(MouseMiddleDown, ());
+      FRAMES_VERB_DECLARE_BUBBLE(MouseMiddleClick, ());
 
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUp, ());
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightUpoutside, ());
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightDown, ());
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseRightClick, ());
+      FRAMES_VERB_DECLARE_BUBBLE(MouseRightUp, ());
+      FRAMES_VERB_DECLARE_BUBBLE(MouseRightUpoutside, ());
+      FRAMES_VERB_DECLARE_BUBBLE(MouseRightDown, ());
+      FRAMES_VERB_DECLARE_BUBBLE(MouseRightClick, ());
 
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUp, (int button));
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonUpoutside, (int button));
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonDown, (int button));
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseButtonClick, (int button));
+      FRAMES_VERB_DECLARE_BUBBLE(MouseButtonUp, (int button));
+      FRAMES_VERB_DECLARE_BUBBLE(MouseButtonUpoutside, (int button));
+      FRAMES_VERB_DECLARE_BUBBLE(MouseButtonDown, (int button));
+      FRAMES_VERB_DECLARE_BUBBLE(MouseButtonClick, (int button));
 
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(MouseWheel, (int delta));
+      FRAMES_VERB_DECLARE_BUBBLE(MouseWheel, (int delta));
 
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyDown, (const KeyEvent &kev));
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyType, (const std::string &text));
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyRepeat, (const KeyEvent &kev));
-      FRAMES_FRAMEEVENT_DECLARE_BUBBLE(KeyUp, (const KeyEvent &kev));
-    FRAMES_FRAMEEVENT_DECLARE_END
+      FRAMES_VERB_DECLARE_BUBBLE(KeyDown, (const KeyEvent &kev));
+      FRAMES_VERB_DECLARE_BUBBLE(KeyType, (const std::string &text));
+      FRAMES_VERB_DECLARE_BUBBLE(KeyRepeat, (const KeyEvent &kev));
+      FRAMES_VERB_DECLARE_BUBBLE(KeyUp, (const KeyEvent &kev));
+    FRAMES_VERB_DECLARE_END
 
   private:
     friend class Environment;
@@ -111,10 +111,10 @@ namespace Frames {
         bool operator()(const FECallback &lhs, const FECallback &rhs) const;
       };
       
-      void Call(EventHandle *eh) const {
+      void Call(Handle *eh) const {
         if (m_type == TYPE_NATIVE) {
           // TODO: This is *definitely* slower than necessary. Fix this!
-          Delegate<void (EventHandle *)> dg;
+          Delegate<void (Handle *)> dg;
           memcpy(&dg, c.nativeDelegate, sizeof(dg));
           dg(eh);
         } else if (m_type == TYPE_LUA) {
@@ -123,10 +123,10 @@ namespace Frames {
         }
       }
       
-      template <typename P1> void Call(EventHandle *eh, P1 p1) const {
+      template <typename P1> void Call(Handle *eh, P1 p1) const {
         if (m_type == TYPE_NATIVE) {
           // TODO: This is *definitely* slower than necessary. Fix this!
-          Delegate<void (EventHandle *, P1)> dg;
+          Delegate<void (Handle *, P1)> dg;
           memcpy(&dg, c.nativeDelegate, sizeof(dg));
           dg(eh, p1);
         } else if (m_type == TYPE_LUA) {
@@ -179,17 +179,17 @@ namespace Frames {
       mutable int m_lock;
       
       // Lua infrastructure
-      int luaF_prepare(EventHandle *eh) const;  // prepares the function pointer and early parameters
+      int luaF_prepare(Handle *eh) const;  // prepares the function pointer and early parameters
       void luaF_call(int stackfront) const;
     };
     
     typedef std::multiset<FECallback, FECallback::Sorter> EventMultiset;
-    typedef std::map<const EventBase *, std::multiset<FECallback, FECallback::Sorter> > EventLookup;
+    typedef std::map<const detail::VerbBase *, std::multiset<FECallback, FECallback::Sorter> > EventLookup;
     
     class FEIterator {
     public:
       FEIterator();
-      FEIterator(Layout *target, const EventBase *event);
+      FEIterator(Layout *target, const detail::VerbBase *event);
       FEIterator(const FEIterator &itr);
       void operator=(const FEIterator &itr);
       ~FEIterator();
@@ -203,7 +203,7 @@ namespace Frames {
       void IndexNext();
       
       Layout *LayoutGet();
-      const EventBase *EventGet();
+      const detail::VerbBase *EventGet();
       
       enum State { STATE_DIVE, STATE_MAIN, STATE_BUBBLE, STATE_COMPLETE };
       State m_state;
@@ -212,7 +212,7 @@ namespace Frames {
       int m_diveIndex;
       
       Layout *m_target;
-      const EventBase *m_event;
+      const detail::VerbBase *m_event;
       
       EventMultiset::iterator m_current;
       EventMultiset::iterator m_last;
@@ -252,11 +252,11 @@ namespace Frames {
     const ChildrenList &GetChildren() { return m_children; }
     
     // Events
-    template <typename Parameters> void EventAttach(const EventType<Parameters> &event, typename EventType<Parameters>::TypeDelegate handler, float priority = 0.0);
-    template <typename Parameters> void EventDetach(const EventType<Parameters> &event, typename EventType<Parameters>::TypeDelegate handler, float priority = detail::Undefined);
+    template <typename Parameters> void EventAttach(const Verb<Parameters> &event, typename Verb<Parameters>::TypeDelegate handler, float priority = 0.0);
+    template <typename Parameters> void EventDetach(const Verb<Parameters> &event, typename Verb<Parameters>::TypeDelegate handler, float priority = detail::Undefined);
     
-    inline void EventTrigger(const EventType<void ()> &event);
-    template <typename P1> void EventTrigger(const EventType<void (P1)> &event, typename detail::MakeConstRef<P1>::T p1);
+    inline void EventTrigger(const Verb<void ()> &event);
+    template <typename P1> void EventTrigger(const Verb<void (P1)> &event, typename detail::MakeConstRef<P1>::T p1);
 
     Environment *GetEnvironment() const { return m_env; }
 
@@ -330,10 +330,10 @@ namespace Frames {
     virtual void RenderElementPost(detail::Renderer *renderer) const { };
 
     // make sure you call these down if you override them
-    bool EventHookedIs(const EventBase &event) const;
+    bool EventHookedIs(const detail::VerbBase &event) const;
         
-    virtual void EventAttached(const EventBase *id);
-    virtual void EventDetached(const EventBase *id);
+    virtual void EventAttached(const detail::VerbBase *id);
+    virtual void EventDetached(const detail::VerbBase *id);
     
     // Lua
     virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, GetStaticType()); } // see Layout::luaF_Register for what yours should look like

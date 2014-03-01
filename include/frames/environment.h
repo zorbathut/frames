@@ -17,7 +17,6 @@
 struct lua_State;
 
 namespace Frames {
-  class EventBase;
   class Frame;
   class Layout;
 
@@ -25,6 +24,7 @@ namespace Frames {
     class Renderer;
     class TextManager;
     class TextureManager;
+    class VerbBase;
   }
 
   /// Coordinator class for almost all Frames state. Every Frames-using program will contain at least one Environment.
@@ -94,7 +94,7 @@ namespace Frames {
     // Lua
     void LuaRegister(lua_State *L, bool hasErrorHandle = false); // if error handle is true, top element of the stack will be popped
     template<typename T> void LuaRegisterFrame(lua_State *L); // needed only if you create third-party frames - Frame will automatically register its internal frame types
-    void LuaRegisterEvent(lua_State *L, EventBase *feb);
+    void LuaRegisterEvent(lua_State *L, detail::VerbBase *feb);
     void LuaUnregister(lua_State *L);
 
     // ==== Internal only, do not call below this line (TODO make more private)

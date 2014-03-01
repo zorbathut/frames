@@ -12,40 +12,40 @@
 #include <limits>
 
 namespace Frames {
-  FRAMES_FRAMEEVENT_DEFINE(Layout::Event::Move, ());
-  FRAMES_FRAMEEVENT_DEFINE(Layout::Event::Size, ());
+  FRAMES_VERB_DEFINE(Layout::Event::Move, ());
+  FRAMES_VERB_DEFINE(Layout::Event::Size, ());
 
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseOver, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseMove, (const Point &pt));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseMoveoutside, (const Point &pt));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseOut, ());
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseOver, ());
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseMove, (const Point &pt));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseMoveoutside, (const Point &pt));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseOut, ());
 
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseLeftUp, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseLeftUpoutside, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseLeftDown, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseLeftClick, ());
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseLeftUp, ());
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseLeftUpoutside, ());
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseLeftDown, ());
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseLeftClick, ());
 
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseMiddleUp, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseMiddleUpoutside, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseMiddleDown, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseMiddleClick, ());
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseMiddleUp, ());
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseMiddleUpoutside, ());
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseMiddleDown, ());
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseMiddleClick, ());
 
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseRightUp, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseRightUpoutside, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseRightDown, ());
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseRightClick, ());
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseRightUp, ());
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseRightUpoutside, ());
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseRightDown, ());
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseRightClick, ());
 
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseButtonUp, (int button));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseButtonUpoutside, (int button));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseButtonDown, (int button));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseButtonClick, (int button));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseButtonUp, (int button));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseButtonUpoutside, (int button));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseButtonDown, (int button));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseButtonClick, (int button));
 
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::MouseWheel, (int delta));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseWheel, (int delta));
 
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::KeyDown, (const KeyEvent &kev));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::KeyType, (const std::string &text));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::KeyRepeat, (const KeyEvent &kev));
-  FRAMES_FRAMEEVENT_DEFINE_BUBBLE(Layout::Event::KeyUp, (const KeyEvent &kev));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyDown, (const KeyEvent &kev));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyType, (const std::string &text));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyRepeat, (const KeyEvent &kev));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyUp, (const KeyEvent &kev));
   
   BOOST_STATIC_ASSERT(sizeof(EventId) == sizeof(intptr_t));
   BOOST_STATIC_ASSERT(sizeof(EventId) == sizeof(void *));
@@ -809,8 +809,8 @@ namespace Frames {
     Obliterate_Extract();
   }
 
-  bool Layout::EventHookedIs(const EventBase &event) const {
-    std::map<const EventBase *, std::multiset<FECallback, FECallback::Sorter> >::const_iterator itr = m_events.find(&event);
+  bool Layout::EventHookedIs(const detail::VerbBase &event) const {
+    std::map<const detail::VerbBase *, std::multiset<FECallback, FECallback::Sorter> >::const_iterator itr = m_events.find(&event);
     if (itr == m_events.end()) {
       // no handles, we're good
       return false;
@@ -828,7 +828,7 @@ namespace Frames {
     return false;
   }
 
-  void Layout::EventAttached(const EventBase *event) {
+  void Layout::EventAttached(const detail::VerbBase *event) {
     if (!m_acceptInput) {
       m_acceptInput =
         EventHookedIs(Event::MouseLeftClick) || EventHookedIs(Event::MouseLeftUp) || EventHookedIs(Event::MouseLeftDown) ||
@@ -839,7 +839,7 @@ namespace Frames {
     }
   }
 
-  void Layout::EventDetached(const EventBase *event) {
+  void Layout::EventDetached(const detail::VerbBase *event) {
     if (m_acceptInput) {
       m_acceptInput =
         EventHookedIs(Event::MouseLeftClick) || EventHookedIs(Event::MouseLeftUp) || EventHookedIs(Event::MouseLeftDown) ||
@@ -1069,7 +1069,7 @@ namespace Frames {
     }
   }
   
-  int Layout::FECallback::luaF_prepare(EventHandle *eh) const {
+  int Layout::FECallback::luaF_prepare(Handle *eh) const {
     lua_State *L = c.lua.L;
     
     int ctop = lua_gettop(L);
@@ -1102,7 +1102,7 @@ namespace Frames {
       
   Layout::FEIterator::FEIterator() : m_state(STATE_COMPLETE), m_diveIndex(0), m_target(0), m_event(0) { };
 
-  Layout::FEIterator::FEIterator(Layout *target, const EventBase *event) : m_state(STATE_DIVE), m_diveIndex(0), m_target(target), m_event(event) { // set to STATE_DIVE so that NextIndex() does the right thing
+  Layout::FEIterator::FEIterator(Layout *target, const detail::VerbBase *event) : m_state(STATE_DIVE), m_diveIndex(0), m_target(target), m_event(event) { // set to STATE_DIVE so that NextIndex() does the right thing
     target->Obliterate_Lock();
     
     if (event->GetDive()) {
@@ -1207,7 +1207,7 @@ namespace Frames {
         layout = m_dives[m_diveIndex];
       }
       
-      const EventBase *event = m_event;
+      const detail::VerbBase *event = m_event;
       if (m_state == STATE_DIVE) {
         event = event->GetDive();
       } else if (m_state == STATE_BUBBLE) {
@@ -1243,7 +1243,7 @@ namespace Frames {
       }
       
       Layout *layout = LayoutGet();
-      const EventBase *event = EventGet();
+      const detail::VerbBase *event = EventGet();
       
       // TODO: can probably be optimized by not doing a ton of lookups
       if (layout->m_events.count(event)) {
@@ -1263,7 +1263,7 @@ namespace Frames {
     }
   }
   
-  const EventBase *Layout::FEIterator::EventGet() {
+  const detail::VerbBase *Layout::FEIterator::EventGet() {
     if (m_state == STATE_DIVE) {
       return m_event->GetDive();
     } else if (m_state == STATE_BUBBLE) {
@@ -1452,10 +1452,10 @@ namespace Frames {
   /*static*/ int Layout::luaF_EventAttach(lua_State *L) {
     luaF_checkparams(L, 3, 4);
     
-    // Stack: layout eventhandle handler (priority)
+    // Stack: layout Handle handler (priority)
     
     Layout *self = luaF_checkframe<Layout>(L, 1);
-    const EventBase *event = luaF_checkevent(L, 2);
+    const detail::VerbBase *event = luaF_checkevent(L, 2);
     float priority = (float)luaL_optnumber(L, 4, 0.f);
     
     int handler = LUA_NOREF;
@@ -1520,10 +1520,10 @@ namespace Frames {
   /*static*/ int Layout::luaF_EventDetach(lua_State *L) {
     luaF_checkparams(L, 3, 4);
     
-    // Stack: layout eventhandle handler (priority)
+    // Stack: layout Handle handler (priority)
     
     Layout *self = luaF_checkframe<Layout>(L, 1);
-    const EventBase *event = luaF_checkevent(L, 2);
+    const detail::VerbBase *event = luaF_checkevent(L, 2);
     float priority = (float)luaL_optnumber(L, 4, detail::Undefined);
     
     int handler = LUA_NOREF;

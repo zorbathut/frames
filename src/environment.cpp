@@ -347,11 +347,11 @@ namespace Frames {
     }
     lua_pop(L, 1);
 
-    // insert the EventHandler metatable - this used to require Frames_ehl to be inserted first! (doesn't now because it doesn't do anything)
+    // insert the Handler metatable - this used to require Frames_ehl to be inserted first! (doesn't now because it doesn't do anything)
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehmt");
     if (lua_isnil(L, -1)) {
       // TODO: Actually create the EHMT
-      //EventHandle::INTERNAL_l_CreateMetatable(L);
+      //Handle::INTERNAL_l_CreateMetatable(L);
       lua_newtable(L);  // make this go away
       lua_setfield(L, LUA_REGISTRYINDEX, "Frames_ehmt");
     }
@@ -417,7 +417,7 @@ namespace Frames {
     // ==================
     //  FRAME EVENT HANDLES
     
-    // insert the EventHandler lookup table - table to lightuserdata pointer
+    // insert the Handler lookup table - table to lightuserdata pointer
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_ehl");
     if (lua_isnil(L, -1)) {
       lua_newtable(L);
@@ -522,7 +522,7 @@ namespace Frames {
     LuaRegisterEvent(L, &Raw::Event::Render);
   }
   
-  void Environment::LuaRegisterEvent(lua_State *L, EventBase *feb) {
+  void Environment::LuaRegisterEvent(lua_State *L, detail::VerbBase *feb) {
     LuaStackChecker lsc(L, this);
     
     lua_getfield(L, LUA_GLOBALSINDEX, "Frames");

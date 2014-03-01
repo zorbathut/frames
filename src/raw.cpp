@@ -7,7 +7,7 @@
 #include "frames/os_gl.h"
 
 namespace Frames {
-  FRAMES_FRAMEEVENT_DEFINE(Raw::Event::Render, ());
+  FRAMES_VERB_DEFINE(Raw::Event::Render, ());
   
   Raw *Raw::CreateBare(Layout *parent) {
     return new Raw(parent);

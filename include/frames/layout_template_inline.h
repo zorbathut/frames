@@ -8,13 +8,13 @@
 #endif
 
 namespace Frames {
-  template <typename Parameters> void Layout::EventAttach(const EventType<Parameters> &event, typename EventType<Parameters>::TypeDelegate handler, float priority /*= 0.0*/) {
+  template <typename Parameters> void Layout::EventAttach(const Verb<Parameters> &event, typename Verb<Parameters>::TypeDelegate handler, float priority /*= 0.0*/) {
     m_events[&event].insert(FECallback::CreateNative(handler, priority));
     
     EventAttached(&event);
   }
     
-  template <typename Parameters> void Layout::EventDetach(const EventType<Parameters> &event, typename EventType<Parameters>::TypeDelegate handler, float priority /*= detail::Undefined*/) {
+  template <typename Parameters> void Layout::EventDetach(const Verb<Parameters> &event, typename Verb<Parameters>::TypeDelegate handler, float priority /*= detail::Undefined*/) {
     if (!m_events.count(&event)) {
       return;
     }
@@ -31,24 +31,24 @@ namespace Frames {
     }
   }
     
-  inline void Layout::EventTrigger(const EventType<void ()> &event) { // static is just so I can keep it in this file
+  inline void Layout::EventTrigger(const Verb<void ()> &event) { // static is just so I can keep it in this file
     if (!m_events.count(&event)) {
       return;
     }
     
-    EventHandle eh(this);
+    Handle eh(this);
     
     for (FEIterator itr = FEIterator(this, &event); !itr.Complete(); itr.Next()) {
       itr.Get().Call(&eh);
     }
   }
   
-  template <typename P1> void Layout::EventTrigger(const EventType<void (P1)> &event, typename detail::MakeConstRef<P1>::T p1) {
+  template <typename P1> void Layout::EventTrigger(const Verb<void (P1)> &event, typename detail::MakeConstRef<P1>::T p1) {
     if (!m_events.count(&event)) {
       return;
     }
     
-    EventHandle eh(this);
+    Handle eh(this);
         
     for (FEIterator itr = FEIterator(this, &event); !itr.Complete(); itr.Next()) {
       itr.Get().Call<P1>(&eh, p1);

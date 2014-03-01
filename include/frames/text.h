@@ -63,7 +63,7 @@ namespace Frames {
     Text(Layout *parent);
     virtual ~Text();
   
-    void SizeChanged(EventHandle *handle);
+    void SizeChanged(Handle *handle);
     void UpdateLayout();
     void ScrollToCursor();
 
@@ -87,13 +87,13 @@ namespace Frames {
     int m_cursor;
 
     // Event handlers for mouse events
-    void EventInternal_LeftDown(EventHandle *e);
-    void EventInternal_LeftUp(EventHandle *e);
-    void EventInternal_Move(EventHandle *e, const Point &pt);
+    void EventInternal_LeftDown(Handle *e);
+    void EventInternal_LeftUp(Handle *e);
+    void EventInternal_Move(Handle *e, const Point &pt);
 
     // Event handlers for key events
-    void EventInternal_KeyType(EventHandle *e, const std::string &type);
-    void EventInternal_KeyDownOrRepeat(EventHandle *e, const KeyEvent &ev);
+    void EventInternal_KeyType(Handle *e, const std::string &type);
+    void EventInternal_KeyDownOrRepeat(Handle *e, const KeyEvent &ev);
 
     // Lua bindings
     static int luaF_SetText(lua_State *L);
