@@ -15,7 +15,7 @@
 
 namespace Frames {
 
-  static const Key::Key c_keyIndex[] = {
+  static const Key::Type c_keyIndex[] = {
     Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0x00 - 0x07
     Key::Backspace, Key::Tab, Key::INVALID, Key::INVALID, Key::INVALID, Key::Return, Key::INVALID, Key::INVALID, // 0x08 - 0x0f
     Key::INVALID, Key::INVALID, Key::INVALID, Key::Pause, Key::LockCaps, Key::INVALID, Key::INVALID, Key::INVALID, // 0x10 - 0x17
@@ -67,7 +67,7 @@ namespace Frames {
             wParam = MapVirtualKey((lParam & 0x00ff0000) >> 16, MAPVK_VSC_TO_VK_EX);
           }
           InputGatherStandard(window_handle, event);
-          Key::Key key = c_keyIndex[wParam];
+          Key::Type key = c_keyIndex[wParam];
           if (lParam & (1 << 30)) {
             event->SetModeKeyRepeat(key);
           } else {

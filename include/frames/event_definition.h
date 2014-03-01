@@ -5,13 +5,11 @@
 
 // not that this helps the defines, but whatever
 namespace Frames {
-  #define FRAMES_VERB_DEFINE(eventname, paramlist) \
+  #define FRAMES_Verb_DEFINE(eventname, paramlist) \
     Verb<void paramlist> eventname(#eventname);
 
-  #define FRAMES_VERB_DEFINE_BUBBLE(eventname, paramlist) \
-    Verb<void paramlist> eventname##Dive(#eventname "Dive"); \
-    Verb<void paramlist> eventname##Bubble(#eventname "Bubble"); \
-    Verb<void paramlist> eventname(#eventname, &eventname##Dive, &eventname##Bubble);
+  #define FRAMES_Verb_DEFINE_BUBBLE(eventname, paramlist) \
+    VerbPackage<void paramlist> eventname(#eventname, #eventname "Dive", #eventname "Bubble");
 }
 
 #endif

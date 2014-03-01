@@ -2,7 +2,7 @@
 #include "frames/input.h"
 
 namespace Frames {
-  const char *Key::StringFromKey(Key key) {
+  const char *Key::StringFromKey(Type key) {
     switch (key) {
       case INVALID: return "(invalid)"; // TODO: global assert
       case A: return "a";

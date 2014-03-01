@@ -8,9 +8,9 @@
 namespace Frames {
   class Raw : public Frame {
   public:
-    FRAMES_VERB_DECLARE_BEGIN
-      FRAMES_VERB_DECLARE(Render, ());
-    FRAMES_VERB_DECLARE_END
+    FRAMES_Verb_DECLARE_BEGIN
+      FRAMES_Verb_DECLARE(Render, ());
+    FRAMES_Verb_DECLARE_END
 
   private:
     friend class Environment;

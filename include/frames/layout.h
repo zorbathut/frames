@@ -33,42 +33,42 @@ namespace Frames {
 
   class Layout : detail::Noncopyable {
   public:
-    FRAMES_VERB_DECLARE_BEGIN
-      FRAMES_VERB_DECLARE(Move, ());
-      FRAMES_VERB_DECLARE(Size, ());
+    FRAMES_Verb_DECLARE_BEGIN
+      FRAMES_Verb_DECLARE(Move, ());
+      FRAMES_Verb_DECLARE(Size, ());
 
-      FRAMES_VERB_DECLARE_BUBBLE(MouseOver, ());
-      FRAMES_VERB_DECLARE_BUBBLE(MouseMove, (const Point &pt));
-      FRAMES_VERB_DECLARE_BUBBLE(MouseMoveoutside, (const Point &pt));
-      FRAMES_VERB_DECLARE_BUBBLE(MouseOut, ());
+      FRAMES_Verb_DECLARE_BUBBLE(MouseOver, ());
+      FRAMES_Verb_DECLARE_BUBBLE(MouseMove, (const Point &pt));
+      FRAMES_Verb_DECLARE_BUBBLE(MouseMoveoutside, (const Point &pt));
+      FRAMES_Verb_DECLARE_BUBBLE(MouseOut, ());
 
-      FRAMES_VERB_DECLARE_BUBBLE(MouseLeftUp, ());
-      FRAMES_VERB_DECLARE_BUBBLE(MouseLeftUpoutside, ());
-      FRAMES_VERB_DECLARE_BUBBLE(MouseLeftDown, ());
-      FRAMES_VERB_DECLARE_BUBBLE(MouseLeftClick, ());
+      FRAMES_Verb_DECLARE_BUBBLE(MouseLeftUp, ());
+      FRAMES_Verb_DECLARE_BUBBLE(MouseLeftUpoutside, ());
+      FRAMES_Verb_DECLARE_BUBBLE(MouseLeftDown, ());
+      FRAMES_Verb_DECLARE_BUBBLE(MouseLeftClick, ());
 
-      FRAMES_VERB_DECLARE_BUBBLE(MouseMiddleUp, ());
-      FRAMES_VERB_DECLARE_BUBBLE(MouseMiddleUpoutside, ());
-      FRAMES_VERB_DECLARE_BUBBLE(MouseMiddleDown, ());
-      FRAMES_VERB_DECLARE_BUBBLE(MouseMiddleClick, ());
+      FRAMES_Verb_DECLARE_BUBBLE(MouseMiddleUp, ());
+      FRAMES_Verb_DECLARE_BUBBLE(MouseMiddleUpoutside, ());
+      FRAMES_Verb_DECLARE_BUBBLE(MouseMiddleDown, ());
+      FRAMES_Verb_DECLARE_BUBBLE(MouseMiddleClick, ());
 
-      FRAMES_VERB_DECLARE_BUBBLE(MouseRightUp, ());
-      FRAMES_VERB_DECLARE_BUBBLE(MouseRightUpoutside, ());
-      FRAMES_VERB_DECLARE_BUBBLE(MouseRightDown, ());
-      FRAMES_VERB_DECLARE_BUBBLE(MouseRightClick, ());
+      FRAMES_Verb_DECLARE_BUBBLE(MouseRightUp, ());
+      FRAMES_Verb_DECLARE_BUBBLE(MouseRightUpoutside, ());
+      FRAMES_Verb_DECLARE_BUBBLE(MouseRightDown, ());
+      FRAMES_Verb_DECLARE_BUBBLE(MouseRightClick, ());
 
-      FRAMES_VERB_DECLARE_BUBBLE(MouseButtonUp, (int button));
-      FRAMES_VERB_DECLARE_BUBBLE(MouseButtonUpoutside, (int button));
-      FRAMES_VERB_DECLARE_BUBBLE(MouseButtonDown, (int button));
-      FRAMES_VERB_DECLARE_BUBBLE(MouseButtonClick, (int button));
+      FRAMES_Verb_DECLARE_BUBBLE(MouseButtonUp, (int button));
+      FRAMES_Verb_DECLARE_BUBBLE(MouseButtonUpoutside, (int button));
+      FRAMES_Verb_DECLARE_BUBBLE(MouseButtonDown, (int button));
+      FRAMES_Verb_DECLARE_BUBBLE(MouseButtonClick, (int button));
 
-      FRAMES_VERB_DECLARE_BUBBLE(MouseWheel, (int delta));
+      FRAMES_Verb_DECLARE_BUBBLE(MouseWheel, (int delta));
 
-      FRAMES_VERB_DECLARE_BUBBLE(KeyDown, (const Key &kev));
-      FRAMES_VERB_DECLARE_BUBBLE(KeyType, (const std::string &text));
-      FRAMES_VERB_DECLARE_BUBBLE(KeyRepeat, (const Key &kev));
-      FRAMES_VERB_DECLARE_BUBBLE(KeyUp, (const Key &kev));
-    FRAMES_VERB_DECLARE_END
+      FRAMES_Verb_DECLARE_BUBBLE(KeyDown, (const Key &kev));
+      FRAMES_Verb_DECLARE_BUBBLE(KeyType, (const std::string &text));
+      FRAMES_Verb_DECLARE_BUBBLE(KeyRepeat, (const Key &kev));
+      FRAMES_Verb_DECLARE_BUBBLE(KeyUp, (const Key &kev));
+    FRAMES_Verb_DECLARE_END
 
   private:
     friend class Environment;

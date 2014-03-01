@@ -57,7 +57,7 @@ namespace Frames {
     m_root->SetHeight((float)y);
   }
 
-  bool Environment::Input(const Input &ie) {
+  bool Environment::Input(const ::Frames::Input &ie) {
     if (ie.GetMetaKnown()) {
       m_lastEvent.shift = ie.GetMetaShift();
       m_lastEvent.ctrl = ie.GetMetaCtrl();

@@ -43,31 +43,42 @@ namespace Frames {
     };
   }
   
+  template <typename Parameters> class VerbPackage;
+
   // Exists just to add templates
   template <typename Parameters> class Verb : public detail::VerbBase {
+  private:
+    friend class VerbPackage<Parameters>;
+    Verb(const char *name, const Verb<Parameters> *dive, const Verb<Parameters> *bubble) : detail::VerbBase(name, dive, bubble) { };
+
   public:
     Verb(const char *name) : detail::VerbBase(name) { };
-    Verb(const char *name, const Verb<Parameters> *dive, const Verb<Parameters> *bubble) : detail::VerbBase(name, dive, bubble) { };
     
     typedef typename detail::FunctionPrefix<Handle*, Parameters>::T TypeHandler;
     typedef Delegate<typename detail::FunctionPrefix<Handle*, Parameters>::T> TypeDelegate;
   };
 
-  #define FRAMES_VERB_DECLARE_BEGIN \
+  template <typename Parameters> class VerbPackage : public Verb<Parameters> {
+  public:
+    VerbPackage(const char *name, const char *nameDive, const char *nameBubble) : Verb(name, &Dive, &Bubble), Dive(nameDive), Bubble(nameBubble) { };
+
+    Verb<Parameters> Dive;
+    Verb<Parameters> Bubble;
+  };
+
+  #define FRAMES_Verb_DECLARE_BEGIN \
     class Event { \
       Event();  /* intentionally left undefined */ \
       ~Event(); \
     public:
 
-  #define FRAMES_VERB_DECLARE(eventname, paramlist) \
+  #define FRAMES_Verb_DECLARE(eventname, paramlist) \
     /** \brief placeholder */ static Verb<void paramlist> eventname;
 
-  #define FRAMES_VERB_DECLARE_BUBBLE(eventname, paramlist) \
-    /** \brief placeholder */ static Verb<void paramlist> eventname; \
-    /** \brief Dive verb for \ref eventname "eventname". */ static Verb<void paramlist> eventname##Dive; \
-    /** \brief Bubble verb for \ref eventname "eventname". */ static Verb<void paramlist> eventname##Bubble;
+  #define FRAMES_Verb_DECLARE_BUBBLE(eventname, paramlist) \
+    /** \brief placeholder */ static VerbPackage<void paramlist> eventname;
 
-  #define FRAMES_VERB_DECLARE_END \
+  #define FRAMES_Verb_DECLARE_END \
     };
 }
 
