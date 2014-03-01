@@ -109,70 +109,72 @@ namespace Frames {
     return rv;
   }
 
-  struct JpegErrorManager {
-    struct jpeg_error_mgr pub; // built-in functionality
+  namespace detail {
+    struct JpegErrorManager {
+      struct jpeg_error_mgr pub; // built-in functionality
 
-    Environment *env;
-    jmp_buf setjmp_buffer;	// return to us
-  };
-  void JpegError(j_common_ptr info) {
-    JpegErrorManager *jerr = (JpegErrorManager*)info->err;
+      Environment *env;
+      jmp_buf setjmp_buffer;	// return to us
+    };
+    void JpegError(j_common_ptr info) {
+      JpegErrorManager *jerr = (JpegErrorManager*)info->err;
 
-    longjmp(jerr->setjmp_buffer, 1);
-  }
-  void JpegMessage(j_common_ptr info) {
-    JpegErrorManager *jerr = (JpegErrorManager*)info->err;
-
-    char buffer[JMSG_LENGTH_MAX];
-
-    /* Create the message */
-    (*info->err->format_message)(info, buffer);
-
-    jerr->env->LogDebug(buffer);
-  }
-
-  const int JPEG_BUFFER_SIZE = 4096;
-  struct JpegBufferManager {
-    struct jpeg_source_mgr pub;
-
-    Stream *stream;
-    JOCTET buffer[JPEG_BUFFER_SIZE]; // start of buffer
-  };
-  void JpegInit(j_decompress_ptr info) {
-    // no-op, we're already initted
-  }
-  boolean JpegFill(j_decompress_ptr info) {
-    JpegBufferManager *jerr = (JpegBufferManager*)info->src;
-
-    jerr->pub.next_input_byte = jerr->buffer;
-    jerr->pub.bytes_in_buffer = jerr->stream->Read(jerr->buffer, JPEG_BUFFER_SIZE);
-
-    return TRUE;
-  }
-  void JpegSkip(j_decompress_ptr cinfo, long num_bytes) {
-    struct jpeg_source_mgr * src = cinfo->src;
-
-    /* Just a dumb implementation for now.  Could use fseek() except
-     * it doesn't work on pipes.  Not clear that being smart is worth
-     * any trouble anyway --- large skips are infrequent.
-     */
-    if (num_bytes > 0) {
-      while (num_bytes > (long) src->bytes_in_buffer) {
-        num_bytes -= (long) src->bytes_in_buffer;
-        (void) (*src->fill_input_buffer) (cinfo);
-        /* note we assume that fill_input_buffer will never return FALSE,
-         * so suspension need not be handled.
-         */
-      }
-      src->next_input_byte += (size_t) num_bytes;
-      src->bytes_in_buffer -= (size_t) num_bytes;
+      longjmp(jerr->setjmp_buffer, 1);
     }
-  }
-  void JpegTerminate(j_decompress_ptr info) {
-    // no-op, we don't terminate
-  }
+    void JpegMessage(j_common_ptr info) {
+      JpegErrorManager *jerr = (JpegErrorManager*)info->err;
 
-  void JpegMemorySource(j_decompress_ptr info, const unsigned char *buffer, int buffer_size) {}
+      char buffer[JMSG_LENGTH_MAX];
+
+      /* Create the message */
+      (*info->err->format_message)(info, buffer);
+
+      jerr->env->LogDebug(buffer);
+    }
+
+    const int JPEG_BUFFER_SIZE = 4096;
+    struct JpegBufferManager {
+      struct jpeg_source_mgr pub;
+
+      Stream *stream;
+      JOCTET buffer[JPEG_BUFFER_SIZE]; // start of buffer
+    };
+    void JpegInit(j_decompress_ptr info) {
+      // no-op, we're already initted
+    }
+    boolean JpegFill(j_decompress_ptr info) {
+      JpegBufferManager *jerr = (JpegBufferManager*)info->src;
+
+      jerr->pub.next_input_byte = jerr->buffer;
+      jerr->pub.bytes_in_buffer = jerr->stream->Read(jerr->buffer, JPEG_BUFFER_SIZE);
+
+      return TRUE;
+    }
+    void JpegSkip(j_decompress_ptr cinfo, long num_bytes) {
+      struct jpeg_source_mgr * src = cinfo->src;
+
+      /* Just a dumb implementation for now.  Could use fseek() except
+       * it doesn't work on pipes.  Not clear that being smart is worth
+       * any trouble anyway --- large skips are infrequent.
+       */
+      if (num_bytes > 0) {
+        while (num_bytes > (long) src->bytes_in_buffer) {
+          num_bytes -= (long) src->bytes_in_buffer;
+          (void) (*src->fill_input_buffer) (cinfo);
+          /* note we assume that fill_input_buffer will never return FALSE,
+           * so suspension need not be handled.
+           */
+        }
+        src->next_input_byte += (size_t) num_bytes;
+        src->bytes_in_buffer -= (size_t) num_bytes;
+      }
+    }
+    void JpegTerminate(j_decompress_ptr info) {
+      // no-op, we don't terminate
+    }
+
+    void JpegMemorySource(j_decompress_ptr info, const unsigned char *buffer, int buffer_size) {}
+  }
 
   TextureConfig Loader::JPG::Load(Environment *env, Stream *stream) {
     TextureConfig rv; // rv created here to deallocate if we hit the setjmp
@@ -180,10 +182,10 @@ namespace Frames {
 
     // Set up the error handler. If jpeglib runs into an error at any future point, it will
     // execute the block after setjmp(), which will otherwise remain unexecuted.
-    JpegErrorManager jerr;
+    detail::JpegErrorManager jerr;
     info.err = jpeg_std_error(&jerr.pub);
-    jerr.pub.error_exit = JpegError;
-    jerr.pub.output_message = JpegMessage;
+    jerr.pub.error_exit = detail::JpegError;
+    jerr.pub.output_message = detail::JpegMessage;
     jerr.env = env;
     if (setjmp(jerr.setjmp_buffer)) {
       jpeg_destroy_decompress(&info);
@@ -194,13 +196,13 @@ namespace Frames {
     jpeg_create_decompress(&info);
 
     // Set up the buffer manager.
-    JpegBufferManager buffer;
+    detail::JpegBufferManager buffer;
     info.src = &buffer.pub;
-    buffer.pub.init_source = JpegInit;
-    buffer.pub.fill_input_buffer = JpegFill;
-    buffer.pub.skip_input_data = JpegSkip;
+    buffer.pub.init_source = detail::JpegInit;
+    buffer.pub.fill_input_buffer = detail::JpegFill;
+    buffer.pub.skip_input_data = detail::JpegSkip;
     buffer.pub.resync_to_restart = jpeg_resync_to_restart;
-    buffer.pub.term_source = JpegTerminate;
+    buffer.pub.term_source = detail::JpegTerminate;
     buffer.pub.next_input_byte = 0;
     buffer.pub.bytes_in_buffer = 0;
     buffer.stream = stream;
