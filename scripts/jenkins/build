@@ -1,3 +1,7 @@
+set -e
+set -nounset
+set -o pipefail
+
 unzip generate.zip
 rm *.zip
 scripts/build.lua $target

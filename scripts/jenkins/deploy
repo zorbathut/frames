@@ -1,3 +1,7 @@
+set -e
+set -nounset
+set -o pipefail
+
 for f in `/usr/bin/find | grep zip`
 do
   unzip $f

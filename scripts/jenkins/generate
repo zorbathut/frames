@@ -1,3 +1,7 @@
+set -e
+set -nounset
+set -o pipefail
+
 scripts/generate.lua
 scripts/generateDocs.lua
 rm -f *.zip version
