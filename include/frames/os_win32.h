@@ -10,7 +10,7 @@
 #include <windows.h>
 
 namespace Frames {
-  bool InputGatherWin32(InputEvent *event, HWND window_handle, UINT message, WPARAM wParam, LPARAM lParam); // returns "true" if something useful has been gathered, false otherwise
+  bool InputGatherWin32(Input *event, HWND window_handle, UINT message, WPARAM wParam, LPARAM lParam); // returns "true" if something useful has been gathered, false otherwise
 }
 
 #endif

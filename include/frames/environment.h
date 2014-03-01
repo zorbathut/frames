@@ -49,25 +49,49 @@ namespace Frames {
     Immediately destroys all child \ref Frame "Frames", cleans up all stored resources and event handles, cleans up any hooks in scripting languages, and so forth.*/
     ~Environment();
 
-    // ==== Update to the state of the world, incoming events
-    // Bool return values indicate that the event was consumed, if applicable
-    bool Input(const InputEvent &ie); // Usable as a single-package class, intended for the OS helper functions or for people who want a single data pathway
+    // ==== Updates to the state of the environment
     
-    // Per-piece update functions
+    // Mouse update functions
+
+    /// Informs the environment that the mouse pointer has moved.
+    /**
+    Takes coordinates in pixelspace. Mouse movement happens immediately and may trigger Layout::Event::MouseOver/\ref Layout::Event::MouseOut "MouseOut"/\ref Layout::Event::MouseMove "MouseMove"/\ref Layout::Event::MouseMoveoutside "MouseMoveoutside" events. */
     void MouseMove(int x, int y);
+
+    /// Informs the environment that a mouse button has been pressed.
+    /**
+    Button state changes happen immediately and may trigger \ref Layout::Event::MouseLeftDown "Layout::Event::Mouse*Down" events.
+    All integers are valid and will trigger the appropriate \ref Layout::Event::MouseButtonDown "Layout::Event::MouseButton*" event.
+    However, 0 will also trigger \ref Layout::Event::MouseLeftDown "Layout::Event::MouseLeft*" events, 1 will also trigger \ref Layout::Event::MouseRightDown "Layout::Event::MouseRight*" events, and 2 will also trigger \ref Layout::Event::MouseMiddleDown "Layout::Event::MouseMiddle*" events. */
     bool MouseDown(int button);
+
+    /// Informs the environment that a mouse button has been released.
+    /**
+    Button state changes happen immediately and may trigger \ref Layout::Event::MouseLeftUp "Layout::Event::Mouse*Up", \ref Layout::Event::MouseLeftUpoutside "Layout::Event::Mouse*Upoutside", and \ref Layout::Event::MouseLeftClick "Layout::Event::Mouse*Click" events.
+    All integers are valid and will trigger the appropriate \ref Layout::Event::MouseButtonUp "Layout::Event::MouseButton*" event.
+    However, 0 will also trigger \ref Layout::Event::MouseLeftUp "Layout::Event::MouseLeft*" events, 1 will also trigger \ref Layout::Event::MouseRightUp "Layout::Event::MouseRight*" events, and 2 will also trigger \ref Layout::Event::MouseMiddleUp "Layout::Event::MouseMiddle*" events. */
     bool MouseUp(int button);
+
+    /// Informs the environment that the mouse wheel has been rotated.
+    /**
+    Wheel state changes happen immediately and may trigger Layout::Event::MouseWheel events. */
     bool MouseWheel(int delta);
 
-    void MouseClear();  // mouse no longer in the scene at all
+    /// Informs the environment that the mouse no longer exists in the scene.
+    /**
+    Mouse movement happens immediately and may trigger Layout::Event::MouseOut events. */
+    void MouseClear();
 
-    bool KeyDown(const KeyEvent &key);
+    bool KeyDown(const Key &key);
     bool KeyType(const std::string &type);
-    bool KeyRepeat(const KeyEvent &key);
-    bool KeyUp(const KeyEvent &key);
+    bool KeyRepeat(const Key &key);
+    bool KeyUp(const Key &key);
 
     // "Hey, the resolution has been changed/the window has been resized"
-    void ResizeRoot(int x, int y);  
+    void ResizeRoot(int x, int y);
+
+    // beep boop more docs
+    bool Input(const Input &ie); // Usable as a single-package class, intended for the OS helper functions or for people who want a single data pathway
     
     // ==== State as of the current event that's being handled
     const Point &GetMouse() const { return m_mouse; }
@@ -165,7 +189,7 @@ namespace Frames {
     Layout *m_focus;
     std::map<int, Layout *> m_buttonDown;
     Point m_mouse;
-    KeyEvent m_lastEvent; // stores the shift/ctrl/alt states
+    Key m_lastEvent; // stores the shift/ctrl/alt states
 
     // Lua
     class LuaStackChecker {

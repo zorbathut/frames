@@ -1,23 +1,13 @@
 
 === BUILDING
 
-* Documentation
+* Document all Verbs
+* Finish documenting Environment
+* Tweak Input?
 
-In source:
-/// Brief description.
-/** Detailed description.
-
-*/
-
-After member:
-int var; ///< Brief description after the member
-
-C++: * Need inline docs in header, need detailed docs
-Lua: * Need computer-readable docs
-
-We're probably better off doing computer sanity checks than doing computer replacment - I don't want generated source files!
-
-
+* Improve streaming API
+* Improve configuration API
+* Improve texture loading API
 
 * Simple examples
   * SDL/GL

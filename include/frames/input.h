@@ -6,8 +6,10 @@
 #include <string>
 
 namespace Frames {
-  namespace Key {
-    enum Key {
+
+  // Used for internal events
+  struct Key {
+    enum Type {
       INVALID,
       // Letters
       A,
@@ -134,27 +136,24 @@ namespace Frames {
       Tab,
     };
 
-    const char *StringFromKey(Key key);
-  }
+    Key() : key(INVALID), shift(false), ctrl(false), alt(false) { };
 
-  // Used for internal events
-  struct KeyEvent {
-    KeyEvent() : key(Key::INVALID), shift(false), ctrl(false), alt(false) { };
-
-    Key::Key key;
+    Type key;
     bool shift;
     bool ctrl;
     bool alt;
+
+    static const char *StringFromKey(Type key);
   };
   
   // Used to send full input events into Frames
-  struct InputEvent {
-    InputEvent() : mode(MODE_NULL), mouseKnown(false), metaKnown(false) { }
+  struct Input {
+    Input() : mode(MODE_NULL), mouseKnown(false), metaKnown(false) { }
     
     // this block is mutually exclusive
-    void SetModeKeyDown(const Key::Key &kev) { mode = MODE_KEYDOWN; key = kev; }
-    void SetModeKeyUp(const Key::Key &kev) { mode = MODE_KEYUP; key = kev; }
-    void SetModeKeyRepeat(const Key::Key &kev) { mode = MODE_KEYREPEAT; key = kev; }
+    void SetModeKeyDown(const Key::Type &kev) { mode = MODE_KEYDOWN; key = kev; }
+    void SetModeKeyUp(const Key::Type &kev) { mode = MODE_KEYUP; key = kev; }
+    void SetModeKeyRepeat(const Key::Type &kev) { mode = MODE_KEYREPEAT; key = kev; }
     void SetModeMouseDown(int button) { mode = MODE_MOUSEDOWN; mouseAmount = button; }
     void SetModeMouseUp(int button) { mode = MODE_MOUSEUP; mouseAmount = button; }
     void SetModeMouseWheel(int delta) { mode = MODE_MOUSEWHEEL; mouseAmount = delta; }
@@ -174,7 +173,7 @@ namespace Frames {
     enum Mode {MODE_NULL, MODE_KEYDOWN, MODE_KEYUP, MODE_KEYREPEAT, MODE_MOUSEDOWN, MODE_MOUSEUP, MODE_MOUSEWHEEL, MODE_TYPE};
     Mode GetMode() const { return mode; }
     
-    const Key::Key &GetKey() const { return key; }
+    const Key::Type &GetKey() const { return key; }
     const std::string &GetType() const { return type; }
     int GetMouseButton() const { return mouseAmount; }
     int GetMouseWheelDelta() const { return mouseAmount; }
@@ -192,7 +191,7 @@ namespace Frames {
   private:
     Mode mode;
     
-    Key::Key key;
+    Key::Type key;
     std::string type;
     
     int mouseAmount;

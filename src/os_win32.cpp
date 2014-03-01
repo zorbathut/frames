@@ -50,7 +50,7 @@ namespace Frames {
     Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0xf8 - 0xff
   };
   
-  static void InputGatherStandard(HWND window, InputEvent *event) {
+  static void InputGatherStandard(HWND window, Input *event) {
     POINT mouse;
     GetCursorPos(&mouse);
     ScreenToClient(window, &mouse);
@@ -58,7 +58,7 @@ namespace Frames {
     event->SetMeta((GetKeyState(VK_SHIFT) & 0x80) != 0, (GetKeyState(VK_CONTROL) & 0x80) != 0, (GetKeyState(VK_MENU) & 0x80) != 0);
   }
   
-  bool InputGatherWin32(InputEvent *event, HWND window_handle, UINT message, WPARAM wParam, LPARAM lParam) {
+  bool InputGatherWin32(Input *event, HWND window_handle, UINT message, WPARAM wParam, LPARAM lParam) {
     switch (message) {
       case WM_KEYDOWN:
       case WM_SYSKEYDOWN:

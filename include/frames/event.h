@@ -60,12 +60,12 @@ namespace Frames {
     public:
 
   #define FRAMES_VERB_DECLARE(eventname, paramlist) \
-    static Verb<void paramlist> eventname;
+    /** \brief placeholder */ static Verb<void paramlist> eventname;
 
   #define FRAMES_VERB_DECLARE_BUBBLE(eventname, paramlist) \
-    static Verb<void paramlist> eventname; \
-    static Verb<void paramlist> eventname##Dive; \
-    static Verb<void paramlist> eventname##Bubble;
+    /** \brief placeholder */ static Verb<void paramlist> eventname; \
+    /** \brief Dive verb for \ref eventname "eventname". */ static Verb<void paramlist> eventname##Dive; \
+    /** \brief Bubble verb for \ref eventname "eventname". */ static Verb<void paramlist> eventname##Bubble;
 
   #define FRAMES_VERB_DECLARE_END \
     };

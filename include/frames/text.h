@@ -93,7 +93,7 @@ namespace Frames {
 
     // Event handlers for key events
     void EventInternal_KeyType(Handle *e, const std::string &type);
-    void EventInternal_KeyDownOrRepeat(Handle *e, const KeyEvent &ev);
+    void EventInternal_KeyDownOrRepeat(Handle *e, const Key &ev);
 
     // Lua bindings
     static int luaF_SetText(lua_State *L);

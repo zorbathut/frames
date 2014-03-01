@@ -57,7 +57,7 @@ namespace Frames {
     m_root->SetHeight((float)y);
   }
 
-  bool Environment::Input(const InputEvent &ie) {
+  bool Environment::Input(const Input &ie) {
     if (ie.GetMetaKnown()) {
       m_lastEvent.shift = ie.GetMetaShift();
       m_lastEvent.ctrl = ie.GetMetaCtrl();
@@ -74,22 +74,22 @@ namespace Frames {
     
     bool consumed = true;
     
-    if (ie.GetMode() == InputEvent::MODE_KEYDOWN) {
+    if (ie.GetMode() == Input::MODE_KEYDOWN) {
       m_lastEvent.key = ie.GetKey();
       consumed = KeyDown(m_lastEvent);
-    } else if (ie.GetMode() == InputEvent::MODE_KEYUP) {
+    } else if (ie.GetMode() == Input::MODE_KEYUP) {
       m_lastEvent.key = ie.GetKey();
       consumed = KeyUp(m_lastEvent);
-    } else if (ie.GetMode() == InputEvent::MODE_KEYREPEAT) {
+    } else if (ie.GetMode() == Input::MODE_KEYREPEAT) {
       m_lastEvent.key = ie.GetKey();
       consumed = KeyRepeat(m_lastEvent);
-    } else if (ie.GetMode() == InputEvent::MODE_MOUSEDOWN) {
+    } else if (ie.GetMode() == Input::MODE_MOUSEDOWN) {
       consumed = MouseDown(ie.GetMouseButton());
-    } else if (ie.GetMode() == InputEvent::MODE_MOUSEUP) {
+    } else if (ie.GetMode() == Input::MODE_MOUSEUP) {
       consumed = MouseUp(ie.GetMouseButton());
-    } else if (ie.GetMode() == InputEvent::MODE_MOUSEWHEEL) {
+    } else if (ie.GetMode() == Input::MODE_MOUSEWHEEL) {
       LogError("No support for mousewheel yet");
-    } else if (ie.GetMode() == InputEvent::MODE_TYPE) {
+    } else if (ie.GetMode() == Input::MODE_TYPE) {
       consumed = KeyType(ie.GetType());
     }
     
@@ -211,7 +211,7 @@ namespace Frames {
 
   //void Environment::MouseClear();  // mouse no longer in the scene at all*/
 
-  bool Environment::KeyDown(const KeyEvent &key) {
+  bool Environment::KeyDown(const Key &key) {
     m_lastEvent = key;
     if (m_focus) {
       m_focus->EventTrigger(Layout::Event::KeyDown, key);
@@ -228,7 +228,7 @@ namespace Frames {
     return false;
   }
 
-  bool Environment::KeyRepeat(const KeyEvent &key) {
+  bool Environment::KeyRepeat(const Key &key) {
     m_lastEvent = key;
     if (m_focus) {
       m_focus->EventTrigger(Layout::Event::KeyRepeat, key);
@@ -237,7 +237,7 @@ namespace Frames {
     return false;
   }
 
-  bool Environment::KeyUp(const KeyEvent &key) {
+  bool Environment::KeyUp(const Key &key) {
     m_lastEvent = key;
     if (m_focus) {
       m_focus->EventTrigger(Layout::Event::KeyUp, key);

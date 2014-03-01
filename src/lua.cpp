@@ -18,7 +18,7 @@ namespace Frames {
     lua_pushnumber(L, pt.x);
     lua_pushnumber(L, pt.y);
   }
-  void luaF_push(lua_State *L, const KeyEvent &kev) {
+  void luaF_push(lua_State *L, const Key &kev) {
     lua_pushstring(L, Key::StringFromKey(kev.key));
     lua_newtable(L);
     if (kev.shift) {

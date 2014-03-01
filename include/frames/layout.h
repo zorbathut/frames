@@ -64,10 +64,10 @@ namespace Frames {
 
       FRAMES_VERB_DECLARE_BUBBLE(MouseWheel, (int delta));
 
-      FRAMES_VERB_DECLARE_BUBBLE(KeyDown, (const KeyEvent &kev));
+      FRAMES_VERB_DECLARE_BUBBLE(KeyDown, (const Key &kev));
       FRAMES_VERB_DECLARE_BUBBLE(KeyType, (const std::string &text));
-      FRAMES_VERB_DECLARE_BUBBLE(KeyRepeat, (const KeyEvent &kev));
-      FRAMES_VERB_DECLARE_BUBBLE(KeyUp, (const KeyEvent &kev));
+      FRAMES_VERB_DECLARE_BUBBLE(KeyRepeat, (const Key &kev));
+      FRAMES_VERB_DECLARE_BUBBLE(KeyUp, (const Key &kev));
     FRAMES_VERB_DECLARE_END
 
   private:

@@ -79,8 +79,8 @@ namespace Frames {
     EventDetach(Event::MouseLeftUp, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftUp));
     EventDetach(Event::MouseLeftUpoutside, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftUp));
 
-    EventDetach(Event::KeyDown, Delegate<void (Handle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
-    EventDetach(Event::KeyRepeat, Delegate<void (Handle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+    EventDetach(Event::KeyDown, Delegate<void (Handle *, const Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+    EventDetach(Event::KeyRepeat, Delegate<void (Handle *, const Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
     EventDetach(Event::KeyType, Delegate<void (Handle *, const std::string &)>(this, &Text::EventInternal_KeyType));
 
     // if necessary, insert event handlers
@@ -90,8 +90,8 @@ namespace Frames {
       EventAttach(Event::MouseLeftUpoutside, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftUp));
     
       // These are needed mostly for ctrl-C
-      EventAttach(Event::KeyDown, Delegate<void (Handle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
-      EventAttach(Event::KeyRepeat, Delegate<void (Handle *, const KeyEvent &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+      EventAttach(Event::KeyDown, Delegate<void (Handle *, const Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+      EventAttach(Event::KeyRepeat, Delegate<void (Handle *, const Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
       EventAttach(Event::KeyType, Delegate<void (Handle *, const std::string &)>(this, &Text::EventInternal_KeyType));
     }
   }
@@ -392,7 +392,7 @@ namespace Frames {
     SetCursor(ncursor);
     SetSelection();
   }
-  void Text::EventInternal_KeyDownOrRepeat(Handle *e, const KeyEvent &ev) {
+  void Text::EventInternal_KeyDownOrRepeat(Handle *e, const Key &ev) {
     // Things supported for everything interactive
     if (ev.key == Key::A && ev.ctrl) {
       SetSelection(0, m_text.size());

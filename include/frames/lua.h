@@ -9,7 +9,7 @@
 
 namespace Frames {
   struct Point;
-  struct KeyEvent;
+  struct Key;
 
   namespace detail {
     class VerbBase;
@@ -20,7 +20,7 @@ namespace Frames {
   void luaF_push(lua_State *L, double x);
   void luaF_push(lua_State *L, const std::string &x);
   void luaF_push(lua_State *L, const Point &pt);
-  void luaF_push(lua_State *L, const KeyEvent &kev);
+  void luaF_push(lua_State *L, const Key &kev);
   
   template <typename T> T *luaF_checkframe_fromregistry(lua_State *L, int index, int registry) {
     luaL_checktype(L, index, LUA_TTABLE);

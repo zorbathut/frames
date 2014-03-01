@@ -42,10 +42,10 @@ namespace Frames {
 
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseWheel, (int delta));
 
-  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyDown, (const KeyEvent &kev));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyDown, (const Key &kev));
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyType, (const std::string &text));
-  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyRepeat, (const KeyEvent &kev));
-  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyUp, (const KeyEvent &kev));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyRepeat, (const Key &kev));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyUp, (const Key &kev));
   
   BOOST_STATIC_ASSERT(sizeof(EventId) == sizeof(intptr_t));
   BOOST_STATIC_ASSERT(sizeof(EventId) == sizeof(void *));
