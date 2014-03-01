@@ -60,7 +60,7 @@ namespace Frames {
 
   template <typename Parameters> class VerbPackage : public Verb<Parameters> {
   public:
-    VerbPackage(const char *name, const char *nameDive, const char *nameBubble) : Verb(name, &Dive, &Bubble), Dive(nameDive), Bubble(nameBubble) { };
+    VerbPackage(const char *name, const char *nameDive, const char *nameBubble) : Verb<Parameters>(name, &Dive, &Bubble), Dive(nameDive), Bubble(nameBubble) { };
 
     Verb<Parameters> Dive;
     Verb<Parameters> Bubble;
