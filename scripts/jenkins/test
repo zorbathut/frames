@@ -1,5 +1,5 @@
 set -e
-set -nounset
+set -o nounset
 set -o pipefail
 
 unzip testdata.zip || exit 1
