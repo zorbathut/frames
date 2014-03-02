@@ -1,6 +1,6 @@
 set -e
 set -o nounset
-set -o pipefail
+#set -o pipefail   # breaks "yes", I think
 
 for f in `/usr/bin/find | grep zip`
 do
