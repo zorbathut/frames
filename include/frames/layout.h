@@ -33,42 +33,86 @@ namespace Frames {
 
   class Layout : detail::Noncopyable {
   public:
-    FRAMES_Verb_DECLARE_BEGIN
-      FRAMES_Verb_DECLARE(Move, ());
-      FRAMES_Verb_DECLARE(Size, ());
+    FRAMES_VERB_DECLARE_BEGIN
+      /// Signals when a frame's edges move.
+      /** WARNING: Unlike most events, Move may not signal immediately after a state change. Move is guaranteed to fire before Environment::Prepare() returns. */
+      FRAMES_VERB_DECLARE(Move, ());
 
-      FRAMES_Verb_DECLARE_BUBBLE(MouseOver, ());
-      FRAMES_Verb_DECLARE_BUBBLE(MouseMove, (const Point &pt));
-      FRAMES_Verb_DECLARE_BUBBLE(MouseMoveoutside, (const Point &pt));
-      FRAMES_Verb_DECLARE_BUBBLE(MouseOut, ());
+      /// Signals when a frame's size changes.
+      /** Since size cannot change without the frame's edges moving, a Size signal is always associated with a Move signal.
+      
+      WARNING: Unlike most events, Size may not signal immediately after a state change. Size is guaranteed to fire before Environment::Prepare() returns. */
+      FRAMES_VERB_DECLARE(Size, ());
 
-      FRAMES_Verb_DECLARE_BUBBLE(MouseLeftUp, ());
-      FRAMES_Verb_DECLARE_BUBBLE(MouseLeftUpoutside, ());
-      FRAMES_Verb_DECLARE_BUBBLE(MouseLeftDown, ());
-      FRAMES_Verb_DECLARE_BUBBLE(MouseLeftClick, ());
+      /// Signals when the mouse enters a frame.
+      /** If a mouse moves from one frame to another, MouseOver is guaranteed to fire after MouseOut. */
+      FRAMES_VERB_DECLARE_BUBBLE(MouseOver, ());
 
-      FRAMES_Verb_DECLARE_BUBBLE(MouseMiddleUp, ());
-      FRAMES_Verb_DECLARE_BUBBLE(MouseMiddleUpoutside, ());
-      FRAMES_Verb_DECLARE_BUBBLE(MouseMiddleDown, ());
-      FRAMES_Verb_DECLARE_BUBBLE(MouseMiddleClick, ());
+      /// Signals when the mouse moves while inside a frame.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseMove, (const Point &pt));
 
-      FRAMES_Verb_DECLARE_BUBBLE(MouseRightUp, ());
-      FRAMES_Verb_DECLARE_BUBBLE(MouseRightUpoutside, ());
-      FRAMES_Verb_DECLARE_BUBBLE(MouseRightDown, ());
-      FRAMES_Verb_DECLARE_BUBBLE(MouseRightClick, ());
+      /// Signals when the mouse moves while outside a frame, after pressing a button inside that frame and keeping it held.
+      /** This functionality is intended for drag-and-drop applications. */
+      FRAMES_VERB_DECLARE_BUBBLE(MouseMoveoutside, (const Point &pt));
 
-      FRAMES_Verb_DECLARE_BUBBLE(MouseButtonUp, (int button));
-      FRAMES_Verb_DECLARE_BUBBLE(MouseButtonUpoutside, (int button));
-      FRAMES_Verb_DECLARE_BUBBLE(MouseButtonDown, (int button));
-      FRAMES_Verb_DECLARE_BUBBLE(MouseButtonClick, (int button));
+      /// Signals when the mouse leaves a frame.
+      /** If a mouse moves from one frame to another, MouseOver is guaranteed to fire after MouseOut. */
+      FRAMES_VERB_DECLARE_BUBBLE(MouseOut, ());
 
-      FRAMES_Verb_DECLARE_BUBBLE(MouseWheel, (int delta));
+      /// Signals immediately after MouseButtonUp(0). See that verb's documentation for details.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseLeftUp, ());
+      /// Signals immediately after MouseButtonUpoutside(0). See that verb's documentation for details.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseLeftUpoutside, ());
+      /// Signals immediately after MouseButtonDown(0). See that verb's documentation for details.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseLeftDown, ());
+      /// Signals immediately after MouseButtonClick(0). See that verb's documentation for details.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseLeftClick, ());
 
-      FRAMES_Verb_DECLARE_BUBBLE(KeyDown, (const Key &kev));
-      FRAMES_Verb_DECLARE_BUBBLE(KeyType, (const std::string &text));
-      FRAMES_Verb_DECLARE_BUBBLE(KeyRepeat, (const Key &kev));
-      FRAMES_Verb_DECLARE_BUBBLE(KeyUp, (const Key &kev));
-    FRAMES_Verb_DECLARE_END
+      /// Signals immediately after MouseButtonUp(1). See that verb's documentation for details.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseMiddleUp, ());
+      /// Signals immediately after MouseButtonUpoutside(1). See that verb's documentation for details.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseMiddleUpoutside, ());
+      /// Signals immediately after MouseButtonDown(1). See that verb's documentation for details.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseMiddleDown, ());
+      /// Signals immediately after MouseButtonClick(1). See that verb's documentation for details.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseMiddleClick, ());
+
+      /// Signals immediately after MouseButtonUp(2). See that verb's documentation for details.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseRightUp, ());
+      /// Signals immediately after MouseButtonUpoutside(2). See that verb's documentation for details.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseRightUpoutside, ());
+      /// Signals immediately after MouseButtonDown(2). See that verb's documentation for details.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseRightDown, ());
+      /// Signals immediately after MouseButtonClick(2). See that verb's documentation for details.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseRightClick, ());
+
+      /// Signals that a mouse button has been released while inside a frame.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseButtonUp, (int button));
+      /// Signals that a mouse button has been released while outside a frame, after pressing that button inside that frame and then moving the mouse out of the frame.
+      /** This functionality is intended for drag-and-drop applications. */
+      FRAMES_VERB_DECLARE_BUBBLE(MouseButtonUpoutside, (int button));
+      /// Signals that a mouse button has been pressed while inside a frame.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseButtonDown, (int button));
+      /// Signals that a mouse button has been clicked while inside a frame.
+      /** This is currently defined as "press, then release, while inside the same frame", and is provided as a commonly-needed convenience verb. */
+      FRAMES_VERB_DECLARE_BUBBLE(MouseButtonClick, (int button));
+
+      /// Signals that the mouse wheel has been moved while inside a frame.
+      FRAMES_VERB_DECLARE_BUBBLE(MouseWheel, (int delta));
+
+      /// Signals that a key has been pressed while a frame has the key focus.
+      /** This verb is recommended for non-text applications, as it reports the key ID and not the unicode text that was entered. */
+      FRAMES_VERB_DECLARE_BUBBLE(KeyDown, (const Key &kev));
+      /// Signals that text has been typed while a frame has the key focus.
+      /** This verb is recommended for text applications, as it provides a Unicode string potentially containing multiple entered characters.*/
+      FRAMES_VERB_DECLARE_BUBBLE(KeyType, (const std::string &text));
+      /// Signals that a keypress has repeated while a frame has the key focus.
+      /** This verb is recommended for non-text applications, as it reports the key ID and not the unicode text that was entered. */
+      FRAMES_VERB_DECLARE_BUBBLE(KeyRepeat, (const Key &kev));
+      /// Signals that a key has been released while a frame has the key focus.
+      /** This verb is recommended for non-text applications, as it reports the key ID and not the unicode text that was entered. */
+      FRAMES_VERB_DECLARE_BUBBLE(KeyUp, (const Key &kev));
+    FRAMES_VERB_DECLARE_END
 
   private:
     friend class Environment;

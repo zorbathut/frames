@@ -66,19 +66,19 @@ namespace Frames {
     Verb<Parameters> Bubble;
   };
 
-  #define FRAMES_Verb_DECLARE_BEGIN \
+  #define FRAMES_VERB_DECLARE_BEGIN \
     class Event { \
       Event();  /* intentionally left undefined */ \
       ~Event(); \
     public:
 
-  #define FRAMES_Verb_DECLARE(eventname, paramlist) \
-    /** \brief placeholder */ static Verb<void paramlist> eventname;
+  #define FRAMES_VERB_DECLARE(eventname, paramlist) \
+    static Verb<void paramlist> eventname;
 
-  #define FRAMES_Verb_DECLARE_BUBBLE(eventname, paramlist) \
-    /** \brief placeholder */ static VerbPackage<void paramlist> eventname;
+  #define FRAMES_VERB_DECLARE_BUBBLE(eventname, paramlist) \
+    static VerbPackage<void paramlist> eventname;
 
-  #define FRAMES_Verb_DECLARE_END \
+  #define FRAMES_VERB_DECLARE_END \
     };
 }
 

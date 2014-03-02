@@ -8,9 +8,11 @@
 namespace Frames {
   class Raw : public Frame {
   public:
-    FRAMES_Verb_DECLARE_BEGIN
-      FRAMES_Verb_DECLARE(Render, ());
-    FRAMES_Verb_DECLARE_END
+    FRAMES_VERB_DECLARE_BEGIN
+      /// Signals that this Raw frame is ready to render.
+      /** WARNING: Unlike most verbs, while this verb is being signaled, it is undefined behavior to call *any* other function provided by Frames and associated with this Environment.*/
+      FRAMES_VERB_DECLARE(Render, ());
+    FRAMES_VERB_DECLARE_END
 
   private:
     friend class Environment;
