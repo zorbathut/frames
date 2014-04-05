@@ -14,8 +14,7 @@ namespace Frames {
   public:
     enum InteractivityMode { INTERACTIVE_NONE, INTERACTIVE_SELECT, INTERACTIVE_CURSOR, INTERACTIVE_EDIT };
 
-    static Text *CreateBare(Layout *parent);
-    static Text *CreateTagged_imp(const char *filename, int line, Layout *parent);
+    static Text *Create(const std::string &name, Layout *parent);
 
     static const char *GetStaticType();
     virtual const char *GetType() const { return GetStaticType(); }
@@ -60,7 +59,7 @@ namespace Frames {
     static void luaF_RegisterFunctions(lua_State *L);
 
   private:
-    Text(Layout *parent);
+    Text(const std::string &name, Layout *parent);
     virtual ~Text();
   
     void SizeChanged(Handle *handle);

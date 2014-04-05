@@ -13,27 +13,28 @@ namespace Frames {
   // Template creation function. Not really part of environment, and there are difficulties with taking the address of member function templates on many semi-modern compilers
   // So we're just going it this way
   template <typename T> int luaF_frameCreate(lua_State *L) {
-    if (lua_gettop(L) != 1) luaL_error(L, "Wrong number of parameters to Frame creation function (%d, should be %d)", lua_gettop(L), 1);
-    luaL_checktype(L, 1, LUA_TTABLE);
+    if (lua_gettop(L) != 2) luaL_error(L, "Wrong number of parameters to Frame creation function (%d, should be %d)", lua_gettop(L), 2);
+    luaL_checktype(L, 1, LUA_TSTRING);
+    luaL_checktype(L, 2, LUA_TTABLE);
 
     // We need to do a lookup to ensure this is actually a layout
-    lua_rawget(L, lua_upvalueindex(1));
+    lua_rawget(L, lua_upvalueindex(2));
 
-    if (lua_isnil(L, 1)) luaL_error(L, "Parameter to frame creation function does not seem to be a valid layout");
-    if (!lua_isuserdata(L, 1)) luaL_error(L, "Internal error, item is not a userdata");
+    if (lua_isnil(L, 2)) luaL_error(L, "Parameter to frame creation function does not seem to be a valid layout");
+    if (!lua_isuserdata(L, 2)) luaL_error(L, "Internal error, item is not a userdata");
 
-    Layout *layout = (Layout *)lua_touserdata(L, 1);
+    Layout *layout = (Layout *)lua_touserdata(L, 2);
 
     // now we have a valid layout
 
-    T *item = T::CreateBare(layout);
+    T *item = T::Create(lua_tostring(L, 1), layout);
 
-    // Optional tagging with file/line
-    {
+    // Optional tagging with file/line - we should add this back once there's debug name functionality
+    /*{
       std::string id;
 
       lua_Debug ar;
-      if (lua_getstack(L, 1, &ar)) {
+      if (lua_getstack(L, 2, &ar)) {
         lua_getinfo(L, "Snl", &ar);
         id += detail::Format("%s:", ar.short_src);
         if (ar.currentline > 0)
@@ -54,7 +55,7 @@ namespace Frames {
       }
 
       item->SetNameDynamic(id);
-    }
+    }*/
 
     // Ahoy!
 

@@ -9,14 +9,8 @@
 #include "frames/os_gl.h"
 
 namespace Frames {
-  Texture *Texture::CreateBare(Layout *parent) {
-    return new Texture(parent);
-  }
-  Texture *Texture::CreateTagged_imp(const char *filename, int line, Layout *parent) {
-    Texture *rv = new Texture(parent);
-    rv->SetNameStatic(filename);
-    rv->SetNameId(line);
-    return rv;
+  Texture *Texture::Create(const std::string &name, Layout *parent) {
+    return new Texture(name, parent);
   }
 
   /*static*/ const char *Texture::GetStaticType() {
@@ -80,8 +74,8 @@ namespace Frames {
     }
   }
 
-  Texture::Texture(Layout *parent) :
-      Frame(parent),
+  Texture::Texture(const std::string &name, Layout *parent) :
+      Frame(name, parent),
       m_tint(1, 1, 1, 1)
   { };
   Texture::~Texture() { };

@@ -861,8 +861,7 @@ namespace Frames {
 
     m_counter = 0;
 
-    m_root = new Layout(0, this);
-    m_root->SetNameStatic("Root");
+    m_root = new Layout("Root", 0, this);
 
     m_renderer = new detail::Renderer(this);
     m_text_manager = new detail::TextManager(this);
@@ -906,19 +905,19 @@ namespace Frames {
     for (int i = m_layoutStack.size(); i > 0; --i) {
       LayoutStack_Entry entry = m_layoutStack[i - 1];
       if (detail::IsUndefined(entry.point))
-        LogError(detail::Format("  %s: size", entry.layout->GetNameFull().c_str()));
+        LogError(detail::Format("  %s: size", entry.layout->DebugGetName().c_str()));
       else if (entry.point == 0 && entry.axis == X)
-        LogError(detail::Format("  %s: LEFT", entry.layout->GetNameFull().c_str()));
+        LogError(detail::Format("  %s: LEFT", entry.layout->DebugGetName().c_str()));
       else if (entry.point == 0 && entry.axis == Y)
-        LogError(detail::Format("  %s: TOP", entry.layout->GetNameFull().c_str()));
+        LogError(detail::Format("  %s: TOP", entry.layout->DebugGetName().c_str()));
       else if (entry.point == 0.5)
-        LogError(detail::Format("  %s: CENTER", entry.layout->GetNameFull().c_str()));
+        LogError(detail::Format("  %s: CENTER", entry.layout->DebugGetName().c_str()));
       else if (entry.point == 1 && entry.axis == X)
-        LogError(detail::Format("  %s: RIGHT", entry.layout->GetNameFull().c_str()));
+        LogError(detail::Format("  %s: RIGHT", entry.layout->DebugGetName().c_str()));
       else if (entry.point == 1 && entry.axis == Y)
-        LogError(detail::Format("  %s: BOTTOM", entry.layout->GetNameFull().c_str()));
+        LogError(detail::Format("  %s: BOTTOM", entry.layout->DebugGetName().c_str()));
       else
-        LogError(detail::Format("  %s: %f", entry.layout->GetNameFull().c_str(), entry.point));
+        LogError(detail::Format("  %s: %f", entry.layout->DebugGetName().c_str(), entry.point));
     }
   }
 

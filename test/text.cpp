@@ -22,10 +22,10 @@ TEST(Text, Basic) {
   };
   Frames::Text *frames[c_tests] = { 0, };
 
-  Frames::Frame *anchor = Frames::Frame::CreateTagged(env->GetRoot());
+  Frames::Frame *anchor = Frames::Frame::Create("Test", env->GetRoot());
   anchor->SetPoint(Frames::BOTTOMLEFT, env->GetRoot(), Frames::TOPLEFT, 20.f, 0.f);
   for (int i = 0; i < c_tests; ++i) {
-    Frames::Text *tex = Frames::Text::CreateTagged(env->GetRoot());
+    Frames::Text *tex = Frames::Text::Create("Layer", env->GetRoot());
     tex->SetSize(sizes[i]);
     tex->SetText(text[i]);
     tex->SetPoint(Frames::TOPLEFT, anchor, Frames::BOTTOMLEFT, 0.f, 5.f);

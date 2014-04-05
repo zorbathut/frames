@@ -283,14 +283,8 @@ namespace Frames {
 
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
 
-    const char *GetNameStatic() const { return m_name_static; }
-    void SetNameStatic(const char *name) { m_name_static = name; }  // WARNING: This does not make a copy! The const char* must have a lifetime longer than this frame.
-
-    int GetNameId() const { return m_name_id; }
-    void SetNameId(int id) { m_name_id = id; }
-
-    const std::string &GetNameDynamic() const { return m_name_dynamic; }
-    void SetNameDynamic(const std::string &name) { m_name_dynamic = name; }
+    const std::string &GetName() const { return m_name; }
+    void SetName(const std::string &name) { m_name = name; }
 
     typedef std::set<Layout *, FrameOrderSorter> ChildrenList;
     const ChildrenList &GetChildren() { return m_children; }
@@ -307,14 +301,12 @@ namespace Frames {
     // Lua-specific
     void luaF_push(lua_State *L) const;
 
-    std::string GetName() const;
-    std::string GetNameFull() const;    // THIS MIGHT BE VERY, VERY SLOW
-
     // Debug
     void DebugDumpLayout() const;
+    std::string DebugGetName() const;    // THIS MIGHT BE VERY, VERY SLOW
 
   protected:
-    Layout(Layout *parent, Environment *env = 0);
+    Layout(const std::string &name, Layout *parent, Environment *env = 0);
     virtual ~Layout();
 
     // while Layout isn't mutable, things that inherit from Layout might be
@@ -443,9 +435,7 @@ namespace Frames {
     bool m_acceptInput;
 
     // Naming system
-    const char *m_name_static;
-    int m_name_id;
-    std::string m_name_dynamic;
+    std::string m_name;
     
     // Event system
     EventLookup m_events;
@@ -491,16 +481,12 @@ namespace Frames {
 
     #define FRAMES_ERROR(...) GetEnvironment()->LogError(detail::Format(__VA_ARGS__))
     #define FRAMES_DEBUG(...) GetEnvironment()->LogDebug(detail::Format(__VA_ARGS__))
-
-    #define CreateTagged(...) CreateTagged_imp(__FILE__, __LINE__, __VA_ARGS__)
   #else
     #define FRAMES_LAYOUT_ASSERT(x, errstring, args...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(detail::Format(errstring, ## args))))
     #define FRAMES_LAYOUT_CHECK(x, errstring, args...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(detail::Format(errstring, ## args))))
 
     #define FRAMES_ERROR(args...) GetEnvironment()->LogError(detail::Format(args))
     #define FRAMES_DEBUG(args...) GetEnvironment()->LogDebug(detail::Format(args))
-
-    #define CreateTagged(args...) CreateTagged_imp(__FILE__, __LINE__, ## args)
   #endif
 }
 

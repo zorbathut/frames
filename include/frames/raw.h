@@ -18,8 +18,7 @@ namespace Frames {
     friend class Environment;
 
   public:
-    static Raw *CreateBare(Layout *parent);
-    static Raw *CreateTagged_imp(const char *filename, int line, Layout *parent);
+    static Raw *Create(const std::string &name, Layout *parent);
 
     static const char *GetStaticType();
     virtual const char *GetType() const { return GetStaticType(); }
@@ -30,7 +29,7 @@ namespace Frames {
     static void luaF_RegisterFunctions(lua_State *L);
 
   private:
-    Raw(Layout *parent);
+    Raw(const std::string &name, Layout *parent);
     virtual ~Raw();
 
     virtual void RenderElement(detail::Renderer *renderer) const;

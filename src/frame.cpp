@@ -8,14 +8,8 @@
 #include <GL/gl.h>
 
 namespace Frames {
-  Frame *Frame::CreateBare(Layout *parent) {
-    return new Frame(parent);
-  }
-  Frame *Frame::CreateTagged_imp(const char *filename, int line, Layout *parent) {
-    Frame *rv = new Frame(parent);
-    rv->SetNameStatic(filename);
-    rv->SetNameId(line);
-    return rv;
+  Frame *Frame::Create(const std::string &name, Layout *parent) {
+    return new Frame(name, parent);
   }
 
   /*static*/ const char *Frame::GetStaticType() {
@@ -101,8 +95,8 @@ namespace Frames {
     luaF_RegisterFunction(L, GetStaticType(), "Obliterate", luaF_Obliterate);
   }
 
-  Frame::Frame(Layout *parent) :
-      Layout(parent),
+  Frame::Frame(const std::string &name, Layout *parent) :
+      Layout(name, parent),
       m_bg(0, 0, 0, 0)
   { };
   Frame::~Frame() { };

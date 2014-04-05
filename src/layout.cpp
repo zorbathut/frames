@@ -293,50 +293,8 @@ namespace Frames {
     }
   }
 
-  std::string Layout::GetName() const {
-    std::string name;
-    bool delimiter = false;
-
-    if (!m_name_dynamic.empty()) {
-      if (delimiter) name += ":";
-      name += m_name_dynamic;
-      delimiter = true;
-    }
-
-    if (m_name_static) {
-      if (delimiter) name += ":";
-      name += m_name_static;
-      delimiter = true;
-    }
-
-    if (m_name_id != -1) {
-      if (delimiter) name += ":";
-      name += detail::Format("%d", m_name_id);
-      delimiter = true;
-    }
-
-    if (!delimiter) {
-      // well okay then
-      name += detail::Format("%p", this);
-      delimiter = true;
-    }
-
-    name = detail::Format("[%s %s]", GetType(), name.c_str());
-
-    return name;
-  }
-
-  std::string Layout::GetNameFull() const {
-    std::string name;
-    if (m_parent) {
-      name = m_parent->GetNameFull() + ".";
-    }
-
-    return name + GetName();
-  }
-
   void Layout::DebugDumpLayout() const {
-    FRAMES_DEBUG("Dump for layout %s", GetNameFull().c_str());
+    FRAMES_DEBUG("Dump for layout %s", DebugGetName().c_str());
     FRAMES_DEBUG("  XAXIS:");
     FRAMES_DEBUG("    Connector 0 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[0].point_mine, (int)m_axes[X].connections[0].link, m_axes[X].connections[0].point_link, m_axes[X].connections[0].offset, m_axes[X].connections[0].cached);
     FRAMES_DEBUG("    Connector 1 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[1].point_mine, (int)m_axes[X].connections[1].link, m_axes[X].connections[1].point_link, m_axes[X].connections[1].offset, m_axes[X].connections[0].cached);
@@ -349,7 +307,16 @@ namespace Frames {
     FRAMES_DEBUG("    Linkcount %d", m_axes[Y].children.size());
   }
 
-  Layout::Layout(Layout *layout, Environment *env) :
+  std::string Layout::DebugGetName() const {
+    std::string name;
+    if (m_parent) {
+      name = m_parent->DebugGetName() + ".";
+    }
+
+    return name + GetName();
+  }
+
+  Layout::Layout(const std::string &name, Layout *layout, Environment *env) :
       m_resolved(false),
       m_last_width(-1),
       m_last_height(-1),
@@ -362,8 +329,7 @@ namespace Frames {
       m_alpha(1),
       m_fullMouseMasking(false),
       m_acceptInput(false),
-      m_name_static(0),
-      m_name_id(-1),
+      m_name(name),
       m_obliterate_lock(0),
       m_obliterate_buffered(false),
       m_env(0)
@@ -981,12 +947,12 @@ namespace Frames {
     const AxisData &ax = m_axes[axis];
 
     if (ax.connections[0].link == layout) {
-      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->GetNameFull().c_str(), GetNameFull().c_str(), axis ? 'Y' : 'X', ax.connections[0].point_mine);
+      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->DebugGetName().c_str(), DebugGetName().c_str(), axis ? 'Y' : 'X', ax.connections[0].point_mine);
       ClearPoint(axis, ax.connections[0].point_mine);
     }
 
     if (ax.connections[1].link == layout) {
-      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->GetNameFull().c_str(), GetNameFull().c_str(), axis ? 'Y' : 'X', ax.connections[1].point_mine);
+      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->DebugGetName().c_str(), DebugGetName().c_str(), axis ? 'Y' : 'X', ax.connections[1].point_mine);
       ClearPoint(axis, ax.connections[1].point_mine);
     }
   }
@@ -1435,7 +1401,7 @@ namespace Frames {
     luaF_checkparams(L, 1);
     Layout *self = luaF_checkframe<Layout>(L, 1);
 
-    lua_pushstring(L, self->GetNameFull().c_str());
+    lua_pushstring(L, self->DebugGetName().c_str());
 
     return 1;
   }

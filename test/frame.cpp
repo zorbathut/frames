@@ -8,7 +8,7 @@
 TEST(Layout, SetBackground) {
   TestEnvironment env;
 
-  Frames::Frame *frame = Frames::Frame::CreateTagged(env->GetRoot());
+  Frames::Frame *frame = Frames::Frame::Create("Test", env->GetRoot());
   frame->SetBackground(Frames::Color(1.f, 0.f, 0.f, 0.5f));
   TestSnapshot(env);
 
@@ -25,7 +25,7 @@ TEST(Layout, SetBackground) {
 TEST(Layout, SetPoint) {
   TestEnvironment env;
 
-  Frames::Frame *red = Frames::Frame::CreateTagged(env->GetRoot());
+  Frames::Frame *red = Frames::Frame::Create("Test", env->GetRoot());
   red->SetBackground(Frames::Color(1.f, 0.f, 0.f, 0.5f)); // Partially transparent so we can see frame intersections
 
   red->SetPoint(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT);
@@ -41,17 +41,17 @@ TEST(Layout, SetPoint) {
   red->SetPoint(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT);
   red->SetPoint(Frames::BOTTOMRIGHT, env->GetRoot(), Frames::CENTER);
 
-  Frames::Frame *green = Frames::Frame::CreateTagged(env->GetRoot());
+  Frames::Frame *green = Frames::Frame::Create("Test", env->GetRoot());
   green->SetBackground(Frames::Color(0.f, 1.f, 0.f, 0.5f));
   green->SetPoint(Frames::CENTER, env->GetRoot(), 0.75f, 0.75f);
   green->SetPoint(Frames::TOPRIGHT, env->GetRoot(), Frames::CENTERRIGHT);
 
-  Frames::Frame *blue = Frames::Frame::CreateTagged(env->GetRoot());
+  Frames::Frame *blue = Frames::Frame::Create("Test", env->GetRoot());
   blue->SetBackground(Frames::Color(0.f, 0.f, 1.f, 0.5f));
   blue->SetPoint(Frames::BOTTOMLEFT, env->GetRoot(), Frames::CENTER);
   blue->SetPoint(Frames::TOPRIGHT, env->GetRoot(), Frames::TOPRIGHT);
 
-  Frames::Frame *gray = Frames::Frame::CreateTagged(env->GetRoot());
+  Frames::Frame *gray = Frames::Frame::Create("Test", env->GetRoot());
   gray->SetBackground(Frames::Color(0.5f, 0.5f, 0.5f, 0.5f));
   gray->SetWidth((float)env.GetWidth() / 2);
   gray->SetHeight((float)env.GetHeight() / 2);
@@ -98,7 +98,7 @@ TEST(Layout, Layer) {
   {
     Frames::Layout *anchor = env->GetRoot();
     for (int i = 0; i < testFrameCount; ++i) {
-      frames[i] = Frames::Frame::CreateTagged(env->GetRoot());
+      frames[i] = Frames::Frame::Create("Layer", env->GetRoot());
       frames[i]->SetWidth(400.f);
       frames[i]->SetHeight(400.f);
       frames[i]->SetBackground(Frames::Color((float)i / testFrameCount, (float)i / testFrameCount, (float)i / testFrameCount, 0.2f));

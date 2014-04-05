@@ -10,14 +10,8 @@
 #include "frames/os_gl.h"
 
 namespace Frames {
-  Text *Text::CreateBare(Layout *parent) {
-    return new Text(parent);
-  }
-  Text *Text::CreateTagged_imp(const char *filename, int line, Layout *parent) {
-    Text *rv = new Text(parent);
-    rv->SetNameStatic(filename);
-    rv->SetNameId(line);
-    return rv;
+  Text *Text::Create(const std::string &name, Layout *parent) {
+    return new Text(name, parent);
   }
 
   /*static*/ const char *Text::GetStaticType() {
@@ -187,8 +181,8 @@ namespace Frames {
     luaF_RegisterFunction(L, GetStaticType(), "GetColorSelected", luaF_GetColorSelected);
   }
 
-  Text::Text(Layout *parent) :
-      Frame(parent),
+  Text::Text(const std::string &name, Layout *parent) :
+      Frame(name, parent),
       m_size(16),
       m_wordwrap(false),
       m_color_text(1, 1, 1),

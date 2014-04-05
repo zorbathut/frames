@@ -11,8 +11,7 @@ namespace Frames {
     friend class Environment;
 
   public:
-    static Frame *CreateBare(Layout *parent);
-    static Frame *CreateTagged_imp(const char *filename, int line, Layout *parent);
+    static Frame *Create(const std::string &name, Layout *parent);
 
     static const char *GetStaticType();
     virtual const char *GetType() const { return GetStaticType(); }
@@ -53,7 +52,7 @@ namespace Frames {
     using Layout::Obliterate;
 
   protected:
-    Frame(Layout *parent);
+    Frame(const std::string &name, Layout *parent);
     virtual ~Frame();
 
     virtual void RenderElement(detail::Renderer *renderer) const;

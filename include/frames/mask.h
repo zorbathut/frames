@@ -10,8 +10,7 @@ namespace Frames {
     friend class Environment;
 
   public:
-    static Mask *CreateBare(Layout *parent);
-    static Mask *CreateTagged_imp(const char *filename, int line, Layout *parent);
+    static Mask *Create(const std::string &name, Layout *parent);
 
     static const char *GetStaticType();
     virtual const char *GetType() const { return GetStaticType(); }
@@ -24,7 +23,7 @@ namespace Frames {
     static void luaF_RegisterFunctions(lua_State *L);
 
   private:
-    Mask(Layout *parent);
+    Mask(const std::string &name, Layout *parent);
     virtual ~Mask();
 
     virtual void RenderElement(detail::Renderer *renderer) const;

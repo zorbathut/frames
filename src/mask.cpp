@@ -7,14 +7,8 @@
 #include "frames/os_gl.h"
 
 namespace Frames {
-  Mask *Mask::CreateBare(Layout *parent) {
-    return new Mask(parent);
-  }
-  Mask *Mask::CreateTagged_imp(const char *filename, int line, Layout *parent) {
-    Mask *rv = new Mask(parent);
-    rv->SetNameStatic(filename);
-    rv->SetNameId(line);
-    return rv;
+  Mask *Mask::Create(const std::string &name, Layout *parent) {
+    return new Mask(name, parent);
   }
 
   /*static*/ const char *Mask::GetStaticType() {
@@ -41,8 +35,8 @@ namespace Frames {
     Frame::RenderElementPost(renderer);
   }
 
-  Mask::Mask(Layout *parent) :
-      Frame(parent)
+  Mask::Mask(const std::string &name, Layout *parent) :
+      Frame(name, parent)
   {
     SetFullMouseMasking(true);
   };

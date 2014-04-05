@@ -9,14 +9,8 @@
 namespace Frames {
   FRAMES_Verb_DEFINE(Raw::Event::Render, ());
   
-  Raw *Raw::CreateBare(Layout *parent) {
-    return new Raw(parent);
-  }
-  Raw *Raw::CreateTagged_imp(const char *filename, int line, Layout *parent) {
-    Raw *rv = new Raw(parent);
-    rv->SetNameStatic(filename);
-    rv->SetNameId(line);
-    return rv;
+  Raw *Raw::Create(const std::string &name, Layout *parent) {
+    return new Raw(name, parent);
   }
 
   /*static*/ const char *Raw::GetStaticType() {
@@ -43,8 +37,8 @@ namespace Frames {
     renderer->StatePop();
   }
 
-  Raw::Raw(Layout *parent) :
-      Frame(parent)
+  Raw::Raw(const std::string &name, Layout *parent) :
+      Frame(name, parent)
   {  };
   Raw::~Raw() { };
 }
