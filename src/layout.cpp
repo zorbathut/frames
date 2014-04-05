@@ -181,13 +181,13 @@ namespace Frames {
     return ax.size_default;
   }
 
-  Layout *Layout::GetFrameUnder(float x, float y) {
+  Layout *Layout::GetLayoutUnder(float x, float y) {
     if (!GetVisible()) return 0; // nope
 
     if (m_fullMouseMasking && !TestMouseMasking(x, y)) return 0;
 
     for (ChildrenList::const_reverse_iterator itr = m_children.rbegin(); itr != m_children.rend(); ++itr) {
-      Layout *prv = (*itr)->GetFrameUnder(x, y);
+      Layout *prv = (*itr)->GetLayoutUnder(x, y);
       if (prv) return prv;
     }
 
@@ -580,11 +580,6 @@ namespace Frames {
     }
 
     ClearSize(axis);
-  }
-
-  void Layout::ClearAllPoints() {
-    ClearAllPoints(X);
-    ClearAllPoints(Y);
   }
 
   // SetPoint adapters

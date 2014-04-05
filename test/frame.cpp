@@ -37,7 +37,7 @@ TEST(Layout, SetPoint) {
 
   TestSnapshot(env);
 
-  red->ClearAllPoints();
+  red->ClearConstraints();
   red->SetPoint(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT);
   red->SetPoint(Frames::BOTTOMRIGHT, env->GetRoot(), Frames::CENTER);
 

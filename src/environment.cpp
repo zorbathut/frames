@@ -101,7 +101,7 @@ namespace Frames {
     float x = (float)ix;
     float y = (float)iy;
 
-    Layout *updated = GetFrameUnder(x, y);
+    Layout *updated = GetLayoutUnder(x, y);
     m_mouse = Point(x, y);
 
     bool mouseover = false;
@@ -317,9 +317,9 @@ namespace Frames {
     }
   }
 
-  Layout *Environment::GetFrameUnder(float x, float y) {
+  Layout *Environment::GetLayoutUnder(float x, float y) {
     // TODO: de-invalidate
-    return m_root->GetFrameUnder(x, y);
+    return m_root->GetLayoutUnder(x, y);
   }
 
   void Environment::LuaRegister(lua_State *L, bool hasErrorHandle) {

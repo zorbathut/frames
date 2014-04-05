@@ -110,7 +110,7 @@ namespace Frames {
     
     // ==== Introspection
     Layout *GetRoot() { return m_root; }
-    Layout *GetFrameUnder(float x, float y);
+    Layout *GetLayoutUnder(float x, float y);
 
     const Configuration &GetConfiguration() { return m_config; }
 
