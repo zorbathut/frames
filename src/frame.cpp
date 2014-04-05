@@ -77,8 +77,8 @@ namespace Frames {
     luaF_RegisterFunction(L, GetStaticType(), "SetLayer", luaF_SetLayer);
     luaF_RegisterFunction(L, GetStaticType(), "GetLayer", luaF_GetLayer);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetStrata", luaF_SetStrata);
-    luaF_RegisterFunction(L, GetStaticType(), "GetStrata", luaF_GetStrata);
+    luaF_RegisterFunction(L, GetStaticType(), "SetImplementation", luaF_SetImplementation);
+    luaF_RegisterFunction(L, GetStaticType(), "GetImplementation", luaF_GetImplementation);
 
     luaF_RegisterFunction(L, GetStaticType(), "SetVisible", luaF_SetVisible);
     luaF_RegisterFunction(L, GetStaticType(), "GetVisible", luaF_GetVisible);
@@ -284,20 +284,21 @@ namespace Frames {
     return 1;
   }
 
-  /*static*/ int Frame::luaF_SetStrata(lua_State *L) {
+  /*static*/ int Frame::luaF_SetImplementation(lua_State *L) {
     luaF_checkparams(L, 2);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->SetStrata((float)luaL_checknumber(L, 2));
+    luaL_checktype(L, 2, LUA_TBOOLEAN); // sigh
+    self->SetImplementation(lua_toboolean(L, 2) != 0);
 
     return 0;
   }
 
-  /*static*/ int Frame::luaF_GetStrata(lua_State *L) {
+  /*static*/ int Frame::luaF_GetImplementation(lua_State *L) {
     luaF_checkparams(L, 1);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    lua_pushnumber(L, self->GetStrata());
+    lua_pushboolean(L, self->GetImplementation());
 
     return 1;
   }

@@ -323,7 +323,7 @@ namespace Frames {
       m_last_x(-1),
       m_last_y(-1),
       m_layer(0),
-      m_strata(0),
+      m_implementation(false),
       m_parent(0),
       m_visible(true),
       m_alpha(1),
@@ -734,8 +734,8 @@ namespace Frames {
     }
   }
 
-  void Layout::SetStrata(float strata) {
-    if (m_strata == strata) {
+  void Layout::SetImplementation(bool implementation) {
+    if (m_implementation == implementation) {
       return;
     }
 
@@ -744,7 +744,7 @@ namespace Frames {
       m_parent->m_children.erase(this);
     }
 
-    m_strata = strata;
+    m_implementation = implementation;
 
     if (m_parent) {
       m_parent->m_children.insert(this);
@@ -1235,8 +1235,8 @@ namespace Frames {
   }
   
   bool Layout::FrameOrderSorter::operator()(const Layout *lhs, const Layout *rhs) const {
-    if (lhs->GetStrata() != rhs->GetStrata())
-      return lhs->GetStrata() < rhs->GetStrata();
+    if (lhs->GetImplementation() != rhs->GetImplementation())
+      return lhs->GetImplementation() < rhs->GetImplementation();
     if (lhs->GetLayer() != rhs->GetLayer())
       return lhs->GetLayer() < rhs->GetLayer();
     // they're the same, but we want a consistent sort that won't result in Z-fighting

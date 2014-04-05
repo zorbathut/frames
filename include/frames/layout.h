@@ -31,12 +31,6 @@ namespace Frames {
 
   typedef intptr_t EventId;
 
-  /// Base class for all objects that have a position within the Frames system.
-  /**
-  This is the base class of Frame, which is the main element of Frames UIs. Layout itself is immutable - it's generally used for system objects such as Root, which represents the screen. Frame exposes many of its protected members as public.
-
-  All Layouts are associated with exactly one Environment.
-  */
   class Layout : detail::Noncopyable {
   public:
     FRAMES_VERB_DECLARE_BEGIN
@@ -269,141 +263,93 @@ namespace Frames {
     };
     
   public:
-    /// Retrieves human-readable type for this class.
     static const char *GetStaticType();
-    /// Retrieves human-readable type for this object.
-    /** Must be overloaded for subclasses; see Texture for an example. */
     virtual const char *GetType() const { return GetStaticType(); }
 
-    /// Gets the location of a given position on a given axis.
-    /**
-    If axis is X, 0 represents the left edge of the frame, 1 represents the right edge.
-    If axis is Y, 0 represents the top edge of the frame, 1 represents the bottom edge.
-    Fractional positions are allowed; for example, 0.5 represents the center. Coordinates less than 0 or greater than 1 are also allowed and will return a linear extrapolation of the frame's coordinates. */
     float GetPoint(Axis axis, float pt) const;
-    /// Gets the location of the left edge of the layout.
     float GetLeft() const { return GetPoint(X, 0); }
-    /// Gets the location of the right edge of the layout.
     float GetRight() const { return GetPoint(X, 1); }
-    /// Gets the location of the top edge of the layout.
     float GetTop() const { return GetPoint(Y, 0); }
-    /// Gets the location of the bottom edge of the layout.
     float GetBottom() const { return GetPoint(Y, 1); }
-    /// Gets the bounds of the layout.
     Rect GetBounds() const;
 
-    /// Gets the size of the layout on a given axis.
     float GetSize(Axis axis) const;
-    /// Gets the width of the layout.
     float GetWidth() const { return GetSize(X); }
-    /// Gets the height of the layout.
     float GetHeight() const { return GetSize(Y); }
 
-    /// Gets the parent of the layout. Will be null for the Root layout, non-null for all other layouts.
     Layout *GetParent() const { return m_parent; }
 
-    /// Gets the input-accepting layout under the given coordinates.
-    Layout *GetLayoutUnder(float x, float y);
+    Layout *GetFrameUnder(float x, float y);
 
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
 
-    /// Retrieves the name of this layout.
-    const std::string &GetName() const { return m_name; }
+    const char *GetNameStatic() const { return m_name_static; }
+    void SetNameStatic(const char *name) { m_name_static = name; }  // WARNING: This does not make a copy! The const char* must have a lifetime longer than this frame.
 
-    /// Type used to store Children. Conforms to the interface of std::set.
+    int GetNameId() const { return m_name_id; }
+    void SetNameId(int id) { m_name_id = id; }
+
+    const std::string &GetNameDynamic() const { return m_name_dynamic; }
+    void SetNameDynamic(const std::string &name) { m_name_dynamic = name; }
+
     typedef std::set<Layout *, FrameOrderSorter> ChildrenList;
-    /// Retrieves a list of this layout's children.
     const ChildrenList &GetChildren() { return m_children; }
     
-    /// Gets this layout's environment.
-    Environment *GetEnvironment() const { return m_env; }
-
-    // --------------- Events
-
-    /// Attaches an event handler to a verb.
+    // Events
     template <typename Parameters> void EventAttach(const Verb<Parameters> &event, typename Verb<Parameters>::TypeDelegate handler, float priority = 0.0);
-    /// Detaches an event handler from a verb.
     template <typename Parameters> void EventDetach(const Verb<Parameters> &event, typename Verb<Parameters>::TypeDelegate handler, float priority = detail::Undefined);
     
-    /// Triggers the event handlers attached to a verb.
     inline void EventTrigger(const Verb<void ()> &event);
-    /// Triggers the event handlers attached to a verb.
     template <typename P1> void EventTrigger(const Verb<void (P1)> &event, typename detail::MakeConstRef<P1>::T p1);
 
-    // --------------- Lua
-    
-    /// Pushes this layout's Lua handle onto a Lua stack.
+    Environment *GetEnvironment() const { return m_env; }
+
+    // Lua-specific
     void luaF_push(lua_State *L) const;
 
-    // --------------- Debug
+    std::string GetName() const;
+    std::string GetNameFull() const;    // THIS MIGHT BE VERY, VERY SLOW
 
-    /// Dumps the detailed layout information to the debug log.
+    // Debug
     void DebugDumpLayout() const;
 
-    /// Returns an extremely detailed name for this layout, including the names of its parents.
-    std::string DebugGetName() const;    // THIS MIGHT BE VERY, VERY SLOW
-
   protected:
-    /// Constructor for Layout.
-    Layout(const std::string &name, Layout *parent, Environment *env = 0);
+    Layout(Layout *parent, Environment *env = 0);
     virtual ~Layout();
 
-    /// Replace or create an anchor.
+    // while Layout isn't mutable, things that inherit from Layout might be
     void SetPoint(Axis axis, float mypt, const Layout *link, float theirpt, float offset = 0.f);
-    /// Clear an existing anchor.
     void ClearPoint(Axis axis, float mypt);
-    /// Clear an existing anchor.
     void ClearPoint(Anchor anchor);
-    /// Clear all anchors on an axis.
     void ClearAllPoints(Axis axis);
+    void ClearAllPoints();
 
     // SetPoint variants
     // Two-anchor version
-    /// Replace or create an anchor.
     void SetPoint(Anchor myanchor, const Layout *link, Anchor theiranchor);
-    /// Replace or create an anchor.
     void SetPoint(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs);
     // First-anchor version
-    /// Replace or create an anchor.
     void SetPoint(Anchor myanchor, const Layout *link, float theirx, float theiry);
-    /// Replace or create an anchor.
     void SetPoint(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs);
     // Second-anchor version
-    /// Replace or create an anchor.
     void SetPoint(float myx, float myy, const Layout *link, Anchor theiranchor);
-    /// Replace or create an anchor.
     void SetPoint(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs);
     // No-anchor version
-    /// Replace or create an anchor.
     void SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry);
-    /// Replace or create an anchor.
     void SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs);
 
-    /// Set the size along an axis.
     void SetSize(Axis axis, float size);
-    /// Set the width.
     void SetWidth(float size) { return SetSize(X, size); }
-    /// Set the height.
     void SetHeight(float size) { return SetSize(Y, size); }
-    /// Clear a previously set size along an axis.
     void ClearSize(Axis axis);
 
-    /// Clear all anchors and sizes.
     void ClearConstraints();
 
-    /// Set the default size along an axis.
     void SetSizeDefault(Axis axis, float size);
-    /// Set the default width.
     void SetWidthDefault(float size) { return SetSizeDefault(X, size); }
-    /// Set the default height.
     void SetHeightDefault(float size) { return SetSizeDefault(Y, size); }
 
-    /// Set this frame's parent.
-    /** The new parent must have the same environment as this layout. */
     void SetParent(Layout *layout);
-
-    /// Sets the name of this layout.
-    void SetName(const std::string &name) { m_name = name; }
 
     void SetLayer(float layer);
     float GetLayer() const { return m_layer; }
@@ -497,7 +443,9 @@ namespace Frames {
     bool m_acceptInput;
 
     // Naming system
-    std::string m_name;
+    const char *m_name_static;
+    int m_name_id;
+    std::string m_name_dynamic;
     
     // Event system
     EventLookup m_events;

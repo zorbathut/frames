@@ -117,9 +117,9 @@ TEST(Layout, Layer) {
 
   TestSnapshot(env);
 
-  // Test strata
+  // Test implementation
   for (int i = 0; i < testFrameCount; ++i) {
-    frames[i]->SetStrata((float)(i % 2));
+    frames[i]->SetImplementation(i % 2 != 0);
   }
 
   TestSnapshot(env);

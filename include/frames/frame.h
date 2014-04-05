@@ -34,8 +34,8 @@ namespace Frames {
     using Layout::SetLayer;
     using Layout::GetLayer;
 
-    using Layout::SetStrata;
-    using Layout::GetStrata;
+    using Layout::SetImplementation;
+    using Layout::GetImplementation;
 
     using Layout::SetVisible;
     using Layout::GetVisible;
@@ -76,8 +76,8 @@ namespace Frames {
     static int luaF_SetLayer(lua_State *L);
     static int luaF_GetLayer(lua_State *L);
 
-    static int luaF_SetStrata(lua_State *L);
-    static int luaF_GetStrata(lua_State *L);
+    static int luaF_SetImplementation(lua_State *L);
+    static int luaF_GetImplementation(lua_State *L);
 
     static int luaF_SetVisible(lua_State *L);
     static int luaF_GetVisible(lua_State *L);
