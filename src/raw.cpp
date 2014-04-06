@@ -7,7 +7,7 @@
 #include "frames/os_gl.h"
 
 namespace Frames {
-  FRAMES_Verb_DEFINE(Raw::Event::Render, ());
+  FRAMES_VERB_DEFINE(Raw::Event::Render, ());
   
   Raw *Raw::Create(const std::string &name, Layout *parent) {
     return new Raw(name, parent);

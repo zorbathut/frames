@@ -29,8 +29,6 @@ namespace Frames {
     class Renderer;
   }
 
-  typedef intptr_t EventId;
-
   class Layout : detail::Noncopyable {
   public:
     FRAMES_VERB_DECLARE_BEGIN
