@@ -37,7 +37,7 @@ solution "Frames"
   location(path)
   includedirs {
     "include",
-    "deps/boost_1_54_0",
+    "deps/boost_1_55_0",
     "deps/freetype-2.3.12/" .. platform .. "/include",
     "deps/glew-1.10.0/" .. platform .. "/include",
     "deps/jpeg-9/" .. platform .. "/include",
@@ -48,7 +48,7 @@ solution "Frames"
     "deps/gtest-1.7.0/" .. platformFull .. "/include",
   }
   libdirs {
-    "deps/boost_1_54_0",
+    "deps/boost_1_55_0",
     "deps/freetype-2.3.12/" .. platform .. "/lib",
     "deps/glew-1.10.0/" .. platform .. "/lib",
     "deps/jpeg-9/" .. platform .. "/lib",
