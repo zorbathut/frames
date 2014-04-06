@@ -279,18 +279,11 @@ namespace Frames {
 
     Layout *GetParent() const { return m_parent; }
 
-    Layout *GetFrameUnder(float x, float y);
+    Layout *GetLayoutUnder(float x, float y);
 
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
 
-    const char *GetNameStatic() const { return m_name_static; }
-    void SetNameStatic(const char *name) { m_name_static = name; }  // WARNING: This does not make a copy! The const char* must have a lifetime longer than this frame.
-
-    int GetNameId() const { return m_name_id; }
-    void SetNameId(int id) { m_name_id = id; }
-
-    const std::string &GetNameDynamic() const { return m_name_dynamic; }
-    void SetNameDynamic(const std::string &name) { m_name_dynamic = name; }
+    const std::string &GetName() const { return m_name; }
 
     typedef std::set<Layout *, FrameOrderSorter> ChildrenList;
     const ChildrenList &GetChildren() { return m_children; }
@@ -307,14 +300,12 @@ namespace Frames {
     // Lua-specific
     void luaF_push(lua_State *L) const;
 
-    std::string GetName() const;
-    std::string GetNameFull() const;    // THIS MIGHT BE VERY, VERY SLOW
-
     // Debug
     void DebugDumpLayout() const;
+    std::string DebugGetName() const;
 
   protected:
-    Layout(Layout *parent, Environment *env = 0);
+    Layout(const std::string &name, Layout *parent, Environment *env = 0);
     virtual ~Layout();
 
     // while Layout isn't mutable, things that inherit from Layout might be
@@ -351,11 +342,13 @@ namespace Frames {
 
     void SetParent(Layout *layout);
 
+    void SetName(const std::string &name) { m_name = name; }
+
     void SetLayer(float layer);
     float GetLayer() const { return m_layer; }
 
-    void SetStrata(float strata);
-    float GetStrata() const { return m_strata; }
+    void SetImplementation(bool implementation);
+    bool GetImplementation() const { return m_implementation; }
 
     void SetVisible(bool visible);
     bool GetVisible() const { return m_visible; }
@@ -429,7 +422,7 @@ namespace Frames {
 
     // Layer/parenting engine
     float m_layer;
-    float m_strata;
+    bool m_implementation;
     unsigned int m_constructionOrder; // This is used to create consistent results when frames are Z-conflicting
     Layout *m_parent;
     bool m_visible;
@@ -443,9 +436,7 @@ namespace Frames {
     bool m_acceptInput;
 
     // Naming system
-    const char *m_name_static;
-    int m_name_id;
-    std::string m_name_dynamic;
+    std::string m_name;
     
     // Event system
     EventLookup m_events;
