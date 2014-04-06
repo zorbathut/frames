@@ -861,7 +861,7 @@ namespace Frames {
 
     m_counter = 0;
 
-    m_root = new Layout("Root", 0, this);
+    m_root = new Layout(this);
 
     m_renderer = new detail::Renderer(this);
     m_text_manager = new detail::TextManager(this);

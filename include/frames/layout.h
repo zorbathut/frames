@@ -119,6 +119,7 @@ namespace Frames {
 
   private:
     friend class Environment;
+    friend class Mask; // solely for MouseMasking
     
     struct FrameOrderSorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
     
@@ -266,113 +267,186 @@ namespace Frames {
     };
     
   public:
+    // --------- Typing and identification
+
     /// Returns a human-readable type string for this class.
     static const char *GetStaticType();
     /// Returns a human-readable type string for this instance.
     /** Must be overloaded in all subclasses (see Texture for an example). */
     virtual const char *GetType() const { return GetStaticType(); }
 
+    /// Returns the name of this layout.
+    const std::string &GetName() const { return m_name; }
+
+    // --------- Layout accessors
+
     /// Returns the position of an anchor along a given axis.
     /** See \ref layoutbasics for details. */
     float GetPoint(Axis axis, float pt) const;
+    /// Returns the left edge's position.
     float GetLeft() const { return GetPoint(X, 0); }
+    /// Returns the right edge's position.
     float GetRight() const { return GetPoint(X, 1); }
+    /// Returns the top edge's position.
     float GetTop() const { return GetPoint(Y, 0); }
+    /// Returns the bottom edge's position.
     float GetBottom() const { return GetPoint(Y, 1); }
+    /// Returns the bounds of the layout.
     Rect GetBounds() const;
 
+    /// Returns the size along a given axis.
     float GetSize(Axis axis) const;
+    /// Returns the width.
     float GetWidth() const { return GetSize(X); }
+    /// Returns the height.
     float GetHeight() const { return GetSize(Y); }
 
+    /// Returns the parent. Guaranteed to be non-null unless this is Root.
     Layout *GetParent() const { return m_parent; }
 
+    /// Returns the highest input-accepting frame located at the given coordinates.
     Layout *GetLayoutUnder(float x, float y);
 
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
 
-    const std::string &GetName() const { return m_name; }
-
+    /// Type used to store a list of children, sorted from bottom to top. Conforms to std::set's interface; may not be a std::set.
     typedef std::set<Layout *, FrameOrderSorter> ChildrenList;
+
+    /// Returns the children of this frame.
     const ChildrenList &GetChildren() { return m_children; }
     
-    // Events
+    // --------- State
+
+    /// Sets the visibility flag.
+    /** Invisible frames will not render or accept input, nor will their children render nor accept input. */
+    void SetVisible(bool visible);
+    /// Gets the visibility flag.
+    bool GetVisible() const { return m_visible; }
+
+    /// Sets the alpha multiplier.
+    /** Changing the alpha multiplier causes this frame, and all its children, to render partially transparent. Note that this is done on a per-frame basis and will not result in layer-perfect results. */
+    void SetAlpha(float alpha) { m_alpha = alpha; }
+    /// Gets the alpha multiplier.
+    float GetAlpha() const { return m_alpha; }
+
+    // --------- Events
+
+    /// Attaches a handler to a verb on this layout.
     template <typename Parameters> void EventAttach(const Verb<Parameters> &event, typename Verb<Parameters>::TypeDelegate handler, float priority = 0.0);
+    /// Detaches a handler from a verb on this layout.
     template <typename Parameters> void EventDetach(const Verb<Parameters> &event, typename Verb<Parameters>::TypeDelegate handler, float priority = detail::Undefined);
     
+    /// Triggers all attached handlers for a given verb.
     inline void EventTrigger(const Verb<void ()> &event);
+    /// Triggers all attached handlers for a given verb.
     template <typename P1> void EventTrigger(const Verb<void (P1)> &event, typename detail::MakeConstRef<P1>::T p1);
 
+    /// Returns the environment.
     Environment *GetEnvironment() const { return m_env; }
 
-    // Lua-specific
+    // --------- Lua
+
+    /// Pushes a handle to this layout onto a Lua stack.
     void luaF_push(lua_State *L) const;
 
-    // Debug
+    // --------- Debug
+
+    /// Dumps comprehensive layout information to the debug log.
     void DebugDumpLayout() const;
+
+    /// Constructs and return the full named path of this layout.
     std::string DebugGetName() const;
 
   protected:
-    Layout(const std::string &name, Layout *parent, Environment *env = 0);
+    /// Constructor for layouts with a parent.
+    Layout(const std::string &name, Layout *parent);
     virtual ~Layout();
 
-    // while Layout isn't mutable, things that inherit from Layout might be
-    void SetPoint(Axis axis, float mypt, const Layout *link, float theirpt, float offset = 0.f);
-    void ClearPoint(Axis axis, float mypt);
-    void ClearPoint(Anchor anchor);
-    void ClearAllPoints(Axis axis);
-    void ClearAllPoints();
+    // --------- SetPoint
 
-    // SetPoint variants
-    // Two-anchor version
+    /// Creates or redefines a single anchor \ref layoutbasics "link".
+    /** It is generally recommended to use the other SetPoint overloads before this one. See \ref layoutbasics for more information. */
+    void SetPoint(Axis axis, float mypt, const Layout *link, float theirpt, float offset = 0.f);
+    /// Clears a single \ref layoutbasics "link".
+    void ClearPoint(Axis axis, float mypt);
+    /// Clears a single \ref layoutbasics "link".
+    void ClearPoint(Anchor anchor);
+    /// Clears all \ref layoutbasics "links" on an axis.
+    void ClearAllPoints(Axis axis);
+
+    // --------- SetPoint variants
+
+    /// SetPoint variant for \ref layoutbasics "linking" two \ref Anchor "Anchors".
     void SetPoint(Anchor myanchor, const Layout *link, Anchor theiranchor);
+    /// SetPoint variant for \ref layoutbasics "linking" two \ref Anchor "Anchors" with an offset.
     void SetPoint(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs);
-    // First-anchor version
+    /// SetPoint variant for \ref layoutbasics "linking" an Anchor to a relative point.
     void SetPoint(Anchor myanchor, const Layout *link, float theirx, float theiry);
+    /// SetPoint variant for \ref layoutbasics "linking" an Anchor to a relative point with an offset.
     void SetPoint(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs);
-    // Second-anchor version
+    /// SetPoint variant for \ref layoutbasics "linking" a relative point to an Anchor.
     void SetPoint(float myx, float myy, const Layout *link, Anchor theiranchor);
+    /// SetPoint variant for \ref layoutbasics "linking" a relative point to an Anchor with an offset.
     void SetPoint(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs);
-    // No-anchor version
+    /// SetPoint variant for \ref layoutbasics "linking" two relative points.
     void SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry);
+    /// SetPoint variant for \ref layoutbasics "linking" two relative points with an offset.
     void SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs);
 
+    /// Sets the size of an axis.
     void SetSize(Axis axis, float size);
+    /// Sets the width.
     void SetWidth(float size) { return SetSize(X, size); }
+    /// Sets the height.
     void SetHeight(float size) { return SetSize(Y, size); }
+    /// Clears the size of an axis.
     void ClearSize(Axis axis);
 
+    /// Clears all links and sizes.
     void ClearConstraints();
 
+    /// Set default size of an axis.
+    /** Default sizing is used for frames that semantically have a "normal" size, but may be resized arbitrary by the user. The frame will fall back to the default size if its size is left undefined otherwise (either via explicit sizing or via sufficient linking to fix the size.)
+    
+    This should generally not be exposed to the end-user of a class - it is intended as an internal implementation tool. */
     void SetSizeDefault(Axis axis, float size);
+    /// Set default width. See SetSizeDefault for details.
     void SetWidthDefault(float size) { return SetSizeDefault(X, size); }
+    /// Set default height. See SetSizeDefault for details.
     void SetHeightDefault(float size) { return SetSizeDefault(Y, size); }
 
+    /// Sets the parent.
+    /** New parent must be non-null and a member of the same environment. */
     void SetParent(Layout *layout);
 
+    /// Sets the name.
     void SetName(const std::string &name) { m_name = name; }
 
+    /// Sets the layer.
+    /** Layers are used to determine frame render and input order. Higher-numbered layers are layered on top of lower-numbered layers. All floating-point values are acceptable besides infinities and NaN. */
     void SetLayer(float layer);
+    /// Gets the layer.
     float GetLayer() const { return m_layer; }
 
+    /// Sets the implementation flag.
+    /** The implementation flag is used to create new frame types that are composited out of subframes. All frames with this flag set will be rendered before frames without the flag set. In addition, frames with this flag will not be returned from GetChildren() (TODO: nyi!). */
     void SetImplementation(bool implementation);
+    /// Gets the implementation flag.
     bool GetImplementation() const { return m_implementation; }
 
-    void SetVisible(bool visible);
-    bool GetVisible() const { return m_visible; }
+    /// Destroys this frame and all its children.
+    /** Also destroys all \ref layoutbasics "links" to and from these layouts. It is undefined behavior to refer to this frame or any of its children after this function is called. */
+    void Obliterate();
 
-    void SetAlpha(float alpha) { m_alpha = alpha; }
-    float GetAlpha() const { return m_alpha; }
-
-    // This is for further-down classes, not so useful for users
-    void SetFullMouseMasking(bool mask) { m_fullMouseMasking = mask; }
-    bool GetFullMouseMasking() { return m_fullMouseMasking; }
-    virtual bool TestMouseMasking(float x, float y) { return true; }
-
-    void Obliterate(); // prep for destruction along with all children
-
+    /// Called when this frame is rendered.
+    /** Overload this to create your own frame types. Must call (super)::RenderElement before it does its own work. */
     virtual void RenderElement(detail::Renderer *renderer) const { };
-    virtual void RenderElementPost(detail::Renderer *renderer) const { };
+    /// Called before this frame's children have been rendered.
+    /** Overload this for pre-render setup. If this frame has no children, may not be called at all. Must call (super)::RenderElementPreChild before it does its own work. */
+    virtual void RenderElementPreChild(detail::Renderer *renderer) const {};
+    /// Called after this frame's children have been rendered.
+    /** Overload this for post-render cleanup. If this frame has no children, may not be called at all. Must call (super)::RenderElementPreChild *after* it does its own work. */
+    virtual void RenderElementPostChild(detail::Renderer *renderer) const { };
 
     // make sure you call these down if you override them
     bool EventHookedIs(const detail::VerbBase &event) const;
@@ -389,9 +463,17 @@ namespace Frames {
     static void luaF_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *));
 
   private:
+    /// Null constructor used to create Root.
+    Layout(Environment *env);
+
     void Render(detail::Renderer *renderer) const;
 
-    // Layout engine
+    // Provided for Mask.
+    void SetFullMouseMasking(bool mask) { m_fullMouseMasking = mask; }
+    bool GetFullMouseMasking() { return m_fullMouseMasking; }
+    virtual bool TestMouseMasking(float x, float y) { return true; }
+
+    // Layout engine - note that this is used heavily by Frame!
     void Invalidate(Axis axis);
     void Obliterate_Detach(); // Detach this layout from all layouts
     void Obliterate_Extract();  // Detach everything that refers to this layout

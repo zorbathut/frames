@@ -23,16 +23,16 @@ namespace Frames {
     Frame::luaF_RegisterFunctions(L);
   }
 
-  void Mask::RenderElement(detail::Renderer *renderer) const {
-    Frame::RenderElement(renderer);
+  void Mask::RenderElementPreChild(detail::Renderer *renderer) const {
+    Frame::RenderElementPreChild(renderer);
 
     renderer->ScissorPush(GetBounds());
   }
 
-  void Mask::RenderElementPost(detail::Renderer *renderer) const {
+  void Mask::RenderElementPostChild(detail::Renderer *renderer) const {
     renderer->ScissorPop();
 
-    Frame::RenderElementPost(renderer);
+    Frame::RenderElementPostChild(renderer);
   }
 
   Mask::Mask(const std::string &name, Layout *parent) :

@@ -37,12 +37,6 @@ namespace Frames {
     using Layout::SetImplementation;
     using Layout::GetImplementation;
 
-    using Layout::SetVisible;
-    using Layout::GetVisible;
-
-    using Layout::SetAlpha;
-    using Layout::GetAlpha;
-
     void SetBackground(const Color &color);
     const Color &GetBackground() const { return m_bg; }
 

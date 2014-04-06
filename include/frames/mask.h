@@ -26,8 +26,8 @@ namespace Frames {
     Mask(const std::string &name, Layout *parent);
     virtual ~Mask();
 
-    virtual void RenderElement(detail::Renderer *renderer) const;
-    virtual void RenderElementPost(detail::Renderer *renderer) const;
+    virtual void RenderElementPreChild(detail::Renderer *renderer) const;
+    virtual void RenderElementPostChild(detail::Renderer *renderer) const;
   };
 }
 

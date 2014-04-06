@@ -313,7 +313,8 @@ namespace Frames {
     return name + GetName();
   }
 
-  Layout::Layout(const std::string &name, Layout *layout, Environment *env) :
+  // DUPLICATE CODE WARNING: Initializers are also used in the environment-only constructor!
+  Layout::Layout(const std::string &name, Layout *parent) :
       m_resolved(false),
       m_last_width(-1),
       m_last_height(-1),
@@ -331,25 +332,51 @@ namespace Frames {
       m_obliterate_buffered(false),
       m_env(0)
   {
-    if (layout) {
-      m_env = layout->GetEnvironment();
-    } else {
-      m_env = env;
+    // TODO: come up with a better panic button for this? if we have no parent or environment then we have no way to do debug logging. Will need global errors for this.
+    FRAMES_LAYOUT_CHECK(parent, "Layout not given parent");
+    if (!parent) {
+      return; // The chance of this not crashing is basically zero, but what can you do.
     }
 
-    if (layout && env) {
-      FRAMES_LAYOUT_CHECK(layout->GetEnvironment() == env, "Layout's explicit parent and environment do not match");
-    }
-    // TODO: come up with a better panic button for this? if we have no parent or environment then we have no way to do debug logging
-    FRAMES_LAYOUT_CHECK(layout || env, "Layout not given parent or environment");
+    m_env = parent->GetEnvironment();
 
     m_constructionOrder = m_env->RegisterFrame();
 
-    m_env->MarkInvalidated(this); // We'll need to resolve this before we go
+    m_env->MarkInvalidated(this); // Need to initialize things properly
 
-    if (layout) {
-      SetParent(layout);
+    SetParent(parent);
+  }
+
+  // DUPLICATE CODE WARNING: Initializers are also used in the parent constructor!
+  Layout::Layout(Environment *env) :
+      m_resolved(false),
+      m_last_width(-1),
+      m_last_height(-1),
+      m_last_x(-1),
+      m_last_y(-1),
+      m_layer(0),
+      m_implementation(false),
+      m_parent(0),
+      m_visible(true),
+      m_alpha(1),
+      m_fullMouseMasking(false),
+      m_acceptInput(false),
+      m_name("Root"), // root is always root
+      m_obliterate_lock(0),
+      m_obliterate_buffered(false),
+      m_env(0)
+  {
+    // TODO: come up with a better panic button for this? if we have no parent or environment then we have no way to do debug logging. Will need global errors for this.
+    FRAMES_LAYOUT_CHECK(env, "Layout not given environment");
+    if (!env) {
+      return; // The chance of this not crashing is basically zero, but what can you do.
     }
+
+    m_env = env;
+
+    m_constructionOrder = m_env->RegisterFrame();
+
+    m_env->MarkInvalidated(this); // Need to initialize things properly
   }
 
   Layout::~Layout() {
@@ -862,11 +889,16 @@ namespace Frames {
       renderer->AlphaPush(GetAlpha());
       RenderElement(renderer);
 
-      for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
-        (*itr)->Render(renderer);
+      if (!m_children.empty()) {
+        RenderElementPreChild(renderer);
+
+        for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
+          (*itr)->Render(renderer);
+        }
+
+        RenderElementPostChild(renderer);
       }
       
-      RenderElementPost(renderer);
       renderer->AlphaPop();
     }
   }
