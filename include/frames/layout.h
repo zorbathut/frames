@@ -118,7 +118,8 @@ namespace Frames {
     FRAMES_VERB_DECLARE_END
 
   private:
-    friend class Environment;
+    friend class Environment; // access SetWidthDefault/SetHeightDefault, construction
+    friend class Frame; // constructor, private functions that modify state
     friend class Mask; // solely for MouseMasking
     
     struct FrameOrderSorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
@@ -358,10 +359,6 @@ namespace Frames {
     std::string DebugGetName() const;
 
   protected:
-    /// Constructor for layouts with a parent.
-    Layout(const std::string &name, Layout *parent);
-    virtual ~Layout();
-
     // --------- SetPoint
 
     /// Creates or redefines a single anchor \ref layoutbasics "link".
@@ -463,8 +460,8 @@ namespace Frames {
     static void luaF_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *));
 
   private:
-    /// Null constructor used to create Root.
-    Layout(Environment *env);
+    Layout(const std::string &name, Environment *env);
+    virtual ~Layout();
 
     void Render(detail::Renderer *renderer) const;
 

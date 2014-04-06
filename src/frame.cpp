@@ -96,10 +96,12 @@ namespace Frames {
   }
 
   Frame::Frame(const std::string &name, Layout *parent) :
-      Layout(name, parent),
+      Layout(name, parent->GetEnvironment()),
       m_bg(0, 0, 0, 0)
-  { };
-  Frame::~Frame() { };
+  {
+    SetParent(parent);
+  }
+  Frame::~Frame() { }
 
   static void luaF_ParseCoord(lua_State *L, int *cindex, bool stringable, bool write, bool *xe, bool *ye, float *xt, float *yt) {
     bool lxe = false;

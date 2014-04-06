@@ -313,8 +313,8 @@ namespace Frames {
     return name + GetName();
   }
 
-  // DUPLICATE CODE WARNING: Initializers are also used in the environment-only constructor!
-  Layout::Layout(const std::string &name, Layout *parent) :
+  // DUPLICATE CODE WARNING: Initializers are also used in the parent constructor!
+  Layout::Layout(const std::string &name, Environment *env) :
       m_resolved(false),
       m_last_width(-1),
       m_last_height(-1),
@@ -328,40 +328,6 @@ namespace Frames {
       m_fullMouseMasking(false),
       m_acceptInput(false),
       m_name(name),
-      m_obliterate_lock(0),
-      m_obliterate_buffered(false),
-      m_env(0)
-  {
-    // TODO: come up with a better panic button for this? if we have no parent or environment then we have no way to do debug logging. Will need global errors for this.
-    FRAMES_LAYOUT_CHECK(parent, "Layout not given parent");
-    if (!parent) {
-      return; // The chance of this not crashing is basically zero, but what can you do.
-    }
-
-    m_env = parent->GetEnvironment();
-
-    m_constructionOrder = m_env->RegisterFrame();
-
-    m_env->MarkInvalidated(this); // Need to initialize things properly
-
-    SetParent(parent);
-  }
-
-  // DUPLICATE CODE WARNING: Initializers are also used in the parent constructor!
-  Layout::Layout(Environment *env) :
-      m_resolved(false),
-      m_last_width(-1),
-      m_last_height(-1),
-      m_last_x(-1),
-      m_last_y(-1),
-      m_layer(0),
-      m_implementation(false),
-      m_parent(0),
-      m_visible(true),
-      m_alpha(1),
-      m_fullMouseMasking(false),
-      m_acceptInput(false),
-      m_name("Root"), // root is always root
       m_obliterate_lock(0),
       m_obliterate_buffered(false),
       m_env(0)

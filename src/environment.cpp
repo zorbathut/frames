@@ -53,8 +53,8 @@ namespace Frames {
   }
 
   void Environment::ResizeRoot(int x, int y) {
-    m_root->SetWidth((float)x);
-    m_root->SetHeight((float)y);
+    m_root->SetWidthDefault((float)x);
+    m_root->SetHeightDefault((float)y);
   }
 
   bool Environment::Input(const ::Frames::Input &ie) {
@@ -861,7 +861,7 @@ namespace Frames {
 
     m_counter = 0;
 
-    m_root = new Layout(this);
+    m_root = new Layout("Root", this);
 
     m_renderer = new detail::Renderer(this);
     m_text_manager = new detail::TextManager(this);
