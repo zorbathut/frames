@@ -29,6 +29,11 @@ namespace Frames {
     class Renderer;
   }
 
+  /// Base class containing location and layout information for all Frames elements.
+  /**
+  A Layout includes all information needed to calculate and update the position and ordering of an element in an Environment. The vast majority of all Layouts are actually \ref Frame "Frames"; the only exception is the Root layout.
+  
+  Layout includes all update-related functions as protected members, most of which are exposed by Frame.*/
   class Layout : detail::Noncopyable {
   public:
     FRAMES_VERB_DECLARE_BEGIN
@@ -261,9 +266,14 @@ namespace Frames {
     };
     
   public:
+    /// Returns a human-readable type string for this class.
     static const char *GetStaticType();
+    /// Returns a human-readable type string for this instance.
+    /** Must be overloaded in all subclasses (see Texture for an example). */
     virtual const char *GetType() const { return GetStaticType(); }
 
+    /// Returns the position of an anchor along a given axis.
+    /** See \ref layoutbasics for details. */
     float GetPoint(Axis axis, float pt) const;
     float GetLeft() const { return GetPoint(X, 0); }
     float GetRight() const { return GetPoint(X, 1); }
