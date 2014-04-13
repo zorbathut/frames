@@ -1,4 +1,8 @@
 
+* Rename Point to Pin
+
+* Create Frame:: function deferment, with documentation
+
 === TWEAK
 
 * Private constructor for Layout for the purpose of Root
@@ -14,6 +18,8 @@
 * Improve streaming API
 * Improve configuration API
 * Improve texture loading API
+  * maybe this should all be done via modifiers after creation?
+  * most of this really doesn't have to exist *at* creation
 
 * Simple examples
   * SDL/GL
@@ -22,6 +28,15 @@
 * Figure out how to document Delegate
 
 * Official release?
+
+=== UE4
+
+* Need some way to build with the UE4 header tool
+* However, also needs hooks in the frames for that to work
+* This means . . . an internal UE4-hook class, then the UE4 code itself hooks that?
+* That seems ugly, but might be necessary
+* Maybe some way to provide the right set of verbs to provide external APIs?
+* That may be extremely difficult
 
 === PROGRESSION
 
