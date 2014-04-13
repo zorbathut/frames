@@ -359,36 +359,36 @@ namespace Frames {
     std::string DebugGetName() const;
 
   protected:
-    // --------- SetPoint
+    // --------- SetPin
 
     /// Creates or redefines a single anchor \ref layoutbasics "link".
-    /** It is generally recommended to use the other SetPoint overloads before this one. See \ref layoutbasics for more information. */
-    void SetPoint(Axis axis, float mypt, const Layout *link, float theirpt, float offset = 0.f);
+    /** It is generally recommended to use the other SetPin overloads before this one. See \ref layoutbasics for more information. */
+    void SetPin(Axis axis, float mypt, const Layout *link, float theirpt, float offset = 0.f);
     /// Clears a single \ref layoutbasics "link".
-    void ClearPoint(Axis axis, float mypt);
+    void ClearPin(Axis axis, float mypt);
     /// Clears a single \ref layoutbasics "link".
-    void ClearPoint(Anchor anchor);
+    void ClearPin(Anchor anchor);
     /// Clears all \ref layoutbasics "links" on an axis.
-    void ClearAllPoints(Axis axis);
+    void ClearPinAll(Axis axis);
 
-    // --------- SetPoint variants
+    // --------- SetPin variants
 
-    /// SetPoint variant for \ref layoutbasics "linking" two \ref Anchor "Anchors".
-    void SetPoint(Anchor myanchor, const Layout *link, Anchor theiranchor);
-    /// SetPoint variant for \ref layoutbasics "linking" two \ref Anchor "Anchors" with an offset.
-    void SetPoint(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs);
-    /// SetPoint variant for \ref layoutbasics "linking" an Anchor to a relative point.
-    void SetPoint(Anchor myanchor, const Layout *link, float theirx, float theiry);
-    /// SetPoint variant for \ref layoutbasics "linking" an Anchor to a relative point with an offset.
-    void SetPoint(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs);
-    /// SetPoint variant for \ref layoutbasics "linking" a relative point to an Anchor.
-    void SetPoint(float myx, float myy, const Layout *link, Anchor theiranchor);
-    /// SetPoint variant for \ref layoutbasics "linking" a relative point to an Anchor with an offset.
-    void SetPoint(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs);
-    /// SetPoint variant for \ref layoutbasics "linking" two relative points.
-    void SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry);
-    /// SetPoint variant for \ref layoutbasics "linking" two relative points with an offset.
-    void SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs);
+    /// SetPin variant for \ref layoutbasics "linking" two \ref Anchor "Anchors".
+    void SetPin(Anchor myanchor, const Layout *link, Anchor theiranchor);
+    /// SetPin variant for \ref layoutbasics "linking" two \ref Anchor "Anchors" with an offset.
+    void SetPin(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs);
+    /// SetPin variant for \ref layoutbasics "linking" an Anchor to a relative point.
+    void SetPin(Anchor myanchor, const Layout *link, float theirx, float theiry);
+    /// SetPin variant for \ref layoutbasics "linking" an Anchor to a relative point with an offset.
+    void SetPin(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs);
+    /// SetPin variant for \ref layoutbasics "linking" a relative point to an Anchor.
+    void SetPin(float myx, float myy, const Layout *link, Anchor theiranchor);
+    /// SetPin variant for \ref layoutbasics "linking" a relative point to an Anchor with an offset.
+    void SetPin(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs);
+    /// SetPin variant for \ref layoutbasics "linking" two relative points.
+    void SetPin(float myx, float myy, const Layout *link, float theirx, float theiry);
+    /// SetPin variant for \ref layoutbasics "linking" two relative points with an offset.
+    void SetPin(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs);
 
     /// Sets the size of an axis.
     void SetSize(Axis axis, float size);
@@ -400,7 +400,7 @@ namespace Frames {
     void ClearSize(Axis axis);
 
     /// Clears all links and sizes.
-    void ClearConstraints();
+    void ClearConstraintAll();
 
     /// Set default size of an axis.
     /** Default sizing is used for frames that semantically have a "normal" size, but may be resized arbitrary by the user. The frame will fall back to the default size if its size is left undefined otherwise (either via explicit sizing or via sufficient linking to fix the size.)

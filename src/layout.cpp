@@ -406,7 +406,7 @@ namespace Frames {
     m_env->DestroyingLayout(this);
   }
 
-  void Layout::SetPoint(Axis axis, float mypt, const Layout *link, float linkpt, float offset /*= 0.f*/) {
+  void Layout::SetPin(Axis axis, float mypt, const Layout *link, float linkpt, float offset /*= 0.f*/) {
     if (link && link->m_env != m_env) {
       FRAMES_LAYOUT_CHECK(false, "Attempted to constrain a frame to a frame from another environment");
       return;
@@ -504,7 +504,7 @@ namespace Frames {
     return;
   }
 
-  void Layout::ClearPoint(Axis axis, float mypt) {
+  void Layout::ClearPin(Axis axis, float mypt) {
     AxisData &ax = m_axes[axis];
 
     AxisData::Connector &axa = ax.connections[0];
@@ -546,86 +546,86 @@ namespace Frames {
     // If we didn't actually clear anything, no sweat, no need to invalidate
   }
 
-  void Layout::ClearPoint(Anchor anchor) {
+  void Layout::ClearPin(Anchor anchor) {
     if (!detail::IsNil(detail::c_anchorLookup[anchor].x)) {
-      ClearPoint(X, detail::c_anchorLookup[anchor].x);
+      ClearPin(X, detail::c_anchorLookup[anchor].x);
     }
 
     if (!detail::IsNil(detail::c_anchorLookup[anchor].y)) {
-      ClearPoint(Y, detail::c_anchorLookup[anchor].y);
+      ClearPin(Y, detail::c_anchorLookup[anchor].y);
     }
   }
 
-  void Layout::ClearAllPoints(Axis axis) {
+  void Layout::ClearPinAll(Axis axis) {
     AxisData &ax = m_axes[axis];
 
     AxisData::Connector &axa = ax.connections[0];
     if (!detail::IsUndefined(axa.point_mine)) {
-      ClearPoint(axis, axa.point_mine);
+      ClearPin(axis, axa.point_mine);
     }
 
     AxisData::Connector &axb = ax.connections[1];
     if (!detail::IsUndefined(axb.point_mine)) {
-      ClearPoint(axis, axb.point_mine);
+      ClearPin(axis, axb.point_mine);
     }
 
     ClearSize(axis);
   }
 
-  // SetPoint adapters
+  // SetPin adapters
   // All the anchor versions just transform themselves into no-anchor versions first
-  void Layout::SetPoint(Anchor myanchor, const Layout *link, Anchor theiranchor) {
-    SetPoint(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
+  void Layout::SetPin(Anchor myanchor, const Layout *link, Anchor theiranchor) {
+    SetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
   }
-  void Layout::SetPoint(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
-    SetPoint(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
+  void Layout::SetPin(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
+    SetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
   }
   
-  void Layout::SetPoint(Anchor myanchor, const Layout *link, float theirx, float theiry) {
-    SetPoint(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry);
+  void Layout::SetPin(Anchor myanchor, const Layout *link, float theirx, float theiry) {
+    SetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry);
   }
-  void Layout::SetPoint(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
-    SetPoint(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
-  }
-
-  void Layout::SetPoint(float myx, float myy, const Layout *link, Anchor theiranchor) {
-    SetPoint(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
-  }
-  void Layout::SetPoint(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
-    SetPoint(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
+  void Layout::SetPin(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
+    SetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
   }
 
-  void Layout::SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry) {
-    FRAMES_LAYOUT_CHECK(link, "SetPoint requires offsets when linking to origin.");
-    FRAMES_LAYOUT_CHECK(detail::IsNil(myx) == detail::IsNil(theirx), "SetPoint provided with only one anchor position for X axis");
-    FRAMES_LAYOUT_CHECK(detail::IsNil(myy) == detail::IsNil(theiry), "SetPoint provided with only one anchor position for Y axis");
-    FRAMES_LAYOUT_CHECK(!detail::IsNil(myx) || !detail::IsNil(myy), "SetPoint not provided with any anchor axes");
+  void Layout::SetPin(float myx, float myy, const Layout *link, Anchor theiranchor) {
+    SetPin(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
+  }
+  void Layout::SetPin(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
+    SetPin(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
+  }
+
+  void Layout::SetPin(float myx, float myy, const Layout *link, float theirx, float theiry) {
+    FRAMES_LAYOUT_CHECK(link, "SetPin requires offsets when linking to origin.");
+    FRAMES_LAYOUT_CHECK(detail::IsNil(myx) == detail::IsNil(theirx), "SetPin provided with only one anchor position for X axis");
+    FRAMES_LAYOUT_CHECK(detail::IsNil(myy) == detail::IsNil(theiry), "SetPin provided with only one anchor position for Y axis");
+    FRAMES_LAYOUT_CHECK(!detail::IsNil(myx) || !detail::IsNil(myy), "SetPin not provided with any anchor axes");
 
     if (!detail::IsNil(myx)) {
-      SetPoint(X, myx, link, theirx);
+      SetPin(X, myx, link, theirx);
     }
 
     if (!detail::IsNil(myy)) {
-      SetPoint(Y, myy, link, theiry);
+      SetPin(Y, myy, link, theiry);
     }
   }
-  void Layout::SetPoint(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
-    FRAMES_LAYOUT_CHECK(!detail::IsNil(myx) || !detail::IsNil(myy), "SetPoint not provided with any anchor axes");
+  void Layout::SetPin(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
+    FRAMES_LAYOUT_CHECK(!detail::IsNil(myx) || !detail::IsNil(myy), "SetPin not provided with any anchor axes");
     if (link) {
-      FRAMES_LAYOUT_CHECK(detail::IsNil(myx) == detail::IsNil(theirx) && detail::IsNil(myx) == detail::IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
-      FRAMES_LAYOUT_CHECK(detail::IsNil(myy) == detail::IsNil(theiry) && detail::IsNil(myy) == detail::IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
+      FRAMES_LAYOUT_CHECK(detail::IsNil(myx) == detail::IsNil(theirx) && detail::IsNil(myx) == detail::IsNil(xofs), "SetPin provided with only one anchor position for X axis");
+      FRAMES_LAYOUT_CHECK(detail::IsNil(myy) == detail::IsNil(theiry) && detail::IsNil(myy) == detail::IsNil(yofs), "SetPin provided with only one anchor position for Y axis");
     } else {
-      FRAMES_LAYOUT_CHECK(detail::IsNil(theirx) && detail::IsNil(theiry), "SetPoint must have nil target anchor points when linking to origin.");
-      FRAMES_LAYOUT_CHECK(detail::IsNil(myx) == detail::IsNil(xofs), "SetPoint provided with only one anchor position for X axis");
-      FRAMES_LAYOUT_CHECK(detail::IsNil(myy) == detail::IsNil(yofs), "SetPoint provided with only one anchor position for Y axis");
+      FRAMES_LAYOUT_CHECK(detail::IsNil(theirx) && detail::IsNil(theiry), "SetPin must have nil target anchor points when linking to origin.");
+      FRAMES_LAYOUT_CHECK(detail::IsNil(myx) == detail::IsNil(xofs), "SetPin provided with only one anchor position for X axis");
+      FRAMES_LAYOUT_CHECK(detail::IsNil(myy) == detail::IsNil(yofs), "SetPin provided with only one anchor position for Y axis");
     }
 
     if (!detail::IsNil(myx)) {
-      SetPoint(X, myx, link, theirx, xofs);
+      SetPin(X, myx, link, theirx, xofs);
     }
 
     if (!detail::IsNil(myy)) {
-      SetPoint(Y, myy, link, theiry, yofs);
+      SetPin(Y, myy, link, theiry, yofs);
     }
   }
 
@@ -660,12 +660,12 @@ namespace Frames {
     }
   }
 
-  void Layout::ClearConstraints() {
+  void Layout::ClearConstraintAll() {
     ClearSize(X);
     ClearSize(Y);
 
-    ClearAllPoints(X);
-    ClearAllPoints(Y);
+    ClearPinAll(X);
+    ClearPinAll(Y);
   }
 
   void Layout::SetSizeDefault(Axis axis, float size) {
@@ -894,7 +894,7 @@ namespace Frames {
   }
 
   void Layout::Obliterate_Detach() {
-    ClearConstraints();  // kill my layout to unlink things
+    ClearConstraintAll();  // kill my layout to unlink things
 
     // OBLITERATE ALL CHILDREN.
     for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
@@ -938,12 +938,12 @@ namespace Frames {
 
     if (ax.connections[0].link == layout) {
       FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->DebugGetName().c_str(), DebugGetName().c_str(), axis ? 'Y' : 'X', ax.connections[0].point_mine);
-      ClearPoint(axis, ax.connections[0].point_mine);
+      ClearPin(axis, ax.connections[0].point_mine);
     }
 
     if (ax.connections[1].link == layout) {
       FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->DebugGetName().c_str(), DebugGetName().c_str(), axis ? 'Y' : 'X', ax.connections[1].point_mine);
-      ClearPoint(axis, ax.connections[1].point_mine);
+      ClearPin(axis, ax.connections[1].point_mine);
     }
   }
 

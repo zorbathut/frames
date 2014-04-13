@@ -66,7 +66,7 @@ namespace Frames {
   /*static*/ void Frame::luaF_RegisterFunctions(lua_State *L) {
     Layout::luaF_RegisterFunctions(L);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetPoint", luaF_SetPoint);
+    luaF_RegisterFunction(L, GetStaticType(), "SetPin", luaF_SetPin);
 
     luaF_RegisterFunction(L, GetStaticType(), "SetWidth", luaF_SetWidth);
     luaF_RegisterFunction(L, GetStaticType(), "SetHeight", luaF_SetHeight);
@@ -108,7 +108,7 @@ namespace Frames {
     bool lye = false;
 
     if (lua_gettop(L) < *cindex) {
-      luaL_error(L, "Ran out of parameters in SetPoint");
+      luaL_error(L, "Ran out of parameters in SetPin");
     }
 
     if (stringable && lua_type(L, *cindex) == LUA_TSTRING) {
@@ -148,17 +148,17 @@ namespace Frames {
       (*cindex)++;
     } else {
       if (lua_gettop(L) < *cindex + 1) {
-        luaL_error(L, "Ran out of parameters in SetPoint");
+        luaL_error(L, "Ran out of parameters in SetPin");
       }
 
       int tx = lua_type(L, *cindex);
       int ty = lua_type(L, *cindex + 1);
 
       if ((tx != LUA_TNUMBER && tx != LUA_TNIL) || (ty != LUA_TNUMBER && ty != LUA_TNIL)) {
-        luaL_error(L, "Invalid parameter type in SetPoint");
+        luaL_error(L, "Invalid parameter type in SetPin");
       }
       if (tx == LUA_TNIL && ty == LUA_TNIL) {
-        luaL_error(L, "No actual coordinates in SetPoint");
+        luaL_error(L, "No actual coordinates in SetPin");
       }
 
       lxe = (tx == LUA_TNUMBER);
@@ -175,12 +175,12 @@ namespace Frames {
       *ye = lye;
     } else {
       if (*xe != lxe || *ye != lye) {
-        luaL_error(L, "Inconsistent nils in SetPoint");
+        luaL_error(L, "Inconsistent nils in SetPin");
       }
     }
   }
 
-  /*static*/ int Frame::luaF_SetPoint(lua_State *L) {
+  /*static*/ int Frame::luaF_SetPin(lua_State *L) {
     // this one is a horrible beast
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
@@ -196,7 +196,7 @@ namespace Frames {
     luaF_ParseCoord(L, &cindex, true, true, &x_enabled, &y_enabled, &x_src, &y_src);
 
     if (lua_gettop(L) < cindex) {
-      luaL_error(L, "Ran out of parameters in SetPoint");
+      luaL_error(L, "Ran out of parameters in SetPin");
     }
 
     Layout *target = 0;
@@ -219,14 +219,14 @@ namespace Frames {
     }
 
     if (lua_gettop(L) != cindex - 1) {
-      luaL_error(L, "Too many parameters in SetPoint");
+      luaL_error(L, "Too many parameters in SetPin");
     }
 
     if (x_enabled) {
-      self->SetPoint(X, x_src, target, x_target, x_ofs);
+      self->SetPin(X, x_src, target, x_target, x_ofs);
     }
     if (y_enabled) {
-      self->SetPoint(Y, y_src, target, y_target, y_ofs);
+      self->SetPin(Y, y_src, target, y_target, y_ofs);
     }
 
     return 0;

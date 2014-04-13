@@ -16,17 +16,17 @@ namespace Frames {
     static const char *GetStaticType();
     virtual const char *GetType() const { return GetStaticType(); }
 
-    using Layout::SetPoint;
+    using Layout::SetPin;
 
-    using Layout::ClearPoint;
-    using Layout::ClearAllPoints;
+    using Layout::ClearPin;
+    using Layout::ClearPinAll;
 
     using Layout::SetSize;
     using Layout::SetWidth;
     using Layout::SetHeight;
     using Layout::ClearSize;
 
-    using Layout::ClearConstraints;
+    using Layout::ClearConstraintAll;
 
     using Layout::SetParent;
     using Layout::GetParent;
@@ -59,7 +59,7 @@ namespace Frames {
     Color m_bg;
 
     // Lua bindings
-    static int luaF_SetPoint(lua_State *L);
+    static int luaF_SetPin(lua_State *L);
 
     static int luaF_SetWidth(lua_State *L);
     static int luaF_SetHeight(lua_State *L);

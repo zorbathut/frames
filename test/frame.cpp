@@ -22,14 +22,14 @@ TEST(Layout, SetBackground) {
   TestSnapshot(env);
 };
 
-TEST(Layout, SetPoint) {
+TEST(Layout, SetPin) {
   TestEnvironment env;
 
   Frames::Frame *red = Frames::Frame::Create("Test", env->GetRoot());
   red->SetBackground(Frames::Color(1.f, 0.f, 0.f, 0.5f)); // Partially transparent so we can see frame intersections
 
-  red->SetPoint(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT);
-  red->SetPoint(Frames::BOTTOMRIGHT, env->GetRoot(), Frames::BOTTOMRIGHT);
+  red->SetPin(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT);
+  red->SetPin(Frames::BOTTOMRIGHT, env->GetRoot(), Frames::BOTTOMRIGHT);
   EXPECT_EQ(red->GetLeft(), 0);
   EXPECT_EQ(red->GetRight(), env.GetWidth());
   EXPECT_EQ(red->GetTop(), 0);
@@ -37,53 +37,53 @@ TEST(Layout, SetPoint) {
 
   TestSnapshot(env);
 
-  red->ClearConstraints();
-  red->SetPoint(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT);
-  red->SetPoint(Frames::BOTTOMRIGHT, env->GetRoot(), Frames::CENTER);
+  red->ClearConstraintAll();
+  red->SetPin(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT);
+  red->SetPin(Frames::BOTTOMRIGHT, env->GetRoot(), Frames::CENTER);
 
   Frames::Frame *green = Frames::Frame::Create("Test", env->GetRoot());
   green->SetBackground(Frames::Color(0.f, 1.f, 0.f, 0.5f));
-  green->SetPoint(Frames::CENTER, env->GetRoot(), 0.75f, 0.75f);
-  green->SetPoint(Frames::TOPRIGHT, env->GetRoot(), Frames::CENTERRIGHT);
+  green->SetPin(Frames::CENTER, env->GetRoot(), 0.75f, 0.75f);
+  green->SetPin(Frames::TOPRIGHT, env->GetRoot(), Frames::CENTERRIGHT);
 
   Frames::Frame *blue = Frames::Frame::Create("Test", env->GetRoot());
   blue->SetBackground(Frames::Color(0.f, 0.f, 1.f, 0.5f));
-  blue->SetPoint(Frames::BOTTOMLEFT, env->GetRoot(), Frames::CENTER);
-  blue->SetPoint(Frames::TOPRIGHT, env->GetRoot(), Frames::TOPRIGHT);
+  blue->SetPin(Frames::BOTTOMLEFT, env->GetRoot(), Frames::CENTER);
+  blue->SetPin(Frames::TOPRIGHT, env->GetRoot(), Frames::TOPRIGHT);
 
   Frames::Frame *gray = Frames::Frame::Create("Test", env->GetRoot());
   gray->SetBackground(Frames::Color(0.5f, 0.5f, 0.5f, 0.5f));
   gray->SetWidth((float)env.GetWidth() / 2);
   gray->SetHeight((float)env.GetHeight() / 2);
-  gray->SetPoint(Frames::CENTER, 0, Frames::Nil, Frames::Nil, (float)env.GetWidth() / 4, (float)env.GetHeight() / 4 * 3);
+  gray->SetPin(Frames::CENTER, 0, Frames::Nil, Frames::Nil, (float)env.GetWidth() / 4, (float)env.GetHeight() / 4 * 3);
 
   TestSnapshot(env);
 
-  red->ClearConstraints();
-  green->ClearConstraints();
-  blue->ClearConstraints();
-  gray->ClearConstraints();
+  red->ClearConstraintAll();
+  green->ClearConstraintAll();
+  blue->ClearConstraintAll();
+  gray->ClearConstraintAll();
 
-  red->SetPoint(Frames::LEFT, env->GetRoot(), Frames::LEFT);
-  green->SetPoint(Frames::LEFT, env->GetRoot(), Frames::LEFT);
-  blue->SetPoint(Frames::LEFT, env->GetRoot(), Frames::LEFT);
-  gray->SetPoint(Frames::LEFT, env->GetRoot(), Frames::LEFT);
+  red->SetPin(Frames::LEFT, env->GetRoot(), Frames::LEFT);
+  green->SetPin(Frames::LEFT, env->GetRoot(), Frames::LEFT);
+  blue->SetPin(Frames::LEFT, env->GetRoot(), Frames::LEFT);
+  gray->SetPin(Frames::LEFT, env->GetRoot(), Frames::LEFT);
 
-  red->SetPoint(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
-  green->SetPoint(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
-  blue->SetPoint(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
-  gray->SetPoint(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
+  red->SetPin(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
+  green->SetPin(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
+  blue->SetPin(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
+  gray->SetPin(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
 
-  red->SetPoint(Frames::TOP, env->GetRoot(), Frames::TOP);
+  red->SetPin(Frames::TOP, env->GetRoot(), Frames::TOP);
   red->SetHeight(100.f);
 
-  green->SetPoint(Frames::TOP, red, Frames::BOTTOM);
+  green->SetPin(Frames::TOP, red, Frames::BOTTOM);
   green->SetHeight(100.f);
 
-  blue->SetPoint(Frames::TOP, green, Frames::BOTTOM);
+  blue->SetPin(Frames::TOP, green, Frames::BOTTOM);
   blue->SetHeight(100.f);
 
-  gray->SetPoint(Frames::TOP, blue, Frames::BOTTOM);
+  gray->SetPin(Frames::TOP, blue, Frames::BOTTOM);
   gray->SetHeight(100.f);
   
   TestSnapshot(env);
@@ -102,7 +102,7 @@ TEST(Layout, Layer) {
       frames[i]->SetWidth(400.f);
       frames[i]->SetHeight(400.f);
       frames[i]->SetBackground(Frames::Color((float)i / testFrameCount, (float)i / testFrameCount, (float)i / testFrameCount, 0.2f));
-      frames[i]->SetPoint(Frames::TOPLEFT, anchor, Frames::TOPLEFT, 10.f, 10.f);
+      frames[i]->SetPin(Frames::TOPLEFT, anchor, Frames::TOPLEFT, 10.f, 10.f);
       frames[i]->SetLayer(order[i]);
       anchor = frames[i];
     }
