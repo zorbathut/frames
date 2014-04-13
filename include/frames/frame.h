@@ -18,11 +18,7 @@ namespace Frames {
 
     using Layout::SetPoint;
 
-    /// Clears a single \ref layoutbasics "link".
-    inline void ClearPoint(Axis axis, float mypt) { return Layout::ClearPoint(axis, mypt); }
-    /// Clears a single \ref layoutbasics "link".
-    inline void ClearPoint(Anchor anchor) { return Layout::ClearPoint(anchor); }
-    
+    using Layout::ClearPoint;
     using Layout::ClearAllPoints;
 
     using Layout::SetSize;
