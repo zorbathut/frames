@@ -13,6 +13,9 @@
 
 * Redesign Format, seriously
 
+* EVENTS
+  * maybe I should give up this template madness and go with a standard encapsulation?
+
 === TWEAK
 
 * GetChildren must somehow ignore implementation

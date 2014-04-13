@@ -760,8 +760,8 @@ namespace Frames {
     Obliterate_Extract();
   }
 
-  bool Layout::EventHookedIs(const detail::VerbBase &event) const {
-    std::map<const detail::VerbBase *, std::multiset<FECallback, FECallback::Sorter> >::const_iterator itr = m_events.find(&event);
+  bool Layout::EventHookedIs(const VerbBase &event) const {
+    std::map<const VerbBase *, std::multiset<FECallback, FECallback::Sorter> >::const_iterator itr = m_events.find(&event);
     if (itr == m_events.end()) {
       // no handles, we're good
       return false;
@@ -1036,7 +1036,7 @@ namespace Frames {
       
   Layout::FEIterator::FEIterator() : m_state(STATE_COMPLETE), m_diveIndex(0), m_target(0), m_event(0) { };
 
-  Layout::FEIterator::FEIterator(Layout *target, const detail::VerbBase *event) : m_state(STATE_DIVE), m_diveIndex(0), m_target(target), m_event(event) { // set to STATE_DIVE so that NextIndex() does the right thing
+  Layout::FEIterator::FEIterator(Layout *target, const VerbBase *event) : m_state(STATE_DIVE), m_diveIndex(0), m_target(target), m_event(event) { // set to STATE_DIVE so that NextIndex() does the right thing
     target->Obliterate_Lock();
     
     if (event->GetDive()) {
@@ -1141,7 +1141,7 @@ namespace Frames {
         layout = m_dives[m_diveIndex];
       }
       
-      const detail::VerbBase *event = m_event;
+      const VerbBase *event = m_event;
       if (m_state == STATE_DIVE) {
         event = event->GetDive();
       } else if (m_state == STATE_BUBBLE) {
@@ -1177,7 +1177,7 @@ namespace Frames {
       }
       
       Layout *layout = LayoutGet();
-      const detail::VerbBase *event = EventGet();
+      const VerbBase *event = EventGet();
       
       // TODO: can probably be optimized by not doing a ton of lookups
       if (layout->m_events.count(event)) {
@@ -1197,7 +1197,7 @@ namespace Frames {
     }
   }
   
-  const detail::VerbBase *Layout::FEIterator::EventGet() {
+  const VerbBase *Layout::FEIterator::EventGet() {
     if (m_state == STATE_DIVE) {
       return m_event->GetDive();
     } else if (m_state == STATE_BUBBLE) {
@@ -1389,7 +1389,7 @@ namespace Frames {
     // Stack: layout Handle handler (priority)
     
     Layout *self = luaF_checkframe<Layout>(L, 1);
-    const detail::VerbBase *event = luaF_checkevent(L, 2);
+    const VerbBase *event = luaF_checkevent(L, 2);
     float priority = (float)luaL_optnumber(L, 4, 0.f);
     
     int handler = LUA_NOREF;
@@ -1456,7 +1456,7 @@ namespace Frames {
     // Stack: layout Handle handler (priority)
     
     Layout *self = luaF_checkframe<Layout>(L, 1);
-    const detail::VerbBase *event = luaF_checkevent(L, 2);
+    const VerbBase *event = luaF_checkevent(L, 2);
     float priority = (float)luaL_optnumber(L, 4, detail::Undefined);
     
     int handler = LUA_NOREF;

@@ -233,12 +233,12 @@ namespace Frames {
     };
     
     typedef std::multiset<FECallback, FECallback::Sorter> EventMultiset;
-    typedef std::map<const detail::VerbBase *, std::multiset<FECallback, FECallback::Sorter> > EventLookup;
+    typedef std::map<const VerbBase *, std::multiset<FECallback, FECallback::Sorter> > EventLookup;
     
     class FEIterator {
     public:
       FEIterator();
-      FEIterator(Layout *target, const detail::VerbBase *event);
+      FEIterator(Layout *target, const VerbBase *event);
       FEIterator(const FEIterator &itr);
       void operator=(const FEIterator &itr);
       ~FEIterator();
@@ -252,7 +252,7 @@ namespace Frames {
       void IndexNext();
       
       Layout *LayoutGet();
-      const detail::VerbBase *EventGet();
+      const VerbBase *EventGet();
       
       enum State { STATE_DIVE, STATE_MAIN, STATE_BUBBLE, STATE_COMPLETE };
       State m_state;
@@ -261,7 +261,7 @@ namespace Frames {
       int m_diveIndex;
       
       Layout *m_target;
-      const detail::VerbBase *m_event;
+      const VerbBase *m_event;
       
       EventMultiset::iterator m_current;
       EventMultiset::iterator m_last;
@@ -343,7 +343,7 @@ namespace Frames {
     template <typename P1> void EventTrigger(const Verb<void (P1)> &event, typename detail::MakeConstRef<P1>::T p1);
 
     /// Determines if a verb is hooked.
-    bool EventHookedIs(const detail::VerbBase &event) const;
+    bool EventHookedIs(const VerbBase &event) const;
 
     // --------- Misc
 

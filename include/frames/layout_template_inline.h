@@ -33,7 +33,7 @@ namespace Frames {
       return;
     }
     
-    Handle eh(this);
+    Handle eh(this, &event);
     
     for (FEIterator itr = FEIterator(this, &event); !itr.Complete(); itr.Next()) {
       itr.Get().Call(&eh);
@@ -45,7 +45,7 @@ namespace Frames {
       return;
     }
     
-    Handle eh(this);
+    Handle eh(this, &event);
         
     for (FEIterator itr = FEIterator(this, &event); !itr.Complete(); itr.Next()) {
       itr.Get().Call<P1>(&eh, p1);

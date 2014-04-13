@@ -41,7 +41,7 @@ TEST(Input, Focus) {
 
   // very thorough testing
   for (int i = 0; i < (1 << 3); ++i) {
-    if (i == 7) {
+    if (i == 0) {
       continue; // no actual input hooks, this is silly
     }
 

@@ -522,7 +522,7 @@ namespace Frames {
     LuaRegisterEvent(L, &Raw::Event::Render);
   }
   
-  void Environment::LuaRegisterEvent(lua_State *L, detail::VerbBase *feb) {
+  void Environment::LuaRegisterEvent(lua_State *L, VerbBase *feb) {
     LuaStackChecker lsc(L, this);
     
     lua_getfield(L, LUA_GLOBALSINDEX, "Frames");

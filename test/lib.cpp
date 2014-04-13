@@ -153,12 +153,12 @@ void VerbLog::Snapshot() {
 }
 
 void VerbLog::RecordEvent(Frames::Handle *handle) {
-  RecordResult(Frames::detail::Format("Event %s on %s", "(unknown)", handle->GetTarget()->DebugGetName().c_str()));
+  RecordResult(Frames::detail::Format("Event %s on %s", handle->GetVerb()->GetName(), handle->GetTarget()->DebugGetName().c_str()));
 }
 
 void VerbLog::RecordResult(const std::string &str) {
-  m_records += "\n";
   m_records += str;
+  m_records += "\n";
 }
 
 void TestSnapshot(TestEnvironment &env) {
