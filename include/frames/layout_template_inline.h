@@ -10,8 +10,6 @@
 namespace Frames {
   template <typename Parameters> void Layout::EventAttach(const Verb<Parameters> &event, typename Verb<Parameters>::TypeDelegate handler, float priority /*= 0.0*/) {
     m_events[&event].insert(FECallback::CreateNative(handler, priority));
-    
-    EventAttached(&event);
   }
     
   template <typename Parameters> void Layout::EventDetach(const Verb<Parameters> &event, typename Verb<Parameters>::TypeDelegate handler, float priority /*= detail::Undefined*/) {
@@ -25,7 +23,6 @@ namespace Frames {
     for (std::multiset<FECallback, FECallback::Sorter>::iterator itr = eventSet.begin(); itr != eventSet.end(); ++itr) {
       if (!itr->DestroyFlagGet() && itr->NativeCallbackEqual(handler) && (detail::IsUndefined(priority) || itr->PriorityGet() == priority)) {
         EventDestroy(m_events.find(&event), itr);
-        EventDetached(&event);
         return;
       }
     }

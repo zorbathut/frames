@@ -448,9 +448,6 @@ namespace Frames {
     // make sure you call these down if you override them
     bool EventHookedIs(const detail::VerbBase &event) const;
         
-    virtual void EventAttached(const detail::VerbBase *id);
-    virtual void EventDetached(const detail::VerbBase *id);
-    
     // Lua
     virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, GetStaticType()); } // see Layout::luaF_Register for what yours should look like
     void luaF_RegisterWorker(lua_State *L, const char *name) const;

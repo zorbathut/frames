@@ -778,29 +778,7 @@ namespace Frames {
     // they are! sigh
     return false;
   }
-
-  void Layout::EventAttached(const detail::VerbBase *event) {
-    if (!m_acceptInput) {
-      m_acceptInput =
-        EventHookedIs(Event::MouseLeftClick) || EventHookedIs(Event::MouseLeftUp) || EventHookedIs(Event::MouseLeftDown) ||
-        EventHookedIs(Event::MouseMiddleClick) || EventHookedIs(Event::MouseMiddleUp) || EventHookedIs(Event::MouseMiddleDown) ||
-        EventHookedIs(Event::MouseRightClick) || EventHookedIs(Event::MouseRightUp) || EventHookedIs(Event::MouseRightDown) ||
-        EventHookedIs(Event::MouseButtonClick) || EventHookedIs(Event::MouseButtonUp) || EventHookedIs(Event::MouseButtonDown) ||
-        EventHookedIs(Event::MouseMove) || EventHookedIs(Event::MouseWheel) || EventHookedIs(Event::MouseOver) || EventHookedIs(Event::MouseOut);
-    }
-  }
-
-  void Layout::EventDetached(const detail::VerbBase *event) {
-    if (m_acceptInput) {
-      m_acceptInput =
-        EventHookedIs(Event::MouseLeftClick) || EventHookedIs(Event::MouseLeftUp) || EventHookedIs(Event::MouseLeftDown) ||
-        EventHookedIs(Event::MouseMiddleClick) || EventHookedIs(Event::MouseMiddleUp) || EventHookedIs(Event::MouseMiddleDown) ||
-        EventHookedIs(Event::MouseRightClick) || EventHookedIs(Event::MouseRightUp) || EventHookedIs(Event::MouseRightDown) ||
-        EventHookedIs(Event::MouseButtonClick) || EventHookedIs(Event::MouseButtonUp) || EventHookedIs(Event::MouseButtonDown) ||
-        EventHookedIs(Event::MouseMove) || EventHookedIs(Event::MouseWheel) || EventHookedIs(Event::MouseOver) || EventHookedIs(Event::MouseOut);
-    }
-  }
-
+  
   void Layout::luaF_RegisterWorker(lua_State *L, const char *name) const {
     Environment::LuaStackChecker lsc(L, m_env);
     // Incoming: ... newtab Frames_rg
@@ -1468,7 +1446,6 @@ namespace Frames {
     lua_pop(L, 1);
   
     self->m_events[event].insert(FECallback::CreateLua(L_base, handler, priority));
-    self->EventAttached(event);
    
     return 0;
   }
@@ -1509,7 +1486,6 @@ namespace Frames {
     for (std::multiset<FECallback, FECallback::Sorter>::iterator itr = eventSet.begin(); itr != eventSet.end(); ++itr) {
       if (!itr->DestroyFlagGet() && itr->LuaHandleEqual(L_base, handler) && (detail::IsUndefined(priority) || itr->PriorityGet() == priority)) {
         self->EventDestroy(self->m_events.find(event), itr);
-        self->EventDetached(event);
         return 0;
       }
     }
