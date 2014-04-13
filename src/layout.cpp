@@ -188,7 +188,7 @@ namespace Frames {
       if (prv) return prv;
     }
 
-    if (m_acceptInput && x >= GetLeft() && y >= GetTop() && x < GetRight() && y < GetBottom()) {
+    if (m_inputMode && x >= GetLeft() && y >= GetTop() && x < GetRight() && y < GetBottom()) {
       return this;
     }
 
@@ -326,7 +326,7 @@ namespace Frames {
       m_visible(true),
       m_alpha(1),
       m_fullMouseMasking(false),
-      m_acceptInput(false),
+      m_inputMode(IM_NONE),
       m_name(name),
       m_obliterate_lock(0),
       m_obliterate_buffered(false),

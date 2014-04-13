@@ -345,6 +345,18 @@ namespace Frames {
     /// Determines if a verb is hooked.
     bool EventHookedIs(const detail::VerbBase &event) const;
 
+    // --------- Misc
+
+    /// Mode for input handling.
+    /**
+    IM_NONE indicates that the frame should not accept input of any kind; any input will pass through transparently.
+    IM_ALL indicates that the frame should accept all kinds of input, and input will not pass to a frame below this one.*/
+    enum InputMode { IM_NONE, IM_ALL };
+    /// Sets the input mode.
+    inline void SetInputMode(InputMode imode) { m_inputMode = imode; }
+    /// Gets the input mode.
+    inline InputMode GetInputMode() const { return m_inputMode; }
+
     /// Returns the environment.
     Environment *GetEnvironment() const { return m_env; }
 
@@ -487,7 +499,7 @@ namespace Frames {
 
     // Input
     bool m_fullMouseMasking;
-    bool m_acceptInput;
+    InputMode m_inputMode;
 
     // Naming system
     std::string m_name;

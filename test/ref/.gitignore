@@ -1,2 +1,2 @@
 # Our test framework outputs results on every run for ease of debugging, but obviously we don't want to include these in git
-*_result.png
+*_result.*

@@ -1,10 +1,17 @@
 
-* Create Frame:: function deferment, with documentation
+* Improve Handle a bit
 
-* Add SetInput?
+* Test SetInput
+
+* Shift to SourceTree embedded
+* de-crlf everything
 
 * Error checks for Layout
 * Tests for all of Layout
+
+* Handle needs to be documented
+
+* Redesign Format, seriously
 
 === TWEAK
 

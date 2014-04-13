@@ -6,13 +6,16 @@
 #include <SDL.h>
 #include <frames/os_gl.h>
 #include <frames/environment.h>
+#include <frames/event.h>
 #include <frames/stream.h>
+#include <frames/layout.h>
 #include <frames/loader.h>
 #include <frames/texture_config.h>
 
 #include <png.h>
 
 #include <cstdio>
+#include <fstream>
 
 TestSDLEnvironment::TestSDLEnvironment() : m_win(0), m_glContext(0) {
   EXPECT_EQ(SDL_Init(SDL_INIT_VIDEO), 0);
@@ -86,6 +89,78 @@ TestEnvironment::~TestEnvironment() {
   delete m_env;
 }
 
+struct TestNames {
+  std::string testName;
+  std::string resultName;
+};
+
+TestNames GetTestNames(const std::string &family, const std::string &extension) {
+  TestNames rv;
+  
+  std::string baseName = Frames::detail::Format("ref/%s_%s", ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name(), ::testing::UnitTest::GetInstance()->current_test_info()->name());
+
+  static std::string s_testNameLast = "";
+  static std::map<std::string, int> s_familyIds;
+
+  if (baseName != s_testNameLast) {
+    s_testNameLast = baseName;
+    s_familyIds.clear();
+  }
+
+  std::string testFilePrefix = Frames::detail::Format("%s_%s_%d", baseName.c_str(), family.c_str(), s_familyIds[family]++);
+
+  rv.testName = testFilePrefix + extension;
+  rv.resultName = testFilePrefix + "_result" + extension;
+
+  // write to the "input" file if that file doesn't exist
+  if (!std::ifstream(rv.testName)) {
+    rv.resultName = rv.testName;
+  }
+
+  return rv;
+}
+
+VerbLog::VerbLog() {
+}
+
+VerbLog::~VerbLog() {
+  if (!m_records.empty()) {
+    Snapshot();
+  }
+}
+
+void VerbLog::Snapshot() {
+  TestNames testNames = GetTestNames("event", ".txt");
+
+  // Grab our source file (or try to)
+  std::string testsrc;
+  {
+    std::ifstream in(testNames.testName, std::ios::binary); // Binary so we don't have to worry about \r\n's showing up in our event results
+    if (in) {
+      testsrc = std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    }
+  }
+
+  // Write result to disk
+  {
+    std::ofstream out(testNames.resultName, std::ios::binary);
+    out << m_records;
+  }
+
+  EXPECT_TRUE(m_records == testsrc);
+
+  m_records.clear();
+}
+
+void VerbLog::RecordEvent(Frames::Handle *handle) {
+  RecordResult(Frames::detail::Format("Event %s on %s", "(unknown)", handle->GetTarget()->DebugGetName().c_str()));
+}
+
+void VerbLog::RecordResult(const std::string &str) {
+  m_records += "\n";
+  m_records += str;
+}
+
 void TestSnapshot(TestEnvironment &env) {
   // Do the render
   glClearColor(0, 0, 0, 1);
@@ -93,20 +168,8 @@ void TestSnapshot(TestEnvironment &env) {
   env->ResizeRoot(env.GetWidth(), env.GetHeight());
   env->Render();
 
-  std::string testName = Frames::detail::Format("ref/%s_%s", ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name(), ::testing::UnitTest::GetInstance()->current_test_info()->name());
-
-  static std::string s_testNameLast = "";
-  static int s_testIdLast = 0;
-
-  if (testName != s_testNameLast) {
-    s_testNameLast = testName;
-    s_testIdLast = 0;
-  }
-
-  std::string testFilePrefix = Frames::detail::Format("%s_%d", testName.c_str(), s_testIdLast++);
-  std::string testFileName = testFilePrefix + ".png";
-  std::string failureFileName = testFilePrefix + "_result.png";
-
+  TestNames testNames = GetTestNames("screen", ".png");
+  
   // We now have our test filename
 
   // Grab a screenshot
@@ -127,7 +190,7 @@ void TestSnapshot(TestEnvironment &env) {
   // Grab our source file (or try to)
   std::vector<unsigned char> reference;
   {
-    Frames::StreamFile *stream = Frames::StreamFile::Create(testFileName);
+    Frames::StreamFile *stream = Frames::StreamFile::Create(testNames.testName);
     if (stream)
     {
       Frames::TextureConfig tex = Frames::Loader::PNG::Load(*env, stream);
@@ -141,18 +204,10 @@ void TestSnapshot(TestEnvironment &env) {
     }
   }
 
-  std::string writeFileName;
-  if (reference.empty()) {
-    writeFileName = testFileName;
-  } else {
-    writeFileName = failureFileName;
-  }
-
-  if (!writeFileName.empty()) {
-    // For now, we just write to disk
+  {
+    // Write result to disk
     // Don't need this anywhere in Frames so we'll just hack it in here
-
-    FILE *fp = fopen(writeFileName.c_str(), "wb");
+    FILE *fp = fopen(testNames.resultName.c_str(), "wb");
 
     png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     png_infop info_ptr = png_create_info_struct(png_ptr);
