@@ -406,7 +406,7 @@ namespace Frames {
     m_env->DestroyingLayout(this);
   }
 
-  void Layout::SetPin(Axis axis, float mypt, const Layout *link, float linkpt, float offset /*= 0.f*/) {
+  void Layout::zinternalSetPin(Axis axis, float mypt, const Layout *link, float linkpt, float offset /*= 0.f*/) {
     if (link && link->m_env != m_env) {
       FRAMES_LAYOUT_CHECK(false, "Attempted to constrain a frame to a frame from another environment");
       return;
@@ -504,7 +504,7 @@ namespace Frames {
     return;
   }
 
-  void Layout::ClearPin(Axis axis, float mypt) {
+  void Layout::zinternalClearPin(Axis axis, float mypt) {
     AxisData &ax = m_axes[axis];
 
     AxisData::Connector &axa = ax.connections[0];
@@ -546,70 +546,70 @@ namespace Frames {
     // If we didn't actually clear anything, no sweat, no need to invalidate
   }
 
-  void Layout::ClearPin(Anchor anchor) {
+  void Layout::zinternalClearPin(Anchor anchor) {
     if (!detail::IsNil(detail::c_anchorLookup[anchor].x)) {
-      ClearPin(X, detail::c_anchorLookup[anchor].x);
+      zinternalClearPin(X, detail::c_anchorLookup[anchor].x);
     }
 
     if (!detail::IsNil(detail::c_anchorLookup[anchor].y)) {
-      ClearPin(Y, detail::c_anchorLookup[anchor].y);
+      zinternalClearPin(Y, detail::c_anchorLookup[anchor].y);
     }
   }
 
-  void Layout::ClearPinAll(Axis axis) {
+  void Layout::zinternalClearPinAll(Axis axis) {
     AxisData &ax = m_axes[axis];
 
     AxisData::Connector &axa = ax.connections[0];
     if (!detail::IsUndefined(axa.point_mine)) {
-      ClearPin(axis, axa.point_mine);
+      zinternalClearPin(axis, axa.point_mine);
     }
 
     AxisData::Connector &axb = ax.connections[1];
     if (!detail::IsUndefined(axb.point_mine)) {
-      ClearPin(axis, axb.point_mine);
+      zinternalClearPin(axis, axb.point_mine);
     }
 
-    ClearSize(axis);
+    zinternalClearSize(axis);
   }
 
   // SetPin adapters
   // All the anchor versions just transform themselves into no-anchor versions first
-  void Layout::SetPin(Anchor myanchor, const Layout *link, Anchor theiranchor) {
-    SetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
+  void Layout::zinternalSetPin(Anchor myanchor, const Layout *link, Anchor theiranchor) {
+    zinternalSetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
   }
-  void Layout::SetPin(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
-    SetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
+  void Layout::zinternalSetPin(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
+    zinternalSetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
   }
   
-  void Layout::SetPin(Anchor myanchor, const Layout *link, float theirx, float theiry) {
-    SetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry);
+  void Layout::zinternalSetPin(Anchor myanchor, const Layout *link, float theirx, float theiry) {
+    zinternalSetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry);
   }
-  void Layout::SetPin(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
-    SetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
-  }
-
-  void Layout::SetPin(float myx, float myy, const Layout *link, Anchor theiranchor) {
-    SetPin(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
-  }
-  void Layout::SetPin(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
-    SetPin(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
+  void Layout::zinternalSetPin(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
+    zinternalSetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
   }
 
-  void Layout::SetPin(float myx, float myy, const Layout *link, float theirx, float theiry) {
+  void Layout::zinternalSetPin(float myx, float myy, const Layout *link, Anchor theiranchor) {
+    zinternalSetPin(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
+  }
+  void Layout::zinternalSetPin(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
+    zinternalSetPin(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
+  }
+
+  void Layout::zinternalSetPin(float myx, float myy, const Layout *link, float theirx, float theiry) {
     FRAMES_LAYOUT_CHECK(link, "SetPin requires offsets when linking to origin.");
     FRAMES_LAYOUT_CHECK(detail::IsNil(myx) == detail::IsNil(theirx), "SetPin provided with only one anchor position for X axis");
     FRAMES_LAYOUT_CHECK(detail::IsNil(myy) == detail::IsNil(theiry), "SetPin provided with only one anchor position for Y axis");
     FRAMES_LAYOUT_CHECK(!detail::IsNil(myx) || !detail::IsNil(myy), "SetPin not provided with any anchor axes");
 
     if (!detail::IsNil(myx)) {
-      SetPin(X, myx, link, theirx);
+      zinternalSetPin(X, myx, link, theirx);
     }
 
     if (!detail::IsNil(myy)) {
-      SetPin(Y, myy, link, theiry);
+      zinternalSetPin(Y, myy, link, theiry);
     }
   }
-  void Layout::SetPin(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
+  void Layout::zinternalSetPin(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
     FRAMES_LAYOUT_CHECK(!detail::IsNil(myx) || !detail::IsNil(myy), "SetPin not provided with any anchor axes");
     if (link) {
       FRAMES_LAYOUT_CHECK(detail::IsNil(myx) == detail::IsNil(theirx) && detail::IsNil(myx) == detail::IsNil(xofs), "SetPin provided with only one anchor position for X axis");
@@ -621,15 +621,15 @@ namespace Frames {
     }
 
     if (!detail::IsNil(myx)) {
-      SetPin(X, myx, link, theirx, xofs);
+      zinternalSetPin(X, myx, link, theirx, xofs);
     }
 
     if (!detail::IsNil(myy)) {
-      SetPin(Y, myy, link, theiry, yofs);
+      zinternalSetPin(Y, myy, link, theiry, yofs);
     }
   }
 
-  void Layout::SetSize(Axis axis, float size) {
+  void Layout::zinternalSetSize(Axis axis, float size) {
     AxisData &ax = m_axes[axis];
 
     if (!detail::IsUndefined(ax.connections[0].point_mine) && !detail::IsUndefined(ax.connections[1].point_mine)) {
@@ -647,7 +647,7 @@ namespace Frames {
     }
   }
 
-  void Layout::ClearSize(Axis axis) {
+  void Layout::zinternalClearSize(Axis axis) {
     AxisData &ax = m_axes[axis];
 
     // We don't care if we haven't changed
@@ -660,12 +660,12 @@ namespace Frames {
     }
   }
 
-  void Layout::ClearConstraintAll() {
-    ClearSize(X);
-    ClearSize(Y);
+  void Layout::zinternalClearConstraintAll() {
+    zinternalClearSize(X);
+    zinternalClearSize(Y);
 
-    ClearPinAll(X);
-    ClearPinAll(Y);
+    zinternalClearPinAll(X);
+    zinternalClearPinAll(Y);
   }
 
   void Layout::SetSizeDefault(Axis axis, float size) {
@@ -682,7 +682,7 @@ namespace Frames {
     }
   }
 
-  void Layout::SetParent(Layout *layout) {
+  void Layout::zinternalSetParent(Layout *layout) {
     if (m_parent == layout) {
       return;
     }
@@ -707,7 +707,7 @@ namespace Frames {
     m_parent->m_children.insert(this);
   }
 
-  void Layout::SetLayer(float layer) {
+  void Layout::zinternalSetLayer(float layer) {
     if (m_layer == layer) {
       return;
     }
@@ -724,7 +724,7 @@ namespace Frames {
     }
   }
 
-  void Layout::SetImplementation(bool implementation) {
+  void Layout::zinternalSetImplementation(bool implementation) {
     if (m_implementation == implementation) {
       return;
     }
@@ -749,7 +749,7 @@ namespace Frames {
     m_visible = visible;
   }
 
-  void Layout::Obliterate() {
+  void Layout::zinternalObliterate() {
     if (m_obliterate_lock) {
       // can't do this quite yet, do it later
       m_obliterate_buffered = true;
@@ -872,7 +872,7 @@ namespace Frames {
   }
 
   void Layout::Obliterate_Detach() {
-    ClearConstraintAll();  // kill my layout to unlink things
+    zinternalClearConstraintAll();  // kill my layout to unlink things
 
     // OBLITERATE ALL CHILDREN.
     for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
@@ -916,12 +916,12 @@ namespace Frames {
 
     if (ax.connections[0].link == layout) {
       FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->DebugGetName().c_str(), DebugGetName().c_str(), axis ? 'Y' : 'X', ax.connections[0].point_mine);
-      ClearPin(axis, ax.connections[0].point_mine);
+      zinternalClearPin(axis, ax.connections[0].point_mine);
     }
 
     if (ax.connections[1].link == layout) {
       FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->DebugGetName().c_str(), DebugGetName().c_str(), axis ? 'Y' : 'X', ax.connections[1].point_mine);
-      ClearPin(axis, ax.connections[1].point_mine);
+      zinternalClearPin(axis, ax.connections[1].point_mine);
     }
   }
 
@@ -1208,10 +1208,10 @@ namespace Frames {
   }
   
   bool Layout::FrameOrderSorter::operator()(const Layout *lhs, const Layout *rhs) const {
-    if (lhs->GetImplementation() != rhs->GetImplementation())
-      return lhs->GetImplementation() < rhs->GetImplementation();
-    if (lhs->GetLayer() != rhs->GetLayer())
-      return lhs->GetLayer() < rhs->GetLayer();
+    if (lhs->zinternalGetImplementation() != rhs->zinternalGetImplementation())
+      return lhs->zinternalGetImplementation() < rhs->zinternalGetImplementation();
+    if (lhs->zinternalGetLayer() != rhs->zinternalGetLayer())
+      return lhs->zinternalGetLayer() < rhs->zinternalGetLayer();
     // they're the same, but we want a consistent sort that won't result in Z-fighting
     return lhs->m_constructionOrder < rhs->m_constructionOrder;
   }
@@ -1271,7 +1271,7 @@ namespace Frames {
     FRAMES_LAYOUT_CHECK(m_obliterate_lock, "Unlocking frame obliterate when already unlocked, internal error");
     --m_obliterate_lock;
     if (!m_obliterate_lock && m_obliterate_buffered) {
-      Obliterate(); // kaboom!
+      zinternalObliterate(); // kaboom!
     }
   }
 

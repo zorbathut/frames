@@ -362,52 +362,9 @@ namespace Frames {
     std::string DebugGetName() const;
 
   protected:
-    // --------- SetPin
-
-    /// Creates or redefines a single anchor \ref layoutbasics "link".
-    /** It is generally recommended to use the other SetPin overloads before this one. See \ref layoutbasics for more information. */
-    void SetPin(Axis axis, float mypt, const Layout *link, float theirpt, float offset = 0.f);
-    /// Clears a single \ref layoutbasics "link".
-    void ClearPin(Axis axis, float mypt);
-    /// Clears a single \ref layoutbasics "link".
-    void ClearPin(Anchor anchor);
-    /// Clears all \ref layoutbasics "links" on an axis.
-    void ClearPinAll(Axis axis);
-
-    // --------- SetPin variants
-
-    /// SetPin variant for \ref layoutbasics "linking" two \ref Anchor "Anchors".
-    void SetPin(Anchor myanchor, const Layout *link, Anchor theiranchor);
-    /// SetPin variant for \ref layoutbasics "linking" two \ref Anchor "Anchors" with an offset.
-    void SetPin(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs);
-    /// SetPin variant for \ref layoutbasics "linking" an Anchor to a relative point.
-    void SetPin(Anchor myanchor, const Layout *link, float theirx, float theiry);
-    /// SetPin variant for \ref layoutbasics "linking" an Anchor to a relative point with an offset.
-    void SetPin(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs);
-    /// SetPin variant for \ref layoutbasics "linking" a relative point to an Anchor.
-    void SetPin(float myx, float myy, const Layout *link, Anchor theiranchor);
-    /// SetPin variant for \ref layoutbasics "linking" a relative point to an Anchor with an offset.
-    void SetPin(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs);
-    /// SetPin variant for \ref layoutbasics "linking" two relative points.
-    void SetPin(float myx, float myy, const Layout *link, float theirx, float theiry);
-    /// SetPin variant for \ref layoutbasics "linking" two relative points with an offset.
-    void SetPin(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs);
-
-    /// Sets the size of an axis.
-    void SetSize(Axis axis, float size);
-    /// Sets the width.
-    void SetWidth(float size) { return SetSize(X, size); }
-    /// Sets the height.
-    void SetHeight(float size) { return SetSize(Y, size); }
-    /// Clears the size of an axis.
-    void ClearSize(Axis axis);
-
-    /// Clears all links and sizes.
-    void ClearConstraintAll();
-
     /// Set default size of an axis.
     /** Default sizing is used for frames that semantically have a "normal" size, but may be resized arbitrary by the user. The frame will fall back to the default size if its size is left undefined otherwise (either via explicit sizing or via sufficient linking to fix the size.)
-    
+
     This should generally not be exposed to the end-user of a class - it is intended as an internal implementation tool. */
     void SetSizeDefault(Axis axis, float size);
     /// Set default width. See SetSizeDefault for details.
@@ -415,48 +372,61 @@ namespace Frames {
     /// Set default height. See SetSizeDefault for details.
     void SetHeightDefault(float size) { return SetSizeDefault(Y, size); }
 
-    /// Sets the parent.
-    /** New parent must be non-null and a member of the same environment. */
-    void SetParent(Layout *layout);
-
-    /// Sets the name.
-    void SetName(const std::string &name) { m_name = name; }
-
-    /// Sets the layer.
-    /** Layers are used to determine frame render and input order. Higher-numbered layers are layered on top of lower-numbered layers. All floating-point values are acceptable besides infinities and NaN. */
-    void SetLayer(float layer);
-    /// Gets the layer.
-    float GetLayer() const { return m_layer; }
-
-    /// Sets the implementation flag.
-    /** The implementation flag is used to create new frame types that are composited out of subframes. All frames with this flag set will be rendered before frames without the flag set. In addition, frames with this flag will not be returned from GetChildren() (TODO: nyi!). */
-    void SetImplementation(bool implementation);
-    /// Gets the implementation flag.
-    bool GetImplementation() const { return m_implementation; }
-
-    /// Destroys this frame and all its children.
-    /** Also destroys all \ref layoutbasics "links" to and from these layouts. It is undefined behavior to refer to this frame or any of its children after this function is called. */
-    void Obliterate();
-
     /// Called when this frame is rendered.
     /** Overload this to create your own frame types. Must call (super)::RenderElement before it does its own work. */
-    virtual void RenderElement(detail::Renderer *renderer) const { };
+    virtual void RenderElement(detail::Renderer *renderer) const {};
     /// Called before this frame's children have been rendered.
     /** Overload this for pre-render setup. If this frame has no children, may not be called at all. Must call (super)::RenderElementPreChild before it does its own work. */
     virtual void RenderElementPreChild(detail::Renderer *renderer) const {};
     /// Called after this frame's children have been rendered.
     /** Overload this for post-render cleanup. If this frame has no children, may not be called at all. Must call (super)::RenderElementPreChild *after* it does its own work. */
-    virtual void RenderElementPostChild(detail::Renderer *renderer) const { };
-        
+    virtual void RenderElementPostChild(detail::Renderer *renderer) const {};
+
     // Lua
     virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, GetStaticType()); } // see Layout::luaF_Register for what yours should look like
     void luaF_RegisterWorker(lua_State *L, const char *name) const;
 
     static void luaF_RegisterFunctions(lua_State *L);
 
-    static void luaF_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *));
+    static void luaF_RegisterFunction(lua_State *L, const char *owner, const char *name, int(*func)(lua_State *));
 
   private:
+    // These need to be defined here because Layout actually contains the implementation, but the documentation and function definitions need to show up in frame.h for the sake of documentation.
+    // This is a bit ugly, but thankfully they can all be inlined.
+    // zinternal prefix so they show up at the bottom of sorting, in either case-sensitive or case-insensitive mode.
+    void zinternalSetPin(Axis axis, float mypt, const Layout *link, float theirpt, float offset = 0.f);
+    void zinternalClearPin(Axis axis, float mypt);
+    void zinternalClearPin(Anchor anchor);
+    void zinternalClearPinAll(Axis axis);
+
+    void zinternalSetPin(Anchor myanchor, const Layout *link, Anchor theiranchor);
+    void zinternalSetPin(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs);
+    void zinternalSetPin(Anchor myanchor, const Layout *link, float theirx, float theiry);
+    void zinternalSetPin(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs);
+    void zinternalSetPin(float myx, float myy, const Layout *link, Anchor theiranchor);
+    void zinternalSetPin(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs);
+    void zinternalSetPin(float myx, float myy, const Layout *link, float theirx, float theiry);
+    void zinternalSetPin(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs);
+
+    void zinternalSetSize(Axis axis, float size);
+    void zinternalSetWidth(float size) { return zinternalSetSize(X, size); }
+    void zinternalSetHeight(float size) { return zinternalSetSize(Y, size); }
+    void zinternalClearSize(Axis axis);
+
+    void zinternalClearConstraintAll();
+
+    void zinternalSetParent(Layout *layout);
+
+    void zinternalSetName(const std::string &name) { m_name = name; }
+
+    void zinternalSetLayer(float layer);
+    float zinternalGetLayer() const { return m_layer; }
+
+    void zinternalSetImplementation(bool implementation);
+    bool zinternalGetImplementation() const { return m_implementation; }
+
+    void zinternalObliterate();
+
     Layout(const std::string &name, Environment *env);
     virtual ~Layout();
 

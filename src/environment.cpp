@@ -31,7 +31,7 @@ namespace Frames {
       LuaUnregister(*m_lua_environments.begin());
     }
 
-    m_root->Obliterate();
+    m_root->zinternalObliterate();
 
     // this flushes everything out of memory
     while (!m_invalidated.empty()) {
