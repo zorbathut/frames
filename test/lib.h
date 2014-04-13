@@ -60,7 +60,9 @@ public:
   template <typename Parameters> void Attach(Frames::Layout *layout, const Frames::Verb<Parameters> &verb) {
     EXPECT_TRUE(m_nameUniqueTest.count(layout->GetName()) == 0 || m_nameUniqueTest[layout->GetName()] == layout);
 
-    layout->EventAttach(verb, Frames::Delegate<typename Frames::detail::FunctionPrefix<Frames::Handle*, Parameters>::T>(this, &VerbLog::RecordEvent));
+    typename Frames::Verb<Parameters>::TypeDelegate delegate = Frames::Verb<Parameters>::TypeDelegate(this, &VerbLog::RecordEvent);
+    layout->EventAttach(verb, delegate);
+    m_detachers.push_back(new Detacher<Parameters>(layout, verb, delegate));
   }
 
 private:
@@ -70,6 +72,26 @@ private:
   std::string m_records;
 
   std::map<std::string, Frames::Layout *> m_nameUniqueTest;
+
+  class DetacherBase : Frames::detail::Noncopyable {
+  public:
+    virtual ~DetacherBase() { }
+  };
+
+  template <typename Parameters> class Detacher : public DetacherBase {
+  public:
+    Detacher(Frames::Layout *layout, const Frames::Verb<Parameters> &verb, typename Frames::Verb<Parameters>::TypeDelegate delegate) : m_layout(layout), m_verb(verb), m_delegate(delegate) {};
+    virtual ~Detacher() {
+      m_layout->EventDetach(m_verb, m_delegate);
+    }
+
+  private:
+    Frames::Layout *m_layout;
+    const Frames::Verb<Parameters> &m_verb;
+    typename Frames::Verb<Parameters>::TypeDelegate m_delegate;
+  };
+
+  std::vector<DetacherBase *> m_detachers;
 };
 
 void TestSnapshot(TestEnvironment &env);

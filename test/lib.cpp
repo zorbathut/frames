@@ -127,6 +127,10 @@ VerbLog::~VerbLog() {
   if (!m_records.empty()) {
     Snapshot();
   }
+
+  for (int i = 0; i < (int)m_detachers.size(); ++i) {
+    delete m_detachers[i];
+  }
 }
 
 void VerbLog::Snapshot() {

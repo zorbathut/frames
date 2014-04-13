@@ -9,10 +9,10 @@ TEST(Input, Focus) {
   TestEnvironment env;
 
   // Create a series of frames, then test movement events
-  // Three frames overlapping, a -> b -> c, though we generate them out of order
+  // Three frames overlapping, a -> b -> c, though we generate them out of order to test layering
   Frames::Frame *a = Frames::Frame::Create("a", env->GetRoot());
-  Frames::Frame *c = Frames::Frame::Create("b", env->GetRoot());
-  Frames::Frame *b = Frames::Frame::Create("c", env->GetRoot());
+  Frames::Frame *c = Frames::Frame::Create("c", env->GetRoot());
+  Frames::Frame *b = Frames::Frame::Create("b", env->GetRoot());
 
   a->SetLayer(0);
   b->SetLayer(1);
@@ -25,9 +25,9 @@ TEST(Input, Focus) {
   c->SetWidth(400);
   c->SetHeight(300);
 
-  a->SetBackground(Frames::Color(1, 0, 0, 0.5));
-  b->SetBackground(Frames::Color(0, 1, 0, 0.5));
-  c->SetBackground(Frames::Color(0, 0, 1, 0.5));
+  a->SetBackground(Frames::Color(1, 0, 0, 0.8));
+  b->SetBackground(Frames::Color(0, 1, 0, 0.8));
+  c->SetBackground(Frames::Color(0, 0, 1, 0.8));
 
   a->SetPin(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT, 100, 100);
   b->SetPin(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT, 200, 200);
