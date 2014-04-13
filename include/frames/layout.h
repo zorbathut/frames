@@ -342,6 +342,9 @@ namespace Frames {
     /// Triggers all attached handlers for a given verb.
     template <typename P1> void EventTrigger(const Verb<void (P1)> &event, typename detail::MakeConstRef<P1>::T p1);
 
+    /// Determines if a verb is hooked.
+    bool EventHookedIs(const detail::VerbBase &event) const;
+
     /// Returns the environment.
     Environment *GetEnvironment() const { return m_env; }
 
@@ -444,9 +447,6 @@ namespace Frames {
     /// Called after this frame's children have been rendered.
     /** Overload this for post-render cleanup. If this frame has no children, may not be called at all. Must call (super)::RenderElementPreChild *after* it does its own work. */
     virtual void RenderElementPostChild(detail::Renderer *renderer) const { };
-
-    // make sure you call these down if you override them
-    bool EventHookedIs(const detail::VerbBase &event) const;
         
     // Lua
     virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, GetStaticType()); } // see Layout::luaF_Register for what yours should look like
