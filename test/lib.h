@@ -6,6 +6,9 @@
 
 #include <frames/environment.h>
 #include <frames/event.h>
+#include <frames/layout.h>
+
+#include <gtest/gtest.h>
 
 namespace Frames {
   class Layout;
@@ -60,7 +63,7 @@ public:
   template <typename Parameters> void Attach(Frames::Layout *layout, const Frames::Verb<Parameters> &verb) {
     EXPECT_TRUE(m_nameUniqueTest.count(layout->GetName()) == 0 || m_nameUniqueTest[layout->GetName()] == layout);
 
-    typename Frames::Verb<Parameters>::TypeDelegate delegate = Frames::Verb<Parameters>::TypeDelegate(this, &VerbLog::RecordEvent);
+    typename Frames::Verb<Parameters>::TypeDelegate delegate = typename Frames::Verb<Parameters>::TypeDelegate(this, &VerbLog::RecordEvent);
     layout->EventAttach(verb, delegate);
     m_detachers.push_back(new Detacher<Parameters>(layout, verb, delegate));
   }
