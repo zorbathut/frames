@@ -30,10 +30,10 @@ TEST(Layout, SetPin) {
 
   red->SetPin(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT);
   red->SetPin(Frames::BOTTOMRIGHT, env->GetRoot(), Frames::BOTTOMRIGHT);
-  EXPECT_EQ(red->GetLeft(), 0);
-  EXPECT_EQ(red->GetRight(), env.GetWidth());
-  EXPECT_EQ(red->GetTop(), 0);
-  EXPECT_EQ(red->GetBottom(), env.GetHeight());
+  EXPECT_EQ(0, red->GetLeft());
+  EXPECT_EQ(env.GetWidth(), red->GetRight());
+  EXPECT_EQ(0, red->GetTop());
+  EXPECT_EQ(env.GetHeight(), red->GetBottom());
 
   TestSnapshot(env);
 
@@ -123,4 +123,66 @@ TEST(Layout, Layer) {
   }
 
   TestSnapshot(env);
+
+}
+
+TEST(Layout, Error) {
+  TestEnvironment env;
+  TestEnvironment env2(false);
+
+  env.AllowErrors();
+
+  Frames::Frame *subject = Frames::Frame::Create("subject", env->GetRoot());
+  Frames::Frame *subjectalt = Frames::Frame::Create("subjectalt", env->GetRoot());
+  Frames::Frame *subj2 = Frames::Frame::Create("subject2", env2->GetRoot());
+
+  // Forged enums
+  subject->ClearPin(Frames::Anchor(-1));
+  subject->ClearPin(Frames::Anchor(Frames::ANCHOR_COUNT));
+
+  subject->ClearPinAll(Frames::Axis(-1));
+  subject->ClearPinAll(Frames::Axis(2));
+
+  subject->ClearSize(Frames::Axis(-1));
+  subject->ClearSize(Frames::Axis(2));
+
+  subject->luaF_push(0);
+
+  subject->SetInputMode(Frames::Layout::InputMode(-1));
+  subject->SetInputMode(Frames::Layout::InputMode(2));
+
+  subject->SetParent(0);
+  subject->SetParent(subj2);
+
+  subject->SetSize(Frames::Axis(-1), 1);
+  subject->SetSize(Frames::Axis(2), 1);
+
+  subject->SetPin(Frames::Anchor(-1), subjectalt, Frames::TOPLEFT);
+  subject->SetPin(Frames::Anchor(Frames::ANCHOR_COUNT), subjectalt, Frames::TOPLEFT);
+  subject->SetPin(Frames::TOPLEFT, subjectalt, Frames::Anchor(-1));
+  subject->SetPin(Frames::TOPLEFT, subjectalt, Frames::Anchor(Frames::ANCHOR_COUNT));
+
+  // Target errors
+  subject->SetPin(Frames::TOPLEFT, subj2, Frames::TOPLEFT);
+  subject->SetPin(Frames::TOPLEFT, subject, Frames::TOPLEFT);
+
+  // Axis mismatches
+  subject->SetPin(Frames::TOPLEFT, subjectalt, Frames::TOP);
+  subject->SetPin(Frames::TOPLEFT, subjectalt, Frames::LEFT);
+  subject->SetPin(Frames::TOP, subjectalt, Frames::TOPLEFT);
+  subject->SetPin(Frames::LEFT, subjectalt, Frames::TOPLEFT);
+  subject->SetPin(Frames::TOP, subjectalt, Frames::LEFT);
+
+  // Offset mismatches
+  subject->SetPin(Frames::TOPLEFT, subjectalt, Frames::TOPLEFT, Frames::Nil, 0.0f);
+  subject->SetPin(Frames::TOPLEFT, subjectalt, Frames::TOPLEFT, 0.0f, Frames::Nil);
+  subject->SetPin(Frames::TOPLEFT, subjectalt, Frames::TOPLEFT, Frames::Nil, Frames::Nil);
+
+  subject->SetPin(Frames::LEFT, subjectalt, Frames::LEFT, Frames::Nil, 0.0f);
+  subject->SetPin(Frames::LEFT, subjectalt, Frames::LEFT, Frames::Nil, Frames::Nil);
+  subject->SetPin(Frames::LEFT, subjectalt, Frames::LEFT, 0.0f, 0.0f);
+
+  subject->SetPin(Frames::TOP, subjectalt, Frames::TOP, 0.0f, Frames::Nil);
+  subject->SetPin(Frames::TOP, subjectalt, Frames::TOP, Frames::Nil, Frames::Nil);
+  subject->SetPin(Frames::TOP, subjectalt, Frames::TOP, 0.0f, 0.0f);
 }

@@ -52,6 +52,11 @@ namespace Frames {
   }
 
   float Layout::GetPoint(Axis axis, float pt) const {
+    if (!(axis == X || axis == Y)) {
+      FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
+      return 0.f;
+    }
+
     const AxisData &ax = m_axes[axis];
 
     // Check our caches
@@ -139,6 +144,11 @@ namespace Frames {
   }
 
   float Layout::GetSize(Axis axis) const {
+    if (!(axis == X || axis == Y)) {
+      FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
+      return 0.f;
+    }
+
     const AxisData &ax = m_axes[axis];
 
     // Check our cache
@@ -196,6 +206,11 @@ namespace Frames {
   }
 
   void Layout::luaF_push(lua_State *L) const {
+    if (!L) {
+      FRAMES_LAYOUT_CHECK(false, "Lua state is null");
+      return;
+    }
+
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rrg");
 
     if (lua_isnil(L, -1)) {
@@ -412,6 +427,16 @@ namespace Frames {
       return;
     }
 
+    if (this == link) {
+      FRAMES_LAYOUT_CHECK(false, "Attempted to constrain a frame to itself");
+      return;
+    }
+
+    if (!(axis == X || axis == Y)) {
+      FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
+      return;
+    }
+
     AxisData &ax = m_axes[axis];
 
     AxisData::Connector &axa = ax.connections[0];
@@ -474,7 +499,7 @@ namespace Frames {
     bool axbu = detail::IsUndefined(axb.point_mine);
 
     if (!detail::IsUndefined(ax.size_set) && (!axau || !axbu)) {
-      FRAMES_LAYOUT_CHECK(link, "Frame overconstrained - attempted to assign a second point to a frame axis that already contained a size and one point.");
+      FRAMES_LAYOUT_CHECK(link, "Frame overconstrained - attempted to assign a second point to a frame axis that already contained a size and one point");
       return;
     }
 
@@ -505,6 +530,11 @@ namespace Frames {
   }
 
   void Layout::zinternalClearPin(Axis axis, float mypt) {
+    if (!(axis == X || axis == Y)) {
+      FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
+      return;
+    }
+
     AxisData &ax = m_axes[axis];
 
     AxisData::Connector &axa = ax.connections[0];
@@ -547,6 +577,11 @@ namespace Frames {
   }
 
   void Layout::zinternalClearPin(Anchor anchor) {
+    if (anchor < 0 || anchor >= ANCHOR_COUNT) {
+      FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
+      return;
+    }
+
     if (!detail::IsNil(detail::c_anchorLookup[anchor].x)) {
       zinternalClearPin(X, detail::c_anchorLookup[anchor].x);
     }
@@ -557,6 +592,11 @@ namespace Frames {
   }
 
   void Layout::zinternalClearPinAll(Axis axis) {
+    if (!(axis == X || axis == Y)) {
+      FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
+      return;
+    }
+    
     AxisData &ax = m_axes[axis];
 
     AxisData::Connector &axa = ax.connections[0];
@@ -575,31 +615,86 @@ namespace Frames {
   // SetPin adapters
   // All the anchor versions just transform themselves into no-anchor versions first
   void Layout::zinternalSetPin(Anchor myanchor, const Layout *link, Anchor theiranchor) {
+    if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
+      FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
+      return;
+    }
+
+    if (theiranchor < 0 || theiranchor >= ANCHOR_COUNT) {
+      FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
+      return;
+    }
+
     zinternalSetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
   }
   void Layout::zinternalSetPin(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
+    if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
+      FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
+      return;
+    }
+
+    if (theiranchor < 0 || theiranchor >= ANCHOR_COUNT) {
+      FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
+      return;
+    }
+    
     zinternalSetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
   }
   
   void Layout::zinternalSetPin(Anchor myanchor, const Layout *link, float theirx, float theiry) {
+    if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
+      FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
+      return;
+    }
+
     zinternalSetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry);
   }
   void Layout::zinternalSetPin(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
+    if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
+      FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
+      return;
+    }
+    
     zinternalSetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
   }
 
   void Layout::zinternalSetPin(float myx, float myy, const Layout *link, Anchor theiranchor) {
+    if (theiranchor < 0 || theiranchor >= ANCHOR_COUNT) {
+      FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
+      return;
+    }
+
     zinternalSetPin(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
   }
   void Layout::zinternalSetPin(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
+    if (theiranchor < 0 || theiranchor >= ANCHOR_COUNT) {
+      FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
+      return;
+    }
+
     zinternalSetPin(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
   }
 
   void Layout::zinternalSetPin(float myx, float myy, const Layout *link, float theirx, float theiry) {
-    FRAMES_LAYOUT_CHECK(link, "SetPin requires offsets when linking to origin.");
-    FRAMES_LAYOUT_CHECK(detail::IsNil(myx) == detail::IsNil(theirx), "SetPin provided with only one anchor position for X axis");
-    FRAMES_LAYOUT_CHECK(detail::IsNil(myy) == detail::IsNil(theiry), "SetPin provided with only one anchor position for Y axis");
-    FRAMES_LAYOUT_CHECK(!detail::IsNil(myx) || !detail::IsNil(myy), "SetPin not provided with any anchor axes");
+    if (detail::IsNil(myx) && detail::IsNil(myy)) {
+      FRAMES_LAYOUT_CHECK(false, "SetPin not provided with any pin axes");
+      return;
+    }
+
+    if (!link) {
+      FRAMES_LAYOUT_CHECK(false, "SetPin requires offsets when linking to origin");
+      return;
+    }
+
+    if (detail::IsNil(myx) != detail::IsNil(theirx)) {
+      FRAMES_LAYOUT_CHECK(false, "SetPin provided with only one pin position for X axis");
+      return;
+    }
+
+    if (detail::IsNil(myy) != detail::IsNil(theiry)) {
+      FRAMES_LAYOUT_CHECK(false, "SetPin provided with only one pin position for Y axis");
+      return;
+    }
 
     if (!detail::IsNil(myx)) {
       zinternalSetPin(X, myx, link, theirx);
@@ -610,14 +705,36 @@ namespace Frames {
     }
   }
   void Layout::zinternalSetPin(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
-    FRAMES_LAYOUT_CHECK(!detail::IsNil(myx) || !detail::IsNil(myy), "SetPin not provided with any anchor axes");
+    if (detail::IsNil(myx) && detail::IsNil(myy)) {
+      FRAMES_LAYOUT_CHECK(false, "SetPin not provided with any pin axes");
+      return;
+    }
+
     if (link) {
-      FRAMES_LAYOUT_CHECK(detail::IsNil(myx) == detail::IsNil(theirx) && detail::IsNil(myx) == detail::IsNil(xofs), "SetPin provided with only one anchor position for X axis");
-      FRAMES_LAYOUT_CHECK(detail::IsNil(myy) == detail::IsNil(theiry) && detail::IsNil(myy) == detail::IsNil(yofs), "SetPin provided with only one anchor position for Y axis");
+      if (detail::IsNil(myx) != detail::IsNil(theirx)) {
+        FRAMES_LAYOUT_CHECK(false, "SetPin provided with only one pin position for X axis");
+        return;
+      }
+
+      if (detail::IsNil(myy) != detail::IsNil(theiry)) {
+        FRAMES_LAYOUT_CHECK(false, "SetPin provided with only one pin position for Y axis");
+        return;
+      }
     } else {
-      FRAMES_LAYOUT_CHECK(detail::IsNil(theirx) && detail::IsNil(theiry), "SetPin must have nil target anchor points when linking to origin.");
-      FRAMES_LAYOUT_CHECK(detail::IsNil(myx) == detail::IsNil(xofs), "SetPin provided with only one anchor position for X axis");
-      FRAMES_LAYOUT_CHECK(detail::IsNil(myy) == detail::IsNil(yofs), "SetPin provided with only one anchor position for Y axis");
+      if (!detail::IsNil(theirx) != !detail::IsNil(theiry)) {
+        FRAMES_LAYOUT_CHECK(false, "SetPin must have nil target anchor points when linking to origin");
+        return;
+      }
+    }
+
+    if (detail::IsNil(myx) != detail::IsNil(xofs)) {
+      FRAMES_LAYOUT_CHECK(false, "SetPin provided with only one of destination-point and offset for X axis");
+      return;
+    }
+
+    if (detail::IsNil(myy) != detail::IsNil(yofs)) {
+      FRAMES_LAYOUT_CHECK(false, "SetPin provided with only one of destination-point and offset for Y axis");
+      return;
     }
 
     if (!detail::IsNil(myx)) {
@@ -630,10 +747,15 @@ namespace Frames {
   }
 
   void Layout::zinternalSetSize(Axis axis, float size) {
+    if (!(axis == X || axis == Y)) {
+      FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
+      return;
+    }
+
     AxisData &ax = m_axes[axis];
 
     if (!detail::IsUndefined(ax.connections[0].point_mine) && !detail::IsUndefined(ax.connections[1].point_mine)) {
-      FRAMES_LAYOUT_CHECK(false, "Frame overconstrained - attempted to assign a size to a frame axis that already contained two points.");
+      FRAMES_LAYOUT_CHECK(false, "Frame overconstrained - attempted to assign a size to a frame axis that already contained two points");
       return;
     }
 
@@ -648,6 +770,11 @@ namespace Frames {
   }
 
   void Layout::zinternalClearSize(Axis axis) {
+    if (!(axis == X || axis == Y)) {
+      FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
+      return;
+    }
+
     AxisData &ax = m_axes[axis];
 
     // We don't care if we haven't changed
@@ -669,6 +796,11 @@ namespace Frames {
   }
 
   void Layout::SetSizeDefault(Axis axis, float size) {
+    if (!(axis == X || axis == Y)) {
+      FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
+      return;
+    }
+
     AxisData &ax = m_axes[axis];
 
     // We don't care if we haven't changed
@@ -778,8 +910,22 @@ namespace Frames {
     // they are! sigh
     return false;
   }
+
+  void Layout::SetInputMode(InputMode imode) {
+    if (imode < 0 || imode >= IM_COUNT) {
+      FRAMES_LAYOUT_CHECK(false, "Input mode is invalid");
+      return;
+    }
+
+    m_inputMode = imode;
+  }
   
   void Layout::luaF_RegisterWorker(lua_State *L, const char *name) const {
+    if (!L) {
+      FRAMES_LAYOUT_CHECK(false, "Lua state is null");
+      return;
+    }
+
     Environment::LuaStackChecker lsc(L, m_env);
     // Incoming: ... newtab Frames_rg
 
@@ -829,6 +975,11 @@ namespace Frames {
   }
 
   void Layout::Render(detail::Renderer *renderer) const {
+    if (!renderer) {
+      FRAMES_LAYOUT_CHECK(false, "Renderer is null");
+      return;
+    }
+
     if (m_visible) {
       renderer->AlphaPush(GetAlpha());
       RenderElement(renderer);
@@ -851,6 +1002,11 @@ namespace Frames {
   // It's unclear if this would be worth the additional overhead and complexity.
   // Invalidating extra stuff, while slow, is at least always correct.
   void Layout::Invalidate(Axis axis) {
+    if (!(axis == X || axis == Y)) {
+      FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
+      return;
+    }
+
     // see if anything needs invalidating
     const AxisData &ax = m_axes[axis];
 
@@ -904,6 +1060,11 @@ namespace Frames {
   }
 
   void Layout::Obliterate_Extract_Axis(Axis axis) {
+    if (!(axis == X || axis == Y)) {
+      FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
+      return;
+    }
+
     const AxisData &ax = m_axes[axis];
     while (!ax.children.empty()) {
       Layout *layout = *ax.children.begin();
@@ -912,6 +1073,16 @@ namespace Frames {
   }
 
   void Layout::Obliterate_Extract_From(Axis axis, const Layout *layout) {
+    if (!(axis == X || axis == Y)) {
+      FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
+      return;
+    }
+
+    if (!layout || layout->m_env != m_env) {
+      FRAMES_LAYOUT_CHECK(false, "Obliterated layout is missing or invalid");
+      return;
+    }
+
     const AxisData &ax = m_axes[axis];
 
     if (ax.connections[0].link == layout) {

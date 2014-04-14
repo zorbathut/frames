@@ -16,7 +16,7 @@ namespace Frames {
 }
 
 // Sets up a working test environment
-class TestSDLEnvironment {
+class TestSDLEnvironment : Frames::detail::Noncopyable {
 public:
   TestSDLEnvironment();
   ~TestSDLEnvironment();
@@ -35,26 +35,32 @@ private:
   int m_height;
 };
 
-class TestEnvironment {
+class TestLogger;
+
+class TestEnvironment : Frames::detail::Noncopyable {
 public:
-  TestEnvironment();
+  TestEnvironment(bool startSDL = true);
   ~TestEnvironment();
 
   Frames::Environment *operator*() { return m_env; }
   Frames::Environment *operator->() { return m_env; }
 
-  int GetWidth() const { return m_sdl.GetWidth(); }
-  int GetHeight() const { return m_sdl.GetHeight(); }
+  int GetWidth() const { return m_sdl->GetWidth(); }
+  int GetHeight() const { return m_sdl->GetHeight(); }
 
-  void Swap() { return m_sdl.Swap(); }
-  void HandleEvents() { return m_sdl.HandleEvents(); }
+  void Swap() { return m_sdl->Swap(); }
+  void HandleEvents() { return m_sdl->HandleEvents(); }
+
+  void AllowErrors();
 
 private:
-  TestSDLEnvironment m_sdl; // mostly taken care of with constructor/destructor
+  TestSDLEnvironment *m_sdl; // mostly taken care of with constructor/destructor
   Frames::Environment *m_env;
+
+  TestLogger *m_logger; // owned by m_env
 };
 
-class VerbLog {
+class VerbLog : Frames::detail::Noncopyable {
 public:
   VerbLog();
   ~VerbLog();

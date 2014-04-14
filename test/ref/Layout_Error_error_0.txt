@@ -1,0 +1,35 @@
+Anchor is invalid
+Anchor is invalid
+Axis is invalid
+Axis is invalid
+Axis is invalid
+Axis is invalid
+Lua state is null
+Input mode is invalid
+Input mode is invalid
+:SetParent() attempted with null parent
+:SetParent() attempted across environment boundaries
+Axis is invalid
+Axis is invalid
+Anchor is invalid
+Anchor is invalid
+Anchor is invalid
+Anchor is invalid
+Attempted to constrain a frame to a frame from another environment
+Attempted to constrain a frame to a frame from another environment
+Attempted to constrain a frame to itself
+Attempted to constrain a frame to itself
+SetPin provided with only one pin position for X axis
+SetPin provided with only one pin position for Y axis
+SetPin provided with only one pin position for X axis
+SetPin provided with only one pin position for Y axis
+SetPin provided with only one pin position for X axis
+SetPin provided with only one of destination-point and offset for X axis
+SetPin provided with only one of destination-point and offset for Y axis
+SetPin provided with only one of destination-point and offset for X axis
+SetPin provided with only one of destination-point and offset for X axis
+SetPin provided with only one of destination-point and offset for X axis
+SetPin provided with only one of destination-point and offset for Y axis
+SetPin provided with only one of destination-point and offset for X axis
+SetPin provided with only one of destination-point and offset for Y axis
+SetPin provided with only one of destination-point and offset for X axis

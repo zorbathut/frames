@@ -17,8 +17,60 @@
 #include <cstdio>
 #include <fstream>
 
+struct TestNames {
+  std::string testName;
+  std::string resultName;
+};
+
+TestNames GetTestNames(const std::string &family, const std::string &extension) {
+  TestNames rv;
+
+  std::string baseName = Frames::detail::Format("ref/%s_%s", ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name(), ::testing::UnitTest::GetInstance()->current_test_info()->name());
+
+  static std::string s_testNameLast = "";
+  static std::map<std::string, int> s_familyIds;
+
+  if (baseName != s_testNameLast) {
+    s_testNameLast = baseName;
+    s_familyIds.clear();
+  }
+
+  std::string testFilePrefix = Frames::detail::Format("%s_%s_%d", baseName.c_str(), family.c_str(), s_familyIds[family]++);
+
+  rv.testName = testFilePrefix + extension;
+  rv.resultName = testFilePrefix + "_result" + extension;
+
+  // write to the "input" file if that file doesn't exist
+  if (!std::ifstream(rv.testName.c_str())) {
+    rv.resultName = rv.testName;
+  }
+
+  return rv;
+}
+
+void TestCompareStrings(const std::string &family, const std::string &data) {
+  TestNames testNames = GetTestNames(family, ".txt");
+
+  // Grab our source file (or try to)
+  std::string testsrc;
+  {
+    std::ifstream in(testNames.testName.c_str(), std::ios::binary); // Binary so we don't have to worry about \r\n's showing up in our event results
+    if (in) {
+      testsrc = std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    }
+  }
+
+  // Write result to disk
+  {
+    std::ofstream out(testNames.resultName.c_str(), std::ios::binary);
+    out << data;
+  }
+
+  EXPECT_TRUE(data == testsrc);
+}
+
 TestSDLEnvironment::TestSDLEnvironment() : m_win(0), m_glContext(0) {
-  EXPECT_EQ(SDL_Init(SDL_INIT_VIDEO), 0);
+  EXPECT_EQ(0, SDL_Init(SDL_INIT_VIDEO));
 
   SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
   SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
@@ -67,57 +119,64 @@ void TestSDLEnvironment::HandleEvents() {
 }
 
 class TestLogger : public Frames::Configuration::Logger {
+public:
+  TestLogger() : m_allowErrors(false) { }
+  ~TestLogger() {
+    if (m_allowErrors) {
+      EXPECT_FALSE(m_loggedErrors.empty());
+
+      TestCompareStrings("error", m_loggedErrors);
+    }
+  }
+
   virtual void LogError(const std::string &log) {
-    printf("[ERR] %s", log.c_str());
-    GTEST_FAIL();
+    printf("[ERR] %s\n", log.c_str());
+    if (!m_allowErrors) {
+      GTEST_FAIL();
+    }
+
+    m_loggedErrors += log;
+    m_loggedErrors += "\n";
   }
   virtual void LogDebug(const std::string &log) {
-    printf("[DBG] %s", log.c_str());
+    printf("[DBG] %s\n", log.c_str());
   }
+
+  void AllowErrors() {
+    m_allowErrors = true;
+  }
+
+private:
+  std::string m_loggedErrors;
+
+  bool m_allowErrors;
 };
 
-TestEnvironment::TestEnvironment() : m_env(0) {
+TestEnvironment::TestEnvironment(bool startSDL) : m_env(0), m_sdl(0) {
+  if (startSDL) {
+    m_sdl = new TestSDLEnvironment();
+  }
+
   Frames::Configuration config;
   config.fontDefaultId = "LindenHill.otf";
-  config.logger = new TestLogger();
+  m_logger = new TestLogger();
+  config.logger = m_logger;
   m_env = new Frames::Environment(config);
-  m_env->ResizeRoot(GetWidth(), GetHeight()); // set this up so we can check coordinates
+
+  if (startSDL) {
+    m_env->ResizeRoot(GetWidth(), GetHeight()); // set this up so we can check coordinates, otherwise we'll currently assume there are no coordinates
+  }
 }
 
 TestEnvironment::~TestEnvironment() {
-  EXPECT_EQ(glGetError(), GL_NO_ERROR); // verify no GL issues
+  EXPECT_EQ(GL_NO_ERROR, glGetError()); // verify no GL issues
   delete m_env;
+  delete m_sdl;
+  delete m_logger;
 }
 
-struct TestNames {
-  std::string testName;
-  std::string resultName;
-};
-
-TestNames GetTestNames(const std::string &family, const std::string &extension) {
-  TestNames rv;
-  
-  std::string baseName = Frames::detail::Format("ref/%s_%s", ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name(), ::testing::UnitTest::GetInstance()->current_test_info()->name());
-
-  static std::string s_testNameLast = "";
-  static std::map<std::string, int> s_familyIds;
-
-  if (baseName != s_testNameLast) {
-    s_testNameLast = baseName;
-    s_familyIds.clear();
-  }
-
-  std::string testFilePrefix = Frames::detail::Format("%s_%s_%d", baseName.c_str(), family.c_str(), s_familyIds[family]++);
-
-  rv.testName = testFilePrefix + extension;
-  rv.resultName = testFilePrefix + "_result" + extension;
-
-  // write to the "input" file if that file doesn't exist
-  if (!std::ifstream(rv.testName.c_str())) {
-    rv.resultName = rv.testName;
-  }
-
-  return rv;
+void TestEnvironment::AllowErrors() {
+  m_logger->AllowErrors();
 }
 
 VerbLog::VerbLog() {
@@ -134,24 +193,7 @@ VerbLog::~VerbLog() {
 }
 
 void VerbLog::Snapshot() {
-  TestNames testNames = GetTestNames("event", ".txt");
-
-  // Grab our source file (or try to)
-  std::string testsrc;
-  {
-    std::ifstream in(testNames.testName.c_str(), std::ios::binary); // Binary so we don't have to worry about \r\n's showing up in our event results
-    if (in) {
-      testsrc = std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-    }
-  }
-
-  // Write result to disk
-  {
-    std::ofstream out(testNames.resultName.c_str(), std::ios::binary);
-    out << m_records;
-  }
-
-  EXPECT_TRUE(m_records == testsrc);
+  TestCompareStrings("event", m_records);
 
   m_records.clear();
 }
@@ -181,7 +223,7 @@ void TestSnapshot(TestEnvironment &env) {
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glReadPixels(0, 0, env.GetWidth(), env.GetHeight(), GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
-  EXPECT_EQ(glGetError(), GL_NO_ERROR);
+  EXPECT_EQ(GL_NO_ERROR, glGetError());
 
   // Annoyingly, OpenGL reads coordinates in math quadrant order, not scanline order like the rest of the civilized computer world
   // So . . . go ahead and invert the entire array
@@ -198,10 +240,10 @@ void TestSnapshot(TestEnvironment &env) {
     if (stream)
     {
       Frames::TextureConfig tex = Frames::Loader::PNG::Load(*env, stream);
-      EXPECT_EQ(tex.GetMode(), Frames::TextureConfig::RAW);
-      EXPECT_EQ(tex.Raw_GetType(), Frames::TextureConfig::MODE_RGBA);
-      EXPECT_EQ(Frames::TextureConfig::GetBPP(Frames::TextureConfig::MODE_RGBA), 4);
-      EXPECT_EQ(tex.Raw_GetStride(), tex.GetWidth() * 4);
+      EXPECT_EQ(Frames::TextureConfig::RAW, tex.GetMode());
+      EXPECT_EQ(Frames::TextureConfig::MODE_RGBA, tex.Raw_GetType());
+      EXPECT_EQ(4, Frames::TextureConfig::GetBPP(Frames::TextureConfig::MODE_RGBA));
+      EXPECT_EQ(tex.GetWidth() * 4, tex.Raw_GetStride());
       reference.resize(tex.GetWidth() * tex.GetHeight() * 4);
       memcpy(&reference[0], tex.Raw_GetData(), tex.GetWidth() * tex.GetHeight() * 4);
       delete stream;
@@ -240,7 +282,7 @@ void TestSnapshot(TestEnvironment &env) {
     fclose(fp);
   }
 
-  EXPECT_EQ(pixels.size(), reference.size());
+  EXPECT_EQ(reference.size(), pixels.size());
   EXPECT_TRUE(pixels == reference);
 }
 

@@ -1,15 +1,13 @@
 
-* Error checks for Layout
 * Tests for all of Layout
 
 * Handle needs to be documented
 
 * Redesign Format, seriously
 
-* EVENTS
-  * maybe I should give up this template madness and go with a standard encapsulation?
-
 === TWEAK
+
+* leaking in my own damn config - that needs to be fixed :/
 
 * GetChildren must somehow ignore implementation
   * Need our own iterators for GetChildren()
