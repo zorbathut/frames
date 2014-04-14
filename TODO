@@ -1,8 +1,4 @@
 
-* Need to generate real build errors on error
-
-* Fix build errors :V
-
 * Shift to SourceTree embedded
 * de-crlf everything
 
