@@ -2,8 +2,8 @@ set -e
 set -o nounset
 set -o pipefail
 
-scripts/generate.lua
-scripts/generateDocs.lua
+lua scripts/generate.lua
+lua scripts/generateDocs.lua
 rm -f *.zip version
 zip -r generate.zip `ls | grep -v doc | grep -v scripts`
 zip -r testdata.zip test

@@ -8,4 +8,4 @@ do
 done
 rm *.zip
 rm -rf label_exp*
-scripts/deploy.lua
+lua scripts/deploy.lua
