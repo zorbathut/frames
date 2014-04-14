@@ -14,6 +14,12 @@ if typ then
   src[typ] = projects[typ]
 end
 
+local success = true
+
 for k, v in pairs(src) do
-  os.execute(("cd projects/%s && %s"):format(k, v.build))
+  if os.execute(("cd projects/%s && %s"):format(k, v.build)) ~= 0 then
+    success = false
+  end
 end
+
+os.exit(success and 0 or 1)
