@@ -113,7 +113,7 @@ TestNames GetTestNames(const std::string &family, const std::string &extension) 
   rv.resultName = testFilePrefix + "_result" + extension;
 
   // write to the "input" file if that file doesn't exist
-  if (!std::ifstream(rv.testName)) {
+  if (!std::ifstream(rv.testName.c_str())) {
     rv.resultName = rv.testName;
   }
 
@@ -139,7 +139,7 @@ void VerbLog::Snapshot() {
   // Grab our source file (or try to)
   std::string testsrc;
   {
-    std::ifstream in(testNames.testName, std::ios::binary); // Binary so we don't have to worry about \r\n's showing up in our event results
+    std::ifstream in(testNames.testName.c_str(), std::ios::binary); // Binary so we don't have to worry about \r\n's showing up in our event results
     if (in) {
       testsrc = std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
     }
@@ -147,7 +147,7 @@ void VerbLog::Snapshot() {
 
   // Write result to disk
   {
-    std::ofstream out(testNames.resultName, std::ios::binary);
+    std::ofstream out(testNames.resultName.c_str(), std::ios::binary);
     out << m_records;
   }
 
