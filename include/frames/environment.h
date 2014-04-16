@@ -170,12 +170,6 @@ namespace Frames {
 
     // Configuration
     Configuration m_config;
-    Configuration::Logger *m_config_logger_owned;
-    Configuration::TextureFromId *m_config_tfi_owned;
-    Configuration::StreamFromId *m_config_sfi_owned;
-    Configuration::PathFromId *m_config_pfi_owned;
-    Configuration::TextureFromStream *m_config_tfs_owned;
-    Configuration::Clipboard *m_config_clipboard_owned;
 
     // Managers
     detail::Renderer *m_renderer;

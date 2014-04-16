@@ -173,7 +173,6 @@ TestEnvironment::~TestEnvironment() {
   EXPECT_EQ(GL_NO_ERROR, glGetError()); // verify no GL issues
   delete m_env;
   delete m_sdl;
-  delete m_logger;
 }
 
 void TestEnvironment::AllowErrors() {

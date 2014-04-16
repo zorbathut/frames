@@ -45,12 +45,6 @@ namespace Frames {
     delete m_text_manager;
     delete m_renderer;
     delete m_texture_manager;
-    delete m_config_logger_owned;
-    delete m_config_tfi_owned;
-    delete m_config_sfi_owned;
-    delete m_config_pfi_owned;
-    delete m_config_tfs_owned;
-    delete m_config_clipboard_owned;
   }
 
   void Environment::ResizeRoot(int x, int y) {
@@ -817,44 +811,31 @@ namespace Frames {
     m_renderer = 0;
     m_text_manager = 0;
     m_texture_manager = 0;
-    
-    m_config_logger_owned = 0;
-    m_config_tfi_owned = 0;
-    m_config_sfi_owned = 0;
-    m_config_pfi_owned = 0;
-    m_config_tfs_owned = 0;
-    m_config_clipboard_owned = 0;
 
     m_config = config;
 
     if (!m_config.logger) {
-      m_config_logger_owned = new Configuration::Logger();
-      m_config.logger = m_config_logger_owned;
+      m_config.logger = new Configuration::Logger();
     }
 
     if (!m_config.textureFromId) {
-      m_config_tfi_owned = new Configuration::TextureFromId();
-      m_config.textureFromId = m_config_tfi_owned;
+      m_config.textureFromId = new Configuration::TextureFromId();
     }
 
     if (!m_config.streamFromId) {
-      m_config_sfi_owned = new Configuration::StreamFromId();
-      m_config.streamFromId = m_config_sfi_owned;
+      m_config.streamFromId = new Configuration::StreamFromId();
     }
 
     if (!m_config.pathFromId) {
-      m_config_pfi_owned = new Configuration::PathFromId();
-      m_config.pathFromId = m_config_pfi_owned;
+      m_config.pathFromId = new Configuration::PathFromId();
     }
 
     if (!m_config.textureFromStream) {
-      m_config_tfs_owned = new Configuration::TextureFromStream();
-      m_config.textureFromStream = m_config_tfs_owned;
+      m_config.textureFromStream = new Configuration::TextureFromStream();
     }
 
     if (!m_config.clipboard) {
-      m_config_clipboard_owned = new Configuration::Clipboard();
-      m_config.clipboard = m_config_clipboard_owned;
+      m_config.clipboard = new Configuration::Clipboard();
     }
     
     // easier to handle it on our own, and we won't be creating environments often enough for this to be a performance hit

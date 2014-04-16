@@ -6,6 +6,7 @@
 #include <string>
 
 #include "os_gl.h"
+#include "ptr.h"
 
 namespace Frames {
   class Environment;
@@ -32,66 +33,66 @@ namespace Frames {
   public:
     Configuration(); // init to default
 
-    class Logger {
+    class Logger : public Refcountable<Logger> {
     public:
       virtual ~Logger() { }
 
       virtual void LogError(const std::string &log);
       virtual void LogDebug(const std::string &log);
     };
-    Logger *logger;
+    Ptr<Logger> logger;
 
-    class TextureFromId {
+    class TextureFromId : public Refcountable<TextureFromId> {
     public:
       virtual ~TextureFromId() { }
 
       virtual TextureConfig Create(Environment *env, const std::string &id);
     };
-    TextureFromId *textureFromId;
+    Ptr<TextureFromId> textureFromId;
 
-    class StreamFromId {
+    class StreamFromId : public Refcountable<StreamFromId> {
     public:
       virtual ~StreamFromId() { }
 
       virtual Stream *Create(Environment *env, const std::string &id);
     };
-    StreamFromId *streamFromId;
+    Ptr<StreamFromId> streamFromId;
 
-    class PathFromId {
+    class PathFromId : public Refcountable<PathFromId> {
     public:
       virtual ~PathFromId() { }
 
       virtual std::string Process(Environment *env, const std::string &id);
     };
-    PathFromId *pathFromId;
+    Ptr<PathFromId> pathFromId;
 
-    class TextureFromStream {
+    class TextureFromStream : public Refcountable<TextureFromStream> {
     public:
       virtual ~TextureFromStream() { }
 
       virtual TextureConfig Create(Environment *env, Stream *stream);
     };
-    TextureFromStream *textureFromStream;
+    Ptr<TextureFromStream> textureFromStream;
 
     std::string fontDefaultId;
 
-    class Clipboard {
+    class Clipboard : public Refcountable<Clipboard> {
     public:
       virtual ~Clipboard() { }
 
       virtual void Set(const std::string &dat);
       virtual std::string Get();
     };
-    Clipboard *clipboard;
+    Ptr<Clipboard> clipboard;
 
-    class Performance {
+    class Performance : public Refcountable<Performance> {
     public:
       virtual ~Performance() { }
 
       virtual void *Push(float r, float g, float b) = 0;  // need to rework the performance system, right now it expects floating-point values
       virtual void Pop(void *) = 0;
     };
-    Performance *performance;
+    Ptr<Performance> performance;
   };
 }
 
