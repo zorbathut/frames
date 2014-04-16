@@ -30,7 +30,7 @@ namespace Frames {
     const VerbBase *GetBubble() const { return m_bubble; }
 
   private:
-    template <typename Parameters> friend Verb;
+    template <typename Parameters> friend class Verb;
     VerbBase(const char *name) : m_name(name), m_dive(0), m_bubble(0) {};
     VerbBase(const char *name, const VerbBase *dive, const VerbBase *bubble) : m_name(name), m_dive(dive), m_bubble(bubble) {};
 
@@ -55,6 +55,8 @@ namespace Frames {
     void luaF_push(lua_State *L);
     
   private:
+    friend class Layout;
+
     Handle(Layout *target, const VerbBase *verb) : m_target(target), m_verb(verb) {}
     ~Handle() {} // TODO - clean up handles in Lua?
 
