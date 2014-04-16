@@ -5,6 +5,7 @@
 
 #include <SDL.h>
 #include <frames/os_gl.h>
+#include <frames/detail_format.h>
 #include <frames/environment.h>
 #include <frames/event.h>
 #include <frames/stream.h>
@@ -35,7 +36,7 @@ TestNames GetTestNames(const std::string &family, const std::string &extension) 
     s_familyIds.clear();
   }
 
-  std::string testFilePrefix = Frames::detail::Format("%s_%s_%d", baseName.c_str(), family.c_str(), s_familyIds[family]++);
+  std::string testFilePrefix = Frames::detail::Format("%s_%s_%d", baseName, family, s_familyIds[family]++);
 
   rv.testName = testFilePrefix + extension;
   rv.resultName = testFilePrefix + "_result" + extension;
@@ -199,7 +200,7 @@ void VerbLog::Snapshot() {
 }
 
 void VerbLog::RecordEvent(Frames::Handle *handle) {
-  RecordResult(Frames::detail::Format("Event %s on %s", handle->GetVerb()->GetName(), handle->GetTarget()->DebugGetName().c_str()));
+  RecordResult(Frames::detail::Format("Event %s on %s", handle->GetVerb()->GetName(), handle->GetTarget()->DebugGetName()));
 }
 
 void VerbLog::RecordResult(const std::string &str) {

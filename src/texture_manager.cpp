@@ -2,6 +2,7 @@
 #include "frames/texture_manager.h"
 
 #include "frames/configuration.h"
+#include "frames/detail_format.h"
 #include "frames/environment.h"
 #include "frames/texture_config.h"
 
@@ -92,14 +93,14 @@ namespace Frames {
         return m_texture.left.find(id)->second;
       }
 
-      m_env->LogDebug(detail::Format("Attempting to load texture %s", id.c_str()));
+      m_env->LogDebug(detail::Format("Attempting to load texture %s", id));
 
       TextureConfig conf = m_env->GetConfiguration().textureFromId->Create(m_env, id);
 
       TextureChunkPtr rv = TextureFromConfig(conf);
 
       if (!rv) {
-        m_env->LogError(detail::Format("Failed to load texture %s", id.c_str()));
+        m_env->LogError(detail::Format("Failed to load texture %s", id));
         return rv; // something went wrong
       }
 

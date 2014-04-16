@@ -2,6 +2,7 @@
 #include "frames/environment.h"
 #include "frames/environment_register.h"
 
+#include "frames/detail_format.h"
 #include "frames/frame.h"
 #include "frames/renderer.h"
 #include "frames/text_manager.h"
@@ -905,19 +906,19 @@ namespace Frames {
     for (int i = m_layoutStack.size(); i > 0; --i) {
       LayoutStack_Entry entry = m_layoutStack[i - 1];
       if (detail::IsUndefined(entry.point))
-        LogError(detail::Format("  %s: size", entry.layout->DebugGetName().c_str()));
+        LogError(detail::Format("  %s: size", entry.layout->DebugGetName()));
       else if (entry.point == 0 && entry.axis == X)
-        LogError(detail::Format("  %s: LEFT", entry.layout->DebugGetName().c_str()));
+        LogError(detail::Format("  %s: LEFT", entry.layout->DebugGetName()));
       else if (entry.point == 0 && entry.axis == Y)
-        LogError(detail::Format("  %s: TOP", entry.layout->DebugGetName().c_str()));
+        LogError(detail::Format("  %s: TOP", entry.layout->DebugGetName()));
       else if (entry.point == 0.5)
-        LogError(detail::Format("  %s: CENTER", entry.layout->DebugGetName().c_str()));
+        LogError(detail::Format("  %s: CENTER", entry.layout->DebugGetName()));
       else if (entry.point == 1 && entry.axis == X)
-        LogError(detail::Format("  %s: RIGHT", entry.layout->DebugGetName().c_str()));
+        LogError(detail::Format("  %s: RIGHT", entry.layout->DebugGetName()));
       else if (entry.point == 1 && entry.axis == Y)
-        LogError(detail::Format("  %s: BOTTOM", entry.layout->DebugGetName().c_str()));
+        LogError(detail::Format("  %s: BOTTOM", entry.layout->DebugGetName()));
       else
-        LogError(detail::Format("  %s: %f", entry.layout->DebugGetName().c_str(), entry.point));
+        LogError(detail::Format("  %s: %f", entry.layout->DebugGetName(), entry.point));
     }
   }
 

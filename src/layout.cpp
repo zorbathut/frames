@@ -1,6 +1,7 @@
 
 #include "frames/layout.h"
 
+#include "frames/detail_format.h"
 #include "frames/environment.h"
 #include "frames/event_definition.h"
 #include "frames/lua.h"

@@ -42,8 +42,6 @@ namespace Frames {
       return Undefined + Processing + Nil;
     }
 
-    std::string Format(const char *bort, ...) FRAMES_ATTRIBUTE_PRINTF(1, 2);
-
     inline float Clamp(float current, float min, float max) {
       if (current < min) return min;
       if (current > max) return max;

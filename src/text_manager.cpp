@@ -2,6 +2,7 @@
 #include "frames/text_manager.h"
 
 #include "frames/configuration.h"
+#include "frames/detail_format.h"
 #include "frames/environment.h"
 #include "frames/renderer.h"
 #include "frames/stream.h"
@@ -448,7 +449,7 @@ namespace Frames {
       if (!m_fonts.left.count(font)) {
         Stream *stream = m_env->GetConfiguration().streamFromId->Create(m_env, font);
         if (!stream) {
-          m_env->LogError(detail::Format("Unable to find font \"%s\"", font.c_str()));
+          m_env->LogError(Frames::detail::Format("Unable to find font \"%s\"", font));
           m_fonts.insert(boost::bimap<std::string, FontInfo *>::value_type(font, new FontInfo(m_env, 0)));
         } else {
           m_fonts.insert(boost::bimap<std::string, FontInfo *>::value_type(font, new FontInfo(m_env, stream)));
