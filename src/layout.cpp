@@ -1,6 +1,7 @@
 
 #include "frames/layout.h"
 
+#include "frames/cast.h"
 #include "frames/detail_format.h"
 #include "frames/environment.h"
 #include "frames/event_definition.h"
@@ -47,6 +48,8 @@ namespace Frames {
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyType, (const std::string &text));
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyRepeat, (const Key &kev));
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyUp, (const Key &kev));
+
+  detail::Rtti Layout::s_rtti(0); // special case, null terminator; other examples should use FRAMES_DEFINE_RTTI
 
   /*static*/ const char *Layout::GetStaticType() {
     return "Layout";

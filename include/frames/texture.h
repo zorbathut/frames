@@ -8,6 +8,7 @@
 
 namespace Frames {
   class Texture : public Frame {
+    FRAMES_DECLARE_RTTI();
     friend class Environment;
 
   public:

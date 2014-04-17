@@ -1,6 +1,7 @@
 
 #include "frames/text.h"
 
+#include "frames/cast.h"
 #include "frames/environment.h"
 #include "frames/lua.h"
 #include "frames/rect.h"
@@ -10,6 +11,8 @@
 #include "frames/os_gl.h"
 
 namespace Frames {
+  FRAMES_DEFINE_RTTI(Text, Frame);
+
   Text *Text::Create(const std::string &name, Layout *parent) {
     return new Text(name, parent);
   }

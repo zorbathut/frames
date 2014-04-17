@@ -25,9 +25,23 @@ namespace Frames {
   struct Rect;
   class Layout;
 
+  template <typename T> T *Cast(Layout *layout);
+  template <typename T> const T *Cast(const Layout *layout);
+
   namespace detail {
     class Renderer;
+    class Rtti;
+
+    template <typename T> const Rtti *InitHelper();
   }
+
+  #define FRAMES_DECLARE_RTTI() \
+    static detail::Rtti s_rtti; \
+    static const detail::Rtti *GetRttiStatic() { return &s_rtti; } \
+    virtual const detail::Rtti *GetRttiVirtual() const { return &s_rtti; } \
+    template <typename T> friend T *Cast<T>(Layout *); \
+    template <typename T> friend const T *Cast<T>(const Layout *); \
+    template <typename T> friend const detail::Rtti *detail::InitHelper<T>();
 
   /// Base class containing location and layout information for all Frames elements.
   /**
@@ -36,6 +50,7 @@ namespace Frames {
   Layout includes all update-related functions as protected members, most of which are exposed by Frame.*/
   class Layout : detail::Noncopyable {
   public:
+
     FRAMES_VERB_DECLARE_BEGIN
       /// Signals when a frame's edges move.
       /** WARNING: Unlike most events, Move may not signal immediately after a state change. Move is guaranteed to fire before Environment::Prepare() returns. */
@@ -118,6 +133,7 @@ namespace Frames {
     FRAMES_VERB_DECLARE_END
 
   private:
+    FRAMES_DECLARE_RTTI();
     friend class Environment; // access SetWidthDefault/SetHeightDefault, construction
     friend class Frame; // constructor, private functions that modify state
     friend class Mask; // solely for MouseMasking

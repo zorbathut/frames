@@ -1,6 +1,7 @@
 
 #include "frames/raw.h"
 
+#include "frames/cast.h"
 #include "frames/event_definition.h"
 #include "frames/renderer.h"
 
@@ -8,6 +9,8 @@
 
 namespace Frames {
   FRAMES_VERB_DEFINE(Raw::Event::Render, ());
+
+  FRAMES_DEFINE_RTTI(Raw, Frame);
   
   Raw *Raw::Create(const std::string &name, Layout *parent) {
     return new Raw(name, parent);

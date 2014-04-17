@@ -15,6 +15,7 @@ namespace Frames {
     FRAMES_VERB_DECLARE_END
 
   private:
+    FRAMES_DECLARE_RTTI();
     friend class Environment;
 
   public:

@@ -1,6 +1,7 @@
 
 #include "frames/frame.h"
 
+#include "frames/cast.h"
 #include "frames/environment.h"
 #include "frames/lua.h"
 #include "frames/renderer.h"
@@ -8,6 +9,8 @@
 #include <GL/gl.h>
 
 namespace Frames {
+  FRAMES_DEFINE_RTTI(Frame, Layout);
+
   Frame *Frame::Create(const std::string &name, Layout *parent) {
     return new Frame(name, parent);
   }

@@ -8,6 +8,7 @@
 
 namespace Frames {
   class Frame : public Layout {
+    FRAMES_DECLARE_RTTI();
     friend class Environment;
 
   public:

@@ -1,12 +1,15 @@
 
 #include "frames/mask.h"
 
+#include "frames/cast.h"
 #include "frames/rect.h"
 #include "frames/renderer.h"
 
 #include "frames/os_gl.h"
 
 namespace Frames {
+  FRAMES_DEFINE_RTTI(Mask, Frame);
+
   Mask *Mask::Create(const std::string &name, Layout *parent) {
     return new Mask(name, parent);
   }

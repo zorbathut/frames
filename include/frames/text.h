@@ -9,6 +9,7 @@
 
 namespace Frames {
   class Text : public Frame {
+    FRAMES_DECLARE_RTTI();
     friend class Environment;
 
   public:

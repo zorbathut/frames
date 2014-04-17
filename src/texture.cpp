@@ -1,6 +1,7 @@
 
 #include "frames/texture.h"
 
+#include "frames/cast.h"
 #include "frames/environment.h"
 #include "frames/lua.h"
 #include "frames/renderer.h"
@@ -9,6 +10,8 @@
 #include "frames/os_gl.h"
 
 namespace Frames {
+  FRAMES_DEFINE_RTTI(Texture, Frame);
+
   Texture *Texture::Create(const std::string &name, Layout *parent) {
     return new Texture(name, parent);
   }

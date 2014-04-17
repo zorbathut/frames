@@ -7,6 +7,7 @@
 
 namespace Frames {
   class Mask : public Frame {
+    FRAMES_DECLARE_RTTI();
     friend class Environment;
 
   public:
