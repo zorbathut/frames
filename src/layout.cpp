@@ -832,12 +832,12 @@ namespace Frames {
 
     // First, remove ourselves from our old parent
     if (m_parent) {
-      m_parent->m_children.erase(this);
+      m_parent->ChildRemove(this);
     }
 
     m_parent = layout;
 
-    m_parent->m_children.insert(this);
+    m_parent->ChildAdd(this);
   }
 
   void Layout::zinternalSetLayer(float layer) {
@@ -847,13 +847,13 @@ namespace Frames {
 
     // We take ourselves out of our parents' list so we can change our layer without breaking the sort
     if (m_parent) {
-      m_parent->m_children.erase(this);
+      m_parent->ChildRemove(this);
     }
 
     m_layer = layer;
 
     if (m_parent) {
-      m_parent->m_children.insert(this);
+      m_parent->ChildAdd(this);
     }
   }
 
@@ -864,13 +864,13 @@ namespace Frames {
 
     // We take ourselves out of our parents' list so we can change our strata without breaking the sort
     if (m_parent) {
-      m_parent->m_children.erase(this);
+      m_parent->ChildRemove(this);
     }
 
     m_implementation = implementation;
 
     if (m_parent) {
-      m_parent->m_children.insert(this);
+      m_parent->ChildAdd(this);
     }
   }
 
@@ -975,6 +975,16 @@ namespace Frames {
     lua_setfield(L, -2, name);
   }
 
+  void Layout::ChildAdd(Layout *child) {
+    m_children.insert(child);
+    (child->zinternalGetImplementation() ? m_children_implementation : m_children_nonimplementation).insert(child);
+  }
+
+  void Layout::ChildRemove(Layout *child) {
+    m_children.erase(child);
+    (child->zinternalGetImplementation() ? m_children_implementation : m_children_nonimplementation).erase(child);
+  }
+
   void Layout::Render(detail::Renderer *renderer) const {
     if (!renderer) {
       FRAMES_LAYOUT_CHECK(false, "Renderer is null");
@@ -1052,7 +1062,7 @@ namespace Frames {
 
     // Detach ourselves from our parent
     if (m_parent) {
-      m_parent->m_children.erase(this);
+      m_parent->ChildRemove(this);
     }
     m_parent = 0;
 
@@ -1514,12 +1524,17 @@ namespace Frames {
   }
 
   /*static*/ int Layout::luaF_GetChildren(lua_State *L) {
-    luaF_checkparams(L, 1);
+    luaF_checkparams(L, 1, 2);
     Layout *self = luaF_checkframe<Layout>(L, 1);
+    bool implementation = false;
+    if (lua_gettop(L) == 2) {
+      luaL_checktype(L, 2, LUA_TBOOLEAN); // sigh
+      implementation = lua_toboolean(L, 2) != 0;
+    }
 
     lua_newtable(L);
 
-    const ChildrenList &children = self->GetChildren();
+    const ChildrenList &children = self->GetChildren(implementation);
     for (ChildrenList::const_iterator itr = children.begin(); itr != children.end(); ++itr) {
       (*itr)->luaF_push(L);
       lua_rawseti(L, -2, lua_objlen(L, -2));

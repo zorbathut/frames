@@ -1,8 +1,13 @@
 
 === TWEAK
 
-* GetChildren must somehow ignore implementation
-  * Need our own iterators for GetChildren()
+* Cast<> support
+  
+* FindChild
+
+* x64
+
+* Redesign Lua API sanely
 
 === BUILDING
 

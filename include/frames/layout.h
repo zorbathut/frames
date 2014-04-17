@@ -314,7 +314,8 @@ namespace Frames {
     typedef std::set<Layout *, FrameOrderSorter> ChildrenList;
 
     /// Returns the children of this frame.
-    const ChildrenList &GetChildren() { return m_children; }
+    /** Pass in "true" for implementation to get only children with the Implementation flag set. Otherwise, you'll get only children without that flag set. */
+    const ChildrenList &GetChildren(bool implementation = false) { return implementation ? m_children_implementation : m_children_nonimplementation; }
     
     // --------- State
 
@@ -403,6 +404,9 @@ namespace Frames {
     static void luaF_RegisterFunction(lua_State *L, const char *owner, const char *name, int(*func)(lua_State *));
 
   private:
+    Layout(const std::string &name, Environment *env);
+    virtual ~Layout();
+
     // These need to be defined here because Layout actually contains the implementation, but the documentation and function definitions need to show up in frame.h for the sake of documentation.
     // This is a bit ugly, but thankfully they can all be inlined.
     // zinternal prefix so they show up at the bottom of sorting, in either case-sensitive or case-insensitive mode.
@@ -439,12 +443,14 @@ namespace Frames {
 
     void zinternalObliterate();
 
-    Layout(const std::string &name, Environment *env);
-    virtual ~Layout();
+    // Layout utility
+    void ChildAdd(Layout *child);
+    void ChildRemove(Layout *child);
 
+    // Rendering
     void Render(detail::Renderer *renderer) const;
 
-    // Provided for Mask.
+    // Mask-related
     void SetFullMouseMasking(bool mask) { m_fullMouseMasking = mask; }
     bool GetFullMouseMasking() { return m_fullMouseMasking; }
     virtual bool TestMouseMasking(float x, float y) { return true; }
@@ -492,7 +498,9 @@ namespace Frames {
     unsigned int m_constructionOrder; // This is used to create consistent results when frames are Z-conflicting
     Layout *m_parent;
     bool m_visible;
-    ChildrenList m_children;
+    ChildrenList m_children;  // Authoritative
+    ChildrenList m_children_implementation; // Provided only for GetChildren
+    ChildrenList m_children_nonimplementation; // Provided only for GetChildren
 
     // Rendering effects
     float m_alpha;
