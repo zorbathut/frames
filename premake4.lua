@@ -28,6 +28,7 @@ local path = "projects/" .. slug
 
 solution "Frames"
   configurations { "Debug", "Release" }
+  platforms { "x32", "x64" }
   
   -- Paths
   location(path)
