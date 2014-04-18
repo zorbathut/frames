@@ -1,6 +1,8 @@
 
 === TWEAK
 
+* {static/dynamic} {mt/st} {x32/x64} config options
+
 * FindChild
 
 * x64

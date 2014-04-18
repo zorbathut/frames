@@ -16,9 +16,10 @@ projects = {
     generator = "vs2013",
     build = [[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 12.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=Release /m "&&" msbuild Frames.sln /p:configuration=Debug /m && rm ../../lib/msvc12/*.idb]],
   },
-  mingw = {
+  -- disabled, possibly permanently
+  --[[mingw = {
     generator = "gmake",
     --path = "/cygdrive/c/mingw/bin",
     build = "PATH=/cygdrive/c/mingw/bin mingw32-make -j12 config=debug && PATH=/cygdrive/c/mingw/bin mingw32-make -j12 config=release && cp `which pthreadGC2.dll` ../../bin/mingw/test",
-  },
+  },]]
 }

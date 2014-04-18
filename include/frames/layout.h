@@ -39,9 +39,9 @@ namespace Frames {
     static detail::Rtti s_rtti; \
     static const detail::Rtti *GetRttiStatic() { return &s_rtti; } \
     virtual const detail::Rtti *GetRttiVirtual() const { return &s_rtti; } \
-    template <typename T> friend T *Cast<T>(Layout *); \
-    template <typename T> friend const T *Cast<T>(const Layout *); \
-    template <typename T> friend const detail::Rtti *detail::InitHelper<T>();
+    template <typename T> friend T *Cast(Layout *); \
+    template <typename T> friend const T *Cast(const Layout *); \
+    template <typename T> friend const detail::Rtti *detail::InitHelper();
 
   /// Base class containing location and layout information for all Frames elements.
   /**

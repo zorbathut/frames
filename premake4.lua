@@ -19,10 +19,6 @@ elseif _ACTION == "vs2013" then -- NYI
   slug = "msvc12"
   platform = "win32"
   platformFull = "win32_12"
-elseif _ACTION == "gmake" and _OS == "windows" then
-  slug = "mingw"
-  platform = "mingw"
-  platformFull = "mingw"
 else
   print(("Not supported: target %s with OS %s"):format(_ACTION, _OS))
   assert(false)
@@ -63,11 +59,6 @@ solution "Frames"
   configuration "vs*"
     defines "_CRT_SECURE_NO_WARNINGS" -- Annoying warning on MSVC that wants use of MSVC-specific functions
   
-  configuration {"gmake", "windows"}
-    defines "_WIN32" -- Doesn't seem to be provided by default on cygwin
-    flags { "StaticRuntime" } -- dynamic linking is such a pain
-    linkoptions "-static" -- above option doesn't seem to do this?
-  
   -- Build config
   configuration "*"
     flags { "Symbols" } -- always create debug symbols
@@ -88,9 +79,6 @@ solution "Frames"
     
     configuration "vs*"
       links {"libpng14", "lua51", "freetype2312", "zlib"}
-      
-    configuration "gmake"
-      links {"png14", "lua", "freetype", "z", "pthread", "gdi32", "ole32", "oleaut32", "uuid"}
       
     configuration {}
   end
@@ -121,9 +109,6 @@ solution "Frames"
     
     configuration {"Debug", "vs*"}
       links {"gtestd", "gtest_maind"}
-      
-    configuration {"Debug", "not vs*"}
-      links {"gtest", "gtest_main"}
     
     configuration "Release"
       links {"gtest", "gtest_main"}
