@@ -11,7 +11,7 @@ namespace Frames {
     return new StreamFile(fil);
   }
 
-  int StreamFile::Read(unsigned char *target, int bytes) { return fread(target, 1, bytes, m_file); }
+  int StreamFile::Read(unsigned char *target, int bytes) { return (int)fread(target, 1, bytes, m_file); } // safe to cast because our input is "int" anyway, so it can't possibly read more than that
   bool StreamFile::Seek(int offset) { return !fseek(m_file, offset, SEEK_SET); }
   bool StreamFile::Seekable() const { return true; }
 

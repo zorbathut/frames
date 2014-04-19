@@ -30,8 +30,8 @@ namespace Frames {
   void PngReader(png_structp png_ptr, png_bytep data, png_size_t length) {
     Stream *istr = (Stream*)png_get_io_ptr(png_ptr);
     
-    int ct = istr->Read(data, length);
-    if(ct != (int)length)
+    int ct = istr->Read(data, (int)length); // if you have a 2gb png, at least this means you won't read all of it
+    if(ct != length)
       png_error(png_ptr, "unexpected EOF");
   }
 

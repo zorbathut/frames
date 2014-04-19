@@ -32,7 +32,7 @@ namespace Frames {
 
       delete stream;
 
-      if (m_face_data.empty() || FT_New_Memory_Face(m_env->GetTextManager()->GetFreetype(), &m_face_data[0], m_face_data.size(), 0, &m_face)) {
+      if (m_face_data.empty() || FT_New_Memory_Face(m_env->GetTextManager()->GetFreetype(), &m_face_data[0], (int)m_face_data.size(), 0, &m_face)) {
         m_env->LogError("Can't load Freetype face");
       }
     
@@ -419,7 +419,7 @@ namespace Frames {
       return line;
     }
     int TextLayout::GetEOLFromLine(int line) const {
-      if (line == (int)m_lines.size()) return m_coordinates.size() - 1;
+      if (line == (int)m_lines.size()) return (int)m_coordinates.size() - 1;
       return m_lines[line] - 1;
     }
 

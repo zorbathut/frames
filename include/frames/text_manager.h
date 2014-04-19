@@ -109,7 +109,7 @@ namespace Frames {
       float GetFullWidth() const { return m_fullWidth; }
       const TextureBackingPtr &GetTexture() const { return m_parent->GetTexture(); }
 
-      int GetCharacterCount() const { return m_characters.size(); }
+      int GetCharacterCount() const { return (int)m_characters.size(); }  // we will never have more than 2 billion characters
       const CharacterInfoPtr &GetCharacter(int index) const { return m_characters[index]; }
       float GetKerning(int index) const { return m_kerning[index]; }
       int GetQuads() const { return m_quads; }

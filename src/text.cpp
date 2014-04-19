@@ -103,7 +103,7 @@ namespace Frames {
       m_select = m_cursor = position;
     }
 
-    m_cursor = detail::Clamp(m_cursor, 0, m_text.size());
+    m_cursor = detail::Clamp(m_cursor, 0, (int)m_text.size());
 
     ScrollToCursor();
   }
@@ -114,8 +114,8 @@ namespace Frames {
 
   void Text::SetSelection(int start, int end) {
     // clamp to sane values
-    start = detail::Clamp(start, 0, m_text.size());  // UNICODE TODO
-    end = detail::Clamp(end, 0, m_text.size());  // UNICODE TODO
+    start = detail::Clamp(start, 0, (int)m_text.size());  // UNICODE TODO
+    end = detail::Clamp(end, 0, (int)m_text.size());  // UNICODE TODO
     if (start == end) {
       m_select = m_cursor = start;
     } else if (m_cursor == start) {
@@ -383,7 +383,7 @@ namespace Frames {
       return;
     }
 
-    int ncursor = std::min(m_cursor, m_select) + type.size();
+    int ncursor = std::min(m_cursor, m_select) + (int)type.size();
 
     SetText(m_text.substr(0, std::min(m_cursor, m_select)) + type + m_text.substr(std::max(m_cursor, m_select)));
     SetCursor(ncursor);
@@ -392,8 +392,8 @@ namespace Frames {
   void Text::EventInternal_KeyDownOrRepeat(Handle *e, const Key &ev) {
     // Things supported for everything interactive
     if (ev.key == Key::A && ev.ctrl) {
-      SetSelection(0, m_text.size());
-      SetCursor(m_text.size());
+      SetSelection(0, (int)m_text.size());
+      SetCursor((int)m_text.size());
     } else if ((ev.key == Key::C && ev.ctrl) || (m_interactive == INTERACTIVE_SELECT && ev.key == Key::X && ev.ctrl)) { // if we're in select mode, interpret cut as copy
       // copy to clipboard
       if (m_cursor != m_select) {
@@ -452,14 +452,14 @@ namespace Frames {
       } else if (ev.key == Key::Home) {
         newcursor = 0;
       } else if (ev.key == Key::End) {
-        newcursor = m_text.size();
+        newcursor = (int)m_text.size();
       } else {
         // isn't actually a cursor movement key
         hascursor = false;
       }
 
       if (hascursor) {
-        newcursor = detail::Clamp(newcursor, 0, m_text.size());
+        newcursor = detail::Clamp(newcursor, 0, (int)m_text.size());
         if (ev.shift) {
           SetSelection(m_select, newcursor);
           SetCursor(newcursor);
@@ -512,7 +512,7 @@ namespace Frames {
     } else if (ev.key == Key::V && ev.ctrl) {
       // paste from clipboard
       std::string clipboard = GetEnvironment()->GetConfiguration().clipboard->Get();
-      int ncursor = m_cursor + clipboard.size();
+      int ncursor = m_cursor + (int)clipboard.size();
       SetText(m_text.substr(0, std::min(m_cursor, m_select)) + clipboard + m_text.substr(std::max(m_cursor, m_select)));
       SetCursor(ncursor);
       SetSelection();
@@ -655,7 +655,7 @@ namespace Frames {
     luaF_checkparams(L, 2);
     Text *self = luaF_checkframe<Text>(L, 1);
 
-    self->SetCursor(luaL_checkinteger(L, 2));
+    self->SetCursor((int)luaL_checkinteger(L, 2));
 
     return 0;
   }
@@ -676,7 +676,7 @@ namespace Frames {
     if (lua_gettop(L) == 1) {
       self->SetSelection();
     } else if(lua_gettop(L) == 3) {
-      self->SetSelection(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3));
+      self->SetSelection((int)luaL_checkinteger(L, 2), (int)luaL_checkinteger(L, 3));
     } else {
       luaL_error(L, "Incorrect number of parameters, expecting 1 or 3");
     }

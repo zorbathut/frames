@@ -1232,7 +1232,7 @@ namespace Frames {
         ctar->Obliterate_Lock();
         ctar = ctar->GetParent();
       }
-      m_diveIndex = m_dives.size();
+      m_diveIndex = (int)m_dives.size();
       
       IndexNext();
     } else {
@@ -1540,7 +1540,7 @@ namespace Frames {
     const ChildrenList &children = self->GetChildren(implementation);
     for (ChildrenList::const_iterator itr = children.begin(); itr != children.end(); ++itr) {
       (*itr)->luaF_push(L);
-      lua_rawseti(L, -2, lua_objlen(L, -2));
+      lua_rawseti(L, -2, (int)lua_objlen(L, -2));
     }
 
     return 1;
@@ -1589,7 +1589,7 @@ namespace Frames {
     if (!lua_isnil(L, -1)) {
       // Found element, need to retrieve ID and increment refcount
       // Stack: ... _rfevh handleid
-      handler = lua_tointeger(L, -1);
+      handler = (int)lua_tointeger(L, -1);  // Lua is a little schizophrenic with its integers; sometimes it wants an int, sometimes a lua_Integer. We're taking the position that 2 billion frames is enough for anyone.
       lua_pop(L, 2);
       
       // Stack: ...

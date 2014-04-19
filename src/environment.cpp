@@ -884,7 +884,7 @@ namespace Frames {
     }
 
     LogError(detail::Format("Layout loop dependency detected, axis %c:", (m_layoutStack[0].axis == X) ? 'X' : 'Y'));
-    for (int i = m_layoutStack.size(); i > 0; --i) {
+    for (int i = (int)m_layoutStack.size(); i > 0; --i) {
       LayoutStack_Entry entry = m_layoutStack[i - 1];
       if (detail::IsUndefined(entry.point))
         LogError(detail::Format("  %s: size", entry.layout->DebugGetName()));
