@@ -4,6 +4,6 @@ set -o pipefail
 
 unzip generate.zip
 rm *.zip
-lua scripts/build.lua $target
-zip -r test-$target.zip bin/$target/test
-zip -r lib-$target.zip lib/$target
+lua scripts/build.lua $target $platform $configuration
+zip -r test-$target-$platform-$configuration.zip bin/$target/$platform/test
+zip -r lib-$target-$platform-$configuration.zip lib/$target/$platform

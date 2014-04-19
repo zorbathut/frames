@@ -99,18 +99,28 @@ solution "Frames"
     kind "StaticLib"
     language "C++"
     location(path)
-    targetdir("lib/" .. slug)
     files "src/*.cpp"
     files "include/frames/*.h"
-
+    
+    configuration "x32"
+      targetdir("lib/" .. slug .. "/x32")
+        
+    configuration "x64"
+      targetdir("lib/" .. slug .. "/x64")
+      
   -- Test
   project "test"
     kind "ConsoleApp"
     language "C++"
     location(path)
-    targetdir("bin/" .. slug .. "/test")
     files "test/*.cpp"
     debugdir "test"
+    
+    configuration "x32"
+      targetdir("bin/" .. slug .. "/x32/test")
+        
+    configuration "x64"
+      targetdir("bin/" .. slug .. "/x64/test")
       
     configuration "vs2012"
       defines "_VARIADIC_MAX=10" -- MSVC11 has sketchy support for tr1::tuple; this is required for google test to work
@@ -127,9 +137,14 @@ solution "Frames"
     kind "WindowedApp"
     language "C++"
     location(path)
-    targetdir("bin/" .. slug .. "/samples")
     files "samples/bootstrap/win32_ogl.cpp"
     debugdir "samples/bootstrap"
     flags "WinMain"
+    
+    configuration "x32"
+      targetdir("bin/" .. slug .. "/x32/samples")
+        
+    configuration "x64"
+      targetdir("bin/" .. slug .. "/x64/samples")
 
     linkWithFrames()

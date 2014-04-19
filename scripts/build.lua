@@ -6,18 +6,26 @@
 require "scripts/lib/platforms"
 require "scripts/lib/util"
 
-local typ = ...
+local target, platform, configuration = ...
 
 local src = projects
-if typ then
+if target then
   src = {}
-  src[typ] = projects[typ]
+  src[target] = projects[target]
+end
+
+if not platform then
+  platform = "x32"
+end
+
+if not configuration then
+  configuration = "release"
 end
 
 local success = true
 
 for k, v in pairs(src) do
-  if os.execute(("cd projects/%s && %s"):format(k, v.build)) ~= 0 then
+  if os.execute(("cd projects/%s && %s"):format(k, v.build(platform, configuration))) ~= 0 then
     success = false
   end
 end

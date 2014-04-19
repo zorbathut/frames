@@ -5,8 +5,8 @@ set -o pipefail
 unzip testdata.zip || exit 1
 unzip test-$target.zip || exit 1
 rm *.zip
-(cd test && ../bin/$target/test/$executable.exe)
+(cd test && ../bin/$target/$platform/test/$executable.exe)
 RES=$?
 pwd
-zip -r result-$target.zip test/ref/* || exit 1
+zip -r result-$target-$platform-$executable.zip test/ref/* || exit 1
 exit $RES
