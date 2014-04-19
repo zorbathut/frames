@@ -23,15 +23,15 @@ projects = {
   },
   msvc10 = {
     generator = "vs2010",
-    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 10.0/Common7/Tools/vsvars32.bat" "&&" ]] .. jenkins_mspdbsrv .. [[ "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform> /m "&&" rm ../../lib/*/*/*.idb]]),
+    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 10.0/Common7/Tools/vsvars32.bat" "&&" ]] .. jenkins_mspdbsrv .. [[ "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform> /m "&&" rm -f ../../lib/*/*/*.idb]]),
   },
   msvc11 = {
     generator = "vs2012",
-    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 11.0/Common7/Tools/vsvars32.bat" "&&" ]] .. jenkins_mspdbsrv .. [[ "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform> /m "&&" rm ../../lib/*/*/*.idb]]),
+    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 11.0/Common7/Tools/vsvars32.bat" "&&" ]] .. jenkins_mspdbsrv .. [[ "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform> /m "&&" rm -f ../../lib/*/*/*.idb]]),
   },
   msvc12 = {
     generator = "vs2013",
-    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 12.0/Common7/Tools/vsvars32.bat" "&&" ]] .. jenkins_mspdbsrv .. [[ "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform> /m "&&" rm ../../lib/*/*/*.idb]]),
+    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 12.0/Common7/Tools/vsvars32.bat" "&&" ]] .. jenkins_mspdbsrv .. [[ "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform> /m "&&" rm -f ../../lib/*/*/*.idb]]),
   },
   -- disabled, possibly permanently
   --[[mingw = {
