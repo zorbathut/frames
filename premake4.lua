@@ -5,20 +5,20 @@ local platformFull
 
 if _ACTION == "vs2008" then
   slug = "msvc9"
-  platform = "win32"
-  platformFull = "win32_9"
+  platform = "win"
+  platformFull = "win_msvc9_"
 elseif _ACTION == "vs2010" then
   slug = "msvc10"
-  platform = "win32"
-  platformFull = "win32_10"
+  platform = "win"
+  platformFull = "win_msvc10_"
 elseif _ACTION == "vs2012" then
   slug = "msvc11"
-  platform = "win32"
-  platformFull = "win32_11"
+  platform = "win"
+  platformFull = "win_msvc11_"
 elseif _ACTION == "vs2013" then -- NYI
   slug = "msvc12"
-  platform = "win32"
-  platformFull = "win32_12"
+  platform = "win"
+  platformFull = "win_msvc12_"
 else
   print(("Not supported: target %s with OS %s"):format(_ACTION, _OS))
   assert(false)
@@ -32,31 +32,41 @@ solution "Frames"
   
   -- Paths
   location(path)
-  includedirs {
-    "include",
-    "deps/boost_1_55_0",
-    "deps/freetype-2.3.12/" .. platform .. "/include",
-    "deps/glew-1.10.0/" .. platform .. "/include",
-    "deps/jpeg-9/" .. platform .. "/include",
-    "deps/libpng-1.4.3/" .. platform .. "/include",
-    "deps/lua-5.1.5/" .. platform .. "/include",
-    "deps/SDL2-2.0.1/" .. platform .. "/include",
-    "deps/zlib-1.2.8/" .. platform .. "/include",
-    "deps/gtest-1.7.0/" .. platformFull .. "/include",
-  }
-  libdirs {
-    "deps/boost_1_55_0",
-    "deps/freetype-2.3.12/" .. platform .. "/lib",
-    "deps/glew-1.10.0/" .. platform .. "/lib",
-    "deps/jpeg-9/" .. platform .. "/lib",
-    "deps/libpng-1.4.3/" .. platform .. "/lib",
-    "deps/lua-5.1.5/" .. platform .. "/lib",
-    "deps/SDL2-2.0.1/" .. platform .. "/lib",
-    "deps/zlib-1.2.8/" .. platform .. "/lib",
-    "deps/gtest-1.7.0/" .. platformFull .. "/lib",
-  }
+  
+  local function libincludes(suffix)
+    includedirs {
+      "include",
+      "deps/boost_1_55_0",
+      "deps/freetype-2.3.12/" .. platform .. suffix .. "/include",
+      "deps/glew-1.10.0/" .. platform .. suffix .. "/include",
+      "deps/jpeg-9/" .. platform .. suffix .. "/include",
+      "deps/libpng-1.4.3/" .. platform .. suffix .. "/include",
+      "deps/lua-5.1.5/" .. platform .. suffix .. "/include",
+      "deps/SDL2-2.0.1/" .. platform .. suffix .. "/include",
+      "deps/zlib-1.2.8/" .. platform .. suffix .. "/include",
+      "deps/gtest-1.7.0/" .. platformFull .. suffix .. "/include",
+    }
+    libdirs {
+      "deps/boost_1_55_0",
+      "deps/freetype-2.3.12/" .. platform .. suffix .. "/lib",
+      "deps/glew-1.10.0/" .. platform .. suffix .. "/lib",
+      "deps/jpeg-9/" .. platform .. suffix .. "/lib",
+      "deps/libpng-1.4.3/" .. platform .. suffix .. "/lib",
+      "deps/lua-5.1.5/" .. platform .. suffix .. "/lib",
+      "deps/SDL2-2.0.1/" .. platform .. suffix .. "/lib",
+      "deps/zlib-1.2.8/" .. platform .. suffix .. "/lib",
+      "deps/gtest-1.7.0/" .. platformFull .. suffix .. "/lib",
+    }
+  end
   
   -- Platform-specific tweaks
+  configuration "x32"
+    libincludes("32")
+  
+  configuration "x64"
+    libincludes("64")
+  
+  -- Compiler-specific tweaks
   configuration "vs*"
     defines "_CRT_SECURE_NO_WARNINGS" -- Annoying warning on MSVC that wants use of MSVC-specific functions
   
@@ -101,9 +111,6 @@ solution "Frames"
     targetdir("bin/" .. slug .. "/test")
     files "test/*.cpp"
     debugdir "test"
-    
-    configuration {"vs2008", "Debug"}
-      linkoptions "/NODEFAULTLIB:msvcrt" -- I think this is a result of not having special debug builds for everything. Might be fixed when those are added.
       
     configuration "vs2012"
       defines "_VARIADIC_MAX=10" -- MSVC11 has sketchy support for tr1::tuple; this is required for google test to work

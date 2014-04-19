@@ -1,6 +1,6 @@
 ==== Platform notes:
 
-== msvc: Note that libraries must be built without SSL2 in order to link with msvc9 and msvc10. They should also be built with the Multi-threaded DLL runtime library.
+== msvc: Note that libraries must be built without SSL2 (that is to say, /arch:SSE) in order to link with msvc9 and msvc10. They should also be built with the Multi-threaded DLL runtime library.
 
 ==== Individual library notes:
 
