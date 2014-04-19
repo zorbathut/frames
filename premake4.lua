@@ -89,7 +89,7 @@ solution "Frames"
     links {"glew32s", "opengl32", "jpeg"}
     
     configuration "vs*"
-      links {"libpng14", "lua51", "freetype2312", "zlib"}
+      links {"libpng14", "lua51", "freetype2312MT", "zlib"}
       
     configuration {}
   end
@@ -115,11 +115,11 @@ solution "Frames"
     configuration "vs2012"
       defines "_VARIADIC_MAX=10" -- MSVC11 has sketchy support for tr1::tuple; this is required for google test to work
     
-    configuration {"Debug", "vs*"}
-      links {"gtestd", "gtest_maind"}
-    
     configuration "Release"
       links {"gtest", "gtest_main"}
+      
+    configuration "Debug"
+      links {"gtestd", "gtest_maind"}
       
     linkWithFrames() -- must be after gtest because of the braindamaged way gcc links with libraries
 

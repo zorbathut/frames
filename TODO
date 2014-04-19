@@ -1,9 +1,8 @@
 
-https://www.shadertoy.com/view/lsSGzy
-
 === TWEAK
 
-* Rebuild libraries to fix linking warnings
+* Test debug tests
+
 * Rebuild libraries for 64-bit support
 * Kill Release libraries
 * Add Debug-with-Debug build and Checked build (but don't build them)

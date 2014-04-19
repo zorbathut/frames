@@ -1,10 +1,48 @@
+X zlib
+X libpng
+X jpeg
+X lua
+X glew
+X freetype
+
+sdl
+gtest
+
 ==== Platform notes:
 
 == msvc: Note that libraries must be built without SSL2 (that is to say, /arch:SSE) in order to link with msvc9 and msvc10. They should also be built with the Multi-threaded DLL runtime library.
 
 ==== Individual library notes:
 
-== lua/win32: Use luavs.bat, but replace the main block with:
+== zlib/win
+
+Remove all -Zi's from win32/Makefile.msc, add -arch:SSE -GS- in place
+
+nmake -f win32/Makefile.msc (in each environment)
+
+== libpng/win
+
+projects/vstudio/vstudio.sln
+
+Turn off debug output, set instruction set to SSE, add zlib includes
+
+For 64-bit you will need to disable warnings-as-errors
+
+== jpeg/win32
+
+Delete !include <win32.mak> from makefile.vc - it seems to be broken
+
+NMAKE /f makefile.vc setup-v10 (in any environment)
+
+Remove garbage characters from the beginning of jpeg.vcxproj
+
+Open jpeg.sln
+
+Turn off debug output, set instruction set to SSE, disable Whole Program Optimization (it locks the library to a specific MSVC patch)
+
+== lua/win
+
+Use luavs.bat, but replace the main block with:
 
 cd src
 %MYCOMPILE% /arch:SSE l*.c
@@ -13,8 +51,32 @@ lib /nologo /out:lua51.lib l*.obj
 del *.obj *.manifest
 cd ..
 
-== jpeg/win32: the built-in configuration enables Whole Program Optimization which not only restricts the output to a specific MSVC version, but a specific MSVC patch. As jpeg isn't performance-sensitive in Frames this has been disabled. If you want to rebuild the library you might be able to get some performance out of turning it back on.
+== glew/win
 
-== zlib/win32: Modify the makefile.msc to incldue /arch:SSE and /GS- then build.
+build/vc10/glew.sln (open with vs10!)
 
-== SDL/win32: SDL has a buggy chkstk implementation under win32. It is unclear why. Deleting its _chkstk definition is required to make it work properly. Also, at least under win32, it's set to build a .dll by default, and should be changed to a static library.
+turn off debug info, change to SSE, multi-threaded DLL
+
+== freetype/win
+
+builds/win32/vs2008/freetype.sln
+
+multi-threaded DLL, SSE
+
+Lib Release Multithreaded
+
+== SDL/win
+
+Find the definiton of _chkstk; delete it entirely, it appears to be buggy.
+
+Change to build as a static library. Disable debug, instruction set SSE. Do this for both sdl and sdlmain.
+
+== gtest/win
+
+Will need to build this once for every compiler target.
+
+No debug info; SSE build; multi-threaded DLL. You'll have to do this for both gtest and gtest_main.
+
+Requires debug libraries as well thanks to debugiterator mismatches.
+
+Requires _VARIADIC_MAX=10 on msvc11.
