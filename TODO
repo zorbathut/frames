@@ -1,11 +1,21 @@
 
+https://www.shadertoy.com/view/lsSGzy
+
 === TWEAK
 
-* {static/dynamic} {mt/st} {x32/x64} config options
+* Rebuild libraries to fix linking warnings
+* Rebuild libraries for 64-bit support
+* Kill Release libraries
+* Add Debug-with-Debug build and Checked build (but don't build them)
+
+* Test 64-bit
+* Add to test suite
+
+* Linux?
+* Clang?
+* Clang Static?
 
 * FindChild
-
-* x64
 
 * Redesign Lua API sanely
 
