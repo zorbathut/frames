@@ -1,4 +1,32 @@
 
+=== DOCS
+
+* Utility
+  * Point
+  * Rect
+  * Ptr
+  * Refcountable
+
+* Input subsystem
+  * Input
+    * Should apply itself to the Environment!
+  * Key
+  * Environment
+
+* Configuration subsystem
+  * Configuration
+  * Stream
+  * StreamFile
+  * StreamBuffer
+  * TextureConfig
+
+* Frame types
+  * Frame (mostly done)
+  * Mask
+  * Text
+  * Texture
+  * Raw
+
 === TWEAK
 
 * Test debug tests
