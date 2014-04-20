@@ -2,7 +2,6 @@
 === DOCS
 
 * Utility
-  * Point
   * Rect
   * Ptr
   * Refcountable

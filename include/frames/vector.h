@@ -2,6 +2,8 @@
 #define FRAMES_VECTOR
 
 namespace Frames {
+  /// Represents a 2d location or direction.
+  /** This is nothing more than a pair of floats tied together. As is usual with Vector classes, the actual meaning of this structure depends strongly on its context. */
   struct Vector {
     Vector() { };
     Vector(float x, float y) : x(x), y(y) { };
@@ -26,7 +28,7 @@ namespace Frames {
   }
 
   namespace detail {
-    // prototyped
+    // prototyped so we can call it without including utility.h
     float Clamp(float current, float min, float max);
 
     inline Vector Clamp(const Vector &current, const Vector &min, const Vector &max) {
