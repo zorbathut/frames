@@ -12,5 +12,5 @@ else
 fi
 RES=$?
 pwd
-zip -r result-$target-$platform-$executable.zip test/ref/* || exit 1
+zip -r result-$target-$platform-$configuration.zip test/ref/* || exit 1
 exit $RES
