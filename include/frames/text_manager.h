@@ -54,7 +54,7 @@ namespace Frames {
       FontInfo(Environment *env, Stream *stream);
 
       TextInfoPtr GetTextInfo(float size, const std::string &text);
-      CharacterInfoPtr GetCharacterInfo(float size, int character); // character is, as usual, a UTF-32 codepoint
+      CharacterInfoPtr GetCharacterInfo(float size, int character); // character is, as usual, a UCS-4 codepoint
 
       FT_Face GetFace(float size);
 
@@ -177,11 +177,11 @@ namespace Frames {
 
       float GetFullHeight() const { return m_fullHeight; }
 
-      void Render(Renderer *renderer, const Color &color, Rect bounds, Point offset); // bounds.s.x and bounds.s.y interpreted as starting coordinates, text clamped to stay within bounds. offset is text's skew within those bounds
+      void Render(Renderer *renderer, const Color &color, Rect bounds, Vector offset); // bounds.s.x and bounds.s.y interpreted as starting coordinates, text clamped to stay within bounds. offset is text's skew within those bounds
       // passed by value because we modify them
 
-      Point GetCoordinateFromCharacter(int character) const;
-      int GetCharacterFromCoordinate(const Point &pt) const;
+      Vector GetCoordinateFromCharacter(int character) const;
+      int GetCharacterFromCoordinate(const Vector &pt) const;
 
       int GetLineFromCharacter(int character) const;
       int GetEOLFromLine(int line) const;
@@ -190,7 +190,7 @@ namespace Frames {
       ~TextLayout();
 
       TextInfoPtr m_parent;
-      std::vector<Point> m_coordinates; // contains coordinates for the points in TextInfoPtr
+      std::vector<Vector> m_coordinates; // contains coordinates for the points in TextInfoPtr
       std::vector<int> m_lines; // first character of each line
 
       float m_fullHeight;

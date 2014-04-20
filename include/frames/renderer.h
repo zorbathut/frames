@@ -25,8 +25,8 @@ namespace Frames {
     class Renderer {
     public:
       struct Vertex {
-        Point p;
-        Point t;
+        Vector p;
+        Vector t;
         Color c;
       };
 

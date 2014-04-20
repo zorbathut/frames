@@ -261,7 +261,7 @@ namespace Frames {
           m_lines.push_back(i + 1);
 
           // important that this happpens here so that the editfield works as intended
-          m_coordinates.push_back(Point(tx, ty));
+          m_coordinates.push_back(Vector(tx, ty));
 
           tx = 0;
           ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
@@ -289,7 +289,7 @@ namespace Frames {
               // In fact it's even worse - this is the first letter.
               // If it's the first letter, we just keep it and move on anyway - it will be too large for the text field, but fuck it, you've given us a half-character-wide textfield, we can't exactly do better.
               // We'll wordwrap on the next character.
-              m_coordinates.push_back(Point(tx, ty));
+              m_coordinates.push_back(Vector(tx, ty));
               tx += chr->GetAdvance();
             } else {
               // Word is too long, but this is the middle of the word.
@@ -299,7 +299,7 @@ namespace Frames {
               ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
               ty = (float)(int)std::floor(ty + 0.5f);
 
-              m_coordinates.push_back(Point(tx, ty));
+              m_coordinates.push_back(Vector(tx, ty));
               tx += chr->GetAdvance();
 
               currentWordStartX = 0;
@@ -315,18 +315,18 @@ namespace Frames {
             m_lines.push_back(currentWordStartIndex);
 
             for (int j = currentWordStartIndex; j < (int)m_coordinates.size(); ++j) {
-              m_coordinates[j] = Point(tx, ty);
+              m_coordinates[j] = Vector(tx, ty);
               tx += m_parent->GetCharacter(j)->GetAdvance();
               tx += m_parent->GetKerning(j + 1);  // no kerning on the first character
             }
 
             // don't need to kern here, we just did it
-            m_coordinates.push_back(Point(tx, ty));
+            m_coordinates.push_back(Vector(tx, ty));
             tx += chr->GetAdvance();
           }
         } else {
           // Push the character, update our X position
-          m_coordinates.push_back(Point(tx, ty));
+          m_coordinates.push_back(Vector(tx, ty));
           tx += chr->GetAdvance();
         }
 
@@ -343,7 +343,7 @@ namespace Frames {
         m_coordinates[i].y += m_parent->GetCharacter(i)->GetOffsetY();
       }
 
-      m_coordinates.push_back(Point(tx, ty)); // TODO: remove, generate when generating cursor positions? Or use an entirely separate lookup?
+      m_coordinates.push_back(Vector(tx, ty)); // TODO: remove, generate when generating cursor positions? Or use an entirely separate lookup?
 
       m_fullHeight = ty + m_parent->GetParent()->GetLineHeightFirst(m_parent->GetSize());
     }
@@ -352,7 +352,7 @@ namespace Frames {
       m_parent->ShutdownLayout(this);
     }
 
-    void TextLayout::Render(Renderer *renderer, const Color &color, Rect bounds, Point offset) {
+    void TextLayout::Render(Renderer *renderer, const Color &color, Rect bounds, Vector offset) {
       // clamp the bounds to the pixel grid to avoid text blurring
       // probably shouldn't do this if we're using distance field rendering
       bounds.s.x = (float)(int)std::floor(bounds.s.x + 0.5f);
@@ -373,9 +373,9 @@ namespace Frames {
         const CharacterInfoPtr &character = m_parent->GetCharacter(i);
 
         if (character->GetTexture()) {
-          Point origin = Point(bounds.s.x + m_coordinates[i].x - offset.x, bounds.s.y + m_coordinates[i].y - offset.y);
+          Vector origin = Vector(bounds.s.x + m_coordinates[i].x - offset.x, bounds.s.y + m_coordinates[i].y - offset.y);
         
-          if (Renderer::WriteCroppedTexRect(vertex, Rect(origin, origin + Point((float)character->GetTexture()->GetWidth(), (float)character->GetTexture()->GetHeight())), character->GetTexture()->GetBounds(), color, bounds)) {
+          if (Renderer::WriteCroppedTexRect(vertex, Rect(origin, origin + Vector((float)character->GetTexture()->GetWidth(), (float)character->GetTexture()->GetHeight())), character->GetTexture()->GetBounds(), color, bounds)) {
             cquad++;
           }
         }
@@ -386,8 +386,8 @@ namespace Frames {
       renderer->Return(GL_QUADS, cquad * 4);
     }
 
-    Point TextLayout::GetCoordinateFromCharacter(int character) const {
-      Point coord = m_coordinates[character];
+    Vector TextLayout::GetCoordinateFromCharacter(int character) const {
+      Vector coord = m_coordinates[character];
       if (character + 1 != (int)m_coordinates.size()) {
         CharacterInfo *chr = GetParent()->GetCharacter(character).get();
         coord.x -= chr->GetOffsetX();
@@ -396,9 +396,9 @@ namespace Frames {
       return coord;
     }
 
-    int TextLayout::GetCharacterFromCoordinate(const Point &pt) const {
+    int TextLayout::GetCharacterFromCoordinate(const Vector &pt) const {
       // yeah we're just going to go mad right here
-      Point lpt = detail::Clamp(pt, Point(0, 0), Point(m_width, m_fullHeight));
+      Vector lpt = detail::Clamp(pt, Vector(0, 0), Vector(m_width, m_fullHeight));
       int line = std::min(int(lpt.y / GetParent()->GetParent()->GetLineHeight(GetParent()->GetSize())), (int)m_lines.size());
 
       int s = 0;

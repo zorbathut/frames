@@ -9,7 +9,7 @@
 #include "frames/lua.h"
 #include "frames/input.h"
 #include "frames/noncopyable.h"
-#include "frames/point.h"
+#include "frames/vector.h"
 
 #include "boost/static_assert.hpp"
 
@@ -67,11 +67,11 @@ namespace Frames {
       FRAMES_VERB_DECLARE_BUBBLE(MouseOver, ());
 
       /// Signals when the mouse moves while inside a frame.
-      FRAMES_VERB_DECLARE_BUBBLE(MouseMove, (const Point &pt));
+      FRAMES_VERB_DECLARE_BUBBLE(MouseMove, (const Vector &pt));
 
       /// Signals when the mouse moves while outside a frame, after pressing a button inside that frame and keeping it held.
       /** This functionality is intended for drag-and-drop applications. */
-      FRAMES_VERB_DECLARE_BUBBLE(MouseMoveoutside, (const Point &pt));
+      FRAMES_VERB_DECLARE_BUBBLE(MouseMoveoutside, (const Vector &pt));
 
       /// Signals when the mouse leaves a frame.
       /** If a mouse moves from one frame to another, MouseOver is guaranteed to fire after MouseOut. */

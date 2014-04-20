@@ -135,7 +135,7 @@ namespace Frames {
     return m_select != m_cursor;
   }
 
-  void Text::SetScroll(const Point &scroll) {
+  void Text::SetScroll(const Vector &scroll) {
     m_scroll = scroll;
   }
 
@@ -241,8 +241,8 @@ namespace Frames {
       return;
     }*/
 
-    Point tpos = m_layout->GetCoordinateFromCharacter(m_cursor);
-    Point cscroll = GetScroll();
+    Vector tpos = m_layout->GetCoordinateFromCharacter(m_cursor);
+    Vector cscroll = GetScroll();
 
     // First, do the X axis
     if (!m_wordwrap) {
@@ -318,11 +318,11 @@ namespace Frames {
         renderer->SetTexture();
         detail::Renderer::Vertex *vert = renderer->Request(4);
         
-        Point origin = m_layout->GetCoordinateFromCharacter(m_cursor) - m_scroll;
+        Vector origin = m_layout->GetCoordinateFromCharacter(m_cursor) - m_scroll;
         origin.x += GetLeft();
         origin.y += GetTop();
         
-        detail::Renderer::WriteCroppedTexRect(vert, Rect(origin, origin + Point(1, m_layout->GetParent()->GetParent()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1, renderer->AlphaGet()), bounds);
+        detail::Renderer::WriteCroppedTexRect(vert, Rect(origin, origin + Vector(1, m_layout->GetParent()->GetParent()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1, renderer->AlphaGet()), bounds);
 
         renderer->Return(GL_QUADS);
       }
@@ -330,12 +330,12 @@ namespace Frames {
   }
 
   void Text::EventInternal_LeftDown(Handle *e) {
-    int pos = m_layout->GetCharacterFromCoordinate(GetEnvironment()->GetMouse() + m_scroll - Point(GetLeft(), GetTop()));
+    int pos = m_layout->GetCharacterFromCoordinate(GetEnvironment()->GetMouse() + m_scroll - Vector(GetLeft(), GetTop()));
     SetCursor(pos);
     SetSelection();
 
-    EventAttach(Event::MouseMove, Delegate<void (Handle *, const Point &pt)>(this, &Text::EventInternal_Move));
-    EventAttach(Event::MouseMoveoutside, Delegate<void (Handle *, const Point &pt)>(this, &Text::EventInternal_Move));
+    EventAttach(Event::MouseMove, Delegate<void (Handle *, const Vector &pt)>(this, &Text::EventInternal_Move));
+    EventAttach(Event::MouseMoveoutside, Delegate<void (Handle *, const Vector &pt)>(this, &Text::EventInternal_Move));
 
     if (m_interactive >= INTERACTIVE_SELECT) {
       GetEnvironment()->SetFocus(this);
@@ -343,7 +343,7 @@ namespace Frames {
   }
 
   void Text::EventInternal_LeftUp(Handle *e) {
-    int pos = m_layout->GetCharacterFromCoordinate(GetEnvironment()->GetMouse() + m_scroll - Point(GetLeft(), GetTop()));
+    int pos = m_layout->GetCharacterFromCoordinate(GetEnvironment()->GetMouse() + m_scroll - Vector(GetLeft(), GetTop()));
 
     // We want to change the cursor position, but still preserve the selection, which takes a little effort
     int start, end;
@@ -355,12 +355,12 @@ namespace Frames {
     }
     SetCursor(pos);
 
-    EventDetach(Event::MouseMove, Delegate<void (Handle *, const Point &pt)>(this, &Text::EventInternal_Move));
-    EventDetach(Event::MouseMoveoutside, Delegate<void (Handle *, const Point &pt)>(this, &Text::EventInternal_Move));
+    EventDetach(Event::MouseMove, Delegate<void (Handle *, const Vector &pt)>(this, &Text::EventInternal_Move));
+    EventDetach(Event::MouseMoveoutside, Delegate<void (Handle *, const Vector &pt)>(this, &Text::EventInternal_Move));
   }
 
-  void Text::EventInternal_Move(Handle *e, const Point &pt) {
-    int pos = m_layout->GetCharacterFromCoordinate(pt + m_scroll - Point(GetLeft(), GetTop()));
+  void Text::EventInternal_Move(Handle *e, const Vector &pt) {
+    int pos = m_layout->GetCharacterFromCoordinate(pt + m_scroll - Vector(GetLeft(), GetTop()));
 
     // We want to change the cursor position, but still preserve the selection, which takes a little effort
     int start, end;
@@ -441,12 +441,12 @@ namespace Frames {
         }
       } else if (ev.key == Key::Up) {
         float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
-        Point ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
+        Vector ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
         ccor.y -= lineheight / 2;
         newcursor = m_layout->GetCharacterFromCoordinate(ccor);
       } else if (ev.key == Key::Down) {
         float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
-        Point ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
+        Vector ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
         ccor.y += lineheight * 3 / 2; // need to bump it into the bottom line
         newcursor = m_layout->GetCharacterFromCoordinate(ccor);
       } else if (ev.key == Key::Home) {
@@ -704,7 +704,7 @@ namespace Frames {
     luaF_checkparams(L, 3);
     Text *self = luaF_checkframe<Text>(L, 1);
 
-    self->SetScroll(Point((float)luaL_checknumber(L, 2), (float)luaL_checknumber(L, 3)));
+    self->SetScroll(Vector((float)luaL_checknumber(L, 2), (float)luaL_checknumber(L, 3)));
 
     return 0;
   }

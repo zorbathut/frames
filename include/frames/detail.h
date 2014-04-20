@@ -11,11 +11,11 @@
 
 #include "frames/config_cc.h"
 #include "frames/const.h"
-#include "frames/point.h"
+#include "frames/vector.h"
 
 namespace Frames {
   namespace detail {
-    extern const Point c_anchorLookup[ANCHOR_COUNT];
+    extern const Vector c_anchorLookup[ANCHOR_COUNT];
 
     template<typename T, typename U> T Reinterpret(U u) {
       union { T t; U u; } uni;
@@ -77,8 +77,6 @@ namespace Frames {
     template<typename NR, typename R, typename P1, typename P2, typename P3, typename P4> struct FunctionRv<NR, R (P1, P2, P3, P4)> { typedef NR T(P1, P2, P3, P4); };
     
     template<typename IT> struct MakeConstRef { typedef typename boost::add_lvalue_reference<typename boost::add_const<typename boost::remove_reference<IT>::type>::type>::type T; };
-
-    typedef intptr_t intfptr_t; // tested in detail.cpp
   };
 }
 

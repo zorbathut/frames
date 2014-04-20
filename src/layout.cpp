@@ -18,8 +18,8 @@ namespace Frames {
   FRAMES_VERB_DEFINE(Layout::Event::Size, ());
 
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseOver, ());
-  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseMove, (const Point &pt));
-  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseMoveoutside, (const Point &pt));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseMove, (const Vector &pt));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseMoveoutside, (const Vector &pt));
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseOut, ());
 
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseLeftUp, ());

@@ -97,7 +97,7 @@ namespace Frames {
     float y = (float)iy;
 
     Layout *updated = GetLayoutUnder(x, y);
-    m_mouse = Point(x, y);
+    m_mouse = Vector(x, y);
 
     bool mouseover = false;
     if (updated != m_over) {
@@ -113,13 +113,13 @@ namespace Frames {
 
     // Do our mousemove messages
     if (m_over) {
-      m_over->EventTrigger(Layout::Event::MouseMove, Point(x, y));
+      m_over->EventTrigger(Layout::Event::MouseMove, Vector(x, y));
     }
 
     // Do our mousemoveout messages
     for (std::map<int, Layout *>::const_iterator itr = m_buttonDown.begin(); itr != m_buttonDown.end(); ++itr) {
       if (itr->second && itr->second != m_over) {
-        itr->second->EventTrigger(Layout::Event::MouseMoveoutside, Point(x, y));
+        itr->second->EventTrigger(Layout::Event::MouseMoveoutside, Vector(x, y));
       }
     }
 

@@ -7,7 +7,7 @@
 #include "frames/detail.h"
 #include "frames/input.h"
 #include "frames/noncopyable.h"
-#include "frames/point.h"
+#include "frames/vector.h"
 
 #include <deque>
 #include <vector>
@@ -94,7 +94,7 @@ namespace Frames {
     bool Input(const Input &ie); // Usable as a single-package class, intended for the OS helper functions or for people who want a single data pathway
     
     // ==== State as of the current event that's being handled
-    const Point &GetMouse() const { return m_mouse; }
+    const Vector &GetMouse() const { return m_mouse; }
     bool IsShift() const;
     bool IsCtrl() const;
     bool IsAlt() const;
@@ -182,7 +182,7 @@ namespace Frames {
     Layout *m_over;
     Layout *m_focus;
     std::map<int, Layout *> m_buttonDown;
-    Point m_mouse;
+    Vector m_mouse;
     Key m_lastEvent; // stores the shift/ctrl/alt states
 
     // Lua

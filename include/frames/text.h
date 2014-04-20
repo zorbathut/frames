@@ -45,8 +45,8 @@ namespace Frames {
     void SetSelection(int start, int end);
     bool GetSelection(int *start, int *end) const;
 
-    void SetScroll(const Point &scroll);
-    const Point &GetScroll() const { return m_scroll; }
+    void SetScroll(const Vector &scroll);
+    const Vector &GetScroll() const { return m_scroll; }
 
     void SetColorSelection(const Color &color);
     const Color &GetColorSelection() const { return m_color_selection; }
@@ -81,7 +81,7 @@ namespace Frames {
 
     InteractivityMode m_interactive;
 
-    Point m_scroll;
+    Vector m_scroll;
 
     int m_select;
     int m_cursor;
@@ -89,7 +89,7 @@ namespace Frames {
     // Event handlers for mouse events
     void EventInternal_LeftDown(Handle *e);
     void EventInternal_LeftUp(Handle *e);
-    void EventInternal_Move(Handle *e, const Point &pt);
+    void EventInternal_Move(Handle *e, const Vector &pt);
 
     // Event handlers for key events
     void EventInternal_KeyType(Handle *e, const std::string &type);
