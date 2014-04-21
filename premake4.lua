@@ -70,6 +70,9 @@ solution "Frames"
   configuration "vs*"
     defines "_CRT_SECURE_NO_WARNINGS" -- Annoying warning on MSVC that wants use of MSVC-specific functions
   
+  configuration { "vs2010", "x64" }
+    libdirs "C:\\Program Files\\Microsoft SDKs\\Windows\\v6.0a\\Lib\\x64"  -- why on earth is this not included by default
+  
   -- Build config
   configuration "*"
     flags { "Symbols" } -- always create debug symbols
