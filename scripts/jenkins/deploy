@@ -7,5 +7,5 @@ do
   yes | unzip $f
 done
 rm *.zip
-rm -rf label_exp*
+rm -rf configuration*
 lua scripts/deploy.lua
