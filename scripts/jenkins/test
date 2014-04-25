@@ -4,6 +4,7 @@ set -o pipefail
 
 unzip testdata.zip || exit 1
 unzip test-$target-$platform-$configuration.zip || exit 1
+unzip debugruntime.zip || exit 1
 rm *.zip
 if [ "$configuration" == "release" ]; then
   (cd test && ../bin/$target/$platform/test/test.exe)
