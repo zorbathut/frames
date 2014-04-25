@@ -11,3 +11,30 @@ zip -r testdata.zip test
 zip -r docs.zip doc/Frames* doc/html
 zip -r scripts.zip scripts
 git describe | sed 's/^v//' > version
+
+# runtime creation
+mkdir -p bin/msvc10/x32/test
+cp c:/windows/syswow64/msvcr100d.dll bin/msvc10/x32/test
+cp c:/windows/syswow64/msvcp100d.dll bin/msvc10/x32/test
+
+mkdir -p bin/msvc11/x32/test
+cp c:/windows/syswow64/msvcr110d.dll bin/msvc11/x32/test
+cp c:/windows/syswow64/msvcp110d.dll bin/msvc11/x32/test
+
+mkdir -p bin/msvc12/x32/test
+cp c:/windows/syswow64/msvcr120d.dll bin/msvc12/x32/test
+cp c:/windows/syswow64/msvcp120d.dll bin/msvc12/x32/test
+
+mkdir -p bin/msvc10/x64/test
+cp c:/windows/sysnative/msvcr100d.dll bin/msvc10/x64/test
+cp c:/windows/sysnative/msvcp100d.dll bin/msvc10/x64/test
+
+mkdir -p bin/msvc11/x64/test
+cp c:/windows/sysnative/msvcr110d.dll bin/msvc11/x64/test
+cp c:/windows/sysnative/msvcp110d.dll bin/msvc11/x64/test
+
+mkdir -p bin/msvc12/x64/test
+cp c:/windows/sysnative/msvcr120d.dll bin/msvc12/x64/test
+cp c:/windows/sysnative/msvcp120d.dll bin/msvc12/x64/test
+
+zip -r debugruntime.zip bin
