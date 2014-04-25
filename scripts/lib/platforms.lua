@@ -16,19 +16,19 @@ end
 projects = {
   msvc9 = {
     generator = "vs2008",
-    build = msbuild([[tmp= temp= cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 9.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform> "&&" rm -f ../../lib/*/*/*.idb]]),  -- vs2008 doesn't seem to like multiple environment variables that are identical when compared case-insensitively
+    build = msbuild([[tmp= temp= cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 9.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform>]]),  -- vs2008 doesn't seem to like multiple environment variables that are identical when compared case-insensitively
   },
   msvc10 = {
     generator = "vs2010",
-    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 10.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform> "&&" rm -f ../../lib/*/*/*.idb]]),
+    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 10.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform>]]),
   },
   msvc11 = {
     generator = "vs2012",
-    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 11.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform> "&&" rm -f ../../lib/*/*/*.idb]]),
+    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 11.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform>]]),
   },
   msvc12 = {
     generator = "vs2013",
-    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 12.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform> "&&" rm -f ../../lib/*/*/*.idb]]),
+    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 12.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform>]]),
   },
   -- disabled, possibly permanently
   --[[mingw = {

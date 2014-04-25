@@ -5,5 +5,8 @@ set -o pipefail
 unzip generate.zip
 rm *.zip
 lua scripts/build.lua $target $platform $configuration
+
+rm -f bin/$target/$platform/*/*.idb bin/$target/$platform/*/*.lib bin/$target/$platform/*/*.exp bin/$target/$platform/*/*.ilk
+
 zip -r test-$target-$platform-$configuration.zip bin/$target/$platform/test
 zip -r lib-$target-$platform-$configuration.zip lib/$target/$platform
