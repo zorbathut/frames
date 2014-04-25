@@ -49,18 +49,18 @@ namespace Frames {
 
     TextInfoPtr FontInfo::GetTextInfo(float size, const std::string &text) {
       if (!m_text.left.count(std::make_pair(size, text))) {
-        m_text.insert(boost::bimap<std::pair<float, std::string>, TextInfo *>::value_type(std::make_pair(size, text), new TextInfo(this, size, text)));
+        m_text.insert(boost::bimap<std::pair<float, std::string>, TextInfo *>::value_type(std::make_pair(size, text), new TextInfo(FontInfoPtr(this), size, text)));
       }
 
-      return m_text.left.find(std::make_pair(size, text))->second;
+      return TextInfoPtr(m_text.left.find(std::make_pair(size, text))->second);
     }
 
     CharacterInfoPtr FontInfo::GetCharacterInfo(float size, int character) {
       if (!m_character.left.count(std::make_pair(size, character))) {
-        m_character.insert(boost::bimap<std::pair<float, int>, CharacterInfo *>::value_type(std::make_pair(size, character), new CharacterInfo(this, size, character)));
+        m_character.insert(boost::bimap<std::pair<float, int>, CharacterInfo *>::value_type(std::make_pair(size, character), new CharacterInfo(FontInfoPtr(this), size, character)));
       }
 
-      return m_character.left.find(std::make_pair(size, character))->second;
+      return CharacterInfoPtr(m_character.left.find(std::make_pair(size, character))->second);
     }
 
     FT_Face FontInfo::GetFace(float size) {
@@ -177,10 +177,10 @@ namespace Frames {
       if (width > m_fullWidth) width = m_fullWidth; // may as well clamp
 
       if (!m_layout.left.count(std::make_pair(width, wordwrap))) {
-        m_layout.insert(boost::bimap<std::pair<float, bool>, TextLayout *>::value_type(std::make_pair(width, wordwrap), new TextLayout(this, width, wordwrap)));
+        m_layout.insert(boost::bimap<std::pair<float, bool>, TextLayout *>::value_type(std::make_pair(width, wordwrap), new TextLayout(TextInfoPtr(this), width, wordwrap)));
       }
 
-      return m_layout.left.find(std::make_pair(width, wordwrap))->second;
+      return TextLayoutPtr(m_layout.left.find(std::make_pair(width, wordwrap))->second);
     }
 
     void TextInfo::ShutdownLayout(TextLayout *layout) {
@@ -252,7 +252,7 @@ namespace Frames {
       float ty = 0;
 
       for (int i = 0; i < m_parent->GetCharacterCount(); ++i) {
-        CharacterInfo *chr = m_parent->GetCharacter(i).get();
+        CharacterInfo *chr = m_parent->GetCharacter(i).Get();
 
         if (chr->IsNewline()) {
           // This line is resolved, kill it and move on
@@ -363,7 +363,7 @@ namespace Frames {
       offset.y = (float)(int)std::floor(offset.y + 0.5f);
 
       // todo: maybe precache this stuff so it becomes a memcpy?
-      renderer->SetTexture(m_parent->GetTexture().get());
+      renderer->SetTexture(m_parent->GetTexture().Get());
 
       Renderer::Vertex *vertexes = renderer->Request(m_parent->GetQuads() * 4);
 
@@ -389,7 +389,7 @@ namespace Frames {
     Vector TextLayout::GetCoordinateFromCharacter(int character) const {
       Vector coord = m_coordinates[character];
       if (character + 1 != (int)m_coordinates.size()) {
-        CharacterInfo *chr = GetParent()->GetCharacter(character).get();
+        CharacterInfo *chr = GetParent()->GetCharacter(character).Get();
         coord.x -= chr->GetOffsetX();
         coord.y -= chr->GetOffsetY();
       }

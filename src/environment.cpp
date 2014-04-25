@@ -815,27 +815,27 @@ namespace Frames {
     m_config = config;
 
     if (!m_config.logger) {
-      m_config.logger = new Configuration::Logger();
+      m_config.logger = Ptr<Configuration::Logger>(new Configuration::Logger());
     }
 
     if (!m_config.textureFromId) {
-      m_config.textureFromId = new Configuration::TextureFromId();
+      m_config.textureFromId = Ptr<Configuration::TextureFromId>(new Configuration::TextureFromId());
     }
 
     if (!m_config.streamFromId) {
-      m_config.streamFromId = new Configuration::StreamFromId();
+      m_config.streamFromId = Ptr<Configuration::StreamFromId>(new Configuration::StreamFromId());
     }
 
     if (!m_config.pathFromId) {
-      m_config.pathFromId = new Configuration::PathFromId();
+      m_config.pathFromId = Ptr<Configuration::PathFromId>(new Configuration::PathFromId());
     }
 
     if (!m_config.textureFromStream) {
-      m_config.textureFromStream = new Configuration::TextureFromStream();
+      m_config.textureFromStream = Ptr<Configuration::TextureFromStream>(new Configuration::TextureFromStream());
     }
 
     if (!m_config.clipboard) {
-      m_config.clipboard = new Configuration::Clipboard();
+      m_config.clipboard = Ptr<Configuration::Clipboard>(new Configuration::Clipboard());
     }
     
     // easier to handle it on our own, and we won't be creating environments often enough for this to be a performance hit

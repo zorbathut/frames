@@ -57,7 +57,7 @@ private:
   TestSDLEnvironment *m_sdl; // mostly taken care of with constructor/destructor
   Frames::Environment *m_env;
 
-  TestLogger *m_logger; // owned by m_env
+  Frames::Ptr<TestLogger> m_logger; // owned by m_env
 };
 
 class VerbLog : Frames::detail::Noncopyable {

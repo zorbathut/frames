@@ -6,12 +6,16 @@
 #include "frames/vector.h"
 
 namespace Frames {
+  /// Represents a rectangular area in space.
+  /** This is nothing more than a pair of Vectors tied together. As is usual with Rect classes, the actual meaning of this structure depends strongly on its context. */
   struct Rect {
     Rect() { }
     Rect(Vector s, Vector e) : s(s), e(e) { }
     Rect(float sx, float sy, float ex, float ey) : s(sx, sy), e(ex, ey) { }
 
+    /// Represents the topleft corner, or "start", of the rectangle.
     Vector s;
+    /// Represents the bottomright corner, or "end", of the rectangle.
     Vector e;
   };
 }

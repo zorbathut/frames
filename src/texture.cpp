@@ -45,7 +45,7 @@ namespace Frames {
     if (m_texture) {
       Color tint = m_tint * Color(1, 1, 1, renderer->AlphaGet());
 
-      renderer->SetTexture(m_texture.get());
+      renderer->SetTexture(m_texture.Get());
 
       float u = GetTop();
       float d = GetBottom();

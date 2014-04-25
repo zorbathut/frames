@@ -1,11 +1,6 @@
 
 === DOCS
 
-* Utility
-  * Rect
-  * Ptr
-  * Refcountable
-
 * Input subsystem
   * Input
     * Should apply itself to the Environment!

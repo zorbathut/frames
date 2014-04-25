@@ -160,7 +160,7 @@ TestEnvironment::TestEnvironment(bool startSDL) : m_env(0), m_sdl(0) {
 
   Frames::Configuration config;
   config.fontDefaultId = "LindenHill.otf";
-  m_logger = new TestLogger();
+  m_logger = Frames::Ptr<TestLogger>(new TestLogger());
   config.logger = m_logger;
   m_env = new Frames::Environment(config);
 

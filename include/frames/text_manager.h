@@ -103,7 +103,7 @@ namespace Frames {
     public:
       TextInfo(FontInfoPtr parent, float size, std::string text);
 
-      FontInfo *GetParent() const { return m_parent.get(); }
+      FontInfo *GetParent() const { return m_parent.Get(); }
       TextLayoutPtr GetLayout(float width, bool wordwrap);
 
       float GetFullWidth() const { return m_fullWidth; }
@@ -173,7 +173,7 @@ namespace Frames {
     public:
       TextLayout(TextInfoPtr parent, float width, bool wordwrap);
 
-      TextInfo *GetParent() const { return m_parent.get(); }
+      TextInfo *GetParent() const { return m_parent.Get(); }
 
       float GetFullHeight() const { return m_fullHeight; }
 

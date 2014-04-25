@@ -82,7 +82,7 @@ namespace Frames {
 
       // Texture creators
       TextureChunkPtr TextureFromId(const std::string &id);
-      TextureChunkPtr TextureFromConfig(const TextureConfig &conf, TextureBackingPtr backing = 0);
+      TextureChunkPtr TextureFromConfig(const TextureConfig &conf, TextureBackingPtr backing = TextureBackingPtr());
 
       TextureBackingPtr BackingCreate(int width, int height, int modeGL); // we'll have to change this to generalized mode at some point
 

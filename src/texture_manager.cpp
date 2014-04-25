@@ -90,7 +90,7 @@ namespace Frames {
 
     TextureChunkPtr TextureManager::TextureFromId(const std::string &id) {
       if (m_texture.left.count(id)) {
-        return m_texture.left.find(id)->second;
+        return TextureChunkPtr(m_texture.left.find(id)->second);
       }
 
       m_env->LogDebug(detail::Format("Attempting to load texture %s", id));
@@ -104,7 +104,7 @@ namespace Frames {
         return rv; // something went wrong
       }
 
-      m_texture.insert(boost::bimap<std::string, TextureChunk *>::value_type(id, rv.get()));
+      m_texture.insert(boost::bimap<std::string, TextureChunk *>::value_type(id, rv.Get()));
 
       return rv;
     }
@@ -116,7 +116,7 @@ namespace Frames {
 
         glEnable(GL_TEXTURE_2D);
 
-        TextureBacking *backing = 0;
+        TextureBackingPtr backing;
 
         int gl_tex_mode = GL_RGBA;
         int input_tex_mode = GL_RGBA;
@@ -135,24 +135,24 @@ namespace Frames {
           input_tex_mode = GL_ALPHA;
         } else {
           m_env->LogError(detail::Format("Unrecognized raw type %d in texture", conf.Raw_GetType()));
-          return 0;
+          return TextureChunkPtr();
         }
 
         if (in_backing) {
-          backing = in_backing.get();
+          backing = in_backing;
         } else {
-          backing = new TextureBacking(m_env);
+          backing.Reset(new TextureBacking(m_env));
 
           backing->Allocate(detail::ClampToPowerOf2(conf.GetWidth()), detail::ClampToPowerOf2(conf.GetHeight()), gl_tex_mode);
 
-          m_backing.insert(backing);
+          m_backing.insert(backing.Get());  // "safe", because the backing stores enough data that it will clean this up when it's destroyed
         }
 
         std::pair<int, int> origin = backing->AllocateSubtexture(conf.GetWidth(), conf.GetHeight());
 
         //m_env->LogDebug(detail::Format("Allocating %d/%d to %d/%d", conf.GetWidth(), conf.GetHeight(), origin.first, origin.second));
 
-        TextureChunk *chunk = new TextureChunk();
+        TextureChunkPtr chunk(new TextureChunk());
         chunk->m_backing = backing;
         chunk->m_texture_width = conf.GetWidth();
         chunk->m_texture_height = conf.GetHeight();
@@ -194,16 +194,16 @@ namespace Frames {
         return chunk;
       } else {
         m_env->LogError("Unknown texture config type");
-        return 0;
+        return TextureChunkPtr();
       }
     }
 
     TextureBackingPtr TextureManager::BackingCreate(int width, int height, int modeGL) {
-      TextureBacking *backing = new TextureBacking(m_env);
+      TextureBackingPtr backing(new TextureBacking(m_env));
 
       backing->Allocate(width, height, modeGL);
 
-      m_backing.insert(backing);
+      m_backing.insert(backing.Get());
 
       return backing;
     }
