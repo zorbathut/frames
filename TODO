@@ -2,10 +2,11 @@
 === DOCS
 
 * Input subsystem
-  * Input
-    * Should apply itself to the Environment!
-  * Key
-  * Environment
+  * Redesign Sequence heavily
+  * Redesign Environment input API
+  * Document
+  * mousewheel :V
+  * Test
 
 * Configuration subsystem
   * Configuration

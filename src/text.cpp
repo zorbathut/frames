@@ -76,8 +76,8 @@ namespace Frames {
     EventDetach(Event::MouseLeftUp, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftUp));
     EventDetach(Event::MouseLeftUpoutside, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftUp));
 
-    EventDetach(Event::KeyDown, Delegate<void (Handle *, const Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
-    EventDetach(Event::KeyRepeat, Delegate<void (Handle *, const Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+    EventDetach(Event::KeyDown, Delegate<void (Handle *, const Input::Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+    EventDetach(Event::KeyRepeat, Delegate<void (Handle *, const Input::Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
     EventDetach(Event::KeyType, Delegate<void (Handle *, const std::string &)>(this, &Text::EventInternal_KeyType));
 
     // if necessary, insert event handlers
@@ -87,8 +87,8 @@ namespace Frames {
       EventAttach(Event::MouseLeftUpoutside, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftUp));
     
       // These are needed mostly for ctrl-C
-      EventAttach(Event::KeyDown, Delegate<void (Handle *, const Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
-      EventAttach(Event::KeyRepeat, Delegate<void (Handle *, const Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+      EventAttach(Event::KeyDown, Delegate<void (Handle *, const Input::Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+      EventAttach(Event::KeyRepeat, Delegate<void (Handle *, const Input::Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
       EventAttach(Event::KeyType, Delegate<void (Handle *, const std::string &)>(this, &Text::EventInternal_KeyType));
     }
   }
@@ -389,12 +389,12 @@ namespace Frames {
     SetCursor(ncursor);
     SetSelection();
   }
-  void Text::EventInternal_KeyDownOrRepeat(Handle *e, const Key &ev) {
+  void Text::EventInternal_KeyDownOrRepeat(Handle *e, const Input::Key &key) {
     // Things supported for everything interactive
-    if (ev.key == Key::A && ev.ctrl) {
+    if (key == Input::Key::A && GetEnvironment()->GetMeta().ctrl) {
       SetSelection(0, (int)m_text.size());
       SetCursor((int)m_text.size());
-    } else if ((ev.key == Key::C && ev.ctrl) || (m_interactive == INTERACTIVE_SELECT && ev.key == Key::X && ev.ctrl)) { // if we're in select mode, interpret cut as copy
+    } else if ((key == Input::Key::C && GetEnvironment()->GetMeta().ctrl) || (m_interactive == INTERACTIVE_SELECT && key == Input::Key::X && GetEnvironment()->GetMeta().ctrl)) { // if we're in select mode, interpret cut as copy
       // copy to clipboard
       if (m_cursor != m_select) {
         GetEnvironment()->GetConfiguration().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
@@ -412,8 +412,8 @@ namespace Frames {
       // movement-based things
       int newcursor = -1;
       bool hascursor = true;
-      if (ev.key == Key::Left) {
-        if (ev.ctrl) {
+      if (key == Input::Key::Left) {
+        if (GetEnvironment()->GetMeta().ctrl) {
           // shift a word
           int curs = m_cursor - 2;
           for (; curs > 0; curs--) {
@@ -426,8 +426,8 @@ namespace Frames {
         } else {
           newcursor = m_cursor - 1;
         }
-      } else if (ev.key == Key::Right) {
-        if (ev.ctrl) {
+      } else if (key == Input::Key::Right) {
+        if (GetEnvironment()->GetMeta().ctrl) {
           // shift a word
           int curs = m_cursor + 1;
           for (; curs < (int)m_text.size(); curs++) {
@@ -439,19 +439,19 @@ namespace Frames {
         } else {
           newcursor = m_cursor + 1;
         }
-      } else if (ev.key == Key::Up) {
+      } else if (key == Input::Key::Up) {
         float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
         Vector ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
         ccor.y -= lineheight / 2;
         newcursor = m_layout->GetCharacterFromCoordinate(ccor);
-      } else if (ev.key == Key::Down) {
+      } else if (key == Input::Key::Down) {
         float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
         Vector ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
         ccor.y += lineheight * 3 / 2; // need to bump it into the bottom line
         newcursor = m_layout->GetCharacterFromCoordinate(ccor);
-      } else if (ev.key == Key::Home) {
+      } else if (key == Input::Key::Home) {
         newcursor = 0;
-      } else if (ev.key == Key::End) {
+      } else if (key == Input::Key::End) {
         newcursor = (int)m_text.size();
       } else {
         // isn't actually a cursor movement key
@@ -460,7 +460,7 @@ namespace Frames {
 
       if (hascursor) {
         newcursor = detail::Clamp(newcursor, 0, (int)m_text.size());
-        if (ev.shift) {
+        if (GetEnvironment()->GetMeta().shift) {
           SetSelection(m_select, newcursor);
           SetCursor(newcursor);
         } else {
@@ -474,7 +474,7 @@ namespace Frames {
       return;
     }
 
-    if (ev.key == Key::Backspace) {
+    if (key == Input::Key::Backspace) {
       if (m_cursor != m_select) {
         // wipe out the selection
         int ncursor = std::min(m_cursor, m_select);
@@ -487,7 +487,7 @@ namespace Frames {
         SetText(m_text.substr(0, m_cursor - 1) + m_text.substr(m_cursor));
         SetCursor(ncursor);
       }
-    } else if (ev.key == Key::Delete) {
+    } else if (key == Input::Key::Delete) {
       if (m_cursor != m_select) {
         // wipe out the selection
         int ncursor = std::min(m_cursor, m_select);
@@ -498,7 +498,7 @@ namespace Frames {
         // wipe out the character after the cursor
         SetText(m_text.substr(0, m_cursor) + m_text.substr(m_cursor + 1));
       }
-    } else if (ev.key == Key::X && ev.ctrl) {
+    } else if (key == Input::Key::X && GetEnvironment()->GetMeta().ctrl) {
       // cut to clipboard
       if (m_cursor != m_select) {
         GetEnvironment()->GetConfiguration().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
@@ -509,7 +509,7 @@ namespace Frames {
         SetCursor(ncursor);
         SetSelection();
       }
-    } else if (ev.key == Key::V && ev.ctrl) {
+    } else if (key == Input::Key::V && GetEnvironment()->GetMeta().ctrl) {
       // paste from clipboard
       std::string clipboard = GetEnvironment()->GetConfiguration().clipboard->Get();
       int ncursor = m_cursor + (int)clipboard.size();

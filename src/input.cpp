@@ -1,134 +1,168 @@
 
 #include "frames/input.h"
 
+#include "frames/environment.h"
+
 namespace Frames {
-  const char *Key::StringFromKey(Type key) {
+  const char *Input::StringFromKey(Key key) {
     switch (key) {
-      case INVALID: return "(invalid)"; // TODO: global assert
-      case A: return "a";
-      case B: return "b";
-      case C: return "c";
-      case D: return "d";
-      case E: return "e";
-      case F: return "f";
-      case G: return "g";
-      case H: return "h";
-      case I: return "i";
-      case J: return "j";
-      case K: return "k";
-      case L: return "l";
-      case M: return "m";
-      case N: return "n";
-      case O: return "o";
-      case P: return "p";
-      case Q: return "q";
-      case R: return "r";
-      case S: return "s";
-      case T: return "t";
-      case U: return "u";
-      case V: return "v";
-      case W: return "w";
-      case X: return "x";
-      case Y: return "y";
-      case Z: return "z";
+      case Input::INVALID: return "(invalid)"; // TODO: global assert
+      case Input::A: return "a";
+      case Input::B: return "b";
+      case Input::C: return "c";
+      case Input::D: return "d";
+      case Input::E: return "e";
+      case Input::F: return "f";
+      case Input::G: return "g";
+      case Input::H: return "h";
+      case Input::I: return "i";
+      case Input::J: return "j";
+      case Input::K: return "k";
+      case Input::L: return "l";
+      case Input::M: return "m";
+      case Input::N: return "n";
+      case Input::O: return "o";
+      case Input::P: return "p";
+      case Input::Q: return "q";
+      case Input::R: return "r";
+      case Input::S: return "s";
+      case Input::T: return "t";
+      case Input::U: return "u";
+      case Input::V: return "v";
+      case Input::W: return "w";
+      case Input::X: return "x";
+      case Input::Y: return "y";
+      case Input::Z: return "z";
       // Numbers
-      case Num0: return "0";
-      case Num1: return "1";
-      case Num2: return "2";
-      case Num3: return "3";
-      case Num4: return "4";
-      case Num5: return "5";
-      case Num6: return "6";
-      case Num7: return "7";
-      case Num8: return "8";
-      case Num9: return "9";
+      case Input::Num0: return "0";
+      case Input::Num1: return "1";
+      case Input::Num2: return "2";
+      case Input::Num3: return "3";
+      case Input::Num4: return "4";
+      case Input::Num5: return "5";
+      case Input::Num6: return "6";
+      case Input::Num7: return "7";
+      case Input::Num8: return "8";
+      case Input::Num9: return "9";
       // Numpad numerics
-      case Numpad0: return "Numpad 0";
-      case Numpad1: return "Numpad 1";
-      case Numpad2: return "Numpad 2";
-      case Numpad3: return "Numpad 3";
-      case Numpad4: return "Numpad 4";
-      case Numpad5: return "Numpad 5";
-      case Numpad6: return "Numpad 6";
-      case Numpad7: return "Numpad 7";
-      case Numpad8: return "Numpad 8";
-      case Numpad9: return "Numpad 9";
+      case Input::Numpad0: return "Numpad 0";
+      case Input::Numpad1: return "Numpad 1";
+      case Input::Numpad2: return "Numpad 2";
+      case Input::Numpad3: return "Numpad 3";
+      case Input::Numpad4: return "Numpad 4";
+      case Input::Numpad5: return "Numpad 5";
+      case Input::Numpad6: return "Numpad 6";
+      case Input::Numpad7: return "Numpad 7";
+      case Input::Numpad8: return "Numpad 8";
+      case Input::Numpad9: return "Numpad 9";
       // Numpad non-numerics
-      case Add: return "Numpad Add";
-      case Subtract: return "Numpad Subtract";
-      case Multiply: return "Numpad Multiply";
-      case Divide: return "Numpad Divide";
-      case Decimal: return "Numpad Decimal";
+      case Input::Add: return "Numpad Add";
+      case Input::Subtract: return "Numpad Subtract";
+      case Input::Multiply: return "Numpad Multiply";
+      case Input::Divide: return "Numpad Divide";
+      case Input::Decimal: return "Numpad Decimal";
       // Editing keys
-      case Left: return "Left";
-      case Right: return "Right";
-      case Up: return "Up";
-      case Down: return "Down";
-      case PageUp: return "Page Up";
-      case PageDown: return "Page Down";
-      case End: return "End";
-      case Home: return "Home";
-      case Insert: return "Insert";
-      case Delete: return "Delete";
+      case Input::Left: return "Left";
+      case Input::Right: return "Right";
+      case Input::Up: return "Up";
+      case Input::Down: return "Down";
+      case Input::PageUp: return "Page Up";
+      case Input::PageDown: return "Page Down";
+      case Input::End: return "End";
+      case Input::Home: return "Home";
+      case Input::Insert: return "Insert";
+      case Input::Delete: return "Delete";
       // F-keys
-      case F1: return "F1";
-      case F2: return "F2";
-      case F3: return "F3";
-      case F4: return "F4";
-      case F5: return "F5";
-      case F6: return "F6";
-      case F7: return "F7";
-      case F8: return "F8";
-      case F9: return "F9";
-      case F10: return "F10";
-      case F11: return "F11";
-      case F12: return "F12";
-      case F13: return "F13";
-      case F14: return "F14";
-      case F15: return "F15";
-      case F16: return "F16";
-      case F17: return "F17";
-      case F18: return "F18";
-      case F19: return "F19";
-      case F20: return "F20";
-      case F21: return "F21";
-      case F22: return "F22";
-      case F23: return "F23";
-      case F24: return "F24";
+      case Input::F1: return "F1";
+      case Input::F2: return "F2";
+      case Input::F3: return "F3";
+      case Input::F4: return "F4";
+      case Input::F5: return "F5";
+      case Input::F6: return "F6";
+      case Input::F7: return "F7";
+      case Input::F8: return "F8";
+      case Input::F9: return "F9";
+      case Input::F10: return "F10";
+      case Input::F11: return "F11";
+      case Input::F12: return "F12";
+      case Input::F13: return "F13";
+      case Input::F14: return "F14";
+      case Input::F15: return "F15";
+      case Input::F16: return "F16";
+      case Input::F17: return "F17";
+      case Input::F18: return "F18";
+      case Input::F19: return "F19";
+      case Input::F20: return "F20";
+      case Input::F21: return "F21";
+      case Input::F22: return "F22";
+      case Input::F23: return "F23";
+      case Input::F24: return "F24";
       // Meta keys
-      case ControlLeft: return "Left Control";
-      case ShiftLeft: return "Left Shift";
-      case AltLeft: return "Left Alt";
-      case SystemLeft: return "Left System";
-      case ControlRight: return "Right Control";
-      case ShiftRight: return "Right Shift";
-      case AltRight: return "Right Alt";
-      case SystemRight: return "Right System";
-      case Apps: return "Apps";
-      case LockCaps: return "Caps Lock";
-      case LockScroll: return "Scroll Lock";
-      case LockNum: return "Num Lock";
-      case Printscreen: return "Printscreen";
-      case Pause: return "Pause";
+      case Input::ControlLeft: return "Left Control";
+      case Input::ShiftLeft: return "Left Shift";
+      case Input::AltLeft: return "Left Alt";
+      case Input::SystemLeft: return "Left System";
+      case Input::ControlRight: return "Right Control";
+      case Input::ShiftRight: return "Right Shift";
+      case Input::AltRight: return "Right Alt";
+      case Input::SystemRight: return "Right System";
+      case Input::Apps: return "Apps";
+      case Input::LockCaps: return "Caps Lock";
+      case Input::LockScroll: return "Scroll Lock";
+      case Input::LockNum: return "Num Lock";
+      case Input::Printscreen: return "Printscreen";
+      case Input::Pause: return "Pause";
       // Punctuation
-      case Escape: return "Escape";
-      case BracketLeft: return "Left Bracket";
-      case BracketRight: return "Right Bracket";
-      case Semicolon: return "Semicolon";
-      case Comma: return "Comma";
-      case Period: return "Period";
-      case Quote: return "Quote";
-      case Slash: return "Slash";
-      case Backslash: return "Backslash";
-      case Tilde: return "Tilde";
-      case Equal: return "Equal";
-      case Dash: return "Dash";
-      case Space: return "Space";
-      case Return: return "Return";
-      case Backspace: return "Backspace";
-      case Tab: return "Tab";
+      case Input::Escape: return "Escape";
+      case Input::BracketLeft: return "Left Bracket";
+      case Input::BracketRight: return "Right Bracket";
+      case Input::Semicolon: return "Semicolon";
+      case Input::Comma: return "Comma";
+      case Input::Period: return "Period";
+      case Input::Quote: return "Quote";
+      case Input::Slash: return "Slash";
+      case Input::Backslash: return "Backslash";
+      case Input::Tilde: return "Tilde";
+      case Input::Equal: return "Equal";
+      case Input::Dash: return "Dash";
+      case Input::Space: return "Space";
+      case Input::Return: return "Return";
+      case Input::Backspace: return "Backspace";
+      case Input::Tab: return "Tab";
 
       default: return "(unknown)";  // TODO: global assert
+    }
+  }
+
+  void Input::Sequence::Process(Environment *env) {
+    if (GetMetaKnown()) {
+      env->MetaSet(meta);
+    }
+    
+    if (GetMouseposKnown()) {
+      if (GetMouseposValid()) {
+        env->MouseMove(GetMouseposX(), GetMouseposY());
+      } else {
+        env->LogError("No support for invalid mousepos yet");
+      }
+    }
+    
+    bool consumed = true;
+    
+    if (GetMode() == MODE_KEYDOWN) {
+      consumed = env->KeyDown(key);
+    } else if (GetMode() == MODE_KEYUP) {
+      consumed = env->KeyUp(key);
+    } else if (GetMode() == MODE_KEYREPEAT) {
+      consumed = env->KeyRepeat(key);
+    } else if (GetMode() == MODE_MOUSEDOWN) {
+      consumed = env->MouseDown(GetMouseButton());
+    } else if (GetMode() == MODE_MOUSEUP) {
+      consumed = env->MouseUp(GetMouseButton());
+    } else if (GetMode() == MODE_MOUSEWHEEL) {
+      env->LogError("No support for mousewheel yet");
+    } else if (GetMode() == MODE_TYPE) {
+      consumed = env->KeyType(GetType());
     }
   }
 }

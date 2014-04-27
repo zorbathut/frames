@@ -15,42 +15,42 @@
 
 namespace Frames {
 
-  static const Key::Type c_keyIndex[] = {
-    Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0x00 - 0x07
-    Key::Backspace, Key::Tab, Key::INVALID, Key::INVALID, Key::INVALID, Key::Return, Key::INVALID, Key::INVALID, // 0x08 - 0x0f
-    Key::INVALID, Key::INVALID, Key::INVALID, Key::Pause, Key::LockCaps, Key::INVALID, Key::INVALID, Key::INVALID, // 0x10 - 0x17
-    Key::INVALID, Key::INVALID, Key::INVALID, Key::Escape, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0x18 - 0x1f
-    Key::Space, Key::PageUp, Key::PageDown, Key::End, Key::Home, Key::Left, Key::Up, Key::Right, // 0x20 - 0x27
-    Key::Down, Key::INVALID, Key::INVALID, Key::INVALID, Key::Printscreen, Key::Insert, Key::Delete, Key::INVALID, // 0x28 - 0x2f
-    Key::Num0, Key::Num1, Key::Num2, Key::Num3, Key::Num4, Key::Num5, Key::Num6, Key::Num7, // 0x30 - 0x37
-    Key::Num8, Key::Num9, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0x38 - 0x3f
-    Key::INVALID, Key::A, Key::B, Key::C, Key::D, Key::E, Key::F, Key::G, // 0x40 - 0x47
-    Key::H, Key::I, Key::J, Key::K, Key::L, Key::M, Key::N, Key::O, // 0x48 - 0x4f
-    Key::P, Key::Q, Key::R, Key::S, Key::T, Key::U, Key::V, Key::W, // 0x50 - 0x57
-    Key::X, Key::Y, Key::Z, Key::SystemLeft, Key::SystemRight, Key::Apps, Key::INVALID, Key::INVALID, // 0x58 - 0x5f
-    Key::Numpad0, Key::Numpad1, Key::Numpad2, Key::Numpad3, Key::Numpad4, Key::Numpad5, Key::Numpad6, Key::Numpad7,  // 0x60 - 0x67
-    Key::Numpad8, Key::Numpad9, Key::Multiply, Key::Add, Key::INVALID, Key::Subtract, Key::Decimal, Key::Divide, // 0x68 - 0x6f
-    Key::F1, Key::F2, Key::F3, Key::F4, Key::F5, Key::F6, Key::F7, Key::F8, // 0x70 - 0x77
-    Key::F9, Key::F10, Key::F11, Key::F12, Key::F13, Key::F14, Key::F15, Key::F16, // 0x78 - 0x7f
-    Key::F17, Key::F18, Key::F19, Key::F20, Key::F21, Key::F22, Key::F23, Key::F24, // 0x80 - 0x87
-    Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0x88 - 0x8f
-    Key::LockNum, Key::LockScroll, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0x90 - 0x97
-    Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0x98 - 0x9f
-    Key::ShiftLeft, Key::ShiftRight, Key::ControlLeft, Key::ControlRight, Key::AltLeft, Key::AltRight, Key::INVALID, Key::INVALID, // 0xa0 - 0xa7
-    Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0xa8 - 0xaf
-    Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0xb0 - 0xb7
-    Key::INVALID, Key::INVALID, Key::Semicolon, Key::Equal, Key::Comma, Key::Dash, Key::Period, Key::Slash, // 0xb8 - 0xbf
-    Key::Tilde, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0xc0 - 0xc7
-    Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0xc8 - 0xcf
-    Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0xd0 - 0xd7
-    Key::INVALID, Key::INVALID, Key::INVALID, Key::BracketLeft, Key::Backslash, Key::BracketRight, Key::Quote, Key::INVALID, // 0xd8 - 0xdf
-    Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0xe0 - 0xe7
-    Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0xe8 - 0xef
-    Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0xf0 - 0xf7
-    Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, Key::INVALID, // 0xf8 - 0xff
+  static const Input::Key c_keyIndex[] = {
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0x00 - 0x07
+    Input::Key::Backspace, Input::Key::Tab, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::Return, Input::Key::INVALID, Input::Key::INVALID, // 0x08 - 0x0f
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::Pause, Input::Key::LockCaps, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0x10 - 0x17
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::Escape, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0x18 - 0x1f
+    Input::Key::Space, Input::Key::PageUp, Input::Key::PageDown, Input::Key::End, Input::Key::Home, Input::Key::Left, Input::Key::Up, Input::Key::Right, // 0x20 - 0x27
+    Input::Key::Down, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::Printscreen, Input::Key::Insert, Input::Key::Delete, Input::Key::INVALID, // 0x28 - 0x2f
+    Input::Key::Num0, Input::Key::Num1, Input::Key::Num2, Input::Key::Num3, Input::Key::Num4, Input::Key::Num5, Input::Key::Num6, Input::Key::Num7, // 0x30 - 0x37
+    Input::Key::Num8, Input::Key::Num9, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0x38 - 0x3f
+    Input::Key::INVALID, Input::Key::A, Input::Key::B, Input::Key::C, Input::Key::D, Input::Key::E, Input::Key::F, Input::Key::G, // 0x40 - 0x47
+    Input::Key::H, Input::Key::I, Input::Key::J, Input::Key::K, Input::Key::L, Input::Key::M, Input::Key::N, Input::Key::O, // 0x48 - 0x4f
+    Input::Key::P, Input::Key::Q, Input::Key::R, Input::Key::S, Input::Key::T, Input::Key::U, Input::Key::V, Input::Key::W, // 0x50 - 0x57
+    Input::Key::X, Input::Key::Y, Input::Key::Z, Input::Key::SystemLeft, Input::Key::SystemRight, Input::Key::Apps, Input::Key::INVALID, Input::Key::INVALID, // 0x58 - 0x5f
+    Input::Key::Numpad0, Input::Key::Numpad1, Input::Key::Numpad2, Input::Key::Numpad3, Input::Key::Numpad4, Input::Key::Numpad5, Input::Key::Numpad6, Input::Key::Numpad7,  // 0x60 - 0x67
+    Input::Key::Numpad8, Input::Key::Numpad9, Input::Key::Multiply, Input::Key::Add, Input::Key::INVALID, Input::Key::Subtract, Input::Key::Decimal, Input::Key::Divide, // 0x68 - 0x6f
+    Input::Key::F1, Input::Key::F2, Input::Key::F3, Input::Key::F4, Input::Key::F5, Input::Key::F6, Input::Key::F7, Input::Key::F8, // 0x70 - 0x77
+    Input::Key::F9, Input::Key::F10, Input::Key::F11, Input::Key::F12, Input::Key::F13, Input::Key::F14, Input::Key::F15, Input::Key::F16, // 0x78 - 0x7f
+    Input::Key::F17, Input::Key::F18, Input::Key::F19, Input::Key::F20, Input::Key::F21, Input::Key::F22, Input::Key::F23, Input::Key::F24, // 0x80 - 0x87
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0x88 - 0x8f
+    Input::Key::LockNum, Input::Key::LockScroll, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0x90 - 0x97
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0x98 - 0x9f
+    Input::Key::ShiftLeft, Input::Key::ShiftRight, Input::Key::ControlLeft, Input::Key::ControlRight, Input::Key::AltLeft, Input::Key::AltRight, Input::Key::INVALID, Input::Key::INVALID, // 0xa0 - 0xa7
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xa8 - 0xaf
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xb0 - 0xb7
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::Semicolon, Input::Key::Equal, Input::Key::Comma, Input::Key::Dash, Input::Key::Period, Input::Key::Slash, // 0xb8 - 0xbf
+    Input::Key::Tilde, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xc0 - 0xc7
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xc8 - 0xcf
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xd0 - 0xd7
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::BracketLeft, Input::Key::Backslash, Input::Key::BracketRight, Input::Key::Quote, Input::Key::INVALID, // 0xd8 - 0xdf
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xe0 - 0xe7
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xe8 - 0xef
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xf0 - 0xf7
+    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xf8 - 0xff
   };
   
-  static void InputGatherStandard(HWND window, Input *event) {
+  static void InputGatherStandard(HWND window, Input::Sequence *event) {
     POINT mouse;
     GetCursorPos(&mouse);
     ScreenToClient(window, &mouse);
@@ -58,7 +58,7 @@ namespace Frames {
     event->SetMeta((GetKeyState(VK_SHIFT) & 0x80) != 0, (GetKeyState(VK_CONTROL) & 0x80) != 0, (GetKeyState(VK_MENU) & 0x80) != 0);
   }
   
-  bool InputGatherWin32(Input *event, HWND window_handle, UINT message, WPARAM wParam, LPARAM lParam) {
+  bool InputGatherWin32(Input::Sequence *event, HWND window_handle, UINT message, WPARAM wParam, LPARAM lParam) {
     switch (message) {
       case WM_KEYDOWN:
       case WM_SYSKEYDOWN:
@@ -67,7 +67,7 @@ namespace Frames {
             wParam = MapVirtualKey((lParam & 0x00ff0000) >> 16, MAPVK_VSC_TO_VK_EX);
           }
           InputGatherStandard(window_handle, event);
-          Key::Type key = c_keyIndex[wParam];
+          Input::Key key = c_keyIndex[wParam];
           if (lParam & (1 << 30)) {
             event->SetModeKeyRepeat(key);
           } else {

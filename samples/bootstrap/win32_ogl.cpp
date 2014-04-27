@@ -94,9 +94,9 @@ LRESULT CALLBACK HandleMessage(HWND window_handle, UINT message, WPARAM wParam, 
 
   // Frames includes a function to translate most immediately relevant Win32 messages into Frames input events.
   if (sEnv) {
-    Frames::Input iev;
+    Frames::Input::Sequence iev;
     if (Frames::InputGatherWin32(&iev, window_handle, message, wParam, lParam)) {
-      sEnv->Input(iev);
+      iev.Process(sEnv);
     }
   }
 

@@ -51,45 +51,6 @@ namespace Frames {
     m_root->SetWidthDefault((float)x);
     m_root->SetHeightDefault((float)y);
   }
-
-  bool Environment::Input(const ::Frames::Input &ie) {
-    if (ie.GetMetaKnown()) {
-      m_lastEvent.shift = ie.GetMetaShift();
-      m_lastEvent.ctrl = ie.GetMetaCtrl();
-      m_lastEvent.alt = ie.GetMetaAlt();
-    }
-    
-    if (ie.GetMouseposKnown()) {
-      if (ie.GetMouseposValid()) {
-        MouseMove(ie.GetMouseposX(), ie.GetMouseposY());
-      } else {
-        LogError("No support for invalid mousepos yet");
-      }
-    }
-    
-    bool consumed = true;
-    
-    if (ie.GetMode() == Input::MODE_KEYDOWN) {
-      m_lastEvent.key = ie.GetKey();
-      consumed = KeyDown(m_lastEvent);
-    } else if (ie.GetMode() == Input::MODE_KEYUP) {
-      m_lastEvent.key = ie.GetKey();
-      consumed = KeyUp(m_lastEvent);
-    } else if (ie.GetMode() == Input::MODE_KEYREPEAT) {
-      m_lastEvent.key = ie.GetKey();
-      consumed = KeyRepeat(m_lastEvent);
-    } else if (ie.GetMode() == Input::MODE_MOUSEDOWN) {
-      consumed = MouseDown(ie.GetMouseButton());
-    } else if (ie.GetMode() == Input::MODE_MOUSEUP) {
-      consumed = MouseUp(ie.GetMouseButton());
-    } else if (ie.GetMode() == Input::MODE_MOUSEWHEEL) {
-      LogError("No support for mousewheel yet");
-    } else if (ie.GetMode() == Input::MODE_TYPE) {
-      consumed = KeyType(ie.GetType());
-    }
-    
-    return consumed;
-  }
   
   void Environment::MouseMove(int ix, int iy) {
     // convert to internal floatingpoint
@@ -206,8 +167,7 @@ namespace Frames {
 
   //void Environment::MouseClear();  // mouse no longer in the scene at all*/
 
-  bool Environment::KeyDown(const Key &key) {
-    m_lastEvent = key;
+  bool Environment::KeyDown(const Input::Key &key) {
     if (m_focus) {
       m_focus->EventTrigger(Layout::Event::KeyDown, key);
       return true;
@@ -223,8 +183,7 @@ namespace Frames {
     return false;
   }
 
-  bool Environment::KeyRepeat(const Key &key) {
-    m_lastEvent = key;
+  bool Environment::KeyRepeat(const Input::Key &key) {
     if (m_focus) {
       m_focus->EventTrigger(Layout::Event::KeyRepeat, key);
       return true;
@@ -232,8 +191,7 @@ namespace Frames {
     return false;
   }
 
-  bool Environment::KeyUp(const Key &key) {
-    m_lastEvent = key;
+  bool Environment::KeyUp(const Input::Key &key) {
     if (m_focus) {
       m_focus->EventTrigger(Layout::Event::KeyUp, key);
       return true;
@@ -242,15 +200,15 @@ namespace Frames {
   }
 
   bool Environment::IsShift() const {
-    return m_lastEvent.shift;
+    return m_lastMeta.shift;
   }
 
   bool Environment::IsCtrl() const {
-    return m_lastEvent.ctrl;
+    return m_lastMeta.ctrl;
   }
 
   bool Environment::IsAlt() const {
-    return m_lastEvent.alt;
+    return m_lastMeta.alt;
   }
 
   void Environment::SetFocus(Layout *layout) {

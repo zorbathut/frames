@@ -18,20 +18,7 @@ namespace Frames {
     lua_pushnumber(L, pt.x);
     lua_pushnumber(L, pt.y);
   }
-  void luaF_push(lua_State *L, const Key &kev) {
-    lua_pushstring(L, Key::StringFromKey(kev.key));
-    lua_newtable(L);
-    if (kev.shift) {
-      lua_pushboolean(L, true);
-      lua_setfield(L, -2, "shift");
-    }
-    if (kev.alt) {
-      lua_pushboolean(L, true);
-      lua_setfield(L, -2, "alt");
-    }
-    if (kev.ctrl) {
-      lua_pushboolean(L, true);
-      lua_setfield(L, -2, "ctrl");
-    }
+  void luaF_push(lua_State *L, const Input::Key &key) {
+    lua_pushstring(L, Input::StringFromKey(key));
   }
 }

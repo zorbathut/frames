@@ -44,10 +44,10 @@ namespace Frames {
 
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseWheel, (int delta));
 
-  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyDown, (const Key &kev));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyDown, (const Input::Key &kev));
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyType, (const std::string &text));
-  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyRepeat, (const Key &kev));
-  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyUp, (const Key &kev));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyRepeat, (const Input::Key &kev));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyUp, (const Input::Key &kev));
 
   detail::Rtti Layout::s_rtti(0); // special case, null terminator; other examples should use FRAMES_DEFINE_RTTI
 

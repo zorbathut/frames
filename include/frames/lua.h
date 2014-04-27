@@ -4,12 +4,12 @@
 #define FRAMES_LUA
 
 #include "os_lua.h"
+#include "input.h"
 
 #include <string>
 
 namespace Frames {
   struct Vector;
-  struct Key;
   class VerbBase;
   
   // luaF_push is intended to be extended by end users! Add more overloads as you see fit to conform to your event schema.
@@ -17,7 +17,7 @@ namespace Frames {
   void luaF_push(lua_State *L, double x);
   void luaF_push(lua_State *L, const std::string &x);
   void luaF_push(lua_State *L, const Vector &pt);
-  void luaF_push(lua_State *L, const Key &kev);
+  void luaF_push(lua_State *L, const Input::Key &kev);
   
   template <typename T> T *luaF_checkframe_fromregistry(lua_State *L, int index, int registry) {
     luaL_checktype(L, index, LUA_TTABLE);

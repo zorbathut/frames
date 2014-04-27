@@ -120,16 +120,16 @@ namespace Frames {
 
       /// Signals that a key has been pressed while a frame has the key focus.
       /** This verb is recommended for non-text applications, as it reports the key ID and not the unicode text that was entered. */
-      FRAMES_VERB_DECLARE_BUBBLE(KeyDown, (const Key &kev));
+      FRAMES_VERB_DECLARE_BUBBLE(KeyDown, (const Input::Key &kev));
       /// Signals that text has been typed while a frame has the key focus.
       /** This verb is recommended for text applications, as it provides a Unicode string potentially containing multiple entered characters.*/
       FRAMES_VERB_DECLARE_BUBBLE(KeyType, (const std::string &text));
       /// Signals that a keypress has repeated while a frame has the key focus.
       /** This verb is recommended for non-text applications, as it reports the key ID and not the unicode text that was entered. */
-      FRAMES_VERB_DECLARE_BUBBLE(KeyRepeat, (const Key &kev));
+      FRAMES_VERB_DECLARE_BUBBLE(KeyRepeat, (const Input::Key &kev));
       /// Signals that a key has been released while a frame has the key focus.
       /** This verb is recommended for non-text applications, as it reports the key ID and not the unicode text that was entered. */
-      FRAMES_VERB_DECLARE_BUBBLE(KeyUp, (const Key &kev));
+      FRAMES_VERB_DECLARE_BUBBLE(KeyUp, (const Input::Key &kev));
     FRAMES_VERB_DECLARE_END
 
   private:

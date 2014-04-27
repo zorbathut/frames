@@ -51,6 +51,10 @@ namespace Frames {
 
     // ==== Updates to the state of the environment
     
+    // NOTE DOCUMENT ME
+    void MetaSet(const Input::Meta &meta) { m_lastMeta = meta; }
+    const Input::Meta &GetMeta() const { return m_lastMeta; }
+
     // Mouse update functions
 
     /// Informs the environment that the mouse pointer has moved.
@@ -82,17 +86,14 @@ namespace Frames {
     Mouse movement happens immediately and may trigger Layout::Event::MouseOut events. */
     void MouseClear();
 
-    bool KeyDown(const Key &key);
+    bool KeyDown(const Input::Key &key);
     bool KeyType(const std::string &type);
-    bool KeyRepeat(const Key &key);
-    bool KeyUp(const Key &key);
+    bool KeyRepeat(const Input::Key &key);
+    bool KeyUp(const Input::Key &key);
 
     // "Hey, the resolution has been changed/the window has been resized"
     void ResizeRoot(int x, int y);
 
-    // beep boop more docs
-    bool Input(const Input &ie); // Usable as a single-package class, intended for the OS helper functions or for people who want a single data pathway
-    
     // ==== State as of the current event that's being handled
     const Vector &GetMouse() const { return m_mouse; }
     bool IsShift() const;
@@ -183,7 +184,7 @@ namespace Frames {
     Layout *m_focus;
     std::map<int, Layout *> m_buttonDown;
     Vector m_mouse;
-    Key m_lastEvent; // stores the shift/ctrl/alt states
+    Input::Meta m_lastMeta; // stores the shift/ctrl/alt states
 
     // Lua
     class LuaStackChecker {
