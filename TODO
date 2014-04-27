@@ -2,11 +2,11 @@
 === DOCS
 
 * Input subsystem
-  * Redesign Sequence heavily
   * Redesign Environment input API
   * Document
-  * mousewheel :V
   * Test
+  
+* Invert Get/Set
 
 * Configuration subsystem
   * Configuration

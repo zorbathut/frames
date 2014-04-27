@@ -50,12 +50,19 @@ namespace Frames {
     Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xf8 - 0xff
   };
   
-  static void InputGatherStandard(HWND window, Input::Sequence *event) {
+  static void InputGatherStandard(HWND window, Input::Sequence *sequence) {
+    Input::Meta meta;
+    meta.shift = (GetKeyState(VK_SHIFT) & 0x80) != 0;
+    meta.ctrl = (GetKeyState(VK_CONTROL) & 0x80) != 0;
+    meta.alt = (GetKeyState(VK_MENU) & 0x80) != 0;
+
+    sequence->Queue(Input::Command::CreateMeta(meta));
+
     POINT mouse;
     GetCursorPos(&mouse);
     ScreenToClient(window, &mouse);
-    event->SetMouseposMove(mouse.x, mouse.y);
-    event->SetMeta((GetKeyState(VK_SHIFT) & 0x80) != 0, (GetKeyState(VK_CONTROL) & 0x80) != 0, (GetKeyState(VK_MENU) & 0x80) != 0);
+
+    sequence->Queue(Input::Command::CreateMouseMove(mouse.x, mouse.y));
   }
   
   bool InputGatherWin32(Input::Sequence *event, HWND window_handle, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -69,9 +76,9 @@ namespace Frames {
           InputGatherStandard(window_handle, event);
           Input::Key key = c_keyIndex[wParam];
           if (lParam & (1 << 30)) {
-            event->SetModeKeyRepeat(key);
+            event->Queue(Input::Command::CreateKeyRepeat(key));
           } else {
-            event->SetModeKeyDown(key);
+            event->Queue(Input::Command::CreateKeyDown(key));
           }
           return true;
         }
@@ -83,7 +90,7 @@ namespace Frames {
             wParam = MapVirtualKey((lParam & 0x00ff0000) >> 16, MAPVK_VSC_TO_VK_EX);
           }
           InputGatherStandard(window_handle, event);
-          event->SetModeKeyUp(c_keyIndex[wParam]);
+          event->Queue(Input::Command::CreateKeyUp(c_keyIndex[wParam]));
           return true;
         }
         break;
@@ -92,20 +99,20 @@ namespace Frames {
           InputGatherStandard(window_handle, event);
           std::string typed;
           typed += (char)wParam; // TODO: utf8ize
-          event->SetModeType(typed);
+          event->Queue(Input::Command::CreateType(typed));
           return true;
         }
         break;
       case WM_CHAR:
         if (wParam == '\r') {
           InputGatherStandard(window_handle, event);
-          event->SetModeType("\n");
+          event->Queue(Input::Command::CreateType("\n"));
           return true;
         } else if (wParam != '\t' && wParam != '\b' && wParam != '\033') { // windows passes a bunch of nonprintable characters through this way, thanks windows. thwindows.
           InputGatherStandard(window_handle, event);
           std::string typed;
           typed += (char)wParam; // TODO: utf8ize
-          event->SetModeType(typed);
+          event->Queue(Input::Command::CreateType(typed));
           return true;
         }
         break;
@@ -115,42 +122,42 @@ namespace Frames {
         break;
       case WM_LBUTTONDOWN:
         InputGatherStandard(window_handle, event);
-        event->SetModeMouseDown(0);
+        event->Queue(Input::Command::CreateMouseDown(0));
         return true;
       case WM_LBUTTONUP:
         InputGatherStandard(window_handle, event);
-        event->SetModeMouseUp(0);
+        event->Queue(Input::Command::CreateMouseUp(0));
         return true;
       case WM_MBUTTONDOWN:
         InputGatherStandard(window_handle, event);
-        event->SetModeMouseDown(1);
+        event->Queue(Input::Command::CreateMouseDown(1));
         return true;
       case WM_MBUTTONUP:
         InputGatherStandard(window_handle, event);
-        event->SetModeMouseUp(1);
+        event->Queue(Input::Command::CreateMouseUp(1));
         return true;
       case WM_RBUTTONDOWN:
         InputGatherStandard(window_handle, event);
-        event->SetModeMouseDown(2);
+        event->Queue(Input::Command::CreateMouseDown(2));
         return true;
       case WM_RBUTTONUP:
         InputGatherStandard(window_handle, event);
-        event->SetModeMouseUp(2);
+        event->Queue(Input::Command::CreateMouseUp(2));
         return true;
       case WM_XBUTTONDOWN:
         InputGatherStandard(window_handle, event);
         if ((wParam >> 16) == XBUTTON1) {
-          event->SetModeMouseDown(3);
+          event->Queue(Input::Command::CreateMouseDown(3));
         } else if ((wParam >> 16) == XBUTTON2) {
-          event->SetModeMouseDown(4);
+          event->Queue(Input::Command::CreateMouseDown(4));
         }
         return true;
       case WM_XBUTTONUP:
         InputGatherStandard(window_handle, event);
         if ((wParam >> 16) == XBUTTON1) {
-          event->SetModeMouseUp(3);
+          event->Queue(Input::Command::CreateMouseUp(3));
         } else if ((wParam >> 16) == XBUTTON2) {
-          event->SetModeMouseUp(4);
+          event->Queue(Input::Command::CreateMouseUp(4));
         }
         return true;
     }

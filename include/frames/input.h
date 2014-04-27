@@ -4,6 +4,7 @@
 #define FRAMES_INPUT
 
 #include <string>
+#include <vector>
 
 namespace Frames {
   // Forward declarations
@@ -145,67 +146,79 @@ namespace Frames {
 
     const char *StringFromKey(Key key);
 
+    class Command {
+    public:
+      enum Type { INVALID, MOUSEDOWN, MOUSEUP, MOUSEWHEEL, MOUSEMOVE, MOUSECLEAR, META, KEYDOWN, KEYUP, KEYREPEAT, TYPE };
+
+      // Mouse
+      static Command CreateMouseDown(int button);
+      static Command CreateMouseUp(int button);
+      static Command CreateMouseWheel(int delta);
+      static Command CreateMouseMove(int x, int y);
+      static Command CreateMouseClear();
+
+      // Key
+      static Command CreateMeta(const Meta &meta);
+
+      static Command CreateKeyDown(Key key);
+      static Command CreateKeyUp(Key key);
+      static Command CreateKeyRepeat(Key key);
+      static Command CreateType(const std::string &type);
+
+      Command();
+
+      Type GetElementType() const;
+
+      int GetMouseDownButton() const;
+      int GetMouseUpButton() const;
+      int GetMouseWheelDelta() const;
+      int GetMouseMoveX() const;
+      int GetMouseMoveY() const;
+        
+      const Meta &GetMeta() const;
+
+      Key GetKeyDown() const;
+      Key GetKeyUp() const;
+      Key GetKeyRepeat() const;
+
+      const std::string &GetTypeText() const;
+
+      bool Process(Environment *env) const;
+        
+    private:
+      Type m_type;
+
+      // Union everything that can be unioned
+      union {
+        int m_mouseDownButton;
+        int m_mouseUpButton;
+        int m_mouseWheelDelta;
+        struct {
+          int m_mouseMoveX;
+          int m_mouseMoveY;
+        };
+        Meta m_meta;
+        Key m_keyDown;
+        Key m_keyUp;
+        Key m_keyRepeat;
+      };
+
+      // This can't be. :(
+      // also this is confusing with the item "type" but whatever, internal API
+      std::string m_typeText;
+    };
+
     // Used to send full input events into Frames
     class Sequence {
     public:
-      Sequence() : mode(MODE_NULL), mouseKnown(false), metaKnown(false) { }
+      void Queue(const Command &element);
 
-      // do it
-      void Process(Environment *env);
-    
-      // this block is mutually exclusive
-      void SetModeKeyDown(const Key &kev) { mode = MODE_KEYDOWN; key = kev; }
-      void SetModeKeyUp(const Key &kev) { mode = MODE_KEYUP; key = kev; }
-      void SetModeKeyRepeat(const Key &kev) { mode = MODE_KEYREPEAT; key = kev; }
-      void SetModeMouseDown(int button) { mode = MODE_MOUSEDOWN; mouseAmount = button; }
-      void SetModeMouseUp(int button) { mode = MODE_MOUSEUP; mouseAmount = button; }
-      void SetModeMouseWheel(int delta) { mode = MODE_MOUSEWHEEL; mouseAmount = delta; }
-      void SetModeType(const std::string &intype) { mode = MODE_TYPE; type = intype; }
-      void SetModeClear() { mode = MODE_NULL; }
-    
-      // this block is mutually exclusive
-      void SetMouseposMove(int x, int y) { mouseKnown = true; mouseValid = true; mouseX = x; mouseY = y; }
-      void SetMouseposInvalid() { mouseKnown = true; mouseValid = false; }  // "not in the frame"
-      void SetMouseposUnknown() { mouseKnown = false; }  // "this event doesn't know where it is"
-    
-      // each key is independent
-      void SetMeta(bool shift, bool ctrl, bool alt) { metaKnown = true; meta.shift = shift; meta.ctrl = ctrl; meta.alt = alt; }
-      void SetMetaUnknown() { metaKnown = false; }
-    
-      // accessors. TODO: more asserts
-      enum Mode {MODE_NULL, MODE_KEYDOWN, MODE_KEYUP, MODE_KEYREPEAT, MODE_MOUSEDOWN, MODE_MOUSEUP, MODE_MOUSEWHEEL, MODE_TYPE};
-      Mode GetMode() const { return mode; }
-    
-      const Key &GetKey() const { return key; }
-      const std::string &GetType() const { return type; }
-      int GetMouseButton() const { return mouseAmount; }
-      int GetMouseWheelDelta() const { return mouseAmount; }
-    
-      bool GetMouseposKnown() const { return mouseKnown; }
-      bool GetMouseposValid() const { return mouseValid; }
-      int GetMouseposX() const { return mouseX; }
-      int GetMouseposY() const { return mouseY; }
-    
-      bool GetMetaKnown() const { return metaKnown; }
-      bool GetMetaShift() const { return meta.shift; }
-      bool GetMetaCtrl() const { return meta.ctrl; }
-      bool GetMetaAlt() const { return meta.alt; }
-    
+      void Process(Environment *env) const;
+
+      const std::vector<Command> &GetQueue() const { return m_queue; }
+
     private:
-      Mode mode;
-    
-      Key key;
-      std::string type;
-    
-      int mouseAmount;
-    
-      bool mouseKnown;
-      bool mouseValid;
-      int mouseX;
-      int mouseY;
-    
-      bool metaKnown;
-      Meta meta;
+      std::vector<Command> m_queue;
     };
   }
 }

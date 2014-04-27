@@ -95,7 +95,7 @@ namespace Frames {
     void ResizeRoot(int x, int y);
 
     // ==== State as of the current event that's being handled
-    const Vector &GetMouse() const { return m_mouse; }
+    const Vector &GetMouse() const { return m_mouse; }  // Returns the last known mouse position; mouse may no longer be on screen
     bool IsShift() const;
     bool IsCtrl() const;
     bool IsAlt() const;

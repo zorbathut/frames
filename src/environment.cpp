@@ -163,9 +163,22 @@ namespace Frames {
 
     return consumed;
   }
-  //void Environment::MouseWheel(int delta);
 
-  //void Environment::MouseClear();  // mouse no longer in the scene at all*/
+  bool Environment::MouseWheel(int delta) {
+    if (m_over) {
+      m_over->EventTrigger(Layout::Event::MouseWheel, delta);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void Environment::MouseClear() {
+    if (m_over) {
+      m_over->EventTrigger(Layout::Event::MouseOut);
+      m_over = 0;
+    }
+  }
 
   bool Environment::KeyDown(const Input::Key &key) {
     if (m_focus) {

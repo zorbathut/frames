@@ -134,35 +134,169 @@ namespace Frames {
     }
   }
 
-  void Input::Sequence::Process(Environment *env) {
-    if (GetMetaKnown()) {
-      env->MetaSet(meta);
+  /*static*/ Input::Command Input::Command::CreateMouseDown(int button) {
+    Command element;
+    element.m_type = Command::MOUSEDOWN;
+    element.m_mouseDownButton = button;
+    return element;
+  }
+  /*static*/ Input::Command Input::Command::CreateMouseUp(int button) {
+    Command element;
+    element.m_type = Command::MOUSEUP;
+    element.m_mouseUpButton = button;
+    return element;
+  }
+  /*static*/ Input::Command Input::Command::CreateMouseWheel(int delta) {
+    Command element;
+    element.m_type = Command::MOUSEWHEEL;
+    element.m_mouseWheelDelta = delta;
+    return element;
+  }
+  /*static*/ Input::Command Input::Command::CreateMouseMove(int x, int y) {
+    Command element;
+    element.m_type = Command::MOUSEMOVE;
+    element.m_mouseMoveX = x;
+    element.m_mouseMoveY = y;
+    return element;
+  }
+  /*static*/ Input::Command Input::Command::CreateMouseClear() {
+    Command element;
+    element.m_type = Command::MOUSECLEAR;
+    return element;
+  }
+
+  /*static*/ Input::Command Input::Command::CreateMeta(const Meta &meta) {
+    Command element;
+    element.m_type = Command::META;
+    element.m_meta = meta;
+    return element;
+  }
+
+  /*static*/ Input::Command Input::Command::CreateKeyDown(Key key) {
+    Command element;
+    element.m_type = Command::KEYDOWN;
+    element.m_keyDown = key;
+    return element;
+  }
+  /*static*/ Input::Command Input::Command::CreateKeyUp(Key key) {
+    Command element;
+    element.m_type = Command::KEYUP;
+    element.m_keyUp = key;
+    return element;
+  }
+  /*static*/ Input::Command Input::Command::CreateKeyRepeat(Key key) {
+    Command element;
+    element.m_type = Command::KEYREPEAT;
+    element.m_keyRepeat = key;
+    return element;
+  }
+  /*static*/ Input::Command Input::Command::CreateType(const std::string &type) {
+    Command element;
+    element.m_type = Command::TYPE;
+    element.m_typeText = type;
+    return element;
+  }
+
+  Input::Command::Command() : m_type(INVALID) { }
+
+  Input::Command::Type Input::Command::GetElementType() const {
+    return m_type;
+  }
+
+  int Input::Command::GetMouseDownButton() const {
+    // TODO assert
+    return m_mouseDownButton;
+  }
+  int Input::Command::GetMouseUpButton() const {
+    // TODO assert
+    return m_mouseUpButton;
+  }
+  int Input::Command::GetMouseWheelDelta() const {
+    // TODO assert
+    return m_mouseWheelDelta;
+  }
+  int Input::Command::GetMouseMoveX() const {
+    // TODO assert
+    return m_mouseMoveX;
+  }
+  int Input::Command::GetMouseMoveY() const {
+    // TODO assert
+    return m_mouseMoveY;
+  }
+        
+  const Input::Meta &Input::Command::GetMeta() const {
+    // TODO assert
+    return m_meta;
+  }
+
+  Input::Key Input::Command::GetKeyDown() const {
+    // TODO assert
+    return m_keyDown;
+  }
+  Input::Key Input::Command::GetKeyUp() const {
+    // TODO assert
+    return m_keyUp;
+  }
+  Input::Key Input::Command::GetKeyRepeat() const {
+    // TODO assert
+    return m_keyRepeat;
+  }
+
+  const std::string &Input::Command::GetTypeText() const {
+    // TODO assert
+    return m_typeText;
+  }
+
+  bool Input::Command::Process(Environment *env) const {
+    switch (GetElementType()) {
+    case MOUSEDOWN:
+      return env->MouseDown(GetMouseDownButton());
+
+    case MOUSEUP:
+      return env->MouseUp(GetMouseUpButton());
+
+    case MOUSEWHEEL:
+      return env->MouseWheel(GetMouseWheelDelta());
+
+    case MOUSEMOVE:
+      env->MouseMove(GetMouseMoveX(), GetMouseMoveY());
+      return true;
+
+    case MOUSECLEAR:
+      env->MouseClear();
+      return true;
+
+    case META:
+      env->MetaSet(GetMeta());
+      return true;
+
+    case KEYDOWN:
+      return env->KeyDown(GetKeyDown());
+
+    case KEYUP:
+      return env->KeyUp(GetKeyUp());
+
+    case KEYREPEAT:
+      return env->KeyRepeat(GetKeyRepeat());
+
+    case TYPE:
+      return env->KeyType(GetTypeText());
+
+    default:
+      // TODO assert
+      return true; // sure, whatever
     }
-    
-    if (GetMouseposKnown()) {
-      if (GetMouseposValid()) {
-        env->MouseMove(GetMouseposX(), GetMouseposY());
-      } else {
-        env->LogError("No support for invalid mousepos yet");
-      }
-    }
-    
-    bool consumed = true;
-    
-    if (GetMode() == MODE_KEYDOWN) {
-      consumed = env->KeyDown(key);
-    } else if (GetMode() == MODE_KEYUP) {
-      consumed = env->KeyUp(key);
-    } else if (GetMode() == MODE_KEYREPEAT) {
-      consumed = env->KeyRepeat(key);
-    } else if (GetMode() == MODE_MOUSEDOWN) {
-      consumed = env->MouseDown(GetMouseButton());
-    } else if (GetMode() == MODE_MOUSEUP) {
-      consumed = env->MouseUp(GetMouseButton());
-    } else if (GetMode() == MODE_MOUSEWHEEL) {
-      env->LogError("No support for mousewheel yet");
-    } else if (GetMode() == MODE_TYPE) {
-      consumed = env->KeyType(GetType());
+  }
+
+
+  void Input::Sequence::Queue(const Input::Command &element) {
+    m_queue.push_back(element);
+  }
+
+  void Input::Sequence::Process(Environment *env) const {
+    for (int i = 0; i < m_queue.size(); ++i)
+    {
+      m_queue[i].Process(env);
     }
   }
 }
