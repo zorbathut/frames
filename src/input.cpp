@@ -267,7 +267,7 @@ namespace Frames {
       return true;
 
     case META:
-      env->MetaSet(GetMeta());
+      env->SetMeta(GetMeta());
       return true;
 
     case KEYDOWN:

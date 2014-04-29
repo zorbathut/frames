@@ -212,18 +212,6 @@ namespace Frames {
     return false;
   }
 
-  bool Environment::IsShift() const {
-    return m_lastMeta.shift;
-  }
-
-  bool Environment::IsCtrl() const {
-    return m_lastMeta.ctrl;
-  }
-
-  bool Environment::IsAlt() const {
-    return m_lastMeta.alt;
-  }
-
   void Environment::SetFocus(Layout *layout) {
     if (layout->GetEnvironment() != this) {
       LogError("Attempted to set focus to frame with incorrect environment");

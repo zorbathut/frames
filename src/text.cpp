@@ -379,7 +379,8 @@ namespace Frames {
       return;
     }
 
-    if (GetEnvironment()->IsCtrl() || GetEnvironment()->IsAlt()) {
+    // If the user is holding ctrl or alt, interpret this as a special command and don't add it to the buffer.
+    if (GetEnvironment()->GetMeta().ctrl || GetEnvironment()->GetMeta().alt) {
       return;
     }
 

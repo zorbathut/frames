@@ -50,10 +50,6 @@ namespace Frames {
     ~Environment();
 
     // ==== Updates to the state of the environment
-    
-    // NOTE DOCUMENT ME
-    void MetaSet(const Input::Meta &meta) { m_lastMeta = meta; }
-    const Input::Meta &GetMeta() const { return m_lastMeta; }
 
     // Mouse update functions
 
@@ -86,19 +82,45 @@ namespace Frames {
     Mouse movement happens immediately and may trigger Layout::Event::MouseOut events. */
     void MouseClear();
 
+    /// Gets the environment's last known mouse position.
+    /**
+    If MouseClear() has been called, this may be inaccurate. */ // TODO come up with a better system >:(
+    const Vector &GetMouse() const { return m_mouse; }
+
+    /// Sets the environment's current metakey flags.
+    /**
+    This does not trigger events, merely updates the key meta state intended for event handlers. */
+    void SetMeta(const Input::Meta &meta) { m_lastMeta = meta; }
+
+    /// Gets the environment's current metakey flags.
+    /**
+    This is intended for input handlers to check if the standard meta buttons - shift, ctrl, and alt - are pressed or not. */
+    const Input::Meta &GetMeta() const { return m_lastMeta; }
+
+    /// Informs the environment that a key has been pressed.
+    /**
+    Keypresses happen immediately and may trigger Layout::Event::KeyDown events.*/
     bool KeyDown(const Input::Key &key);
+
+    /// Informs the environment that text has been typed.
+    /**
+    Typing happens immediately and may trigger Layout::Event::KeyType events.*/
     bool KeyType(const std::string &type);
+
+    /// Informs the environment that a key has repeated.
+    /**
+    Key repeats happen immediately and may trigger Layout::Event::KeyRepeat events. */
     bool KeyRepeat(const Input::Key &key);
+
+    /// Informs the environment that a key has released.
+    /**
+    Key releases happen immediately and may trigger Layout::Event::KeyUp events. */
     bool KeyUp(const Input::Key &key);
 
-    // "Hey, the resolution has been changed/the window has been resized"
+    /// Informs the environment that the rendering environment has resized.
+    /**
+    This must be called whenever the render canvas resizes. It will resize Root immediately. */
     void ResizeRoot(int x, int y);
-
-    // ==== State as of the current event that's being handled
-    const Vector &GetMouse() const { return m_mouse; }  // Returns the last known mouse position; mouse may no longer be on screen
-    bool IsShift() const;
-    bool IsCtrl() const;
-    bool IsAlt() const;
     
     // ==== Focus
     Layout *GetFocus() { return m_focus; }
