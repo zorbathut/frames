@@ -213,15 +213,11 @@ namespace Frames {
   }
 
   void Environment::SetFocus(Layout *layout) {
-    if (layout->GetEnvironment() != this) {
+    if (layout && layout->GetEnvironment() != this) {
       LogError("Attempted to set focus to frame with incorrect environment");
     } else {
       m_focus = layout;
     }
-  }
-
-  void Environment::ClearFocus() {
-    m_focus = 0;
   }
 
   void Environment::Render(const Layout *root) {

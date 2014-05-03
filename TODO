@@ -1,9 +1,6 @@
 
 === DOCS
 
-* Input subsystem
-  * Test
-
 * i++/j++ convert
   
 * Invert Get/Set
@@ -39,6 +36,11 @@
 
 * Add DX11
   * Test DX11
+
+=== TESTING
+
+* Obliterate
+* Events
 
 === BUILDING
 

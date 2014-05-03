@@ -1044,6 +1044,10 @@ namespace Frames {
   void Layout::Obliterate_Detach() {
     zinternalClearConstraintAll();  // kill my layout to unlink things
 
+    if (m_env->GetFocus() == this) {
+      m_env->SetFocus(0);
+    }
+
     // OBLITERATE ALL CHILDREN.
     for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
       (*itr)->Obliterate_Detach();
@@ -1054,6 +1058,11 @@ namespace Frames {
     // at this point, nobody should be referring to me, in theory
     Obliterate_Extract_Axis(X);
     Obliterate_Extract_Axis(Y);
+
+    // but just to make sure
+    if (m_env->GetFocus() == this) {
+      m_env->SetFocus(0);
+    }
 
     // OBLITERATE ALL CHILDREN.
     for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ) {

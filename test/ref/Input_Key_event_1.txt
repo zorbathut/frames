@@ -1,0 +1,8 @@
+Begin log
+Event Layout::Event::KeyDown (h) on Root.a
+Event Layout::Event::KeyDown (i) on Root.a
+Event Layout::Event::KeyRepeat (i) on Root.a
+Event Layout::Event::KeyUp (i) on Root.a
+Event Layout::Event::KeyUp (h) on Root.a
+Event Layout::Event::KeyText (Test1) on Root.a
+Event Layout::Event::KeyText (Test2) on Root.a

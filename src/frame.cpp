@@ -25,20 +25,6 @@ namespace Frames {
     }
   }
 
-  void Frame::SetFocus(bool focus) {
-    if (focus != GetFocus()) {
-      if (!focus) {
-        GetEnvironment()->ClearFocus();
-      } else {
-        GetEnvironment()->SetFocus(this);
-      }
-    }
-  }
-
-  bool Frame::GetFocus() const {
-    return GetEnvironment()->GetFocus() == this;
-  }
-
   void Frame::RenderElement(detail::Renderer *renderer) const {
     if (m_bg.a > 0) {
       Color bgc = m_bg * Color(1, 1, 1, renderer->AlphaGet());
@@ -91,9 +77,6 @@ namespace Frames {
 
     luaF_RegisterFunction(L, GetStaticType(), "SetBackground", luaF_SetBackground);
     luaF_RegisterFunction(L, GetStaticType(), "GetBackground", luaF_GetBackground);
-
-    luaF_RegisterFunction(L, GetStaticType(), "SetFocus", luaF_SetFocus);
-    luaF_RegisterFunction(L, GetStaticType(), "GetFocus", luaF_GetFocus);
 
     luaF_RegisterFunction(L, GetStaticType(), "Obliterate", luaF_Obliterate);
   }
@@ -366,24 +349,6 @@ namespace Frames {
     lua_pushnumber(L, col.a);
 
     return 4;
-  }
-
-  /*static*/ int Frame::luaF_SetFocus(lua_State *L) {
-    luaF_checkparams(L, 2);
-    Frame *self = luaF_checkframe<Frame>(L, 1);
-
-    self->SetFocus(lua_toboolean(L, 2) != 0);
-
-    return 0;
-  }
-
-  /*static*/ int Frame::luaF_GetFocus(lua_State *L) {
-    luaF_checkparams(L, 1);
-    Frame *self = luaF_checkframe<Frame>(L, 1);
-
-    lua_pushboolean(L, self->GetFocus());
-
-    return 1;
   }
 
   /*static*/ int Frame::luaF_Obliterate(lua_State *L) {

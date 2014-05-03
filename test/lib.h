@@ -75,9 +75,11 @@ public:
   }
 
 private:
-  void RecordEvent(Frames::Handle *);
-  void RecordEvent(Frames::Handle *, int p1);
-  void RecordEvent(Frames::Handle *, const Frames::Vector &p1);
+  void RecordEvent(Frames::Handle *handle);
+  void RecordEvent(Frames::Handle *handle, int p1);
+  void RecordEvent(Frames::Handle *handle, const Frames::Vector &p1);
+  void RecordEvent(Frames::Handle *handle, Frames::Input::Key p1);
+  void RecordEvent(Frames::Handle *handle, const std::string &p1);
 
   void RecordResult(const std::string &str);
   std::string m_records;

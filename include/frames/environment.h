@@ -135,7 +135,6 @@ namespace Frames {
     Layout *GetFocus() { return m_focus; }
     const Layout *GetFocus() const { return m_focus; }
     void SetFocus(Layout *layout);
-    void ClearFocus();
 
     // ==== Rendering
     void Render(const Layout *root = 0);

@@ -14,6 +14,9 @@ namespace Frames {
 
     /// Represents the current state of the system's standard modifier keys.
     struct Meta {
+      /// Initialize to all values false.
+      Meta() : shift(false), ctrl(false), alt(false) { }
+
       /// True if either "shift" key is depressed.
       bool shift;
       /// True if either "ctrl" key is depressed.
@@ -254,14 +257,13 @@ namespace Frames {
           int m_mouseMoveX;
           int m_mouseMoveY;
         };
-        Meta m_meta;
         Key m_keyDown;
         Key m_keyUp;
         Key m_keyRepeat;
       };
 
-      // This can't be. :(
-      // also this is confusing with the item "type" but whatever, internal API
+      // These can't be. :( stupid constructor
+      Meta m_meta;
       std::string m_keyText;
     };
 

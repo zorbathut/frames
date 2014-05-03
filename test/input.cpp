@@ -6,7 +6,7 @@
 
 #include "lib.h"
 
-void MouseEventHook(VerbLog *log, Frames::Frame *frame) {
+void InputEventHook(VerbLog *log, Frames::Frame *frame) {
   log->Attach(frame, Frames::Layout::Event::MouseOver);
   log->Attach(frame, Frames::Layout::Event::MouseMove);
   log->Attach(frame, Frames::Layout::Event::MouseMoveoutside);
@@ -33,6 +33,11 @@ void MouseEventHook(VerbLog *log, Frames::Frame *frame) {
   log->Attach(frame, Frames::Layout::Event::MouseButtonClick);
 
   log->Attach(frame, Frames::Layout::Event::MouseWheel);
+
+  log->Attach(frame, Frames::Layout::Event::KeyDown);
+  log->Attach(frame, Frames::Layout::Event::KeyRepeat);
+  log->Attach(frame, Frames::Layout::Event::KeyUp);
+  log->Attach(frame, Frames::Layout::Event::KeyText);
 }
 
 TEST(Input, Ordering) {
@@ -77,9 +82,9 @@ TEST(Input, Ordering) {
 
     VerbLog log;
 
-    MouseEventHook(&log, a);
-    MouseEventHook(&log, b);
-    MouseEventHook(&log, c);
+    InputEventHook(&log, a);
+    InputEventHook(&log, b);
+    InputEventHook(&log, c);
 
     env->Input_MouseMove(150, 150);
     env->Input_MouseDown(0);
@@ -135,8 +140,8 @@ TEST(Input, Mouse) {
     for (int button = 0; button < 4; ++button) {
       VerbLog log(Frames::detail::Format("frame%d_button%d", i, button));
 
-      MouseEventHook(&log, a);
-      MouseEventHook(&log, b);
+      InputEventHook(&log, a);
+      InputEventHook(&log, b);
 
       // Test basic click
       env->Input_MouseDown(button);
@@ -173,8 +178,8 @@ TEST(Input, Mouse) {
 
       VerbLog log(Frames::detail::Format("frame%d_misc", i));
 
-      MouseEventHook(&log, a);
-      MouseEventHook(&log, b);
+      InputEventHook(&log, a);
+      InputEventHook(&log, b);
 
       // Test mousewheel
       env->Input_MouseWheel(1);
@@ -189,8 +194,8 @@ TEST(Input, Mouse) {
 
     VerbLog log(Frames::detail::Format("multi_button%d", button));
 
-    MouseEventHook(&log, a);
-    MouseEventHook(&log, b);
+    InputEventHook(&log, a);
+    InputEventHook(&log, b);
 
     env->Input_MouseMove(coord[0], coord[0]);
     env->Input_MouseDown(button);
@@ -202,11 +207,48 @@ TEST(Input, Mouse) {
   }
 }
 
-/*TEST(Input, Meta) {
+TEST(Input, Meta) {
+  TestEnvironment env;
 
+  EXPECT_TRUE(env->Input_MetaGet().shift == false);
+  EXPECT_TRUE(env->Input_MetaGet().alt == false);
+  EXPECT_TRUE(env->Input_MetaGet().ctrl == false);
+
+  Frames::Input::Meta meta;
+  meta.shift = true;
+  meta.alt = true;
+  meta.ctrl = true;
+
+  env->Input_MetaSet(meta);
+
+  EXPECT_TRUE(env->Input_MetaGet().shift == true);
+  EXPECT_TRUE(env->Input_MetaGet().alt == true);
+  EXPECT_TRUE(env->Input_MetaGet().ctrl == true);
+
+  // not exactly complicated
 }
 
 TEST(Input, Key) {
+  TestEnvironment env;
 
+  Frames::Frame *a = Frames::Frame::Create("a", env->GetRoot());
+
+  for (int i = 0; i < 3; ++i) {
+    VerbLog log;
+
+    InputEventHook(&log, a);
+
+    env->SetFocus(i == 1 ? a : 0);
+
+    env->Input_KeyDown(Frames::Input::H);
+    env->Input_KeyDown(Frames::Input::I);
+
+    env->Input_KeyRepeat(Frames::Input::I);
+    
+    env->Input_KeyUp(Frames::Input::I);
+    env->Input_KeyUp(Frames::Input::H);
+
+    env->Input_KeyText("Test1");
+    env->Input_KeyText("Test2");
+  }
 }
-*/

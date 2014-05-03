@@ -215,6 +215,14 @@ void VerbLog::RecordEvent(Frames::Handle *handle, const Frames::Vector &p1) {
   RecordResult(Frames::detail::Format("Event %s (%s) on %s", handle->GetVerb()->GetName(), p1, handle->GetTarget()->DebugGetName()));
 }
 
+void VerbLog::RecordEvent(Frames::Handle *handle, Frames::Input::Key p1) {
+  RecordResult(Frames::detail::Format("Event %s (%s) on %s", handle->GetVerb()->GetName(), Frames::Input::StringFromKey(p1), handle->GetTarget()->DebugGetName()));
+}
+
+void VerbLog::RecordEvent(Frames::Handle *handle, const std::string &p1) {
+  RecordResult(Frames::detail::Format("Event %s (%s) on %s", handle->GetVerb()->GetName(), p1, handle->GetTarget()->DebugGetName()));
+}
+
 void VerbLog::RecordResult(const std::string &str) {
   m_records += str;
   m_records += "\n";

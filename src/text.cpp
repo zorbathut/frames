@@ -313,7 +313,7 @@ namespace Frames {
       m_layout->Render(renderer, m_color_text * Color(1, 1, 1, renderer->AlphaGet()), GetBounds(), GetScroll());
 
       // render cursor, if there is one
-      if (m_interactive >= INTERACTIVE_CURSOR && GetFocus()) { // display only if in focus
+      if (m_interactive >= INTERACTIVE_CURSOR && GetEnvironment()->GetFocus() == this) { // display only if in focus
         // TODO: cull properly when too small
         renderer->SetTexture();
         detail::Renderer::Vertex *vert = renderer->Request(4);

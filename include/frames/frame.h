@@ -86,9 +86,6 @@ namespace Frames {
     void SetBackground(const Color &color);
     const Color &GetBackground() const { return m_bg; }
 
-    void SetFocus(bool focus);
-    bool GetFocus() const;
-
   protected:
     Frame(const std::string &name, Layout *parent);
     virtual ~Frame();
@@ -125,9 +122,6 @@ namespace Frames {
 
     static int luaF_SetBackground(lua_State *L);
     static int luaF_GetBackground(lua_State *L);
-
-    static int luaF_SetFocus(lua_State *L);
-    static int luaF_GetFocus(lua_State *L);
 
     static int luaF_Obliterate(lua_State *L);
   };
