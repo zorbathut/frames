@@ -20,14 +20,14 @@ namespace Frames {
   class VerbBase : detail::Noncopyable {
   public:
     /// Returns human-readable name for this Verb.
-    const char *GetName() const { return m_name; }
+    const char *NameGet() const { return m_name; }
 
     /// Gets this verb's Dive version.
     /** Guaranteed to return NULL if this verb is a Dive or Bubble. */
-    const VerbBase *GetDive() const { return m_dive; }
+    const VerbBase *DiveGet() const { return m_dive; }
     /// Gets this verb's Bubble version.
     /** Guaranteed to return NULL if this verb is a Dive or Bubble. */
-    const VerbBase *GetBubble() const { return m_bubble; }
+    const VerbBase *BubbleGet() const { return m_bubble; }
 
   private:
     template <typename Parameters> friend class Verb;
@@ -46,10 +46,10 @@ namespace Frames {
   public:
     /// Returns the Layout this event refers to.
     /** If this is part of a Dive or Bubble series, this will return the Layout that is the destination of the series. */
-    Layout *GetTarget() const { return m_target; }
+    Layout *TargetGet() const { return m_target; }
     /// Returns the Verb this event refers to.
     /** If this is part of a Dive or Bubble series, this will return the specific Verb that is being called. */
-    const VerbBase *GetVerb() const { return m_verb; }
+    const VerbBase *VerbGet() const { return m_verb; }
     
     /// Pushes this Handle onto a lua stack.
     void luaF_push(lua_State *L);

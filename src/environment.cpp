@@ -494,7 +494,7 @@ namespace Frames {
     
     // ... Event
     
-    const char *name = feb->GetName();
+    const char *name = feb->NameGet();
     int chunkstart = 0;
     int chunkend = 1;
     while (name[chunkend]) {
@@ -842,19 +842,19 @@ namespace Frames {
     for (int i = (int)m_layoutStack.size(); i > 0; --i) {
       LayoutStack_Entry entry = m_layoutStack[i - 1];
       if (detail::IsUndefined(entry.point))
-        LogError(detail::Format("  %s: size", entry.layout->DebugGetName()));
+        LogError(detail::Format("  %s: size", entry.layout->DebugNameGet()));
       else if (entry.point == 0 && entry.axis == X)
-        LogError(detail::Format("  %s: LEFT", entry.layout->DebugGetName()));
+        LogError(detail::Format("  %s: LEFT", entry.layout->DebugNameGet()));
       else if (entry.point == 0 && entry.axis == Y)
-        LogError(detail::Format("  %s: TOP", entry.layout->DebugGetName()));
+        LogError(detail::Format("  %s: TOP", entry.layout->DebugNameGet()));
       else if (entry.point == 0.5)
-        LogError(detail::Format("  %s: CENTER", entry.layout->DebugGetName()));
+        LogError(detail::Format("  %s: CENTER", entry.layout->DebugNameGet()));
       else if (entry.point == 1 && entry.axis == X)
-        LogError(detail::Format("  %s: RIGHT", entry.layout->DebugGetName()));
+        LogError(detail::Format("  %s: RIGHT", entry.layout->DebugNameGet()));
       else if (entry.point == 1 && entry.axis == Y)
-        LogError(detail::Format("  %s: BOTTOM", entry.layout->DebugGetName()));
+        LogError(detail::Format("  %s: BOTTOM", entry.layout->DebugNameGet()));
       else
-        LogError(detail::Format("  %s: %f", entry.layout->DebugGetName(), entry.point));
+        LogError(detail::Format("  %s: %f", entry.layout->DebugNameGet(), entry.point));
     }
   }
 

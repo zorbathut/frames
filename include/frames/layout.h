@@ -294,7 +294,7 @@ namespace Frames {
     virtual const char *GetType() const { return GetStaticType(); }
 
     /// Returns the name of this layout.
-    const std::string &GetName() const { return m_name; }
+    const std::string &NameGet() const { return m_name; }
 
     // --------- Layout accessors
 
@@ -389,7 +389,7 @@ namespace Frames {
     void DebugDumpLayout() const;
 
     /// Constructs and return the full named path of this layout.
-    std::string DebugGetName() const;
+    std::string DebugNameGet() const;
 
   protected:
     /// Set default size of an axis.
@@ -556,8 +556,8 @@ namespace Frames {
 
     static int luaF_GetChildren(lua_State *L);
 
-    static int luaF_GetName(lua_State *L);
-    static int luaF_GetNameFull(lua_State *L);
+    static int luaF_NameGet(lua_State *L);
+    static int luaF_NameGetFull(lua_State *L);
     static int luaF_GetType(lua_State *L);
     
     static int luaF_EventAttach(lua_State *L);

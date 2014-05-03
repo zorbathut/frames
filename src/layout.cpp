@@ -310,7 +310,7 @@ namespace Frames {
   }
 
   void Layout::DebugDumpLayout() const {
-    FRAMES_DEBUG("Dump for layout %s", DebugGetName().c_str());
+    FRAMES_DEBUG("Dump for layout %s", DebugNameGet().c_str());
     FRAMES_DEBUG("  XAXIS:");
     FRAMES_DEBUG("    Connector 0 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[0].point_mine, (int)m_axes[X].connections[0].link, m_axes[X].connections[0].point_link, m_axes[X].connections[0].offset, m_axes[X].connections[0].cached);
     FRAMES_DEBUG("    Connector 1 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[1].point_mine, (int)m_axes[X].connections[1].link, m_axes[X].connections[1].point_link, m_axes[X].connections[1].offset, m_axes[X].connections[0].cached);
@@ -323,13 +323,13 @@ namespace Frames {
     FRAMES_DEBUG("    Linkcount %d", m_axes[Y].children.size());
   }
 
-  std::string Layout::DebugGetName() const {
+  std::string Layout::DebugNameGet() const {
     std::string name;
     if (m_parent) {
-      name = m_parent->DebugGetName() + ".";
+      name = m_parent->DebugNameGet() + ".";
     }
 
-    return name + GetName();
+    return name + NameGet();
   }
 
   // DUPLICATE CODE WARNING: Initializers are also used in the parent constructor!
@@ -960,8 +960,8 @@ namespace Frames {
 
     luaF_RegisterFunction(L, GetStaticType(), "GetChildren", luaF_GetChildren);
 
-    luaF_RegisterFunction(L, GetStaticType(), "GetName", luaF_GetName);
-    luaF_RegisterFunction(L, GetStaticType(), "GetNameFull", luaF_GetNameFull);
+    luaF_RegisterFunction(L, GetStaticType(), "NameGet", luaF_NameGet);
+    luaF_RegisterFunction(L, GetStaticType(), "NameGetFull", luaF_NameGetFull);
     luaF_RegisterFunction(L, GetStaticType(), "GetType", luaF_GetType);
     
     luaF_RegisterFunction(L, GetStaticType(), "EventAttach", luaF_EventAttach);
@@ -1109,12 +1109,12 @@ namespace Frames {
     const AxisData &ax = m_axes[axis];
 
     if (ax.connections[0].link == layout) {
-      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->DebugGetName().c_str(), DebugGetName().c_str(), axis ? 'Y' : 'X', ax.connections[0].point_mine);
+      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->DebugNameGet().c_str(), DebugNameGet().c_str(), axis ? 'Y' : 'X', ax.connections[0].point_mine);
       zinternalClearPin(axis, ax.connections[0].point_mine);
     }
 
     if (ax.connections[1].link == layout) {
-      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->DebugGetName().c_str(), DebugGetName().c_str(), axis ? 'Y' : 'X', ax.connections[1].point_mine);
+      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->DebugNameGet().c_str(), DebugNameGet().c_str(), axis ? 'Y' : 'X', ax.connections[1].point_mine);
       zinternalClearPin(axis, ax.connections[1].point_mine);
     }
   }
@@ -1203,7 +1203,7 @@ namespace Frames {
     int ctop = lua_gettop(L);
     
     // error handler
-    eh->GetTarget()->GetEnvironment()->Lua_PushErrorHandler(L);
+    eh->TargetGet()->GetEnvironment()->Lua_PushErrorHandler(L);
     
     // get function
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fevh");
@@ -1211,7 +1211,7 @@ namespace Frames {
     lua_remove(L, -2);
     
     // target frame
-    eh->GetTarget()->luaF_push(L);
+    eh->TargetGet()->luaF_push(L);
     
     // event handle
     eh->luaF_push(L);
@@ -1233,7 +1233,7 @@ namespace Frames {
   Layout::FEIterator::FEIterator(Layout *target, const VerbBase *event) : m_state(STATE_DIVE), m_diveIndex(0), m_target(target), m_event(event) { // set to STATE_DIVE so that NextIndex() does the right thing
     target->Obliterate_Lock();
     
-    if (event->GetDive()) {
+    if (event->DiveGet()) {
       // Dive event! Accumulate everything we need
       Layout *ctar = target;
       while (ctar) {
@@ -1337,9 +1337,9 @@ namespace Frames {
       
       const VerbBase *event = m_event;
       if (m_state == STATE_DIVE) {
-        event = event->GetDive();
+        event = event->DiveGet();
       } else if (m_state == STATE_BUBBLE) {
-        event = event->GetBubble();
+        event = event->BubbleGet();
       }
       
       layout->EventDestroy(layout->m_events.find(event), itr);
@@ -1393,9 +1393,9 @@ namespace Frames {
   
   const VerbBase *Layout::FEIterator::EventGet() {
     if (m_state == STATE_DIVE) {
-      return m_event->GetDive();
+      return m_event->DiveGet();
     } else if (m_state == STATE_BUBBLE) {
-      return m_event->GetBubble();
+      return m_event->BubbleGet();
     } else {
       return m_event;
     }
@@ -1555,20 +1555,20 @@ namespace Frames {
     return 1;
   }
 
-  /*static*/ int Layout::luaF_GetName(lua_State *L) {
+  /*static*/ int Layout::luaF_NameGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Layout *self = luaF_checkframe<Layout>(L, 1);
 
-    lua_pushstring(L, self->GetName().c_str());
+    lua_pushstring(L, self->NameGet().c_str());
 
     return 1;
   }
 
-  /*static*/ int Layout::luaF_GetNameFull(lua_State *L) {
+  /*static*/ int Layout::luaF_NameGetFull(lua_State *L) {
     luaF_checkparams(L, 1);
     Layout *self = luaF_checkframe<Layout>(L, 1);
 
-    lua_pushstring(L, self->DebugGetName().c_str());
+    lua_pushstring(L, self->DebugNameGet().c_str());
 
     return 1;
   }

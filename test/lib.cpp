@@ -204,23 +204,23 @@ void VerbLog::Snapshot() {
 }
 
 void VerbLog::RecordEvent(Frames::Handle *handle) {
-  RecordResult(Frames::detail::Format("Event %s on %s", handle->GetVerb()->GetName(), handle->GetTarget()->DebugGetName()));
+  RecordResult(Frames::detail::Format("Event %s on %s", handle->VerbGet()->NameGet(), handle->TargetGet()->DebugNameGet()));
 }
 
 void VerbLog::RecordEvent(Frames::Handle *handle, int p1) {
-  RecordResult(Frames::detail::Format("Event %s (%d) on %s", handle->GetVerb()->GetName(), p1, handle->GetTarget()->DebugGetName()));
+  RecordResult(Frames::detail::Format("Event %s (%d) on %s", handle->VerbGet()->NameGet(), p1, handle->TargetGet()->DebugNameGet()));
 }
 
 void VerbLog::RecordEvent(Frames::Handle *handle, const Frames::Vector &p1) {
-  RecordResult(Frames::detail::Format("Event %s (%s) on %s", handle->GetVerb()->GetName(), p1, handle->GetTarget()->DebugGetName()));
+  RecordResult(Frames::detail::Format("Event %s (%s) on %s", handle->VerbGet()->NameGet(), p1, handle->TargetGet()->DebugNameGet()));
 }
 
 void VerbLog::RecordEvent(Frames::Handle *handle, Frames::Input::Key p1) {
-  RecordResult(Frames::detail::Format("Event %s (%s) on %s", handle->GetVerb()->GetName(), Frames::Input::StringFromKey(p1), handle->GetTarget()->DebugGetName()));
+  RecordResult(Frames::detail::Format("Event %s (%s) on %s", handle->VerbGet()->NameGet(), Frames::Input::StringFromKey(p1), handle->TargetGet()->DebugNameGet()));
 }
 
 void VerbLog::RecordEvent(Frames::Handle *handle, const std::string &p1) {
-  RecordResult(Frames::detail::Format("Event %s (%s) on %s", handle->GetVerb()->GetName(), p1, handle->GetTarget()->DebugGetName()));
+  RecordResult(Frames::detail::Format("Event %s (%s) on %s", handle->VerbGet()->NameGet(), p1, handle->TargetGet()->DebugNameGet()));
 }
 
 void VerbLog::RecordResult(const std::string &str) {
