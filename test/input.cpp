@@ -5,7 +5,7 @@
 
 #include "lib.h"
 
-TEST(Input, Focus) {
+TEST(Input, Ordering) {
   TestEnvironment env;
 
   // Create a series of frames, then test movement events
