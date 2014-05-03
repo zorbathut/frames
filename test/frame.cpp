@@ -8,7 +8,7 @@
 TEST(Layout, SetBackground) {
   TestEnvironment env;
 
-  Frames::Frame *frame = Frames::Frame::Create("Test", env->GetRoot());
+  Frames::Frame *frame = Frames::Frame::Create("Test", env->RootGet());
   frame->SetBackground(Frames::Color(1.f, 0.f, 0.f, 0.5f));
   TestSnapshot(env);
 
@@ -25,11 +25,11 @@ TEST(Layout, SetBackground) {
 TEST(Layout, SetPin) {
   TestEnvironment env;
 
-  Frames::Frame *red = Frames::Frame::Create("Test", env->GetRoot());
+  Frames::Frame *red = Frames::Frame::Create("Test", env->RootGet());
   red->SetBackground(Frames::Color(1.f, 0.f, 0.f, 0.5f)); // Partially transparent so we can see frame intersections
 
-  red->SetPin(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT);
-  red->SetPin(Frames::BOTTOMRIGHT, env->GetRoot(), Frames::BOTTOMRIGHT);
+  red->SetPin(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT);
+  red->SetPin(Frames::BOTTOMRIGHT, env->RootGet(), Frames::BOTTOMRIGHT);
   EXPECT_EQ(0, red->GetLeft());
   EXPECT_EQ(env.GetWidth(), red->GetRight());
   EXPECT_EQ(0, red->GetTop());
@@ -38,20 +38,20 @@ TEST(Layout, SetPin) {
   TestSnapshot(env);
 
   red->ClearConstraintAll();
-  red->SetPin(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT);
-  red->SetPin(Frames::BOTTOMRIGHT, env->GetRoot(), Frames::CENTER);
+  red->SetPin(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT);
+  red->SetPin(Frames::BOTTOMRIGHT, env->RootGet(), Frames::CENTER);
 
-  Frames::Frame *green = Frames::Frame::Create("Test", env->GetRoot());
+  Frames::Frame *green = Frames::Frame::Create("Test", env->RootGet());
   green->SetBackground(Frames::Color(0.f, 1.f, 0.f, 0.5f));
-  green->SetPin(Frames::CENTER, env->GetRoot(), 0.75f, 0.75f);
-  green->SetPin(Frames::TOPRIGHT, env->GetRoot(), Frames::CENTERRIGHT);
+  green->SetPin(Frames::CENTER, env->RootGet(), 0.75f, 0.75f);
+  green->SetPin(Frames::TOPRIGHT, env->RootGet(), Frames::CENTERRIGHT);
 
-  Frames::Frame *blue = Frames::Frame::Create("Test", env->GetRoot());
+  Frames::Frame *blue = Frames::Frame::Create("Test", env->RootGet());
   blue->SetBackground(Frames::Color(0.f, 0.f, 1.f, 0.5f));
-  blue->SetPin(Frames::BOTTOMLEFT, env->GetRoot(), Frames::CENTER);
-  blue->SetPin(Frames::TOPRIGHT, env->GetRoot(), Frames::TOPRIGHT);
+  blue->SetPin(Frames::BOTTOMLEFT, env->RootGet(), Frames::CENTER);
+  blue->SetPin(Frames::TOPRIGHT, env->RootGet(), Frames::TOPRIGHT);
 
-  Frames::Frame *gray = Frames::Frame::Create("Test", env->GetRoot());
+  Frames::Frame *gray = Frames::Frame::Create("Test", env->RootGet());
   gray->SetBackground(Frames::Color(0.5f, 0.5f, 0.5f, 0.5f));
   gray->SetWidth((float)env.GetWidth() / 2);
   gray->SetHeight((float)env.GetHeight() / 2);
@@ -64,17 +64,17 @@ TEST(Layout, SetPin) {
   blue->ClearConstraintAll();
   gray->ClearConstraintAll();
 
-  red->SetPin(Frames::LEFT, env->GetRoot(), Frames::LEFT);
-  green->SetPin(Frames::LEFT, env->GetRoot(), Frames::LEFT);
-  blue->SetPin(Frames::LEFT, env->GetRoot(), Frames::LEFT);
-  gray->SetPin(Frames::LEFT, env->GetRoot(), Frames::LEFT);
+  red->SetPin(Frames::LEFT, env->RootGet(), Frames::LEFT);
+  green->SetPin(Frames::LEFT, env->RootGet(), Frames::LEFT);
+  blue->SetPin(Frames::LEFT, env->RootGet(), Frames::LEFT);
+  gray->SetPin(Frames::LEFT, env->RootGet(), Frames::LEFT);
 
-  red->SetPin(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
-  green->SetPin(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
-  blue->SetPin(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
-  gray->SetPin(Frames::RIGHT, env->GetRoot(), Frames::RIGHT);
+  red->SetPin(Frames::RIGHT, env->RootGet(), Frames::RIGHT);
+  green->SetPin(Frames::RIGHT, env->RootGet(), Frames::RIGHT);
+  blue->SetPin(Frames::RIGHT, env->RootGet(), Frames::RIGHT);
+  gray->SetPin(Frames::RIGHT, env->RootGet(), Frames::RIGHT);
 
-  red->SetPin(Frames::TOP, env->GetRoot(), Frames::TOP);
+  red->SetPin(Frames::TOP, env->RootGet(), Frames::TOP);
   red->SetHeight(100.f);
 
   green->SetPin(Frames::TOP, red, Frames::BOTTOM);
@@ -96,9 +96,9 @@ TEST(Layout, Layer) {
   Frames::Frame *frames[testFrameCount];
   const float order[testFrameCount] = { 0, 6, 3.14159f, 3, 5, 9, 12, -5, 0, 0, 3.14159f, 2, 2, 2, 5000, 4999, 5001, 0, 3, 3.14159f };  // Numbers are not magic in any way, just trying to provide an interesting cross-section
   {
-    Frames::Layout *anchor = env->GetRoot();
+    Frames::Layout *anchor = env->RootGet();
     for (int i = 0; i < testFrameCount; ++i) {
-      frames[i] = Frames::Frame::Create("Layer", env->GetRoot());
+      frames[i] = Frames::Frame::Create("Layer", env->RootGet());
       frames[i]->SetWidth(400.f);
       frames[i]->SetHeight(400.f);
       frames[i]->SetBackground(Frames::Color((float)i / testFrameCount, (float)i / testFrameCount, (float)i / testFrameCount, 0.2f));
@@ -132,9 +132,9 @@ TEST(Layout, Error) {
 
   env.AllowErrors();
 
-  Frames::Frame *subject = Frames::Frame::Create("subject", env->GetRoot());
-  Frames::Frame *subjectalt = Frames::Frame::Create("subjectalt", env->GetRoot());
-  Frames::Frame *subj2 = Frames::Frame::Create("subject2", env2->GetRoot());
+  Frames::Frame *subject = Frames::Frame::Create("subject", env->RootGet());
+  Frames::Frame *subjectalt = Frames::Frame::Create("subjectalt", env->RootGet());
+  Frames::Frame *subj2 = Frames::Frame::Create("subject2", env2->RootGet());
 
   // Forged enums
   subject->ClearPin(Frames::Anchor(-1));

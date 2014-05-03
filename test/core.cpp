@@ -13,7 +13,7 @@
 TEST(Core, Cast) {
   TestEnvironment env;
 
-  Frames::Layout *layout = env->GetRoot();
+  Frames::Layout *layout = env->RootGet();
   Frames::Layout *frame = Frames::Frame::Create("Frame", layout);
   Frames::Layout *mask = Frames::Mask::Create("Mask", layout);
   Frames::Layout *raw = Frames::Raw::Create("Raw", layout);

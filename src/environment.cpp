@@ -57,7 +57,7 @@ namespace Frames {
     float x = (float)ix;
     float y = (float)iy;
 
-    Layout *updated = GetLayoutUnder(x, y);
+    Layout *updated = LayoutUnderGet(x, y);
     m_mouse = Vector(x, y);
 
     bool mouseover = false;
@@ -212,7 +212,7 @@ namespace Frames {
     return false;
   }
 
-  void Environment::SetFocus(Layout *layout) {
+  void Environment::FocusSet(Layout *layout) {
     if (layout && layout->GetEnvironment() != this) {
       LogError("Attempted to set focus to frame with incorrect environment");
     } else {
@@ -228,7 +228,7 @@ namespace Frames {
     }
 
     if (root->GetEnvironment() != this) {
-      GetConfiguration().logger->LogError("Attempt to render a frame through an unrelated environment");
+      ConfigurationGet().logger->LogError("Attempt to render a frame through an unrelated environment");
       return;
     }
 
@@ -267,9 +267,9 @@ namespace Frames {
     }
   }
 
-  Layout *Environment::GetLayoutUnder(float x, float y) {
+  Layout *Environment::LayoutUnderGet(float x, float y) {
     // TODO: de-invalidate
-    return m_root->GetLayoutUnder(x, y);
+    return m_root->LayoutUnderGet(x, y);
   }
 
   void Environment::LuaRegister(lua_State *L, bool hasErrorHandle) {
@@ -741,13 +741,13 @@ namespace Frames {
   }
   
   Environment::Performance::Performance(Environment *env, float r, float g, float b) : m_env(env) { // handle left uninitialized intentionally
-    if (m_env->GetConfiguration().performance) {
-      m_handle = m_env->GetConfiguration().performance->Push(r, g, b);
+    if (m_env->ConfigurationGet().performance) {
+      m_handle = m_env->ConfigurationGet().performance->Push(r, g, b);
     }
   }
   Environment::Performance::~Performance() {
-    if (m_env->GetConfiguration().performance) {
-      m_env->GetConfiguration().performance->Pop(m_handle);
+    if (m_env->ConfigurationGet().performance) {
+      m_env->ConfigurationGet().performance->Pop(m_handle);
     }
   }
 

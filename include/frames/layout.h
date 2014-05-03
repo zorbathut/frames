@@ -323,7 +323,7 @@ namespace Frames {
     Layout *GetParent() const { return m_parent; }
 
     /// Returns the highest input-accepting frame located at the given coordinates.
-    Layout *GetLayoutUnder(float x, float y);
+    Layout *LayoutUnderGet(float x, float y);
 
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
 

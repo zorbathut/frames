@@ -3,6 +3,8 @@
 
 * Invert Get/Set
 
+* Rename Texture to Sprite
+
 * Configuration subsystem
   * Configuration
   * Stream

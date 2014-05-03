@@ -22,8 +22,12 @@ namespace Frames {
   class VerbBase;
 
   namespace detail {
+    class CharacterInfo;
+    class FontInfo;
     class Renderer;
     class TextManager;
+    class TextureBacking;
+    class TextureChunk;
     class TextureManager;
   }
 
@@ -132,9 +136,9 @@ namespace Frames {
     bool Input_KeyUp(const Input::Key &key);
     
     // ==== Focus
-    Layout *GetFocus() { return m_focus; }
-    const Layout *GetFocus() const { return m_focus; }
-    void SetFocus(Layout *layout);
+    Layout *FocusGet() { return m_focus; }
+    const Layout *FocusGet() const { return m_focus; }
+    void FocusSet(Layout *layout);
 
     // ==== Rendering
     void Render(const Layout *root = 0);
@@ -145,10 +149,10 @@ namespace Frames {
     void ResizeRoot(int x, int y);
     
     // ==== Introspection
-    Layout *GetRoot() { return m_root; }
-    Layout *GetLayoutUnder(float x, float y);
+    Layout *RootGet() { return m_root; }
+    Layout *LayoutUnderGet(float x, float y);
 
-    const Configuration &GetConfiguration() { return m_config; }
+    const Configuration &ConfigurationGet() { return m_config; }
 
     // ==== Scripting languages
     // Lua
@@ -157,10 +161,7 @@ namespace Frames {
     void LuaRegisterEvent(lua_State *L, VerbBase *feb);
     void LuaUnregister(lua_State *L);
 
-    // ==== Internal only, do not call below this line (TODO make more private)
-    detail::TextManager *GetTextManager() { return m_text_manager; }
-    detail::TextureManager *GetTextureManager() { return m_texture_manager; }
-
+    // ==== Logging and debugging
     void LogError(const std::string &log) { if (m_config.logger) m_config.logger->LogError(log); }
     void LogDebug(const std::string &log) { if (m_config.logger) m_config.logger->LogDebug(log); }
 
@@ -176,6 +177,14 @@ namespace Frames {
   private:
     friend class Layout;
     friend class Frame;
+
+    // For access to manager Get functions
+    friend class Text;
+    friend class Texture;
+    friend class detail::CharacterInfo;
+    friend class detail::FontInfo;
+    friend class detail::TextureBacking;
+    friend class detail::TextureChunk;
 
     // Unique ID code
     unsigned int RegisterFrame();
@@ -208,6 +217,9 @@ namespace Frames {
     Configuration m_config;
 
     // Managers
+    detail::TextManager *GetTextManager() { return m_text_manager; }
+    detail::TextureManager *GetTextureManager() { return m_texture_manager; }
+
     detail::Renderer *m_renderer;
     detail::TextManager *m_text_manager;
     detail::TextureManager *m_texture_manager;

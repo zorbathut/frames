@@ -23,10 +23,10 @@ namespace Frames {
   }
 
   TextureConfig Configuration::TextureFromId::Create(Environment *env, const std::string &id) {
-    Stream *stream = env->GetConfiguration().streamFromId->Create(env, id);
+    Stream *stream = env->ConfigurationGet().streamFromId->Create(env, id);
 
     if (stream) {
-      TextureConfig rv = env->GetConfiguration().textureFromStream->Create(env, stream);
+      TextureConfig rv = env->ConfigurationGet().textureFromStream->Create(env, stream);
       delete stream;
       return rv;
     }
@@ -35,7 +35,7 @@ namespace Frames {
   }
 
   Stream *Configuration::StreamFromId::Create(Environment *env, const std::string &id) {
-    std::string path = env->GetConfiguration().pathFromId->Process(env, id);
+    std::string path = env->ConfigurationGet().pathFromId->Process(env, id);
     if (!path.empty()) {
       return StreamFile::Create(path);
     }

@@ -45,9 +45,9 @@ TEST(Input, Ordering) {
 
   // Create a series of frames, then test movement events
   // Three frames overlapping, a -> b -> c, though we generate them out of order to test layering
-  Frames::Frame *a = Frames::Frame::Create("a", env->GetRoot());
-  Frames::Frame *c = Frames::Frame::Create("c", env->GetRoot());
-  Frames::Frame *b = Frames::Frame::Create("b", env->GetRoot());
+  Frames::Frame *a = Frames::Frame::Create("a", env->RootGet());
+  Frames::Frame *c = Frames::Frame::Create("c", env->RootGet());
+  Frames::Frame *b = Frames::Frame::Create("b", env->RootGet());
 
   a->SetLayer(0);
   b->SetLayer(1);
@@ -64,9 +64,9 @@ TEST(Input, Ordering) {
   b->SetBackground(Frames::Color(0, 1, 0, 0.8f));
   c->SetBackground(Frames::Color(0, 0, 1, 0.8f));
 
-  a->SetPin(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT, 100, 100);
-  b->SetPin(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT, 200, 200);
-  c->SetPin(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT, 300, 300);
+  a->SetPin(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 100, 100);
+  b->SetPin(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 200, 200);
+  c->SetPin(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 300, 300);
   
   // Just to make sure this hasn't changed, or we'll be confused
   TestSnapshot(env);
@@ -106,8 +106,8 @@ TEST(Input, Mouse) {
   TestEnvironment env;
 
   // Two overlapping frames
-  Frames::Frame *a = Frames::Frame::Create("a", env->GetRoot());
-  Frames::Frame *b = Frames::Frame::Create("b", env->GetRoot());
+  Frames::Frame *a = Frames::Frame::Create("a", env->RootGet());
+  Frames::Frame *b = Frames::Frame::Create("b", env->RootGet());
 
   a->SetWidth(400);
   a->SetHeight(300);
@@ -117,8 +117,8 @@ TEST(Input, Mouse) {
   a->SetBackground(Frames::Color(1, 0, 0, 0.8f));
   b->SetBackground(Frames::Color(0, 1, 0, 0.8f));
 
-  a->SetPin(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT, 100, 100);
-  b->SetPin(Frames::TOPLEFT, env->GetRoot(), Frames::TOPLEFT, 200, 200);
+  a->SetPin(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 100, 100);
+  b->SetPin(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 200, 200);
 
   a->SetInputMode(Frames::Layout::IM_ALL);
   b->SetInputMode(Frames::Layout::IM_ALL);
@@ -231,14 +231,14 @@ TEST(Input, Meta) {
 TEST(Input, Key) {
   TestEnvironment env;
 
-  Frames::Frame *a = Frames::Frame::Create("a", env->GetRoot());
+  Frames::Frame *a = Frames::Frame::Create("a", env->RootGet());
 
   for (int i = 0; i < 3; ++i) {
     VerbLog log;
 
     InputEventHook(&log, a);
 
-    env->SetFocus(i == 1 ? a : 0);
+    env->FocusSet(i == 1 ? a : 0);
 
     env->Input_KeyDown(Frames::Input::H);
     env->Input_KeyDown(Frames::Input::I);

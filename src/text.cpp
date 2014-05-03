@@ -66,8 +66,8 @@ namespace Frames {
     
     // kill focus if we no longer need to be focused
     if (interactive == INTERACTIVE_NONE) {
-      if (GetEnvironment()->GetFocus() == this) {
-        GetEnvironment()->SetFocus(0);
+      if (GetEnvironment()->FocusGet() == this) {
+        GetEnvironment()->FocusSet(0);
       }
     }
 
@@ -196,7 +196,7 @@ namespace Frames {
       m_select(0),
       m_cursor(0)
   {
-    m_font = GetEnvironment()->GetConfiguration().fontDefaultId;
+    m_font = GetEnvironment()->ConfigurationGet().fontDefaultId;
 
     SetWidthDefault(0);
     SetHeightDefault(20);
@@ -313,7 +313,7 @@ namespace Frames {
       m_layout->Render(renderer, m_color_text * Color(1, 1, 1, renderer->AlphaGet()), GetBounds(), GetScroll());
 
       // render cursor, if there is one
-      if (m_interactive >= INTERACTIVE_CURSOR && GetEnvironment()->GetFocus() == this) { // display only if in focus
+      if (m_interactive >= INTERACTIVE_CURSOR && GetEnvironment()->FocusGet() == this) { // display only if in focus
         // TODO: cull properly when too small
         renderer->SetTexture();
         detail::Renderer::Vertex *vert = renderer->Request(4);
@@ -338,7 +338,7 @@ namespace Frames {
     EventAttach(Event::MouseMoveoutside, Delegate<void (Handle *, const Vector &pt)>(this, &Text::EventInternal_Move));
 
     if (m_interactive >= INTERACTIVE_SELECT) {
-      GetEnvironment()->SetFocus(this);
+      GetEnvironment()->FocusSet(this);
     }
   }
 
@@ -398,7 +398,7 @@ namespace Frames {
     } else if ((key == Input::Key::C && GetEnvironment()->Input_MetaGet().ctrl) || (m_interactive == INTERACTIVE_SELECT && key == Input::Key::X && GetEnvironment()->Input_MetaGet().ctrl)) { // if we're in select mode, interpret cut as copy
       // copy to clipboard
       if (m_cursor != m_select) {
-        GetEnvironment()->GetConfiguration().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
+        GetEnvironment()->ConfigurationGet().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
       }
     }
 
@@ -502,7 +502,7 @@ namespace Frames {
     } else if (key == Input::Key::X && GetEnvironment()->Input_MetaGet().ctrl) {
       // cut to clipboard
       if (m_cursor != m_select) {
-        GetEnvironment()->GetConfiguration().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
+        GetEnvironment()->ConfigurationGet().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
 
         // chop out that text
         int ncursor = std::min(m_cursor, m_select);
@@ -512,7 +512,7 @@ namespace Frames {
       }
     } else if (key == Input::Key::V && GetEnvironment()->Input_MetaGet().ctrl) {
       // paste from clipboard
-      std::string clipboard = GetEnvironment()->GetConfiguration().clipboard->Get();
+      std::string clipboard = GetEnvironment()->ConfigurationGet().clipboard->Get();
       int ncursor = m_cursor + (int)clipboard.size();
       SetText(m_text.substr(0, std::min(m_cursor, m_select)) + clipboard + m_text.substr(std::max(m_cursor, m_select)));
       SetCursor(ncursor);

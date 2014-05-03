@@ -22,10 +22,10 @@ TEST(Text, Basic) {
   };
   Frames::Text *frames[c_tests] = { 0, };
 
-  Frames::Frame *anchor = Frames::Frame::Create("Test", env->GetRoot());
-  anchor->SetPin(Frames::BOTTOMLEFT, env->GetRoot(), Frames::TOPLEFT, 20.f, 0.f);
+  Frames::Frame *anchor = Frames::Frame::Create("Test", env->RootGet());
+  anchor->SetPin(Frames::BOTTOMLEFT, env->RootGet(), Frames::TOPLEFT, 20.f, 0.f);
   for (int i = 0; i < c_tests; ++i) {
-    Frames::Text *tex = Frames::Text::Create("Layer", env->GetRoot());
+    Frames::Text *tex = Frames::Text::Create("Layer", env->RootGet());
     tex->SetSize(sizes[i]);
     tex->SetText(text[i]);
     tex->SetPin(Frames::TOPLEFT, anchor, Frames::BOTTOMLEFT, 0.f, 5.f);
@@ -45,7 +45,7 @@ TEST(Text, Basic) {
 
   for (int i = 0; i < c_tests; ++i) {
     frames[i]->SetWordwrap(true);
-    frames[i]->SetPin(Frames::RIGHT, env->GetRoot(), Frames::RIGHT, -20.f, Frames::Nil);
+    frames[i]->SetPin(Frames::RIGHT, env->RootGet(), Frames::RIGHT, -20.f, Frames::Nil);
   }
 
   TestSnapshot(env);
