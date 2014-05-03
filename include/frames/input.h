@@ -11,12 +11,18 @@ namespace Frames {
   class Environment;
 
   namespace Input {
+
+    /// Represents the current state of the system's standard modifier keys.
     struct Meta {
+      /// True if either "shift" key is depressed.
       bool shift;
+      /// True if either "ctrl" key is depressed.
       bool ctrl;
+      /// True if either "alt" key is depressed.
       bool alt;
     };
 
+    /// Represents the scancode of a single keyboard key in QWERTY layout.
     enum Key {
       INVALID,
       // Letters
@@ -144,45 +150,96 @@ namespace Frames {
       Tab,
     };
 
+    /// Converts a scancode into a human-readable constant string.
+    /** This is intended for internal development purposes; the string returned does not respect locale.
+    
+    Pointers returned are valid forever. */
     const char *StringFromKey(Key key);
 
+    /// Represents a single input command that can be sent to the Environment.
+    /** This is not required to use Frames. It's provided as a convenient way method for generic event transport from an OS abstraction layer to a Frames Environment. */
     class Command {
     public:
-      enum Type { INVALID, MOUSEDOWN, MOUSEUP, MOUSEWHEEL, MOUSEMOVE, MOUSECLEAR, META, KEYDOWN, KEYUP, KEYREPEAT, TYPE };
-
-      // Mouse
+      /// Creates a MOUSEDOWN Command.
       static Command CreateMouseDown(int button);
+      /// Creates a MOUSEUP Command.
       static Command CreateMouseUp(int button);
+      /// Creates a MOUSEWHEEL Command.
       static Command CreateMouseWheel(int delta);
+      /// Creates a MOUSEMOVE Command.
       static Command CreateMouseMove(int x, int y);
+      /// Creates a MOUSECLEAR Command.
       static Command CreateMouseClear();
 
-      // Key
-      static Command CreateMeta(const Meta &meta);
+      /// Creates a METASET Command.
+      static Command CreateMetaSet(const Meta &meta);
 
+      /// Creates a KEYDOWN Command.
       static Command CreateKeyDown(Key key);
+      /// Creates a KEYUP Command.
       static Command CreateKeyUp(Key key);
+      /// Creates a KEYREPEAT Command.
       static Command CreateKeyRepeat(Key key);
-      static Command CreateType(const std::string &type);
+      /// Creates a KEYTEXT Command.
+      static Command CreateKeyText(const std::string &type);
 
+      /// Creates a Command initialized to the INVALID state.
       Command();
 
+      /// List of states that this Command can be in.
+      enum Type {
+        INVALID, ///< Not a valid command.
+        MOUSEDOWN, ///< Will call Environment::Input_MouseDown.
+        MOUSEUP, ///< Will call Environment::Input_MouseUp.
+        MOUSEWHEEL, ///< Will call Environment::Input_MouseWheel.
+        MOUSEMOVE, ///< Will call Environment::Input_MouseMove.
+        MOUSECLEAR, ///< Will call Environment::Input_MouseClear.
+        METASET, ///< Will call Environment::Input_MetaSet.
+        KEYDOWN, ///< Will call Environment::Input_KeyDown.
+        KEYUP, ///< Will call Environment::Input_KeyUp.
+        KEYREPEAT, ///< Will call Environment::Input_KeyRepeat.
+        KEYTEXT, ///< Will call Environment::Input_KeyText.
+      };
+      /// Returns the current state of this Command.
       Type TypeGet() const;
 
+      /// Returns the button involved in this MOUSEDOWN event.
+      /** Call only if this is a MOUSEDOWN Command. */
       int MouseDownButtonGet() const;
+      /// Returns the button involved in this MOUSEUP event.
+      /** Call only if this is a MOUSEUP Command. */
       int MouseUpButtonGet() const;
+      /// Returns the delta involved in this MOUSEWHEEL event.
+      /** Call only if this is a MOUSEWHEEL Command. */
       int MouseWheelDeltaGet() const;
+      /// Returns the X position involved in this MOUSEMOVE event.
+      /** Call only if this is a MOUSEMOVE Command. */
       int MouseMoveXGet() const;
+      /// Returns the Y position involved in this MOUSEMOVE event.
+      /** Call only if this is a MOUSEMOVE Command. */
       int MouseMoveYGet() const;
-        
+      
+      /// Returns the new meta state involved in this METASET event.
+      /** Call only if this is a METASET Command. */
       const Meta &MetaGet() const;
 
+      /// Returns the key involved in this KEYDOWN event.
+      /** Call only if this is a KEYDOWN Command. */
       Key KeyDownGet() const;
+      /// Returns the key involved in this KEYUP event.
+      /** Call only if this is a KEYUP Command. */
       Key KeyUpGet() const;
+      /// Returns the key involved in this KEYREPEAT event.
+      /** Call only if this is a KEYREPEAT Command. */
       Key KeyRepeatGet() const;
+      /// Returns the text involved in this KEYTEXT event.
+      /** Call only if this is a KEYTEXT Command. */
+      const std::string &KeyTextGet() const;
 
-      const std::string &TextGet() const;
-
+      /// Feeds this Command into an Environment.
+      /** Returns true if this event was consumed by the Environment, false otherwise.
+      
+      Call only if this is a KEYTEXT Command. */
       bool Process(Environment *env) const;
         
     private:
@@ -205,16 +262,23 @@ namespace Frames {
 
       // This can't be. :(
       // also this is confusing with the item "type" but whatever, internal API
-      std::string m_text;
+      std::string m_keyText;
     };
 
-    // Used to send full input events into Frames
+    /// Represents a stream of input commands that can be sent to the Environment.
+    /** This is basically a std::vector<Command> with a helper function. More complicated Command processing should be done with your own tools. */
     class Sequence {
     public:
+      /// Adds a Command to the end of this Sequence.
       void Queue(const Command &element);
 
+      /// Processes all Commands in order.
+      /** There is no way to detect whether a Command was consumed by the Environment or not; if you need this functionality, you should Process the Commands on your own.
+      
+      TODO add a feature request link */
       void Process(Environment *env) const;
 
+      /// Gets the Command queue.
       const std::vector<Command> &GetQueue() const { return m_queue; }
 
     private:

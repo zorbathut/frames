@@ -165,9 +165,9 @@ namespace Frames {
     return element;
   }
 
-  /*static*/ Input::Command Input::Command::CreateMeta(const Meta &meta) {
+  /*static*/ Input::Command Input::Command::CreateMetaSet(const Meta &meta) {
     Command element;
-    element.m_type = Command::META;
+    element.m_type = Command::METASET;
     element.m_meta = meta;
     return element;
   }
@@ -190,10 +190,10 @@ namespace Frames {
     element.m_keyRepeat = key;
     return element;
   }
-  /*static*/ Input::Command Input::Command::CreateType(const std::string &type) {
+  /*static*/ Input::Command Input::Command::CreateKeyText(const std::string &type) {
     Command element;
-    element.m_type = Command::TYPE;
-    element.m_text = type;
+    element.m_type = Command::KEYTEXT;
+    element.m_keyText = type;
     return element;
   }
 
@@ -242,9 +242,9 @@ namespace Frames {
     return m_keyRepeat;
   }
 
-  const std::string &Input::Command::TextGet() const {
+  const std::string &Input::Command::KeyTextGet() const {
     // TODO assert
-    return m_text;
+    return m_keyText;
   }
 
   bool Input::Command::Process(Environment *env) const {
@@ -266,7 +266,7 @@ namespace Frames {
       env->Input_MouseClear();
       return true;
 
-    case META:
+    case METASET:
       env->Input_MetaSet(MetaGet());
       return true;
 
@@ -279,15 +279,14 @@ namespace Frames {
     case KEYREPEAT:
       return env->Input_KeyRepeat(KeyRepeatGet());
 
-    case TYPE:
-      return env->Input_KeyText(TextGet());
+    case KEYTEXT:
+      return env->Input_KeyText(KeyTextGet());
 
     default:
       // TODO assert
       return true; // sure, whatever
     }
   }
-
 
   void Input::Sequence::Queue(const Input::Command &element) {
     m_queue.push_back(element);

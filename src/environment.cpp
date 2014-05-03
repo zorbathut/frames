@@ -469,9 +469,9 @@ namespace Frames {
     LuaRegisterEvent(L, &Layout::Event::MouseWheel);
 
     LuaRegisterEvent(L, &Layout::Event::KeyDown);
-    LuaRegisterEvent(L, &Layout::Event::KeyText);
     LuaRegisterEvent(L, &Layout::Event::KeyRepeat);
     LuaRegisterEvent(L, &Layout::Event::KeyUp);
+    LuaRegisterEvent(L, &Layout::Event::KeyText);
       
     LuaRegisterEvent(L, &Raw::Event::Render);
   }

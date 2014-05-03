@@ -56,7 +56,7 @@ namespace Frames {
     meta.ctrl = (GetKeyState(VK_CONTROL) & 0x80) != 0;
     meta.alt = (GetKeyState(VK_MENU) & 0x80) != 0;
 
-    sequence->Queue(Input::Command::CreateMeta(meta));
+    sequence->Queue(Input::Command::CreateMetaSet(meta));
 
     POINT mouse;
     GetCursorPos(&mouse);
@@ -99,20 +99,20 @@ namespace Frames {
           InputGatherStandard(window_handle, event);
           std::string typed;
           typed += (char)wParam; // TODO: utf8ize
-          event->Queue(Input::Command::CreateType(typed));
+          event->Queue(Input::Command::CreateKeyText(typed));
           return true;
         }
         break;
       case WM_CHAR:
         if (wParam == '\r') {
           InputGatherStandard(window_handle, event);
-          event->Queue(Input::Command::CreateType("\n"));
+          event->Queue(Input::Command::CreateKeyText("\n"));
           return true;
         } else if (wParam != '\t' && wParam != '\b' && wParam != '\033') { // windows passes a bunch of nonprintable characters through this way, thanks windows. thwindows.
           InputGatherStandard(window_handle, event);
           std::string typed;
           typed += (char)wParam; // TODO: utf8ize
-          event->Queue(Input::Command::CreateType(typed));
+          event->Queue(Input::Command::CreateKeyText(typed));
           return true;
         }
         break;
