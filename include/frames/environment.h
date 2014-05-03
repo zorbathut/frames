@@ -56,71 +56,80 @@ namespace Frames {
     /// Informs the environment that the mouse pointer has moved.
     /**
     Takes coordinates in pixelspace. Mouse movement happens immediately and may trigger Layout::Event::MouseOver/\ref Layout::Event::MouseOut "MouseOut"/\ref Layout::Event::MouseMove "MouseMove"/\ref Layout::Event::MouseMoveoutside "MouseMoveoutside" events. */
-    void MouseMove(int x, int y);
+    void Input_MouseMove(int x, int y);
 
     /// Informs the environment that a mouse button has been pressed.
     /**
     Button state changes happen immediately and may trigger \ref Layout::Event::MouseLeftDown "Layout::Event::Mouse*Down" events.
     All integers are valid and will trigger the appropriate \ref Layout::Event::MouseButtonDown "Layout::Event::MouseButton*" event.
-    However, 0 will also trigger \ref Layout::Event::MouseLeftDown "Layout::Event::MouseLeft*" events, 1 will also trigger \ref Layout::Event::MouseRightDown "Layout::Event::MouseRight*" events, and 2 will also trigger \ref Layout::Event::MouseMiddleDown "Layout::Event::MouseMiddle*" events. */
-    bool MouseDown(int button);
+    However, 0 will also trigger \ref Layout::Event::MouseLeftDown "Layout::Event::MouseLeft*" events, 1 will also trigger \ref Layout::Event::MouseRightDown "Layout::Event::MouseRight*" events, and 2 will also trigger \ref Layout::Event::MouseMiddleDown "Layout::Event::MouseMiddle*" events.
+    
+    Returns true if the event was consumed by a Frame.*/
+    bool Input_MouseDown(int button);
 
     /// Informs the environment that a mouse button has been released.
     /**
     Button state changes happen immediately and may trigger \ref Layout::Event::MouseLeftUp "Layout::Event::Mouse*Up", \ref Layout::Event::MouseLeftUpoutside "Layout::Event::Mouse*Upoutside", and \ref Layout::Event::MouseLeftClick "Layout::Event::Mouse*Click" events.
     All integers are valid and will trigger the appropriate \ref Layout::Event::MouseButtonUp "Layout::Event::MouseButton*" event.
-    However, 0 will also trigger \ref Layout::Event::MouseLeftUp "Layout::Event::MouseLeft*" events, 1 will also trigger \ref Layout::Event::MouseRightUp "Layout::Event::MouseRight*" events, and 2 will also trigger \ref Layout::Event::MouseMiddleUp "Layout::Event::MouseMiddle*" events. */
-    bool MouseUp(int button);
+    However, 0 will also trigger \ref Layout::Event::MouseLeftUp "Layout::Event::MouseLeft*" events, 1 will also trigger \ref Layout::Event::MouseRightUp "Layout::Event::MouseRight*" events, and 2 will also trigger \ref Layout::Event::MouseMiddleUp "Layout::Event::MouseMiddle*" events.
+    
+    Returns true if the event was consumed by a Frame.*/
+    bool Input_MouseUp(int button);
 
     /// Informs the environment that the mouse wheel has been rotated.
     /**
-    Wheel state changes happen immediately and may trigger Layout::Event::MouseWheel events. */
-    bool MouseWheel(int delta);
+    Wheel state changes happen immediately and may trigger Layout::Event::MouseWheel events. 
+    
+    Returns true if the event was consumed by a Frame.*/
+    bool Input_MouseWheel(int delta);
 
     /// Informs the environment that the mouse no longer exists in the scene.
     /**
     Mouse movement happens immediately and may trigger Layout::Event::MouseOut events. */
-    void MouseClear();
+    void Input_MouseClear();
 
     /// Gets the environment's last known mouse position.
     /**
     If MouseClear() has been called, this may be inaccurate. */ // TODO come up with a better system >:(
-    const Vector &GetMouse() const { return m_mouse; }
+    const Vector &Input_MouseGet() const { return m_mouse; }
 
     /// Sets the environment's current metakey flags.
     /**
     This does not trigger events, merely updates the key meta state intended for event handlers. */
-    void SetMeta(const Input::Meta &meta) { m_lastMeta = meta; }
+    void Input_MetaSet(const Input::Meta &meta) { m_lastMeta = meta; }
 
     /// Gets the environment's current metakey flags.
     /**
     This is intended for input handlers to check if the standard meta buttons - shift, ctrl, and alt - are pressed or not. */
-    const Input::Meta &GetMeta() const { return m_lastMeta; }
+    const Input::Meta &Input_MetaGet() const { return m_lastMeta; }
 
     /// Informs the environment that a key has been pressed.
     /**
-    Keypresses happen immediately and may trigger Layout::Event::KeyDown events.*/
-    bool KeyDown(const Input::Key &key);
+    Keypresses happen immediately and may trigger Layout::Event::KeyDown events.
+    
+    Returns true if the event was consumed by a Frame.*/
+    bool Input_KeyDown(const Input::Key &key);
 
     /// Informs the environment that text has been typed.
     /**
-    Typing happens immediately and may trigger Layout::Event::KeyType events.*/
-    bool KeyType(const std::string &type);
+    Typing happens immediately and may trigger Layout::Event::KeyType events.
+    
+    Returns true if the event was consumed by a Frame.*/
+    bool Input_KeyText(const std::string &text);
 
     /// Informs the environment that a key has repeated.
     /**
-    Key repeats happen immediately and may trigger Layout::Event::KeyRepeat events. */
-    bool KeyRepeat(const Input::Key &key);
+    Key repeats happen immediately and may trigger Layout::Event::KeyRepeat events.
+    
+    Returns true if the event was consumed by a Frame.*/
+    bool Input_KeyRepeat(const Input::Key &key);
 
     /// Informs the environment that a key has released.
     /**
-    Key releases happen immediately and may trigger Layout::Event::KeyUp events. */
-    bool KeyUp(const Input::Key &key);
-
-    /// Informs the environment that the rendering environment has resized.
-    /**
-    This must be called whenever the render canvas resizes. It will resize Root immediately. */
-    void ResizeRoot(int x, int y);
+    Key releases happen immediately and may trigger Layout::Event::KeyUp events.
+    
+    Returns true if the event was consumed by a Frame.*/
+    bool Input_KeyUp(const Input::Key &key);
     
     // ==== Focus
     Layout *GetFocus() { return m_focus; }
@@ -130,6 +139,11 @@ namespace Frames {
 
     // ==== Rendering
     void Render(const Layout *root = 0);
+
+    /// Informs the environment that the rendering environment has resized.
+    /**
+    This must be called whenever the render canvas resizes. It will resize Root immediately. */
+    void ResizeRoot(int x, int y);
     
     // ==== Introspection
     Layout *GetRoot() { return m_root; }

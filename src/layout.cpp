@@ -45,7 +45,7 @@ namespace Frames {
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::MouseWheel, (int delta));
 
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyDown, (const Input::Key &kev));
-  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyType, (const std::string &text));
+  FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyText, (const std::string &text));
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyRepeat, (const Input::Key &kev));
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyUp, (const Input::Key &kev));
 

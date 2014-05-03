@@ -2,8 +2,6 @@
 === DOCS
 
 * Input subsystem
-  * Redesign Environment input API
-  * Document
   * Test
   
 * Invert Get/Set
@@ -24,15 +22,6 @@
 
 === TWEAK
 
-* Test debug tests
-
-* Rebuild libraries for 64-bit support
-* Kill Release libraries
-* Add Debug-with-Debug build and Checked build (but don't build them)
-
-* Test 64-bit
-* Add to test suite
-
 * Linux?
 * Clang?
 * Clang Static?
@@ -40,6 +29,14 @@
 * FindChild
 
 * Redesign Lua API sanely
+
+=== INTEGRATION
+
+* Split OGL into its own lib
+  * Test OGL
+
+* Add DX11
+  * Test DX11
 
 === BUILDING
 

@@ -193,94 +193,94 @@ namespace Frames {
   /*static*/ Input::Command Input::Command::CreateType(const std::string &type) {
     Command element;
     element.m_type = Command::TYPE;
-    element.m_typeText = type;
+    element.m_text = type;
     return element;
   }
 
   Input::Command::Command() : m_type(INVALID) { }
 
-  Input::Command::Type Input::Command::GetElementType() const {
+  Input::Command::Type Input::Command::TypeGet() const {
     return m_type;
   }
 
-  int Input::Command::GetMouseDownButton() const {
+  int Input::Command::MouseDownButtonGet() const {
     // TODO assert
     return m_mouseDownButton;
   }
-  int Input::Command::GetMouseUpButton() const {
+  int Input::Command::MouseUpButtonGet() const {
     // TODO assert
     return m_mouseUpButton;
   }
-  int Input::Command::GetMouseWheelDelta() const {
+  int Input::Command::MouseWheelDeltaGet() const {
     // TODO assert
     return m_mouseWheelDelta;
   }
-  int Input::Command::GetMouseMoveX() const {
+  int Input::Command::MouseMoveXGet() const {
     // TODO assert
     return m_mouseMoveX;
   }
-  int Input::Command::GetMouseMoveY() const {
+  int Input::Command::MouseMoveYGet() const {
     // TODO assert
     return m_mouseMoveY;
   }
         
-  const Input::Meta &Input::Command::GetMeta() const {
+  const Input::Meta &Input::Command::MetaGet() const {
     // TODO assert
     return m_meta;
   }
 
-  Input::Key Input::Command::GetKeyDown() const {
+  Input::Key Input::Command::KeyDownGet() const {
     // TODO assert
     return m_keyDown;
   }
-  Input::Key Input::Command::GetKeyUp() const {
+  Input::Key Input::Command::KeyUpGet() const {
     // TODO assert
     return m_keyUp;
   }
-  Input::Key Input::Command::GetKeyRepeat() const {
+  Input::Key Input::Command::KeyRepeatGet() const {
     // TODO assert
     return m_keyRepeat;
   }
 
-  const std::string &Input::Command::GetTypeText() const {
+  const std::string &Input::Command::TextGet() const {
     // TODO assert
-    return m_typeText;
+    return m_text;
   }
 
   bool Input::Command::Process(Environment *env) const {
-    switch (GetElementType()) {
+    switch (TypeGet()) {
     case MOUSEDOWN:
-      return env->MouseDown(GetMouseDownButton());
+      return env->Input_MouseDown(MouseDownButtonGet());
 
     case MOUSEUP:
-      return env->MouseUp(GetMouseUpButton());
+      return env->Input_MouseUp(MouseUpButtonGet());
 
     case MOUSEWHEEL:
-      return env->MouseWheel(GetMouseWheelDelta());
+      return env->Input_MouseWheel(MouseWheelDeltaGet());
 
     case MOUSEMOVE:
-      env->MouseMove(GetMouseMoveX(), GetMouseMoveY());
+      env->Input_MouseMove(MouseMoveXGet(), MouseMoveYGet());
       return true;
 
     case MOUSECLEAR:
-      env->MouseClear();
+      env->Input_MouseClear();
       return true;
 
     case META:
-      env->SetMeta(GetMeta());
+      env->Input_MetaSet(MetaGet());
       return true;
 
     case KEYDOWN:
-      return env->KeyDown(GetKeyDown());
+      return env->Input_KeyDown(KeyDownGet());
 
     case KEYUP:
-      return env->KeyUp(GetKeyUp());
+      return env->Input_KeyUp(KeyUpGet());
 
     case KEYREPEAT:
-      return env->KeyRepeat(GetKeyRepeat());
+      return env->Input_KeyRepeat(KeyRepeatGet());
 
     case TYPE:
-      return env->KeyType(GetTypeText());
+      return env->Input_KeyText(TextGet());
 
     default:
       // TODO assert
@@ -294,7 +294,7 @@ namespace Frames {
   }
 
   void Input::Sequence::Process(Environment *env) const {
-    for (int i = 0; i < m_queue.size(); ++i)
+    for (int i = 0; i < (int)m_queue.size(); ++i)
     {
       m_queue[i].Process(env);
     }

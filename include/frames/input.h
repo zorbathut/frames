@@ -167,21 +167,21 @@ namespace Frames {
 
       Command();
 
-      Type GetElementType() const;
+      Type TypeGet() const;
 
-      int GetMouseDownButton() const;
-      int GetMouseUpButton() const;
-      int GetMouseWheelDelta() const;
-      int GetMouseMoveX() const;
-      int GetMouseMoveY() const;
+      int MouseDownButtonGet() const;
+      int MouseUpButtonGet() const;
+      int MouseWheelDeltaGet() const;
+      int MouseMoveXGet() const;
+      int MouseMoveYGet() const;
         
-      const Meta &GetMeta() const;
+      const Meta &MetaGet() const;
 
-      Key GetKeyDown() const;
-      Key GetKeyUp() const;
-      Key GetKeyRepeat() const;
+      Key KeyDownGet() const;
+      Key KeyUpGet() const;
+      Key KeyRepeatGet() const;
 
-      const std::string &GetTypeText() const;
+      const std::string &TextGet() const;
 
       bool Process(Environment *env) const;
         
@@ -205,7 +205,7 @@ namespace Frames {
 
       // This can't be. :(
       // also this is confusing with the item "type" but whatever, internal API
-      std::string m_typeText;
+      std::string m_text;
     };
 
     // Used to send full input events into Frames

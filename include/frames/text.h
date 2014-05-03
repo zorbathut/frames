@@ -92,7 +92,7 @@ namespace Frames {
     void EventInternal_Move(Handle *e, const Vector &pt);
 
     // Event handlers for key events
-    void EventInternal_KeyType(Handle *e, const std::string &type);
+    void EventInternal_KeyText(Handle *e, const std::string &type);
     void EventInternal_KeyDownOrRepeat(Handle *e, const Input::Key &key);
 
     // Lua bindings

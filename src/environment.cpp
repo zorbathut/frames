@@ -52,7 +52,7 @@ namespace Frames {
     m_root->SetHeightDefault((float)y);
   }
   
-  void Environment::MouseMove(int ix, int iy) {
+  void Environment::Input_MouseMove(int ix, int iy) {
     // convert to internal floatingpoint
     float x = (float)ix;
     float y = (float)iy;
@@ -89,10 +89,10 @@ namespace Frames {
     }
   }
 
-  bool Environment::MouseDown(int button) {
+  bool Environment::Input_MouseDown(int button) {
     if (m_buttonDown[button]) {
       LogError(detail::Format("Received a mouse down message for button %d while in the middle of a click. Fabricating fake MouseUp message in order to preserve ordering guarantees.", button));
-      MouseUp(button);
+      Input_MouseUp(button);
     }
 
     if (m_over) {
@@ -112,7 +112,7 @@ namespace Frames {
     return false;
   }
 
-  bool Environment::MouseUp(int button) {
+  bool Environment::Input_MouseUp(int button) {
     // be careful: any event can cause m_over or any m_buttonDown to be cleared
     bool consumed = false;
 
@@ -164,7 +164,7 @@ namespace Frames {
     return consumed;
   }
 
-  bool Environment::MouseWheel(int delta) {
+  bool Environment::Input_MouseWheel(int delta) {
     if (m_over) {
       m_over->EventTrigger(Layout::Event::MouseWheel, delta);
       return true;
@@ -173,14 +173,14 @@ namespace Frames {
     }
   }
 
-  void Environment::MouseClear() {
+  void Environment::Input_MouseClear() {
     if (m_over) {
       m_over->EventTrigger(Layout::Event::MouseOut);
       m_over = 0;
     }
   }
 
-  bool Environment::KeyDown(const Input::Key &key) {
+  bool Environment::Input_KeyDown(const Input::Key &key) {
     if (m_focus) {
       m_focus->EventTrigger(Layout::Event::KeyDown, key);
       return true;
@@ -188,15 +188,15 @@ namespace Frames {
     return false;
   }
 
-  bool Environment::KeyType(const std::string &type) {
+  bool Environment::Input_KeyText(const std::string &type) {
     if (m_focus) {
-      m_focus->EventTrigger(Layout::Event::KeyType, type);
+      m_focus->EventTrigger(Layout::Event::KeyText, type);
       return true;
     }
     return false;
   }
 
-  bool Environment::KeyRepeat(const Input::Key &key) {
+  bool Environment::Input_KeyRepeat(const Input::Key &key) {
     if (m_focus) {
       m_focus->EventTrigger(Layout::Event::KeyRepeat, key);
       return true;
@@ -204,7 +204,7 @@ namespace Frames {
     return false;
   }
 
-  bool Environment::KeyUp(const Input::Key &key) {
+  bool Environment::Input_KeyUp(const Input::Key &key) {
     if (m_focus) {
       m_focus->EventTrigger(Layout::Event::KeyUp, key);
       return true;
@@ -469,7 +469,7 @@ namespace Frames {
     LuaRegisterEvent(L, &Layout::Event::MouseWheel);
 
     LuaRegisterEvent(L, &Layout::Event::KeyDown);
-    LuaRegisterEvent(L, &Layout::Event::KeyType);
+    LuaRegisterEvent(L, &Layout::Event::KeyText);
     LuaRegisterEvent(L, &Layout::Event::KeyRepeat);
     LuaRegisterEvent(L, &Layout::Event::KeyUp);
       

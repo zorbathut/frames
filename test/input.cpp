@@ -37,7 +37,7 @@ TEST(Input, Focus) {
   TestSnapshot(env);
 
   // Make sure to reset to base state
-  env->MouseMove(0, 0);
+  env->Input_MouseMove(0, 0);
 
   // very thorough testing
   for (int i = 0; i < (1 << 3); ++i) {
@@ -63,18 +63,18 @@ TEST(Input, Focus) {
     log.Attach(c, Frames::Layout::Event::MouseOut);
     log.Attach(c, Frames::Layout::Event::MouseLeftDown);
 
-    env->MouseMove(150, 150);
-    env->MouseDown(0);
-    env->MouseUp(0);
+    env->Input_MouseMove(150, 150);
+    env->Input_MouseDown(0);
+    env->Input_MouseUp(0);
 
-    env->MouseMove(250, 250);
-    env->MouseDown(0);
-    env->MouseUp(0);
+    env->Input_MouseMove(250, 250);
+    env->Input_MouseDown(0);
+    env->Input_MouseUp(0);
 
-    env->MouseMove(350, 350);
-    env->MouseDown(0);
-    env->MouseUp(0);
+    env->Input_MouseMove(350, 350);
+    env->Input_MouseDown(0);
+    env->Input_MouseUp(0);
 
-    env->MouseMove(0, 0);
+    env->Input_MouseMove(0, 0);
   }
 }

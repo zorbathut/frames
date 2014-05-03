@@ -123,7 +123,7 @@ namespace Frames {
       FRAMES_VERB_DECLARE_BUBBLE(KeyDown, (const Input::Key &kev));
       /// Signals that text has been typed while a frame has the key focus.
       /** This verb is recommended for text applications, as it provides a Unicode string potentially containing multiple entered characters.*/
-      FRAMES_VERB_DECLARE_BUBBLE(KeyType, (const std::string &text));
+      FRAMES_VERB_DECLARE_BUBBLE(KeyText, (const std::string &text));
       /// Signals that a keypress has repeated while a frame has the key focus.
       /** This verb is recommended for non-text applications, as it reports the key ID and not the unicode text that was entered. */
       FRAMES_VERB_DECLARE_BUBBLE(KeyRepeat, (const Input::Key &kev));
