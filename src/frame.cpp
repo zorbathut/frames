@@ -15,7 +15,7 @@ namespace Frames {
     return new Frame(name, parent);
   }
 
-  /*static*/ const char *Frame::GetStaticType() {
+  /*static*/ const char *Frame::TypeStaticGet() {
     return "Frame";
   }
 
@@ -31,10 +31,10 @@ namespace Frames {
 
       renderer->SetTexture();
 
-      float u = GetTop();
-      float d = GetBottom();
-      float l = GetLeft();
-      float r = GetRight();
+      float u = TopGet();
+      float d = BottomGet();
+      float l = LeftGet();
+      float r = RightGet();
 
       detail::Renderer::Vertex *v = renderer->Request(4);
 
@@ -55,37 +55,37 @@ namespace Frames {
   /*static*/ void Frame::luaF_RegisterFunctions(lua_State *L) {
     Layout::luaF_RegisterFunctions(L);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetPin", luaF_SetPin);
+    luaF_RegisterFunction(L, TypeStaticGet(), "PinSet", luaF_PinSet);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetWidth", luaF_SetWidth);
-    luaF_RegisterFunction(L, GetStaticType(), "SetHeight", luaF_SetHeight);
+    luaF_RegisterFunction(L, TypeStaticGet(), "WidthSet", luaF_WidthSet);
+    luaF_RegisterFunction(L, TypeStaticGet(), "HeightSet", luaF_HeightSet);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetParent", luaF_SetParent);
-    luaF_RegisterFunction(L, GetStaticType(), "GetParent", luaF_GetParent);
+    luaF_RegisterFunction(L, TypeStaticGet(), "ParentSet", luaF_ParentSet);
+    luaF_RegisterFunction(L, TypeStaticGet(), "ParentGet", luaF_ParentGet);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetLayer", luaF_SetLayer);
-    luaF_RegisterFunction(L, GetStaticType(), "GetLayer", luaF_GetLayer);
+    luaF_RegisterFunction(L, TypeStaticGet(), "LayerSet", luaF_LayerSet);
+    luaF_RegisterFunction(L, TypeStaticGet(), "LayerGet", luaF_LayerGet);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetImplementation", luaF_SetImplementation);
-    luaF_RegisterFunction(L, GetStaticType(), "GetImplementation", luaF_GetImplementation);
+    luaF_RegisterFunction(L, TypeStaticGet(), "ImplementationSet", luaF_ImplementationSet);
+    luaF_RegisterFunction(L, TypeStaticGet(), "ImplementationGet", luaF_ImplementationGet);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetVisible", luaF_SetVisible);
-    luaF_RegisterFunction(L, GetStaticType(), "GetVisible", luaF_GetVisible);
+    luaF_RegisterFunction(L, TypeStaticGet(), "VisibleSet", luaF_VisibleSet);
+    luaF_RegisterFunction(L, TypeStaticGet(), "VisibleGet", luaF_VisibleGet);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetAlpha", luaF_SetAlpha);
-    luaF_RegisterFunction(L, GetStaticType(), "GetAlpha", luaF_GetAlpha);
+    luaF_RegisterFunction(L, TypeStaticGet(), "AlphaSet", luaF_AlphaSet);
+    luaF_RegisterFunction(L, TypeStaticGet(), "AlphaGet", luaF_AlphaGet);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetBackground", luaF_SetBackground);
-    luaF_RegisterFunction(L, GetStaticType(), "GetBackground", luaF_GetBackground);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SetBackground", luaF_SetBackground);
+    luaF_RegisterFunction(L, TypeStaticGet(), "GetBackground", luaF_GetBackground);
 
-    luaF_RegisterFunction(L, GetStaticType(), "Obliterate", luaF_Obliterate);
+    luaF_RegisterFunction(L, TypeStaticGet(), "Obliterate", luaF_Obliterate);
   }
 
   Frame::Frame(const std::string &name, Layout *parent) :
-      Layout(name, parent->GetEnvironment()),
+      Layout(name, parent->EnvironmentGet()),
       m_bg(0, 0, 0, 0)
   {
-    SetParent(parent);
+    ParentSet(parent);
   }
   Frame::~Frame() { }
 
@@ -94,7 +94,7 @@ namespace Frames {
     bool lye = false;
 
     if (lua_gettop(L) < *cindex) {
-      luaL_error(L, "Ran out of parameters in SetPin");
+      luaL_error(L, "Ran out of parameters in PinSet");
     }
 
     if (stringable && lua_type(L, *cindex) == LUA_TSTRING) {
@@ -134,17 +134,17 @@ namespace Frames {
       (*cindex)++;
     } else {
       if (lua_gettop(L) < *cindex + 1) {
-        luaL_error(L, "Ran out of parameters in SetPin");
+        luaL_error(L, "Ran out of parameters in PinSet");
       }
 
       int tx = lua_type(L, *cindex);
       int ty = lua_type(L, *cindex + 1);
 
       if ((tx != LUA_TNUMBER && tx != LUA_TNIL) || (ty != LUA_TNUMBER && ty != LUA_TNIL)) {
-        luaL_error(L, "Invalid parameter type in SetPin");
+        luaL_error(L, "Invalid parameter type in PinSet");
       }
       if (tx == LUA_TNIL && ty == LUA_TNIL) {
-        luaL_error(L, "No actual coordinates in SetPin");
+        luaL_error(L, "No actual coordinates in PinSet");
       }
 
       lxe = (tx == LUA_TNUMBER);
@@ -161,12 +161,12 @@ namespace Frames {
       *ye = lye;
     } else {
       if (*xe != lxe || *ye != lye) {
-        luaL_error(L, "Inconsistent nils in SetPin");
+        luaL_error(L, "Inconsistent nils in PinSet");
       }
     }
   }
 
-  /*static*/ int Frame::luaF_SetPin(lua_State *L) {
+  /*static*/ int Frame::luaF_PinSet(lua_State *L) {
     // this one is a horrible beast
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
@@ -182,7 +182,7 @@ namespace Frames {
     luaF_ParseCoord(L, &cindex, true, true, &x_enabled, &y_enabled, &x_src, &y_src);
 
     if (lua_gettop(L) < cindex) {
-      luaL_error(L, "Ran out of parameters in SetPin");
+      luaL_error(L, "Ran out of parameters in PinSet");
     }
 
     Layout *target = 0;
@@ -205,125 +205,125 @@ namespace Frames {
     }
 
     if (lua_gettop(L) != cindex - 1) {
-      luaL_error(L, "Too many parameters in SetPin");
+      luaL_error(L, "Too many parameters in PinSet");
     }
 
     if (x_enabled) {
-      self->SetPin(X, x_src, target, x_target, x_ofs);
+      self->PinSet(X, x_src, target, x_target, x_ofs);
     }
     if (y_enabled) {
-      self->SetPin(Y, y_src, target, y_target, y_ofs);
+      self->PinSet(Y, y_src, target, y_target, y_ofs);
     }
 
     return 0;
   }
 
-  /*static*/ int Frame::luaF_SetWidth(lua_State *L) {
+  /*static*/ int Frame::luaF_WidthSet(lua_State *L) {
     luaF_checkparams(L, 2);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->SetWidth((float)luaL_checknumber(L, 2));
+    self->WidthSet((float)luaL_checknumber(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Frame::luaF_SetHeight(lua_State *L) {
+  /*static*/ int Frame::luaF_HeightSet(lua_State *L) {
     luaF_checkparams(L, 2);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->SetHeight((float)luaL_checknumber(L, 2));
+    self->HeightSet((float)luaL_checknumber(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Frame::luaF_SetParent(lua_State *L) {
+  /*static*/ int Frame::luaF_ParentSet(lua_State *L) {
     luaF_checkparams(L, 2);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->SetParent(luaF_checkframe<Layout>(L, 2));
+    self->ParentSet(luaF_checkframe<Layout>(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Frame::luaF_GetParent(lua_State *L) {
+  /*static*/ int Frame::luaF_ParentGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->GetParent()->luaF_push(L);
+    self->ParentGet()->luaF_push(L);
 
     return 1;
   }
 
-  /*static*/ int Frame::luaF_SetLayer(lua_State *L) {
+  /*static*/ int Frame::luaF_LayerSet(lua_State *L) {
     luaF_checkparams(L, 2);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->SetLayer((float)luaL_checknumber(L, 2));
+    self->LayerSet((float)luaL_checknumber(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Frame::luaF_GetLayer(lua_State *L) {
+  /*static*/ int Frame::luaF_LayerGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    lua_pushnumber(L, self->GetLayer());
+    lua_pushnumber(L, self->LayerGet());
 
     return 1;
   }
 
-  /*static*/ int Frame::luaF_SetImplementation(lua_State *L) {
+  /*static*/ int Frame::luaF_ImplementationSet(lua_State *L) {
     luaF_checkparams(L, 2);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
     luaL_checktype(L, 2, LUA_TBOOLEAN); // sigh
-    self->SetImplementation(lua_toboolean(L, 2) != 0);
+    self->ImplementationSet(lua_toboolean(L, 2) != 0);
 
     return 0;
   }
 
-  /*static*/ int Frame::luaF_GetImplementation(lua_State *L) {
+  /*static*/ int Frame::luaF_ImplementationGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    lua_pushboolean(L, self->GetImplementation());
+    lua_pushboolean(L, self->ImplementationGet());
 
     return 1;
   }
 
-  /*static*/ int Frame::luaF_SetVisible(lua_State *L) {
+  /*static*/ int Frame::luaF_VisibleSet(lua_State *L) {
     luaF_checkparams(L, 2);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
     luaL_checktype(L, 2, LUA_TBOOLEAN); // sigh
-    self->SetVisible(lua_toboolean(L, 2) != 0);
+    self->VisibleSet(lua_toboolean(L, 2) != 0);
 
     return 0;
   }
 
-  /*static*/ int Frame::luaF_GetVisible(lua_State *L) {
+  /*static*/ int Frame::luaF_VisibleGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    lua_pushboolean(L, self->GetVisible());
+    lua_pushboolean(L, self->VisibleGet());
 
     return 1;
   }
 
-  /*static*/ int Frame::luaF_SetAlpha(lua_State *L) {
+  /*static*/ int Frame::luaF_AlphaSet(lua_State *L) {
     luaF_checkparams(L, 2);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    self->SetAlpha((float)luaL_checknumber(L, 2));
+    self->AlphaSet((float)luaL_checknumber(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Frame::luaF_GetAlpha(lua_State *L) {
+  /*static*/ int Frame::luaF_AlphaGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Frame *self = luaF_checkframe<Frame>(L, 1);
 
-    lua_pushnumber(L, self->GetAlpha());
+    lua_pushnumber(L, self->AlphaGet());
 
     return 1;
   }

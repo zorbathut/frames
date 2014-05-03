@@ -10,15 +10,15 @@ namespace Frames {
     public:
       Rtti(const Rtti *parent) : m_parent(parent) { }
 
-      const Rtti *GetParent() const { return m_parent; }
+      const Rtti *ParentGet() const { return m_parent; }
 
     private:
       const Rtti *m_parent;
     };
 
-    // This exists solely so we don't have to "public" GetRttiStatic()
+    // This exists solely so we don't have to "public" RttiStaticGet()
     template <typename T> const Rtti *InitHelper() {
-      return T::GetRttiStatic();
+      return T::RttiStaticGet();
     }
   }
 
@@ -31,13 +31,13 @@ namespace Frames {
   /// Safe dynamic cast for the Layout hierarchy.
   /** Returns a valid pointer to T* if the provided Layout is actually a T*, or a null pointer otherwise. */
   template <typename T> const T *Cast(const Layout *layout) {
-    const detail::Rtti *target = T::GetRttiStatic();
-    const detail::Rtti *current = layout->GetRttiVirtual();
+    const detail::Rtti *target = T::RttiStaticGet();
+    const detail::Rtti *current = layout->RttiVirtualGet();
     while (current) {
       if (current == target) {
         return static_cast<const T*>(layout);
       }
-      current = current->GetParent();
+      current = current->ParentGet();
     }
     return 0; // nope
   }

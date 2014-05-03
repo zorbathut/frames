@@ -16,7 +16,7 @@ namespace Frames {
     return new Raw(name, parent);
   }
 
-  /*static*/ const char *Raw::GetStaticType() {
+  /*static*/ const char *Raw::TypeStaticGet() {
     return "Raw";
   }
 

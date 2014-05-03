@@ -23,12 +23,12 @@ TEST(Text, Basic) {
   Frames::Text *frames[c_tests] = { 0, };
 
   Frames::Frame *anchor = Frames::Frame::Create("Test", env->RootGet());
-  anchor->SetPin(Frames::BOTTOMLEFT, env->RootGet(), Frames::TOPLEFT, 20.f, 0.f);
+  anchor->PinSet(Frames::BOTTOMLEFT, env->RootGet(), Frames::TOPLEFT, 20.f, 0.f);
   for (int i = 0; i < c_tests; ++i) {
     Frames::Text *tex = Frames::Text::Create("Layer", env->RootGet());
-    tex->SetSize(sizes[i]);
+    tex->SizeSet(sizes[i]);
     tex->SetText(text[i]);
-    tex->SetPin(Frames::TOPLEFT, anchor, Frames::BOTTOMLEFT, 0.f, 5.f);
+    tex->PinSet(Frames::TOPLEFT, anchor, Frames::BOTTOMLEFT, 0.f, 5.f);
     anchor = tex;
     frames[i] = tex;
   }
@@ -45,14 +45,14 @@ TEST(Text, Basic) {
 
   for (int i = 0; i < c_tests; ++i) {
     frames[i]->SetWordwrap(true);
-    frames[i]->SetPin(Frames::RIGHT, env->RootGet(), Frames::RIGHT, -20.f, Frames::Nil);
+    frames[i]->PinSet(Frames::RIGHT, env->RootGet(), Frames::RIGHT, -20.f, Frames::Nil);
   }
 
   TestSnapshot(env);
 
   for (int i = 0; i < c_tests; ++i) {
-    frames[i]->ClearPin(Frames::RIGHT);
-    frames[i]->SetWidth(sizes[i] * 7);
+    frames[i]->PinClear(Frames::RIGHT);
+    frames[i]->WidthSet(sizes[i] * 7);
   }
 
   TestSnapshot(env);

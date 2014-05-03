@@ -21,8 +21,8 @@ public:
   TestSDLEnvironment();
   ~TestSDLEnvironment();
 
-  int GetWidth() const;
-  int GetHeight() const;
+  int WidthGet() const;
+  int HeightGet() const;
 
   void Swap();
   void HandleEvents();
@@ -45,8 +45,8 @@ public:
   Frames::Environment *operator*() { return m_env; }
   Frames::Environment *operator->() { return m_env; }
 
-  int GetWidth() const { return m_sdl->GetWidth(); }
-  int GetHeight() const { return m_sdl->GetHeight(); }
+  int WidthGet() const { return m_sdl->WidthGet(); }
+  int HeightGet() const { return m_sdl->HeightGet(); }
 
   void Swap() { return m_sdl->Swap(); }
   void HandleEvents() { return m_sdl->HandleEvents(); }
@@ -67,7 +67,7 @@ public:
 
   void Snapshot();  // auto-snapshot on exit
   template <typename Parameters> void Attach(Frames::Layout *layout, const Frames::Verb<Parameters> &verb) {
-    EXPECT_TRUE(m_nameUniqueTest.count(layout->GetName()) == 0 || m_nameUniqueTest[layout->GetName()] == layout);
+    EXPECT_TRUE(m_nameUniqueTest.count(layout->NameGet()) == 0 || m_nameUniqueTest[layout->NameGet()] == layout);
 
     typename Frames::Verb<Parameters>::TypeDelegate delegate = typename Frames::Verb<Parameters>::TypeDelegate(this, &VerbLog::RecordEvent);
     layout->EventAttach(verb, delegate);

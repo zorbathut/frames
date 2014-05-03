@@ -16,27 +16,27 @@ namespace Frames {
     return new Texture(name, parent);
   }
 
-  /*static*/ const char *Texture::GetStaticType() {
+  /*static*/ const char *Texture::TypeStaticGet() {
     return "Texture";
   }
 
   void Texture::SetTexture(const std::string &id) {
     // work work work
     m_texture_id = id;
-    m_texture = GetEnvironment()->GetTextureManager()->TextureFromId(id);
+    m_texture = EnvironmentGet()->GetTextureManager()->TextureFromId(id);
     
-    SetWidthDefault((float)m_texture->GetWidth());
-    SetHeightDefault((float)m_texture->GetHeight());
+    WidthDefaultSet((float)m_texture->WidthGet());
+    HeightDefaultSet((float)m_texture->HeightGet());
   }
 
   /*static*/ void Texture::luaF_RegisterFunctions(lua_State *L) {
     Frame::luaF_RegisterFunctions(L);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetTexture", luaF_SetTexture);
-    luaF_RegisterFunction(L, GetStaticType(), "GetTexture", luaF_GetTexture);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SetTexture", luaF_SetTexture);
+    luaF_RegisterFunction(L, TypeStaticGet(), "GetTexture", luaF_GetTexture);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetTint", luaF_SetTint);
-    luaF_RegisterFunction(L, GetStaticType(), "GetTint", luaF_GetTint);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SetTint", luaF_SetTint);
+    luaF_RegisterFunction(L, TypeStaticGet(), "GetTint", luaF_GetTint);
   }
 
   void Texture::RenderElement(detail::Renderer *renderer) const {
@@ -47,10 +47,10 @@ namespace Frames {
 
       renderer->SetTexture(m_texture.Get());
 
-      float u = GetTop();
-      float d = GetBottom();
-      float l = GetLeft();
-      float r = GetRight();
+      float u = TopGet();
+      float d = BottomGet();
+      float l = LeftGet();
+      float r = RightGet();
 
       detail::Renderer::Vertex *v = renderer->Request(4);
 
@@ -59,8 +59,8 @@ namespace Frames {
       v[2].p.x = r; v[2].p.y = d;
       v[3].p.x = l; v[3].p.y = d;
 
-      v[0].t = m_texture->GetBounds().s;
-      v[2].t = m_texture->GetBounds().e;
+      v[0].t = m_texture->BoundsGet().s;
+      v[2].t = m_texture->BoundsGet().e;
       
       v[1].t.x = v[2].t.x;
       v[1].t.y = v[0].t.y;

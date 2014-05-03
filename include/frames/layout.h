@@ -37,8 +37,8 @@ namespace Frames {
 
   #define FRAMES_DECLARE_RTTI() \
     static detail::Rtti s_rtti; \
-    static const detail::Rtti *GetRttiStatic() { return &s_rtti; } \
-    virtual const detail::Rtti *GetRttiVirtual() const { return &s_rtti; } \
+    static const detail::Rtti *RttiStaticGet() { return &s_rtti; } \
+    virtual const detail::Rtti *RttiVirtualGet() const { return &s_rtti; } \
     template <typename T> friend T *Cast(Layout *); \
     template <typename T> friend const T *Cast(const Layout *); \
     template <typename T> friend const detail::Rtti *detail::InitHelper();
@@ -135,7 +135,7 @@ namespace Frames {
 
   private:
     FRAMES_DECLARE_RTTI();
-    friend class Environment; // access SetWidthDefault/SetHeightDefault, construction
+    friend class Environment; // access WidthDefaultSet/HeightDefaultSet, construction
     friend class Frame; // constructor, private functions that modify state
     friend class Mask; // solely for MouseMasking
     
@@ -288,10 +288,10 @@ namespace Frames {
     // --------- Typing and identification
 
     /// Returns a human-readable type string for this class.
-    static const char *GetStaticType();
+    static const char *TypeStaticGet();
     /// Returns a human-readable type string for this instance.
     /** Must be overloaded in all subclasses (see Texture for an example). */
-    virtual const char *GetType() const { return GetStaticType(); }
+    virtual const char *TypeGet() const { return TypeStaticGet(); }
 
     /// Returns the name of this layout.
     const std::string &NameGet() const { return m_name; }
@@ -300,27 +300,27 @@ namespace Frames {
 
     /// Returns the position of an anchor along a given axis.
     /** See \ref layoutbasics for details. */
-    float GetPoint(Axis axis, float pt) const;
+    float PointGet(Axis axis, float pt) const;
     /// Returns the left edge's position.
-    float GetLeft() const { return GetPoint(X, 0); }
+    float LeftGet() const { return PointGet(X, 0); }
     /// Returns the right edge's position.
-    float GetRight() const { return GetPoint(X, 1); }
+    float RightGet() const { return PointGet(X, 1); }
     /// Returns the top edge's position.
-    float GetTop() const { return GetPoint(Y, 0); }
+    float TopGet() const { return PointGet(Y, 0); }
     /// Returns the bottom edge's position.
-    float GetBottom() const { return GetPoint(Y, 1); }
+    float BottomGet() const { return PointGet(Y, 1); }
     /// Returns the bounds of the layout.
-    Rect GetBounds() const;
+    Rect BoundsGet() const;
 
     /// Returns the size along a given axis.
-    float GetSize(Axis axis) const;
+    float SizeGet(Axis axis) const;
     /// Returns the width.
-    float GetWidth() const { return GetSize(X); }
+    float WidthGet() const { return SizeGet(X); }
     /// Returns the height.
-    float GetHeight() const { return GetSize(Y); }
+    float HeightGet() const { return SizeGet(Y); }
 
     /// Returns the parent. Guaranteed to be non-null unless this is Root.
-    Layout *GetParent() const { return m_parent; }
+    Layout *ParentGet() const { return m_parent; }
 
     /// Returns the highest input-accepting frame located at the given coordinates.
     Layout *LayoutUnderGet(float x, float y);
@@ -332,21 +332,21 @@ namespace Frames {
 
     /// Returns the children of this frame.
     /** Pass in "true" for implementation to get only children with the Implementation flag set. Otherwise, you'll get only children without that flag set. */
-    const ChildrenList &GetChildren(bool implementation = false) { return implementation ? m_children_implementation : m_children_nonimplementation; }
+    const ChildrenList &ChildrenGet(bool implementation = false) { return implementation ? m_children_implementation : m_children_nonimplementation; }
     
     // --------- State
 
     /// Sets the visibility flag.
     /** Invisible frames will not render or accept input, nor will their children render nor accept input. */
-    void SetVisible(bool visible);
+    void VisibleSet(bool visible);
     /// Gets the visibility flag.
-    bool GetVisible() const { return m_visible; }
+    bool VisibleGet() const { return m_visible; }
 
     /// Sets the alpha multiplier.
     /** Changing the alpha multiplier causes this frame, and all its children, to render partially transparent. Note that this is done on a per-frame basis and will not result in layer-perfect results. */
-    void SetAlpha(float alpha) { m_alpha = alpha; }
+    void AlphaSet(float alpha) { m_alpha = alpha; }
     /// Gets the alpha multiplier.
-    float GetAlpha() const { return m_alpha; }
+    float AlphaGet() const { return m_alpha; }
 
     // --------- Events
 
@@ -371,12 +371,12 @@ namespace Frames {
     IM_ALL indicates that the frame should accept all kinds of input, and input will not pass to a frame below this one.*/
     enum InputMode { IM_NONE, IM_ALL, IM_COUNT };
     /// Sets the input mode.
-    void SetInputMode(InputMode imode);
+    void InputModeSet(InputMode imode);
     /// Gets the input mode.
-    inline InputMode GetInputMode() const { return m_inputMode; }
+    inline InputMode InputModeSet() const { return m_inputMode; }
 
     /// Returns the environment.
-    Environment *GetEnvironment() const { return m_env; }
+    Environment *EnvironmentGet() const { return m_env; }
 
     // --------- Lua
 
@@ -396,11 +396,11 @@ namespace Frames {
     /** Default sizing is used for frames that semantically have a "normal" size, but may be resized arbitrary by the user. The frame will fall back to the default size if its size is left undefined otherwise (either via explicit sizing or via sufficient linking to fix the size.)
 
     This should generally not be exposed to the end-user of a class - it is intended as an internal implementation tool. */
-    void SetSizeDefault(Axis axis, float size);
-    /// Set default width. See SetSizeDefault for details.
-    void SetWidthDefault(float size) { return SetSizeDefault(X, size); }
-    /// Set default height. See SetSizeDefault for details.
-    void SetHeightDefault(float size) { return SetSizeDefault(Y, size); }
+    void SizeDefaultSet(Axis axis, float size);
+    /// Set default width. See SizeDefaultSet for details.
+    void WidthDefaultSet(float size) { return SizeDefaultSet(X, size); }
+    /// Set default height. See SizeDefaultSet for details.
+    void HeightDefaultSet(float size) { return SizeDefaultSet(Y, size); }
 
     /// Called when this frame is rendered.
     /** Overload this to create your own frame types. Must call (super)::RenderElement before it does its own work. */
@@ -413,7 +413,7 @@ namespace Frames {
     virtual void RenderElementPostChild(detail::Renderer *renderer) const {};
 
     // Lua
-    virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, GetStaticType()); } // see Layout::luaF_Register for what yours should look like
+    virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, TypeStaticGet()); } // see Layout::luaF_Register for what yours should look like
     void luaF_RegisterWorker(lua_State *L, const char *name) const;
 
     static void luaF_RegisterFunctions(lua_State *L);
@@ -427,36 +427,36 @@ namespace Frames {
     // These need to be defined here because Layout actually contains the implementation, but the documentation and function definitions need to show up in frame.h for the sake of documentation.
     // This is a bit ugly, but thankfully they can all be inlined.
     // zinternal prefix so they show up at the bottom of sorting, in either case-sensitive or case-insensitive mode.
-    void zinternalSetPin(Axis axis, float mypt, const Layout *link, float theirpt, float offset = 0.f);
-    void zinternalClearPin(Axis axis, float mypt);
-    void zinternalClearPin(Anchor anchor);
-    void zinternalClearPinAll(Axis axis);
+    void zinternalPinSet(Axis axis, float mypt, const Layout *link, float theirpt, float offset = 0.f);
+    void zinternalPinClear(Axis axis, float mypt);
+    void zinternalPinClear(Anchor anchor);
+    void zinternalPinClearAll(Axis axis);
 
-    void zinternalSetPin(Anchor myanchor, const Layout *link, Anchor theiranchor);
-    void zinternalSetPin(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs);
-    void zinternalSetPin(Anchor myanchor, const Layout *link, float theirx, float theiry);
-    void zinternalSetPin(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs);
-    void zinternalSetPin(float myx, float myy, const Layout *link, Anchor theiranchor);
-    void zinternalSetPin(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs);
-    void zinternalSetPin(float myx, float myy, const Layout *link, float theirx, float theiry);
-    void zinternalSetPin(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs);
+    void zinternalPinSet(Anchor myanchor, const Layout *link, Anchor theiranchor);
+    void zinternalPinSet(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs);
+    void zinternalPinSet(Anchor myanchor, const Layout *link, float theirx, float theiry);
+    void zinternalPinSet(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs);
+    void zinternalPinSet(float myx, float myy, const Layout *link, Anchor theiranchor);
+    void zinternalPinSet(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs);
+    void zinternalPinSet(float myx, float myy, const Layout *link, float theirx, float theiry);
+    void zinternalPinSet(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs);
 
-    void zinternalSetSize(Axis axis, float size);
-    void zinternalSetWidth(float size) { return zinternalSetSize(X, size); }
-    void zinternalSetHeight(float size) { return zinternalSetSize(Y, size); }
-    void zinternalClearSize(Axis axis);
+    void zinternalSizeSet(Axis axis, float size);
+    void zinternalWidthSet(float size) { return zinternalSizeSet(X, size); }
+    void zinternalHeightSet(float size) { return zinternalSizeSet(Y, size); }
+    void zinternalSizeClear(Axis axis);
 
-    void zinternalClearConstraintAll();
+    void zinternalConstraintClearAll();
 
-    void zinternalSetParent(Layout *layout);
+    void zinternalParentSet(Layout *layout);
 
-    void zinternalSetName(const std::string &name) { m_name = name; }
+    void zinternalNameSet(const std::string &name) { m_name = name; }
 
-    void zinternalSetLayer(float layer);
-    float zinternalGetLayer() const { return m_layer; }
+    void zinternalLayerSet(float layer);
+    float zinternalLayerGet() const { return m_layer; }
 
-    void zinternalSetImplementation(bool implementation);
-    bool zinternalGetImplementation() const { return m_implementation; }
+    void zinternalImplementationSet(bool implementation);
+    bool zinternalImplementationGet() const { return m_implementation; }
 
     void zinternalObliterate();
 
@@ -468,16 +468,16 @@ namespace Frames {
     void Render(detail::Renderer *renderer) const;
 
     // Mask-related
-    void SetFullMouseMasking(bool mask) { m_fullMouseMasking = mask; }
-    bool GetFullMouseMasking() { return m_fullMouseMasking; }
-    virtual bool TestMouseMasking(float x, float y) { return true; }
+    void MouseMaskingFullSet(bool mask) { m_fullMouseMasking = mask; }
+    bool MouseMaskingFullGet() { return m_fullMouseMasking; }
+    virtual bool MouseMaskingTest(float x, float y) { return true; }
 
     // Layout engine - note that this is used heavily by Frame!
     void Invalidate(Axis axis);
-    void Obliterate_Detach(); // Detach this layout from all layouts
-    void Obliterate_Extract();  // Detach everything that refers to this layout
-    void Obliterate_Extract_Axis(Axis axis);  // Detach everything that refers to this axis
-    void Obliterate_Extract_From(Axis axis, const Layout *layout);
+    void ObliterateDetach(); // Detach this layout from all layouts
+    void ObliterateExtract();  // Detach everything that refers to this layout
+    void ObliterateExtractAxis(Axis axis);  // Detach everything that refers to this axis
+    void ObliterateExtractFrom(Axis axis, const Layout *layout);
     void Resolve();
     struct AxisData {
       AxisData() : size_cached(detail::Undefined), size_set(detail::Undefined), size_default(40) { };
@@ -516,8 +516,8 @@ namespace Frames {
     Layout *m_parent;
     bool m_visible;
     ChildrenList m_children;  // Authoritative
-    ChildrenList m_children_implementation; // Provided only for GetChildren
-    ChildrenList m_children_nonimplementation; // Provided only for GetChildren
+    ChildrenList m_children_implementation; // Provided only for ChildrenGet
+    ChildrenList m_children_nonimplementation; // Provided only for ChildrenGet
 
     // Rendering effects
     float m_alpha;
@@ -545,20 +545,20 @@ namespace Frames {
     Environment *m_env;
 
     // Lua bindings
-    static int luaF_GetLeft(lua_State *L);
-    static int luaF_GetRight(lua_State *L);
-    static int luaF_GetTop(lua_State *L);
-    static int luaF_GetBottom(lua_State *L);
-    static int luaF_GetBounds(lua_State *L);
+    static int luaF_LeftGet(lua_State *L);
+    static int luaF_RightGet(lua_State *L);
+    static int luaF_TopGet(lua_State *L);
+    static int luaF_BottomGet(lua_State *L);
+    static int luaF_BoundsGet(lua_State *L);
 
-    static int luaF_GetWidth(lua_State *L);
-    static int luaF_GetHeight(lua_State *L);
+    static int luaF_WidthGet(lua_State *L);
+    static int luaF_HeightGet(lua_State *L);
 
-    static int luaF_GetChildren(lua_State *L);
+    static int luaF_ChildrenGet(lua_State *L);
 
     static int luaF_NameGet(lua_State *L);
-    static int luaF_NameGetFull(lua_State *L);
-    static int luaF_GetType(lua_State *L);
+    static int luaF_NameFullGet(lua_State *L);
+    static int luaF_TypeGet(lua_State *L);
     
     static int luaF_EventAttach(lua_State *L);
     static int luaF_EventDetach(lua_State *L);
@@ -568,17 +568,17 @@ namespace Frames {
 
   // Debug code
   #ifdef _MSC_VER
-    #define FRAMES_LAYOUT_ASSERT(x, errstring, ...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(detail::Format(errstring, __VA_ARGS__))))
-    #define FRAMES_LAYOUT_CHECK(x, errstring, ...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(detail::Format(errstring, __VA_ARGS__))))
+    #define FRAMES_LAYOUT_ASSERT(x, errstring, ...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (EnvironmentGet()->LogError(detail::Format(errstring, __VA_ARGS__))))
+    #define FRAMES_LAYOUT_CHECK(x, errstring, ...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (EnvironmentGet()->LogError(detail::Format(errstring, __VA_ARGS__))))
 
-    #define FRAMES_ERROR(...) GetEnvironment()->LogError(detail::Format(__VA_ARGS__))
-    #define FRAMES_DEBUG(...) GetEnvironment()->LogDebug(detail::Format(__VA_ARGS__))
+    #define FRAMES_ERROR(...) EnvironmentGet()->LogError(detail::Format(__VA_ARGS__))
+    #define FRAMES_DEBUG(...) EnvironmentGet()->LogDebug(detail::Format(__VA_ARGS__))
   #else
-    #define FRAMES_LAYOUT_ASSERT(x, errstring, args...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(detail::Format(errstring, ## args))))
-    #define FRAMES_LAYOUT_CHECK(x, errstring, args...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (GetEnvironment()->LogError(detail::Format(errstring, ## args))))
+    #define FRAMES_LAYOUT_ASSERT(x, errstring, args...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (EnvironmentGet()->LogError(detail::Format(errstring, ## args))))
+    #define FRAMES_LAYOUT_CHECK(x, errstring, args...) (FRAMES_EXPECT(!!(x), 1) ? (void)(1) : (EnvironmentGet()->LogError(detail::Format(errstring, ## args))))
 
-    #define FRAMES_ERROR(args...) GetEnvironment()->LogError(detail::Format(args))
-    #define FRAMES_DEBUG(args...) GetEnvironment()->LogDebug(detail::Format(args))
+    #define FRAMES_ERROR(args...) EnvironmentGet()->LogError(detail::Format(args))
+    #define FRAMES_DEBUG(args...) EnvironmentGet()->LogDebug(detail::Format(args))
   #endif
 }
 

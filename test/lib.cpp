@@ -101,10 +101,10 @@ TestSDLEnvironment::~TestSDLEnvironment() {
   SDL_Quit();
 }
 
-int TestSDLEnvironment::GetWidth() const {
+int TestSDLEnvironment::WidthGet() const {
   return m_width;
 }
-int TestSDLEnvironment::GetHeight() const {
+int TestSDLEnvironment::HeightGet() const {
   return m_height;
 }
 
@@ -165,7 +165,7 @@ TestEnvironment::TestEnvironment(bool startSDL) : m_env(0), m_sdl(0) {
   m_env = new Frames::Environment(config);
 
   if (startSDL) {
-    m_env->ResizeRoot(GetWidth(), GetHeight()); // set this up so we can check coordinates, otherwise we'll currently assume there are no coordinates
+    m_env->ResizeRoot(WidthGet(), HeightGet()); // set this up so we can check coordinates, otherwise we'll currently assume there are no coordinates
   }
 }
 
@@ -232,7 +232,7 @@ void TestSnapshot(TestEnvironment &env) {
   // Do the render
   glClearColor(0, 0, 0, 1);
   glClear(GL_COLOR_BUFFER_BIT);
-  env->ResizeRoot(env.GetWidth(), env.GetHeight());
+  env->ResizeRoot(env.WidthGet(), env.HeightGet());
   env->Render();
 
   TestNames testNames = GetTestNames("screen", ".png");
@@ -240,17 +240,17 @@ void TestSnapshot(TestEnvironment &env) {
   // We now have our test filename
 
   // Grab a screenshot
-  std::vector<unsigned char> pixels; pixels.resize(4 * env.GetWidth() * env.GetHeight());
+  std::vector<unsigned char> pixels; pixels.resize(4 * env.WidthGet() * env.HeightGet());
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  glReadPixels(0, 0, env.GetWidth(), env.GetHeight(), GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
+  glReadPixels(0, 0, env.WidthGet(), env.HeightGet(), GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
   EXPECT_EQ(GL_NO_ERROR, glGetError());
 
   // Annoyingly, OpenGL reads coordinates in math quadrant order, not scanline order like the rest of the civilized computer world
   // So . . . go ahead and invert the entire array
-  for (int y = 0; y < env.GetHeight() / 2; ++y) {
-    for (int x = 0; x < env.GetWidth() * 4; ++x) {
-      std::swap(pixels[y * env.GetWidth() * 4 + x], pixels[(env.GetHeight() - 1 - y) * env.GetWidth() * 4 + x]);
+  for (int y = 0; y < env.HeightGet() / 2; ++y) {
+    for (int x = 0; x < env.WidthGet() * 4; ++x) {
+      std::swap(pixels[y * env.WidthGet() * 4 + x], pixels[(env.HeightGet() - 1 - y) * env.WidthGet() * 4 + x]);
     }
   }
 
@@ -262,11 +262,11 @@ void TestSnapshot(TestEnvironment &env) {
     {
       Frames::TextureConfig tex = Frames::Loader::PNG::Load(*env, stream);
       EXPECT_EQ(Frames::TextureConfig::RAW, tex.GetMode());
-      EXPECT_EQ(Frames::TextureConfig::MODE_RGBA, tex.Raw_GetType());
+      EXPECT_EQ(Frames::TextureConfig::MODE_RGBA, tex.Raw_TypeGet());
       EXPECT_EQ(4, Frames::TextureConfig::GetBPP(Frames::TextureConfig::MODE_RGBA));
-      EXPECT_EQ(tex.GetWidth() * 4, tex.Raw_GetStride());
-      reference.resize(tex.GetWidth() * tex.GetHeight() * 4);
-      memcpy(&reference[0], tex.Raw_GetData(), tex.GetWidth() * tex.GetHeight() * 4);
+      EXPECT_EQ(tex.WidthGet() * 4, tex.Raw_GetStride());
+      reference.resize(tex.WidthGet() * tex.HeightGet() * 4);
+      memcpy(&reference[0], tex.Raw_GetData(), tex.WidthGet() * tex.HeightGet() * 4);
       delete stream;
     }
   }
@@ -283,15 +283,15 @@ void TestSnapshot(TestEnvironment &env) {
     png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
     png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
 
-    png_set_IHDR(png_ptr, info_ptr, env.GetWidth(), env.GetHeight(),
+    png_set_IHDR(png_ptr, info_ptr, env.WidthGet(), env.HeightGet(),
       8, PNG_COLOR_TYPE_RGB_ALPHA, PNG_INTERLACE_NONE,
       PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
     png_write_info(png_ptr, info_ptr);
 
     std::vector<unsigned char *> rows;
-    for (int i = 0; i < env.GetHeight(); ++i) {
-      rows.push_back(&pixels[0] + i * env.GetWidth() * 4);
+    for (int i = 0; i < env.HeightGet(); ++i) {
+      rows.push_back(&pixels[0] + i * env.WidthGet() * 4);
     }
 
     png_write_image(png_ptr, &rows[0]);
@@ -312,7 +312,7 @@ void HaltAndRender(TestEnvironment &env) {
     // Do the render
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT);
-    env->ResizeRoot(env.GetWidth(), env.GetHeight());
+    env->ResizeRoot(env.WidthGet(), env.HeightGet());
     env->Render();
     env.Swap();
     env.HandleEvents();

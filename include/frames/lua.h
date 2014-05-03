@@ -25,7 +25,7 @@ namespace Frames {
     lua_rawget(L, registry);
 
     if (lua_isnil(L, -1)) {
-      luaL_error(L, "Failed to find frame of type %s for parameter %d", T::GetStaticType(), index);
+      luaL_error(L, "Failed to find frame of type %s for parameter %d", T::TypeStaticGet(), index);
     }
 
     luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
@@ -43,8 +43,8 @@ namespace Frames {
     luaL_checktype(L, lua_upvalueindex(1), LUA_TTABLE);
     lua_getfield(L, lua_upvalueindex(1), "id");
     const char *res = luaL_checklstring(L, -1, NULL);
-    if (strcmp(res, T::GetStaticType()) != 0) {
-      luaL_error(L, "Internal error, mismatch in expected registry table %s against actual table %s", T::GetStaticType(), res);
+    if (strcmp(res, T::TypeStaticGet()) != 0) {
+      luaL_error(L, "Internal error, mismatch in expected registry table %s against actual table %s", T::TypeStaticGet(), res);
     }
     lua_pop(L, 1);
 
@@ -55,7 +55,7 @@ namespace Frames {
     if (index < 0) index += lua_gettop(L) + 1;
 
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_rg");
-    lua_getfield(L, -1, T::GetStaticType());
+    lua_getfield(L, -1, T::TypeStaticGet());
 
     T *result = luaF_checkframe_fromregistry<T>(L, index, lua_gettop(L));
 

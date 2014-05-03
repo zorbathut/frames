@@ -14,12 +14,12 @@ namespace Frames {
     return new Mask(name, parent);
   }
 
-  /*static*/ const char *Mask::GetStaticType() {
+  /*static*/ const char *Mask::TypeStaticGet() {
     return "Mask";
   }
 
-  bool Mask::TestMouseMasking(float x, float y) {
-    return x >= GetLeft() && y >= GetTop() && x < GetRight() && y < GetBottom();
+  bool Mask::MouseMaskingTest(float x, float y) {
+    return x >= LeftGet() && y >= TopGet() && x < RightGet() && y < BottomGet();
   }
 
   /*static*/ void Mask::luaF_RegisterFunctions(lua_State *L) {
@@ -29,7 +29,7 @@ namespace Frames {
   void Mask::RenderElementPreChild(detail::Renderer *renderer) const {
     Frame::RenderElementPreChild(renderer);
 
-    renderer->ScissorPush(GetBounds());
+    renderer->ScissorPush(BoundsGet());
   }
 
   void Mask::RenderElementPostChild(detail::Renderer *renderer) const {
@@ -41,7 +41,7 @@ namespace Frames {
   Mask::Mask(const std::string &name, Layout *parent) :
       Frame(name, parent)
   {
-    SetFullMouseMasking(true);
+    MouseMaskingFullSet(true);
   };
   Mask::~Mask() { };
 }

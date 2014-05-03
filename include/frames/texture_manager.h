@@ -53,10 +53,10 @@ namespace Frames {
     class TextureChunk : public Refcountable<TextureChunk> {
       friend class Refcountable<TextureChunk>;
     public:
-      int GetWidth() const { return m_texture_width; }
-      int GetHeight() const { return m_texture_height; }
+      int WidthGet() const { return m_texture_width; }
+      int HeightGet() const { return m_texture_height; }
 
-      const Rect &GetBounds() { return m_bounds; }
+      const Rect &BoundsGet() { return m_bounds; }
 
       GLuint GetGLID() const { return m_backing->GetGLID(); }
 

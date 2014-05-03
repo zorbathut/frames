@@ -49,24 +49,24 @@ TEST(Input, Ordering) {
   Frames::Frame *c = Frames::Frame::Create("c", env->RootGet());
   Frames::Frame *b = Frames::Frame::Create("b", env->RootGet());
 
-  a->SetLayer(0);
-  b->SetLayer(1);
-  c->SetLayer(2);
+  a->LayerSet(0);
+  b->LayerSet(1);
+  c->LayerSet(2);
 
-  a->SetWidth(400);
-  a->SetHeight(300);
-  b->SetWidth(400);
-  b->SetHeight(300);
-  c->SetWidth(400);
-  c->SetHeight(300);
+  a->WidthSet(400);
+  a->HeightSet(300);
+  b->WidthSet(400);
+  b->HeightSet(300);
+  c->WidthSet(400);
+  c->HeightSet(300);
 
   a->SetBackground(Frames::Color(1, 0, 0, 0.8f));
   b->SetBackground(Frames::Color(0, 1, 0, 0.8f));
   c->SetBackground(Frames::Color(0, 0, 1, 0.8f));
 
-  a->SetPin(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 100, 100);
-  b->SetPin(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 200, 200);
-  c->SetPin(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 300, 300);
+  a->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 100, 100);
+  b->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 200, 200);
+  c->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 300, 300);
   
   // Just to make sure this hasn't changed, or we'll be confused
   TestSnapshot(env);
@@ -76,9 +76,9 @@ TEST(Input, Ordering) {
 
   // very thorough testing
   for (int i = 0; i < (1 << 3); ++i) {
-    a->SetInputMode((i & (1 << 0)) ? Frames::Layout::IM_ALL : Frames::Layout::IM_NONE);
-    b->SetInputMode((i & (1 << 1)) ? Frames::Layout::IM_ALL : Frames::Layout::IM_NONE);
-    c->SetInputMode((i & (1 << 2)) ? Frames::Layout::IM_ALL : Frames::Layout::IM_NONE);
+    a->InputModeSet((i & (1 << 0)) ? Frames::Layout::IM_ALL : Frames::Layout::IM_NONE);
+    b->InputModeSet((i & (1 << 1)) ? Frames::Layout::IM_ALL : Frames::Layout::IM_NONE);
+    c->InputModeSet((i & (1 << 2)) ? Frames::Layout::IM_ALL : Frames::Layout::IM_NONE);
 
     VerbLog log;
 
@@ -109,19 +109,19 @@ TEST(Input, Mouse) {
   Frames::Frame *a = Frames::Frame::Create("a", env->RootGet());
   Frames::Frame *b = Frames::Frame::Create("b", env->RootGet());
 
-  a->SetWidth(400);
-  a->SetHeight(300);
-  b->SetWidth(400);
-  b->SetHeight(300);
+  a->WidthSet(400);
+  a->HeightSet(300);
+  b->WidthSet(400);
+  b->HeightSet(300);
 
   a->SetBackground(Frames::Color(1, 0, 0, 0.8f));
   b->SetBackground(Frames::Color(0, 1, 0, 0.8f));
 
-  a->SetPin(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 100, 100);
-  b->SetPin(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 200, 200);
+  a->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 100, 100);
+  b->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 200, 200);
 
-  a->SetInputMode(Frames::Layout::IM_ALL);
-  b->SetInputMode(Frames::Layout::IM_ALL);
+  a->InputModeSet(Frames::Layout::IM_ALL);
+  b->InputModeSet(Frames::Layout::IM_ALL);
 
   // Just to make sure this hasn't changed, or we'll be confused
   TestSnapshot(env);

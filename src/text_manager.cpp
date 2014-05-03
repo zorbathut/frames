@@ -158,7 +158,7 @@ namespace Frames {
         } else {
           linewidth += m_characters.back()->GetAdvance();
           if (m_characters.back()->GetTexture()) {
-            lastadjust = m_characters.back()->GetAdvance() - m_characters.back()->GetTexture()->GetWidth();
+            lastadjust = m_characters.back()->GetAdvance() - m_characters.back()->GetTexture()->WidthGet();
           } else {
             lastadjust = m_characters.back()->GetAdvance();
           }
@@ -218,8 +218,8 @@ namespace Frames {
       FT_BitmapGlyph bmp = (FT_BitmapGlyph)glyph;
 
       if (bmp && bmp->bitmap.buffer) {
-        m_texture = parent->GetEnvironment()->GetTextureManager()->TextureFromConfig(
-              TextureConfig::CreateUnmanagedRaw(parent->GetEnvironment(), bmp->bitmap.width, bmp->bitmap.rows, TextureConfig::MODE_A, bmp->bitmap.buffer, bmp->bitmap.width),
+        m_texture = parent->EnvironmentGet()->GetTextureManager()->TextureFromConfig(
+              TextureConfig::CreateUnmanagedRaw(parent->EnvironmentGet(), bmp->bitmap.width, bmp->bitmap.rows, TextureConfig::MODE_A, bmp->bitmap.buffer, bmp->bitmap.width),
               parent->GetTexture()
         );
 
@@ -264,7 +264,7 @@ namespace Frames {
           m_coordinates.push_back(Vector(tx, ty));
 
           tx = 0;
-          ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
+          ty = ty + m_parent->ParentGet()->GetLineHeight(m_parent->SizeGet());
           ty = (float)(int)std::floor(ty + 0.5f); // again we're back to the pixel subsampling nightmare
         
           continue;
@@ -278,7 +278,7 @@ namespace Frames {
         // calculate the distance this character will go
         float charbound = tx;
         if (chr->GetTexture()) {
-          charbound += chr->GetTexture()->GetWidth();
+          charbound += chr->GetTexture()->WidthGet();
         }
 
         if (wordwrap && charbound > width) {
@@ -296,7 +296,7 @@ namespace Frames {
               // Do a forced line break, take this character, drop it at the beginning of the next word.
               // If the word is too long and this character is too long, then we just plop it down anyway because we don't have a realistic choice.
               tx = 0;
-              ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
+              ty = ty + m_parent->ParentGet()->GetLineHeight(m_parent->SizeGet());
               ty = (float)(int)std::floor(ty + 0.5f);
 
               m_coordinates.push_back(Vector(tx, ty));
@@ -310,7 +310,7 @@ namespace Frames {
             // This word isn't too long, so we'll transplant the entire word to the next line. We know this will work without linewrapping because it was long enough to fit on this line.
             currentWordStartX = 0;
             tx = 0;
-            ty = ty + m_parent->GetParent()->GetLineHeight(m_parent->GetSize());
+            ty = ty + m_parent->ParentGet()->GetLineHeight(m_parent->SizeGet());
             ty = (float)(int)std::floor(ty + 0.5f);
             m_lines.push_back(currentWordStartIndex);
 
@@ -345,7 +345,7 @@ namespace Frames {
 
       m_coordinates.push_back(Vector(tx, ty)); // TODO: remove, generate when generating cursor positions? Or use an entirely separate lookup?
 
-      m_fullHeight = ty + m_parent->GetParent()->GetLineHeightFirst(m_parent->GetSize());
+      m_fullHeight = ty + m_parent->ParentGet()->GetLineHeightFirst(m_parent->SizeGet());
     }
 
     TextLayout::~TextLayout() {
@@ -375,7 +375,7 @@ namespace Frames {
         if (character->GetTexture()) {
           Vector origin = Vector(bounds.s.x + m_coordinates[i].x - offset.x, bounds.s.y + m_coordinates[i].y - offset.y);
         
-          if (Renderer::WriteCroppedTexRect(vertex, Rect(origin, origin + Vector((float)character->GetTexture()->GetWidth(), (float)character->GetTexture()->GetHeight())), character->GetTexture()->GetBounds(), color, bounds)) {
+          if (Renderer::WriteCroppedTexRect(vertex, Rect(origin, origin + Vector((float)character->GetTexture()->WidthGet(), (float)character->GetTexture()->HeightGet())), character->GetTexture()->BoundsGet(), color, bounds)) {
             cquad++;
           }
         }
@@ -389,7 +389,7 @@ namespace Frames {
     Vector TextLayout::GetCoordinateFromCharacter(int character) const {
       Vector coord = m_coordinates[character];
       if (character + 1 != (int)m_coordinates.size()) {
-        CharacterInfo *chr = GetParent()->GetCharacter(character).Get();
+        CharacterInfo *chr = ParentGet()->GetCharacter(character).Get();
         coord.x -= chr->GetOffsetX();
         coord.y -= chr->GetOffsetY();
       }
@@ -399,7 +399,7 @@ namespace Frames {
     int TextLayout::GetCharacterFromCoordinate(const Vector &pt) const {
       // yeah we're just going to go mad right here
       Vector lpt = detail::Clamp(pt, Vector(0, 0), Vector(m_width, m_fullHeight));
-      int line = std::min(int(lpt.y / GetParent()->GetParent()->GetLineHeight(GetParent()->GetSize())), (int)m_lines.size());
+      int line = std::min(int(lpt.y / ParentGet()->ParentGet()->GetLineHeight(ParentGet()->SizeGet())), (int)m_lines.size());
 
       int s = 0;
       if (line)

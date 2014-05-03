@@ -29,13 +29,13 @@ namespace Frames {
 
     Mode GetMode() const { return m_mode; }
 
-    int GetWidth() const { return m_width; }
-    int GetHeight() const { return m_height; }
+    int WidthGet() const { return m_width; }
+    int HeightGet() const { return m_height; }
 
     unsigned char *Raw_GetData() { return m_raw_data; }
     const unsigned char *Raw_GetData() const { return m_raw_data; }
     int Raw_GetStride() const { return m_raw_stride; }
-    Type Raw_GetType() const { return m_raw_type; }
+    Type Raw_TypeGet() const { return m_raw_type; }
 
   private:
     Mode m_mode;

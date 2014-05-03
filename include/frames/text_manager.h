@@ -68,7 +68,7 @@ namespace Frames {
 
       float GetKerning(float size, int char1, int char2);
 
-      Environment *GetEnvironment() { return m_env; }
+      Environment *EnvironmentGet() { return m_env; }
     private:
       ~FontInfo();
 
@@ -103,7 +103,7 @@ namespace Frames {
     public:
       TextInfo(FontInfoPtr parent, float size, std::string text);
 
-      FontInfo *GetParent() const { return m_parent.Get(); }
+      FontInfo *ParentGet() const { return m_parent.Get(); }
       TextLayoutPtr GetLayout(float width, bool wordwrap);
 
       float GetFullWidth() const { return m_fullWidth; }
@@ -114,7 +114,7 @@ namespace Frames {
       float GetKerning(int index) const { return m_kerning[index]; }
       int GetQuads() const { return m_quads; }
 
-      float GetSize() const { return m_size; }
+      float SizeGet() const { return m_size; }
 
       void ShutdownLayout(TextLayout *layout);
     private:
@@ -173,7 +173,7 @@ namespace Frames {
     public:
       TextLayout(TextInfoPtr parent, float width, bool wordwrap);
 
-      TextInfo *GetParent() const { return m_parent.Get(); }
+      TextInfo *ParentGet() const { return m_parent.Get(); }
 
       float GetFullHeight() const { return m_fullHeight; }
 

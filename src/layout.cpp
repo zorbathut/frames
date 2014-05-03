@@ -51,11 +51,11 @@ namespace Frames {
 
   detail::Rtti Layout::s_rtti(0); // special case, null terminator; other examples should use FRAMES_DEFINE_RTTI
 
-  /*static*/ const char *Layout::GetStaticType() {
+  /*static*/ const char *Layout::TypeStaticGet() {
     return "Layout";
   }
 
-  float Layout::GetPoint(Axis axis, float pt) const {
+  float Layout::PointGet(Axis axis, float pt) const {
     if (!(axis == X || axis == Y)) {
       FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
       return 0.f;
@@ -78,7 +78,7 @@ namespace Frames {
       if (axa.link) {
         m_env->LayoutStack_Push(this, axis, pt);
         axa.cached = detail::Processing; // seed it with processing so we'll exit if this turns out to be an infinite loop
-        axa.cached = axa.link->GetPoint(axis, axa.point_link) + axa.offset;
+        axa.cached = axa.link->PointGet(axis, axa.point_link) + axa.offset;
         m_env->LayoutStack_Pop();
         return axa.cached;
       }
@@ -100,7 +100,7 @@ namespace Frames {
       if (axb.link) {
         m_env->LayoutStack_Push(this, axis, pt);
         axb.cached = detail::Processing; // seed it with processing so we'll exit if this turns out to be an infinite loop
-        axb.cached = axb.link->GetPoint(axis, axb.point_link) + axb.offset;
+        axb.cached = axb.link->PointGet(axis, axb.point_link) + axb.offset;
         m_env->LayoutStack_Pop();
         return axb.cached;
       }
@@ -116,7 +116,7 @@ namespace Frames {
     // 1 vertex, size: Place as appropriate
     // 2 vertices, no size: Calculate size (we'll need it anyway) and defer to "1 vertex, size"
     // In other words, the only cases we actually care about are "0 vertices, size" and "1 vertex, size"
-    // In all cases, we assume size exists via GetSize() - the only question is whether we have a vertex or not
+    // In all cases, we assume size exists via SizeGet() - the only question is whether we have a vertex or not
 
     // It's worth noting that we're guaranteed to validate our size while doing this, which means that anything deriving its info from us *will* be properly invalidated later if necessary
 
@@ -131,23 +131,23 @@ namespace Frames {
     // 0 vertices, size
     if (detail::IsUndefined(connect->point_mine)) {
       m_env->LayoutStack_Push(this, axis, pt);
-      float rv = pt * GetSize(axis);
+      float rv = pt * SizeGet(axis);
       m_env->LayoutStack_Pop();
       return rv;
     }
 
     // 1 vertex, size
     m_env->LayoutStack_Push(this, axis, pt);
-    float rv = GetPoint(axis, connect->point_mine) + (pt - connect->point_mine) * GetSize(axis);
+    float rv = PointGet(axis, connect->point_mine) + (pt - connect->point_mine) * SizeGet(axis);
     m_env->LayoutStack_Pop();
     return rv;
   }
 
-  Rect Layout::GetBounds() const {
-    return Rect(GetLeft(), GetTop(), GetRight(), GetBottom());
+  Rect Layout::BoundsGet() const {
+    return Rect(LeftGet(), TopGet(), RightGet(), BottomGet());
   }
 
-  float Layout::GetSize(Axis axis) const {
+  float Layout::SizeGet(Axis axis) const {
     if (!(axis == X || axis == Y)) {
       FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
       return 0.f;
@@ -179,8 +179,8 @@ namespace Frames {
       // Woo! We can calculate from here
       m_env->LayoutStack_Push(this, axis);
       ax.size_cached = detail::Processing; // seed it with processing so we'll exit if this turns out to be an infinite loop
-      float a = GetPoint(axis, axa.point_mine);
-      float b = GetPoint(axis, axb.point_mine);
+      float a = PointGet(axis, axa.point_mine);
+      float b = PointGet(axis, axb.point_mine);
       m_env->LayoutStack_Pop();
 
       ax.size_cached = (a - b) / (axa.point_mine - axb.point_mine);
@@ -193,16 +193,16 @@ namespace Frames {
   }
 
   Layout *Layout::LayoutUnderGet(float x, float y) {
-    if (!GetVisible()) return 0; // nope
+    if (!VisibleGet()) return 0; // nope
 
-    if (m_fullMouseMasking && !TestMouseMasking(x, y)) return 0;
+    if (m_fullMouseMasking && !MouseMaskingTest(x, y)) return 0;
 
     for (ChildrenList::const_reverse_iterator itr = m_children.rbegin(); itr != m_children.rend(); ++itr) {
       Layout *prv = (*itr)->LayoutUnderGet(x, y);
       if (prv) return prv;
     }
 
-    if (m_inputMode && x >= GetLeft() && y >= GetTop() && x < GetRight() && y < GetBottom()) {
+    if (m_inputMode && x >= LeftGet() && y >= TopGet() && x < RightGet() && y < BottomGet()) {
       return this;
     }
 
@@ -276,11 +276,11 @@ namespace Frames {
 
       // Next, let's set the metatable to the one that's stored
       lua_getfield(L, LUA_REGISTRYINDEX, "Frames_mt");
-      lua_getfield(L, -1, GetType());
+      lua_getfield(L, -1, TypeGet());
 
       if (lua_isnil(L, -1)) {
         // fffff
-        FRAMES_ERROR("Attempting to push unregistered frame type %s", GetType());
+        FRAMES_ERROR("Attempting to push unregistered frame type %s", TypeGet());
       } // guess we'll just go with it, though
 
       lua_setmetatable(L, -3);
@@ -425,7 +425,7 @@ namespace Frames {
     m_env->DestroyingLayout(this);
   }
 
-  void Layout::zinternalSetPin(Axis axis, float mypt, const Layout *link, float linkpt, float offset /*= 0.f*/) {
+  void Layout::zinternalPinSet(Axis axis, float mypt, const Layout *link, float linkpt, float offset /*= 0.f*/) {
     if (link && link->m_env != m_env) {
       FRAMES_LAYOUT_CHECK(false, "Attempted to constrain a frame to a frame from another environment");
       return;
@@ -533,7 +533,7 @@ namespace Frames {
     return;
   }
 
-  void Layout::zinternalClearPin(Axis axis, float mypt) {
+  void Layout::zinternalPinClear(Axis axis, float mypt) {
     if (!(axis == X || axis == Y)) {
       FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
       return;
@@ -580,22 +580,22 @@ namespace Frames {
     // If we didn't actually clear anything, no sweat, no need to invalidate
   }
 
-  void Layout::zinternalClearPin(Anchor anchor) {
+  void Layout::zinternalPinClear(Anchor anchor) {
     if (anchor < 0 || anchor >= ANCHOR_COUNT) {
       FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
       return;
     }
 
     if (!detail::IsNil(detail::c_anchorLookup[anchor].x)) {
-      zinternalClearPin(X, detail::c_anchorLookup[anchor].x);
+      zinternalPinClear(X, detail::c_anchorLookup[anchor].x);
     }
 
     if (!detail::IsNil(detail::c_anchorLookup[anchor].y)) {
-      zinternalClearPin(Y, detail::c_anchorLookup[anchor].y);
+      zinternalPinClear(Y, detail::c_anchorLookup[anchor].y);
     }
   }
 
-  void Layout::zinternalClearPinAll(Axis axis) {
+  void Layout::zinternalPinClearAll(Axis axis) {
     if (!(axis == X || axis == Y)) {
       FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
       return;
@@ -605,20 +605,20 @@ namespace Frames {
 
     AxisData::Connector &axa = ax.connections[0];
     if (!detail::IsUndefined(axa.point_mine)) {
-      zinternalClearPin(axis, axa.point_mine);
+      zinternalPinClear(axis, axa.point_mine);
     }
 
     AxisData::Connector &axb = ax.connections[1];
     if (!detail::IsUndefined(axb.point_mine)) {
-      zinternalClearPin(axis, axb.point_mine);
+      zinternalPinClear(axis, axb.point_mine);
     }
 
-    zinternalClearSize(axis);
+    zinternalSizeClear(axis);
   }
 
-  // SetPin adapters
+  // PinSet adapters
   // All the anchor versions just transform themselves into no-anchor versions first
-  void Layout::zinternalSetPin(Anchor myanchor, const Layout *link, Anchor theiranchor) {
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, Anchor theiranchor) {
     if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
       FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
       return;
@@ -629,9 +629,9 @@ namespace Frames {
       return;
     }
 
-    zinternalSetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
+    zinternalPinSet(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
   }
-  void Layout::zinternalSetPin(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
     if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
       FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
       return;
@@ -642,115 +642,115 @@ namespace Frames {
       return;
     }
     
-    zinternalSetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
+    zinternalPinSet(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
   }
   
-  void Layout::zinternalSetPin(Anchor myanchor, const Layout *link, float theirx, float theiry) {
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, float theirx, float theiry) {
     if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
       FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
       return;
     }
 
-    zinternalSetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry);
+    zinternalPinSet(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry);
   }
-  void Layout::zinternalSetPin(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
     if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
       FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
       return;
     }
     
-    zinternalSetPin(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
+    zinternalPinSet(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
   }
 
-  void Layout::zinternalSetPin(float myx, float myy, const Layout *link, Anchor theiranchor) {
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, Anchor theiranchor) {
     if (theiranchor < 0 || theiranchor >= ANCHOR_COUNT) {
       FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
       return;
     }
 
-    zinternalSetPin(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
+    zinternalPinSet(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
   }
-  void Layout::zinternalSetPin(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
     if (theiranchor < 0 || theiranchor >= ANCHOR_COUNT) {
       FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
       return;
     }
 
-    zinternalSetPin(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
+    zinternalPinSet(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
   }
 
-  void Layout::zinternalSetPin(float myx, float myy, const Layout *link, float theirx, float theiry) {
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, float theirx, float theiry) {
     if (detail::IsNil(myx) && detail::IsNil(myy)) {
-      FRAMES_LAYOUT_CHECK(false, "SetPin not provided with any pin axes");
+      FRAMES_LAYOUT_CHECK(false, "PinSet not provided with any pin axes");
       return;
     }
 
     if (!link) {
-      FRAMES_LAYOUT_CHECK(false, "SetPin requires offsets when linking to origin");
+      FRAMES_LAYOUT_CHECK(false, "PinSet requires offsets when linking to origin");
       return;
     }
 
     if (detail::IsNil(myx) != detail::IsNil(theirx)) {
-      FRAMES_LAYOUT_CHECK(false, "SetPin provided with only one pin position for X axis");
+      FRAMES_LAYOUT_CHECK(false, "PinSet provided with only one pin position for X axis");
       return;
     }
 
     if (detail::IsNil(myy) != detail::IsNil(theiry)) {
-      FRAMES_LAYOUT_CHECK(false, "SetPin provided with only one pin position for Y axis");
+      FRAMES_LAYOUT_CHECK(false, "PinSet provided with only one pin position for Y axis");
       return;
     }
 
     if (!detail::IsNil(myx)) {
-      zinternalSetPin(X, myx, link, theirx);
+      zinternalPinSet(X, myx, link, theirx);
     }
 
     if (!detail::IsNil(myy)) {
-      zinternalSetPin(Y, myy, link, theiry);
+      zinternalPinSet(Y, myy, link, theiry);
     }
   }
-  void Layout::zinternalSetPin(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
     if (detail::IsNil(myx) && detail::IsNil(myy)) {
-      FRAMES_LAYOUT_CHECK(false, "SetPin not provided with any pin axes");
+      FRAMES_LAYOUT_CHECK(false, "PinSet not provided with any pin axes");
       return;
     }
 
     if (link) {
       if (detail::IsNil(myx) != detail::IsNil(theirx)) {
-        FRAMES_LAYOUT_CHECK(false, "SetPin provided with only one pin position for X axis");
+        FRAMES_LAYOUT_CHECK(false, "PinSet provided with only one pin position for X axis");
         return;
       }
 
       if (detail::IsNil(myy) != detail::IsNil(theiry)) {
-        FRAMES_LAYOUT_CHECK(false, "SetPin provided with only one pin position for Y axis");
+        FRAMES_LAYOUT_CHECK(false, "PinSet provided with only one pin position for Y axis");
         return;
       }
     } else {
       if (!detail::IsNil(theirx) != !detail::IsNil(theiry)) {
-        FRAMES_LAYOUT_CHECK(false, "SetPin must have nil target anchor points when linking to origin");
+        FRAMES_LAYOUT_CHECK(false, "PinSet must have nil target anchor points when linking to origin");
         return;
       }
     }
 
     if (detail::IsNil(myx) != detail::IsNil(xofs)) {
-      FRAMES_LAYOUT_CHECK(false, "SetPin provided with only one of destination-point and offset for X axis");
+      FRAMES_LAYOUT_CHECK(false, "PinSet provided with only one of destination-point and offset for X axis");
       return;
     }
 
     if (detail::IsNil(myy) != detail::IsNil(yofs)) {
-      FRAMES_LAYOUT_CHECK(false, "SetPin provided with only one of destination-point and offset for Y axis");
+      FRAMES_LAYOUT_CHECK(false, "PinSet provided with only one of destination-point and offset for Y axis");
       return;
     }
 
     if (!detail::IsNil(myx)) {
-      zinternalSetPin(X, myx, link, theirx, xofs);
+      zinternalPinSet(X, myx, link, theirx, xofs);
     }
 
     if (!detail::IsNil(myy)) {
-      zinternalSetPin(Y, myy, link, theiry, yofs);
+      zinternalPinSet(Y, myy, link, theiry, yofs);
     }
   }
 
-  void Layout::zinternalSetSize(Axis axis, float size) {
+  void Layout::zinternalSizeSet(Axis axis, float size) {
     if (!(axis == X || axis == Y)) {
       FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
       return;
@@ -773,7 +773,7 @@ namespace Frames {
     }
   }
 
-  void Layout::zinternalClearSize(Axis axis) {
+  void Layout::zinternalSizeClear(Axis axis) {
     if (!(axis == X || axis == Y)) {
       FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
       return;
@@ -791,15 +791,15 @@ namespace Frames {
     }
   }
 
-  void Layout::zinternalClearConstraintAll() {
-    zinternalClearSize(X);
-    zinternalClearSize(Y);
+  void Layout::zinternalConstraintClearAll() {
+    zinternalSizeClear(X);
+    zinternalSizeClear(Y);
 
-    zinternalClearPinAll(X);
-    zinternalClearPinAll(Y);
+    zinternalPinClearAll(X);
+    zinternalPinClearAll(Y);
   }
 
-  void Layout::SetSizeDefault(Axis axis, float size) {
+  void Layout::SizeDefaultSet(Axis axis, float size) {
     if (!(axis == X || axis == Y)) {
       FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
       return;
@@ -818,18 +818,18 @@ namespace Frames {
     }
   }
 
-  void Layout::zinternalSetParent(Layout *layout) {
+  void Layout::zinternalParentSet(Layout *layout) {
     if (m_parent == layout) {
       return;
     }
 
     if (!layout) {
-      FRAMES_LAYOUT_CHECK(false, ":SetParent() attempted with null parent");
+      FRAMES_LAYOUT_CHECK(false, ":ParentSet() attempted with null parent");
       return;
     }
 
-    if (layout && m_env != layout->GetEnvironment()) {
-      FRAMES_LAYOUT_CHECK(false, ":SetParent() attempted across environment boundaries");
+    if (layout && m_env != layout->EnvironmentGet()) {
+      FRAMES_LAYOUT_CHECK(false, ":ParentSet() attempted across environment boundaries");
       return;
     }
 
@@ -843,7 +843,7 @@ namespace Frames {
     m_parent->ChildAdd(this);
   }
 
-  void Layout::zinternalSetLayer(float layer) {
+  void Layout::zinternalLayerSet(float layer) {
     if (m_layer == layer) {
       return;
     }
@@ -860,7 +860,7 @@ namespace Frames {
     }
   }
 
-  void Layout::zinternalSetImplementation(bool implementation) {
+  void Layout::zinternalImplementationSet(bool implementation) {
     if (m_implementation == implementation) {
       return;
     }
@@ -877,7 +877,7 @@ namespace Frames {
     }
   }
 
-  void Layout::SetVisible(bool visible) {
+  void Layout::VisibleSet(bool visible) {
     if (m_visible == visible) {
       return;
     }
@@ -892,8 +892,8 @@ namespace Frames {
       return;
     }
 
-    Obliterate_Detach();
-    Obliterate_Extract();
+    ObliterateDetach();
+    ObliterateExtract();
   }
 
   bool Layout::EventHookedIs(const VerbBase &event) const {
@@ -915,7 +915,7 @@ namespace Frames {
     return false;
   }
 
-  void Layout::SetInputMode(InputMode imode) {
+  void Layout::InputModeSet(InputMode imode) {
     if (imode < 0 || imode >= IM_COUNT) {
       FRAMES_LAYOUT_CHECK(false, "Input mode is invalid");
       return;
@@ -949,25 +949,25 @@ namespace Frames {
   }
 
   /*static*/ void Layout::luaF_RegisterFunctions(lua_State *L) {
-    luaF_RegisterFunction(L, GetStaticType(), "GetLeft", luaF_GetLeft);
-    luaF_RegisterFunction(L, GetStaticType(), "GetRight", luaF_GetRight);
-    luaF_RegisterFunction(L, GetStaticType(), "GetTop", luaF_GetTop);
-    luaF_RegisterFunction(L, GetStaticType(), "GetBottom", luaF_GetBottom);
-    luaF_RegisterFunction(L, GetStaticType(), "GetBounds", luaF_GetBounds);
+    luaF_RegisterFunction(L, TypeStaticGet(), "LeftGet", luaF_LeftGet);
+    luaF_RegisterFunction(L, TypeStaticGet(), "RightGet", luaF_RightGet);
+    luaF_RegisterFunction(L, TypeStaticGet(), "TopGet", luaF_TopGet);
+    luaF_RegisterFunction(L, TypeStaticGet(), "BottomGet", luaF_BottomGet);
+    luaF_RegisterFunction(L, TypeStaticGet(), "BoundsGet", luaF_BoundsGet);
 
-    luaF_RegisterFunction(L, GetStaticType(), "GetWidth", luaF_GetWidth);
-    luaF_RegisterFunction(L, GetStaticType(), "GetHeight", luaF_GetHeight);
+    luaF_RegisterFunction(L, TypeStaticGet(), "WidthGet", luaF_WidthGet);
+    luaF_RegisterFunction(L, TypeStaticGet(), "HeightGet", luaF_HeightGet);
 
-    luaF_RegisterFunction(L, GetStaticType(), "GetChildren", luaF_GetChildren);
+    luaF_RegisterFunction(L, TypeStaticGet(), "ChildrenGet", luaF_ChildrenGet);
 
-    luaF_RegisterFunction(L, GetStaticType(), "NameGet", luaF_NameGet);
-    luaF_RegisterFunction(L, GetStaticType(), "NameGetFull", luaF_NameGetFull);
-    luaF_RegisterFunction(L, GetStaticType(), "GetType", luaF_GetType);
+    luaF_RegisterFunction(L, TypeStaticGet(), "NameGet", luaF_NameGet);
+    luaF_RegisterFunction(L, TypeStaticGet(), "NameFullGet", luaF_NameFullGet);
+    luaF_RegisterFunction(L, TypeStaticGet(), "TypeGet", luaF_TypeGet);
     
-    luaF_RegisterFunction(L, GetStaticType(), "EventAttach", luaF_EventAttach);
-    luaF_RegisterFunction(L, GetStaticType(), "EventDetach", luaF_EventDetach);
+    luaF_RegisterFunction(L, TypeStaticGet(), "EventAttach", luaF_EventAttach);
+    luaF_RegisterFunction(L, TypeStaticGet(), "EventDetach", luaF_EventDetach);
 
-    luaF_RegisterFunction(L, GetStaticType(), "DebugDumpLayout", luaF_DebugDumpLayout);
+    luaF_RegisterFunction(L, TypeStaticGet(), "DebugDumpLayout", luaF_DebugDumpLayout);
   }
 
   /*static*/ void Layout::luaF_RegisterFunction(lua_State *L, const char *owner, const char *name, int (*func)(lua_State *)) {
@@ -980,12 +980,12 @@ namespace Frames {
 
   void Layout::ChildAdd(Layout *child) {
     m_children.insert(child);
-    (child->zinternalGetImplementation() ? m_children_implementation : m_children_nonimplementation).insert(child);
+    (child->zinternalImplementationGet() ? m_children_implementation : m_children_nonimplementation).insert(child);
   }
 
   void Layout::ChildRemove(Layout *child) {
     m_children.erase(child);
-    (child->zinternalGetImplementation() ? m_children_implementation : m_children_nonimplementation).erase(child);
+    (child->zinternalImplementationGet() ? m_children_implementation : m_children_nonimplementation).erase(child);
   }
 
   void Layout::Render(detail::Renderer *renderer) const {
@@ -995,7 +995,7 @@ namespace Frames {
     }
 
     if (m_visible) {
-      renderer->AlphaPush(GetAlpha());
+      renderer->AlphaPush(AlphaGet());
       RenderElement(renderer);
 
       if (!m_children.empty()) {
@@ -1041,8 +1041,8 @@ namespace Frames {
     }
   }
 
-  void Layout::Obliterate_Detach() {
-    zinternalClearConstraintAll();  // kill my layout to unlink things
+  void Layout::ObliterateDetach() {
+    zinternalConstraintClearAll();  // kill my layout to unlink things
 
     if (m_env->FocusGet() == this) {
       m_env->FocusSet(0);
@@ -1050,14 +1050,14 @@ namespace Frames {
 
     // OBLITERATE ALL CHILDREN.
     for (ChildrenList::const_iterator itr = m_children.begin(); itr != m_children.end(); ++itr) {
-      (*itr)->Obliterate_Detach();
+      (*itr)->ObliterateDetach();
     }
   }
 
-  void Layout::Obliterate_Extract() {
+  void Layout::ObliterateExtract() {
     // at this point, nobody should be referring to me, in theory
-    Obliterate_Extract_Axis(X);
-    Obliterate_Extract_Axis(Y);
+    ObliterateExtractAxis(X);
+    ObliterateExtractAxis(Y);
 
     // but just to make sure
     if (m_env->FocusGet() == this) {
@@ -1069,7 +1069,7 @@ namespace Frames {
       // little dance here 'cause our children are going to be fucking around with our structure
       ChildrenList::const_iterator kill = itr;
       ++itr;
-      (*kill)->Obliterate_Extract();
+      (*kill)->ObliterateExtract();
     }
 
     // Detach ourselves from our parent
@@ -1082,7 +1082,7 @@ namespace Frames {
     delete this;
   }
 
-  void Layout::Obliterate_Extract_Axis(Axis axis) {
+  void Layout::ObliterateExtractAxis(Axis axis) {
     if (!(axis == X || axis == Y)) {
       FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
       return;
@@ -1091,11 +1091,11 @@ namespace Frames {
     const AxisData &ax = m_axes[axis];
     while (!ax.children.empty()) {
       Layout *layout = *ax.children.begin();
-      layout->Obliterate_Extract_From(axis, this);
+      layout->ObliterateExtractFrom(axis, this);
     }
   }
 
-  void Layout::Obliterate_Extract_From(Axis axis, const Layout *layout) {
+  void Layout::ObliterateExtractFrom(Axis axis, const Layout *layout) {
     if (!(axis == X || axis == Y)) {
       FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
       return;
@@ -1110,23 +1110,23 @@ namespace Frames {
 
     if (ax.connections[0].link == layout) {
       FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->DebugNameGet().c_str(), DebugNameGet().c_str(), axis ? 'Y' : 'X', ax.connections[0].point_mine);
-      zinternalClearPin(axis, ax.connections[0].point_mine);
+      zinternalPinClear(axis, ax.connections[0].point_mine);
     }
 
     if (ax.connections[1].link == layout) {
       FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->DebugNameGet().c_str(), DebugNameGet().c_str(), axis ? 'Y' : 'X', ax.connections[1].point_mine);
-      zinternalClearPin(axis, ax.connections[1].point_mine);
+      zinternalPinClear(axis, ax.connections[1].point_mine);
     }
   }
 
   void Layout::Resolve() {
-    float nx = GetLeft();
-    GetRight();
-    float ny = GetTop();
-    GetBottom();
+    float nx = LeftGet();
+    RightGet();
+    float ny = TopGet();
+    BottomGet();
     
-    float nw = GetWidth();
-    float nh = GetHeight();
+    float nw = WidthGet();
+    float nh = HeightGet();
 
     m_resolved = true;
 
@@ -1203,7 +1203,7 @@ namespace Frames {
     int ctop = lua_gettop(L);
     
     // error handler
-    eh->TargetGet()->GetEnvironment()->Lua_PushErrorHandler(L);
+    eh->TargetGet()->EnvironmentGet()->Lua_PushErrorHandler(L);
     
     // get function
     lua_getfield(L, LUA_REGISTRYINDEX, "Frames_fevh");
@@ -1239,7 +1239,7 @@ namespace Frames {
       while (ctar) {
         m_dives.push_back(ctar);
         ctar->Obliterate_Lock();
-        ctar = ctar->GetParent();
+        ctar = ctar->ParentGet();
       }
       m_diveIndex = (int)m_dives.size();
       
@@ -1402,10 +1402,10 @@ namespace Frames {
   }
   
   bool Layout::FrameOrderSorter::operator()(const Layout *lhs, const Layout *rhs) const {
-    if (lhs->zinternalGetImplementation() != rhs->zinternalGetImplementation())
-      return lhs->zinternalGetImplementation() < rhs->zinternalGetImplementation();
-    if (lhs->zinternalGetLayer() != rhs->zinternalGetLayer())
-      return lhs->zinternalGetLayer() < rhs->zinternalGetLayer();
+    if (lhs->zinternalImplementationGet() != rhs->zinternalImplementationGet())
+      return lhs->zinternalImplementationGet() < rhs->zinternalImplementationGet();
+    if (lhs->zinternalLayerGet() != rhs->zinternalLayerGet())
+      return lhs->zinternalLayerGet() < rhs->zinternalLayerGet();
     // they're the same, but we want a consistent sort that won't result in Z-fighting
     return lhs->m_constructionOrder < rhs->m_constructionOrder;
   }
@@ -1469,73 +1469,73 @@ namespace Frames {
     }
   }
 
-  /*static*/ int Layout::luaF_GetLeft(lua_State *L) {
+  /*static*/ int Layout::luaF_LeftGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Layout *self = luaF_checkframe<Layout>(L, 1);
 
-    lua_pushnumber(L, self->GetLeft());
+    lua_pushnumber(L, self->LeftGet());
 
     return 1;
   }
 
-  /*static*/ int Layout::luaF_GetRight(lua_State *L) {
+  /*static*/ int Layout::luaF_RightGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Layout *self = luaF_checkframe<Layout>(L, 1);
 
-    lua_pushnumber(L, self->GetRight());
+    lua_pushnumber(L, self->RightGet());
 
     return 1;
   }
 
-  /*static*/ int Layout::luaF_GetTop(lua_State *L) {
+  /*static*/ int Layout::luaF_TopGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Layout *self = luaF_checkframe<Layout>(L, 1);
 
-    lua_pushnumber(L, self->GetTop());
+    lua_pushnumber(L, self->TopGet());
 
     return 1;
   }
 
-  /*static*/ int Layout::luaF_GetBottom(lua_State *L) {
+  /*static*/ int Layout::luaF_BottomGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Layout *self = luaF_checkframe<Layout>(L, 1);
 
-    lua_pushnumber(L, self->GetBottom());
+    lua_pushnumber(L, self->BottomGet());
 
     return 1;
   }
 
-  /*static*/ int Layout::luaF_GetBounds(lua_State *L) {
+  /*static*/ int Layout::luaF_BoundsGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Layout *self = luaF_checkframe<Layout>(L, 1);
 
-    lua_pushnumber(L, self->GetLeft());
-    lua_pushnumber(L, self->GetTop());
-    lua_pushnumber(L, self->GetRight());
-    lua_pushnumber(L, self->GetBottom());
+    lua_pushnumber(L, self->LeftGet());
+    lua_pushnumber(L, self->TopGet());
+    lua_pushnumber(L, self->RightGet());
+    lua_pushnumber(L, self->BottomGet());
 
     return 4;
   }
 
-  /*static*/ int Layout::luaF_GetWidth(lua_State *L) {
+  /*static*/ int Layout::luaF_WidthGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Layout *self = luaF_checkframe<Layout>(L, 1);
 
-    lua_pushnumber(L, self->GetWidth());
+    lua_pushnumber(L, self->WidthGet());
 
     return 1;
   }
 
-  /*static*/ int Layout::luaF_GetHeight(lua_State *L) {
+  /*static*/ int Layout::luaF_HeightGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Layout *self = luaF_checkframe<Layout>(L, 1);
 
-    lua_pushnumber(L, self->GetHeight());
+    lua_pushnumber(L, self->HeightGet());
 
     return 1;
   }
 
-  /*static*/ int Layout::luaF_GetChildren(lua_State *L) {
+  /*static*/ int Layout::luaF_ChildrenGet(lua_State *L) {
     luaF_checkparams(L, 1, 2);
     Layout *self = luaF_checkframe<Layout>(L, 1);
     bool implementation = false;
@@ -1546,7 +1546,7 @@ namespace Frames {
 
     lua_newtable(L);
 
-    const ChildrenList &children = self->GetChildren(implementation);
+    const ChildrenList &children = self->ChildrenGet(implementation);
     for (ChildrenList::const_iterator itr = children.begin(); itr != children.end(); ++itr) {
       (*itr)->luaF_push(L);
       lua_rawseti(L, -2, (int)lua_objlen(L, -2));
@@ -1564,7 +1564,7 @@ namespace Frames {
     return 1;
   }
 
-  /*static*/ int Layout::luaF_NameGetFull(lua_State *L) {
+  /*static*/ int Layout::luaF_NameFullGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Layout *self = luaF_checkframe<Layout>(L, 1);
 
@@ -1573,11 +1573,11 @@ namespace Frames {
     return 1;
   }
 
-  /*static*/ int Layout::luaF_GetType(lua_State *L)  {
+  /*static*/ int Layout::luaF_TypeGet(lua_State *L)  {
     luaF_checkparams(L, 1);
     Layout *self = luaF_checkframe<Layout>(L, 1);
 
-    lua_pushstring(L, self->GetType());
+    lua_pushstring(L, self->TypeGet());
 
     return 1;
   }

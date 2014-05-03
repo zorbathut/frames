@@ -54,7 +54,7 @@ namespace Frames {
         id = "(unknown lua)";
       }
 
-      item->SetNameDynamic(id);
+      item->NameSetDynamic(id);
     }*/
 
     // Ahoy!
@@ -76,7 +76,7 @@ namespace Frames {
       return;
     }
 
-    lua_getfield(L, -1, T::GetStaticType());
+    lua_getfield(L, -1, T::TypeStaticGet());
     if (!lua_isnil(L, -1)) {
       // In Bizarro world, frame am already registered!
       lua_pop(L, 2);
@@ -102,17 +102,17 @@ namespace Frames {
     // Stack: ... Frames_mt Frames_rg
     
     // See if we've already got a registry table. Used for correlating Lua tables with lightuserdata, we don't need to put anything in it yet
-    lua_getfield(L, -1, T::GetStaticType());
+    lua_getfield(L, -1, T::TypeStaticGet());
     if (lua_isnil(L, -1)) {
       lua_pop(L, 1);
 
       lua_newtable(L);
 
       // TODO: don't include this if we're in release mode
-      lua_pushstring(L, T::GetStaticType());
+      lua_pushstring(L, T::TypeStaticGet());
       lua_setfield(L, -2, "id");
 
-      lua_setfield(L, -2, T::GetStaticType());
+      lua_setfield(L, -2, T::TypeStaticGet());
     } else {
       LogError("Registry table already exists, but the metatable didn't? This should not happen ever");
       lua_pop(L, 1);
@@ -161,7 +161,7 @@ namespace Frames {
     // Stack: ... Frames_mt Frames_rg Frames_fevh Frames_rfevh Frames_cfevh metatable
 
     // Register the metatable
-    lua_setfield(L, -6, T::GetStaticType());
+    lua_setfield(L, -6, T::TypeStaticGet());
 
     // Stack: ... Frames_mt Frames_rg Frames_fevh Frames_rfevh Frames_cfevh
 
@@ -183,7 +183,7 @@ namespace Frames {
 
     // Stack: ... globalFrame
 
-    lua_getfield(L, -1, T::GetStaticType());
+    lua_getfield(L, -1, T::TypeStaticGet());
     if (!lua_isnil(L, -1)) {
       // well okay I guess we're done
       lua_pop(L, 2);
@@ -216,7 +216,7 @@ namespace Frames {
 
     // Insert function
     lua_pushcclosure(L, &luaF_frameCreate<T>, 1);
-    lua_setfield(L, -3, T::GetStaticType());
+    lua_setfield(L, -3, T::TypeStaticGet());
 
     // Stack: ... globalFrame Frames_rg
 

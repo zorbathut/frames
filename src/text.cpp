@@ -17,7 +17,7 @@ namespace Frames {
     return new Text(name, parent);
   }
 
-  /*static*/ const char *Text::GetStaticType() {
+  /*static*/ const char *Text::TypeStaticGet() {
     return "Text";
   }
 
@@ -40,7 +40,7 @@ namespace Frames {
     }
   }
 
-  void Text::SetSize(float size) {
+  void Text::SizeSet(float size) {
     if (m_size != size) {
       m_size = size;
 
@@ -66,8 +66,8 @@ namespace Frames {
     
     // kill focus if we no longer need to be focused
     if (interactive == INTERACTIVE_NONE) {
-      if (GetEnvironment()->FocusGet() == this) {
-        GetEnvironment()->FocusSet(0);
+      if (EnvironmentGet()->FocusGet() == this) {
+        EnvironmentGet()->FocusSet(0);
       }
     }
 
@@ -150,38 +150,38 @@ namespace Frames {
   /*static*/ void Text::luaF_RegisterFunctions(lua_State *L) {
     Frame::luaF_RegisterFunctions(L);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetText", luaF_SetText);
-    luaF_RegisterFunction(L, GetStaticType(), "GetText", luaF_GetText);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SetText", luaF_SetText);
+    luaF_RegisterFunction(L, TypeStaticGet(), "GetText", luaF_GetText);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetFont", luaF_SetFont);
-    luaF_RegisterFunction(L, GetStaticType(), "GetFont", luaF_GetFont);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SetFont", luaF_SetFont);
+    luaF_RegisterFunction(L, TypeStaticGet(), "GetFont", luaF_GetFont);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetSize", luaF_SetSize);
-    luaF_RegisterFunction(L, GetStaticType(), "GetSize", luaF_GetSize);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SizeSet", luaF_SizeSet);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SizeGet", luaF_SizeGet);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetWordwrap", luaF_SetWordwrap);
-    luaF_RegisterFunction(L, GetStaticType(), "GetWordwrap", luaF_GetWordwrap);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SetWordwrap", luaF_SetWordwrap);
+    luaF_RegisterFunction(L, TypeStaticGet(), "GetWordwrap", luaF_GetWordwrap);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetColor", luaF_SetColor);
-    luaF_RegisterFunction(L, GetStaticType(), "GetColor", luaF_GetColor);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SetColor", luaF_SetColor);
+    luaF_RegisterFunction(L, TypeStaticGet(), "GetColor", luaF_GetColor);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetInteractive", luaF_SetInteractive);
-    luaF_RegisterFunction(L, GetStaticType(), "GetInteractive", luaF_GetInteractive);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SetInteractive", luaF_SetInteractive);
+    luaF_RegisterFunction(L, TypeStaticGet(), "GetInteractive", luaF_GetInteractive);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetCursor", luaF_SetCursor);
-    luaF_RegisterFunction(L, GetStaticType(), "GetCursor", luaF_GetCursor);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SetCursor", luaF_SetCursor);
+    luaF_RegisterFunction(L, TypeStaticGet(), "GetCursor", luaF_GetCursor);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetSelection", luaF_SetSelection);
-    luaF_RegisterFunction(L, GetStaticType(), "GetSelection", luaF_GetSelection);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SetSelection", luaF_SetSelection);
+    luaF_RegisterFunction(L, TypeStaticGet(), "GetSelection", luaF_GetSelection);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetScroll", luaF_SetScroll);
-    luaF_RegisterFunction(L, GetStaticType(), "GetScroll", luaF_GetScroll);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SetScroll", luaF_SetScroll);
+    luaF_RegisterFunction(L, TypeStaticGet(), "GetScroll", luaF_GetScroll);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetColorSelection", luaF_SetColorSelection);
-    luaF_RegisterFunction(L, GetStaticType(), "GetColorSelection", luaF_GetColorSelection);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SetColorSelection", luaF_SetColorSelection);
+    luaF_RegisterFunction(L, TypeStaticGet(), "GetColorSelection", luaF_GetColorSelection);
 
-    luaF_RegisterFunction(L, GetStaticType(), "SetColorSelected", luaF_SetColorSelected);
-    luaF_RegisterFunction(L, GetStaticType(), "GetColorSelected", luaF_GetColorSelected);
+    luaF_RegisterFunction(L, TypeStaticGet(), "SetColorSelected", luaF_SetColorSelected);
+    luaF_RegisterFunction(L, TypeStaticGet(), "GetColorSelected", luaF_GetColorSelected);
   }
 
   Text::Text(const std::string &name, Layout *parent) :
@@ -196,10 +196,10 @@ namespace Frames {
       m_select(0),
       m_cursor(0)
   {
-    m_font = GetEnvironment()->ConfigurationGet().fontDefaultId;
+    m_font = EnvironmentGet()->ConfigurationGet().fontDefaultId;
 
-    SetWidthDefault(0);
-    SetHeightDefault(20);
+    WidthDefaultSet(0);
+    HeightDefaultSet(20);
 
     // default font
     UpdateLayout();
@@ -224,13 +224,13 @@ namespace Frames {
     if (m_font.empty() && m_text.empty()) {
     } else if (m_font.empty()) {
       // PROBLEM
-      GetEnvironment()->LogError("Error - attempting to render text without a valid font");
+      EnvironmentGet()->LogError("Error - attempting to render text without a valid font");
     } else {
-      detail::TextInfoPtr tinfo = GetEnvironment()->GetTextManager()->GetTextInfo(m_font, m_size, m_text);
-      SetWidthDefault(tinfo->GetFullWidth());
+      detail::TextInfoPtr tinfo = EnvironmentGet()->GetTextManager()->GetTextInfo(m_font, m_size, m_text);
+      WidthDefaultSet(tinfo->GetFullWidth());
 
-      m_layout = tinfo->GetLayout(GetWidth(), m_wordwrap);
-      SetHeightDefault(m_layout->GetFullHeight());
+      m_layout = tinfo->GetLayout(WidthGet(), m_wordwrap);
+      HeightDefaultSet(m_layout->GetFullHeight());
 
       ScrollToCursor();
     }
@@ -246,17 +246,17 @@ namespace Frames {
 
     // First, do the X axis
     if (!m_wordwrap) {
-      cscroll.x = detail::Clamp(detail::Clamp(cscroll.x, tpos.x - GetWidth() * 3 / 4, tpos.x - GetWidth() / 4), 0.f, m_layout->GetParent()->GetFullWidth() - GetWidth());
+      cscroll.x = detail::Clamp(detail::Clamp(cscroll.x, tpos.x - WidthGet() * 3 / 4, tpos.x - WidthGet() / 4), 0.f, m_layout->ParentGet()->GetFullWidth() - WidthGet());
     } else {
       cscroll.x = 0;
     }
 
     // Next, do the Y axis
-    float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
-    if (GetHeight() >= lineheight) {
-      cscroll.y = detail::Clamp(cscroll.y, tpos.y + lineheight - GetHeight(), tpos.y);
+    float lineheight = m_layout->ParentGet()->ParentGet()->GetLineHeight(m_size);
+    if (HeightGet() >= lineheight) {
+      cscroll.y = detail::Clamp(cscroll.y, tpos.y + lineheight - HeightGet(), tpos.y);
     } else {
-      cscroll.y = tpos.y + (lineheight - GetHeight()) / 2;
+      cscroll.y = tpos.y + (lineheight - HeightGet()) / 2;
     }
 
     SetScroll(cscroll);
@@ -267,7 +267,7 @@ namespace Frames {
 
     // we'll fix this up further later
     if (m_layout) {
-      Rect bounds = GetBounds();
+      Rect bounds = BoundsGet();
 
       // render selection
       if (m_interactive >= INTERACTIVE_SELECT && m_cursor != m_select) {
@@ -294,13 +294,13 @@ namespace Frames {
           rect.s -= m_scroll;
           rect.e -= m_scroll;
 
-          rect.s.x += GetLeft();
-          rect.e.x += GetLeft();
+          rect.s.x += LeftGet();
+          rect.e.x += LeftGet();
 
-          rect.s.y += GetTop();
-          rect.e.y += GetTop();
+          rect.s.y += TopGet();
+          rect.e.y += TopGet();
 
-          rect.e.y += m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
+          rect.e.y += m_layout->ParentGet()->ParentGet()->GetLineHeight(m_size);
 
           if (detail::Renderer::WriteCroppedRect(verts + idx, rect, m_color_selection * Color(1, 1, 1, renderer->AlphaGet()), bounds)) {
             idx += 4;
@@ -310,19 +310,19 @@ namespace Frames {
       }
 
       // render the actual text
-      m_layout->Render(renderer, m_color_text * Color(1, 1, 1, renderer->AlphaGet()), GetBounds(), GetScroll());
+      m_layout->Render(renderer, m_color_text * Color(1, 1, 1, renderer->AlphaGet()), BoundsGet(), GetScroll());
 
       // render cursor, if there is one
-      if (m_interactive >= INTERACTIVE_CURSOR && GetEnvironment()->FocusGet() == this) { // display only if in focus
+      if (m_interactive >= INTERACTIVE_CURSOR && EnvironmentGet()->FocusGet() == this) { // display only if in focus
         // TODO: cull properly when too small
         renderer->SetTexture();
         detail::Renderer::Vertex *vert = renderer->Request(4);
         
         Vector origin = m_layout->GetCoordinateFromCharacter(m_cursor) - m_scroll;
-        origin.x += GetLeft();
-        origin.y += GetTop();
+        origin.x += LeftGet();
+        origin.y += TopGet();
         
-        detail::Renderer::WriteCroppedTexRect(vert, Rect(origin, origin + Vector(1, m_layout->GetParent()->GetParent()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1, renderer->AlphaGet()), bounds);
+        detail::Renderer::WriteCroppedTexRect(vert, Rect(origin, origin + Vector(1, m_layout->ParentGet()->ParentGet()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1, renderer->AlphaGet()), bounds);
 
         renderer->Return(GL_QUADS);
       }
@@ -330,7 +330,7 @@ namespace Frames {
   }
 
   void Text::EventInternal_LeftDown(Handle *e) {
-    int pos = m_layout->GetCharacterFromCoordinate(GetEnvironment()->Input_MouseGet() + m_scroll - Vector(GetLeft(), GetTop()));
+    int pos = m_layout->GetCharacterFromCoordinate(EnvironmentGet()->Input_MouseGet() + m_scroll - Vector(LeftGet(), TopGet()));
     SetCursor(pos);
     SetSelection();
 
@@ -338,12 +338,12 @@ namespace Frames {
     EventAttach(Event::MouseMoveoutside, Delegate<void (Handle *, const Vector &pt)>(this, &Text::EventInternal_Move));
 
     if (m_interactive >= INTERACTIVE_SELECT) {
-      GetEnvironment()->FocusSet(this);
+      EnvironmentGet()->FocusSet(this);
     }
   }
 
   void Text::EventInternal_LeftUp(Handle *e) {
-    int pos = m_layout->GetCharacterFromCoordinate(GetEnvironment()->Input_MouseGet() + m_scroll - Vector(GetLeft(), GetTop()));
+    int pos = m_layout->GetCharacterFromCoordinate(EnvironmentGet()->Input_MouseGet() + m_scroll - Vector(LeftGet(), TopGet()));
 
     // We want to change the cursor position, but still preserve the selection, which takes a little effort
     int start, end;
@@ -360,7 +360,7 @@ namespace Frames {
   }
 
   void Text::EventInternal_Move(Handle *e, const Vector &pt) {
-    int pos = m_layout->GetCharacterFromCoordinate(pt + m_scroll - Vector(GetLeft(), GetTop()));
+    int pos = m_layout->GetCharacterFromCoordinate(pt + m_scroll - Vector(LeftGet(), TopGet()));
 
     // We want to change the cursor position, but still preserve the selection, which takes a little effort
     int start, end;
@@ -380,7 +380,7 @@ namespace Frames {
     }
 
     // If the user is holding ctrl or alt, interpret this as a special command and don't add it to the buffer.
-    if (GetEnvironment()->Input_MetaGet().ctrl || GetEnvironment()->Input_MetaGet().alt) {
+    if (EnvironmentGet()->Input_MetaGet().ctrl || EnvironmentGet()->Input_MetaGet().alt) {
       return;
     }
 
@@ -392,13 +392,13 @@ namespace Frames {
   }
   void Text::EventInternal_KeyDownOrRepeat(Handle *e, Input::Key key) {
     // Things supported for everything interactive
-    if (key == Input::Key::A && GetEnvironment()->Input_MetaGet().ctrl) {
+    if (key == Input::Key::A && EnvironmentGet()->Input_MetaGet().ctrl) {
       SetSelection(0, (int)m_text.size());
       SetCursor((int)m_text.size());
-    } else if ((key == Input::Key::C && GetEnvironment()->Input_MetaGet().ctrl) || (m_interactive == INTERACTIVE_SELECT && key == Input::Key::X && GetEnvironment()->Input_MetaGet().ctrl)) { // if we're in select mode, interpret cut as copy
+    } else if ((key == Input::Key::C && EnvironmentGet()->Input_MetaGet().ctrl) || (m_interactive == INTERACTIVE_SELECT && key == Input::Key::X && EnvironmentGet()->Input_MetaGet().ctrl)) { // if we're in select mode, interpret cut as copy
       // copy to clipboard
       if (m_cursor != m_select) {
-        GetEnvironment()->ConfigurationGet().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
+        EnvironmentGet()->ConfigurationGet().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
       }
     }
 
@@ -414,7 +414,7 @@ namespace Frames {
       int newcursor = -1;
       bool hascursor = true;
       if (key == Input::Key::Left) {
-        if (GetEnvironment()->Input_MetaGet().ctrl) {
+        if (EnvironmentGet()->Input_MetaGet().ctrl) {
           // shift a word
           int curs = m_cursor - 2;
           for (; curs > 0; --curs) {
@@ -428,7 +428,7 @@ namespace Frames {
           newcursor = m_cursor - 1;
         }
       } else if (key == Input::Key::Right) {
-        if (GetEnvironment()->Input_MetaGet().ctrl) {
+        if (EnvironmentGet()->Input_MetaGet().ctrl) {
           // shift a word
           int curs = m_cursor + 1;
           for (; curs < (int)m_text.size(); ++curs) {
@@ -441,12 +441,12 @@ namespace Frames {
           newcursor = m_cursor + 1;
         }
       } else if (key == Input::Key::Up) {
-        float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
+        float lineheight = m_layout->ParentGet()->ParentGet()->GetLineHeight(m_size);
         Vector ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
         ccor.y -= lineheight / 2;
         newcursor = m_layout->GetCharacterFromCoordinate(ccor);
       } else if (key == Input::Key::Down) {
-        float lineheight = m_layout->GetParent()->GetParent()->GetLineHeight(m_size);
+        float lineheight = m_layout->ParentGet()->ParentGet()->GetLineHeight(m_size);
         Vector ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
         ccor.y += lineheight * 3 / 2; // need to bump it into the bottom line
         newcursor = m_layout->GetCharacterFromCoordinate(ccor);
@@ -461,7 +461,7 @@ namespace Frames {
 
       if (hascursor) {
         newcursor = detail::Clamp(newcursor, 0, (int)m_text.size());
-        if (GetEnvironment()->Input_MetaGet().shift) {
+        if (EnvironmentGet()->Input_MetaGet().shift) {
           SetSelection(m_select, newcursor);
           SetCursor(newcursor);
         } else {
@@ -499,10 +499,10 @@ namespace Frames {
         // wipe out the character after the cursor
         SetText(m_text.substr(0, m_cursor) + m_text.substr(m_cursor + 1));
       }
-    } else if (key == Input::Key::X && GetEnvironment()->Input_MetaGet().ctrl) {
+    } else if (key == Input::Key::X && EnvironmentGet()->Input_MetaGet().ctrl) {
       // cut to clipboard
       if (m_cursor != m_select) {
-        GetEnvironment()->ConfigurationGet().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
+        EnvironmentGet()->ConfigurationGet().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
 
         // chop out that text
         int ncursor = std::min(m_cursor, m_select);
@@ -510,9 +510,9 @@ namespace Frames {
         SetCursor(ncursor);
         SetSelection();
       }
-    } else if (key == Input::Key::V && GetEnvironment()->Input_MetaGet().ctrl) {
+    } else if (key == Input::Key::V && EnvironmentGet()->Input_MetaGet().ctrl) {
       // paste from clipboard
-      std::string clipboard = GetEnvironment()->ConfigurationGet().clipboard->Get();
+      std::string clipboard = EnvironmentGet()->ConfigurationGet().clipboard->Get();
       int ncursor = m_cursor + (int)clipboard.size();
       SetText(m_text.substr(0, std::min(m_cursor, m_select)) + clipboard + m_text.substr(std::max(m_cursor, m_select)));
       SetCursor(ncursor);
@@ -556,20 +556,20 @@ namespace Frames {
     return 1;
   }
 
-  /*static*/ int Text::luaF_SetSize(lua_State *L) {
+  /*static*/ int Text::luaF_SizeSet(lua_State *L) {
     luaF_checkparams(L, 2);
     Text *self = luaF_checkframe<Text>(L, 1);
 
-    self->SetSize((float)luaL_checknumber(L, 2));
+    self->SizeSet((float)luaL_checknumber(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Text::luaF_GetSize(lua_State *L) {
+  /*static*/ int Text::luaF_SizeGet(lua_State *L) {
     luaF_checkparams(L, 1);
     Text *self = luaF_checkframe<Text>(L, 1);
 
-    lua_pushnumber(L, self->GetSize());
+    lua_pushnumber(L, self->SizeGet());
 
     return 1;
   }
@@ -645,7 +645,7 @@ namespace Frames {
     } else if (self->GetInteractive() == INTERACTIVE_EDIT) {
       lua_pushliteral(L, "edit");
     } else {
-      self->GetEnvironment()->LogError("Completely unknown interactivity flag, please report as a bug");
+      self->EnvironmentGet()->LogError("Completely unknown interactivity flag, please report as a bug");
       lua_pushnil(L);
     }
 

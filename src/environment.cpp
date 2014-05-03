@@ -48,8 +48,8 @@ namespace Frames {
   }
 
   void Environment::ResizeRoot(int x, int y) {
-    m_root->SetWidthDefault((float)x);
-    m_root->SetHeightDefault((float)y);
+    m_root->WidthDefaultSet((float)x);
+    m_root->HeightDefaultSet((float)y);
   }
   
   void Environment::Input_MouseMove(int ix, int iy) {
@@ -213,7 +213,7 @@ namespace Frames {
   }
 
   void Environment::FocusSet(Layout *layout) {
-    if (layout && layout->GetEnvironment() != this) {
+    if (layout && layout->EnvironmentGet() != this) {
       LogError("Attempted to set focus to frame with incorrect environment");
     } else {
       m_focus = layout;
@@ -227,7 +227,7 @@ namespace Frames {
       root = m_root;
     }
 
-    if (root->GetEnvironment() != this) {
+    if (root->EnvironmentGet() != this) {
       ConfigurationGet().logger->LogError("Attempt to render a frame through an unrelated environment");
       return;
     }
@@ -252,7 +252,7 @@ namespace Frames {
 
       {
         Performance perf(this, 0.4f, 0.2f, 0.2f);
-        m_renderer->Begin((int)m_root->GetWidth(), (int)m_root->GetHeight());
+        m_renderer->Begin((int)m_root->WidthGet(), (int)m_root->HeightGet());
       }
 
       {
@@ -612,7 +612,7 @@ namespace Frames {
       // stack: ... Frames_rrg Frames_rg key/frameuserdata frametable
       // See if this is our environment. If it's possible for things to not be Layouts, we may need to tweak this later.
       Layout *layout = (Layout *)lua_touserdata(L, -2);
-      if (layout->GetEnvironment() == this) {
+      if (layout->EnvironmentGet() == this) {
         // This one is getting killed
         // First, we want to plow through the forward registry and strip it as necessary
 

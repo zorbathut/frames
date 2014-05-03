@@ -90,7 +90,7 @@ namespace Frames {
     tinfo = TextureConfig::CreateManagedRaw(env, png_get_image_width(png_ptr, info_ptr), png_get_image_height(png_ptr, info_ptr), TextureConfig::MODE_RGBA);
     
     for(int i = 0; i < (int)png_get_image_height(png_ptr, info_ptr); ++i)
-      ul.push_back(tinfo.Raw_GetData() + i * tinfo.GetWidth() * 4);
+      ul.push_back(tinfo.Raw_GetData() + i * tinfo.WidthGet() * 4);
     png_read_image(png_ptr, (png_byte**)&ul[0]);
         
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);

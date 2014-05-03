@@ -17,8 +17,8 @@ namespace Frames {
 
     static Text *Create(const std::string &name, Layout *parent);
 
-    static const char *GetStaticType();
-    virtual const char *GetType() const { return GetStaticType(); }
+    static const char *TypeStaticGet();
+    virtual const char *TypeGet() const { return TypeStaticGet(); }
 
     void SetText(const std::string &text);
     const std::string &GetText() const { return m_text; }
@@ -26,8 +26,8 @@ namespace Frames {
     void SetFont(const std::string &id);
     const std::string &GetFont() const { return m_font; }
 
-    void SetSize(float size);
-    float GetSize() const { return m_size; }
+    void SizeSet(float size);
+    float SizeGet() const { return m_size; }
 
     void SetWordwrap(bool wordwrap);
     bool GetWordwrap() const { return m_wordwrap; }
@@ -55,7 +55,7 @@ namespace Frames {
     const Color &GetColorSelected() const { return m_color_selected; }
 
   protected:
-    virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, GetStaticType()); Frame::luaF_Register(L); }
+    virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, TypeStaticGet()); Frame::luaF_Register(L); }
 
     static void luaF_RegisterFunctions(lua_State *L);
 
@@ -102,8 +102,8 @@ namespace Frames {
     static int luaF_SetFont(lua_State *L);
     static int luaF_GetFont(lua_State *L);
 
-    static int luaF_SetSize(lua_State *L);
-    static int luaF_GetSize(lua_State *L);
+    static int luaF_SizeSet(lua_State *L);
+    static int luaF_SizeGet(lua_State *L);
 
     static int luaF_SetWordwrap(lua_State *L);
     static int luaF_GetWordwrap(lua_State *L);
