@@ -417,7 +417,7 @@ namespace Frames {
         if (GetEnvironment()->Input_MetaGet().ctrl) {
           // shift a word
           int curs = m_cursor - 2;
-          for (; curs > 0; curs--) {
+          for (; curs > 0; --curs) {
             if (isspace(m_text[curs])) {
               curs++; // put us after the space
               break;
@@ -431,7 +431,7 @@ namespace Frames {
         if (GetEnvironment()->Input_MetaGet().ctrl) {
           // shift a word
           int curs = m_cursor + 1;
-          for (; curs < (int)m_text.size(); curs++) {
+          for (; curs < (int)m_text.size(); ++curs) {
             if (isspace(m_text[curs])) {
               break;
             }
