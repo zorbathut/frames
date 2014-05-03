@@ -76,8 +76,8 @@ namespace Frames {
     EventDetach(Event::MouseLeftUp, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftUp));
     EventDetach(Event::MouseLeftUpoutside, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftUp));
 
-    EventDetach(Event::KeyDown, Delegate<void (Handle *, const Input::Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
-    EventDetach(Event::KeyRepeat, Delegate<void (Handle *, const Input::Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+    EventDetach(Event::KeyDown, Delegate<void (Handle *, Input::Key)>(this, &Text::EventInternal_KeyDownOrRepeat));
+    EventDetach(Event::KeyRepeat, Delegate<void (Handle *, Input::Key)>(this, &Text::EventInternal_KeyDownOrRepeat));
     EventDetach(Event::KeyText, Delegate<void (Handle *, const std::string &)>(this, &Text::EventInternal_KeyText));
 
     // if necessary, insert event handlers
@@ -87,8 +87,8 @@ namespace Frames {
       EventAttach(Event::MouseLeftUpoutside, Delegate<void (Handle *)>(this, &Text::EventInternal_LeftUp));
     
       // These are needed mostly for ctrl-C
-      EventAttach(Event::KeyDown, Delegate<void (Handle *, const Input::Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
-      EventAttach(Event::KeyRepeat, Delegate<void (Handle *, const Input::Key &)>(this, &Text::EventInternal_KeyDownOrRepeat));
+      EventAttach(Event::KeyDown, Delegate<void (Handle *, Input::Key)>(this, &Text::EventInternal_KeyDownOrRepeat));
+      EventAttach(Event::KeyRepeat, Delegate<void (Handle *, Input::Key)>(this, &Text::EventInternal_KeyDownOrRepeat));
       EventAttach(Event::KeyText, Delegate<void (Handle *, const std::string &)>(this, &Text::EventInternal_KeyText));
     }
   }
@@ -390,7 +390,7 @@ namespace Frames {
     SetCursor(ncursor);
     SetSelection();
   }
-  void Text::EventInternal_KeyDownOrRepeat(Handle *e, const Input::Key &key) {
+  void Text::EventInternal_KeyDownOrRepeat(Handle *e, Input::Key key) {
     // Things supported for everything interactive
     if (key == Input::Key::A && GetEnvironment()->Input_MetaGet().ctrl) {
       SetSelection(0, (int)m_text.size());
