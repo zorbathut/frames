@@ -1,8 +1,6 @@
 
 === DOCS
 
-* Invert Get/Set
-
 * Rename Texture to Sprite
 
 * Configuration subsystem
@@ -41,6 +39,9 @@
 
 * Obliterate
 * Events
+
+* Frames
+  * Text is the big one here
 
 === BUILDING
 

@@ -27,7 +27,7 @@ TEST(Text, Basic) {
   for (int i = 0; i < c_tests; ++i) {
     Frames::Text *tex = Frames::Text::Create("Layer", env->RootGet());
     tex->SizeSet(sizes[i]);
-    tex->SetText(text[i]);
+    tex->TextSet(text[i]);
     tex->PinSet(Frames::TOPLEFT, anchor, Frames::BOTTOMLEFT, 0.f, 5.f);
     anchor = tex;
     frames[i] = tex;
@@ -37,14 +37,14 @@ TEST(Text, Basic) {
 
   for (int i = 0; i < c_tests; ++i) {
     if (i % 2 == 0) {
-      frames[i]->SetFont("geo_1.ttf");
+      frames[i]->FontSet("geo_1.ttf");
     }
   }
 
   TestSnapshot(env);
 
   for (int i = 0; i < c_tests; ++i) {
-    frames[i]->SetWordwrap(true);
+    frames[i]->WordwrapSet(true);
     frames[i]->PinSet(Frames::RIGHT, env->RootGet(), Frames::RIGHT, -20.f, Frames::Nil);
   }
 

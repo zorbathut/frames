@@ -39,9 +39,9 @@ namespace Frames {
       Vertex *Request(int vertices);
       void Return(int mode, int count = -1);  // also renders, count lets you optionally specify the number of vertices
 
-      void SetTexture();
-      void SetTexture(TextureChunk *tex);
-      void SetTexture(TextureBacking *tex);
+      void TextureSet();
+      void TextureSet(TextureChunk *tex);
+      void TextureSet(TextureBacking *tex);
 
       void ScissorPush(Rect rect);
       void ScissorPop();

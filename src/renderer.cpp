@@ -127,15 +127,15 @@ namespace Frames {
       glDrawElements(mode, count, GL_UNSIGNED_SHORT, (void*)(m_last_pos * sizeof(GLushort)));
     }
 
-    void Renderer::SetTexture() {
+    void Renderer::TextureSet() {
       Internal_SetTexture(0);
     }
 
-    void Renderer::SetTexture(detail::TextureBacking *tex) {
+    void Renderer::TextureSet(detail::TextureBacking *tex) {
       Internal_SetTexture(tex ? tex->GetGLID() : 0);
     }
 
-    void Renderer::SetTexture(detail::TextureChunk *tex) {
+    void Renderer::TextureSet(detail::TextureChunk *tex) {
       Internal_SetTexture(tex ? tex->GetGLID() : 0);
     }
 

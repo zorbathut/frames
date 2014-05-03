@@ -14,12 +14,12 @@ namespace Frames {
   public:
     static Texture *Create(const std::string &name, Layout *parent);
 
-    void SetTexture(const std::string &id);
-    const std::string &GetTexture() const { return m_texture_id; }
+    void TextureSet(const std::string &id);
+    const std::string &TextureGet() const { return m_texture_id; }
 
     // EXPERIMENTAL
-    void SetTint(Color color);
-    Color GetTint() const { return m_tint; }
+    void TintSet(Color color);
+    Color TintGet() const { return m_tint; }
 
   protected:
     virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, TypeStaticGet()); Frame::luaF_Register(L); }

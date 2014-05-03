@@ -25,7 +25,7 @@ namespace Frames {
     if (m_bg.a > 0) {
       Color bgc = m_bg * Color(1, 1, 1, renderer->AlphaGet());
 
-      renderer->SetTexture();
+      renderer->TextureSet();
 
       float u = TopGet();
       float d = BottomGet();

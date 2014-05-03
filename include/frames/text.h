@@ -17,39 +17,39 @@ namespace Frames {
 
     static Text *Create(const std::string &name, Layout *parent);
 
-    void SetText(const std::string &text);
-    const std::string &GetText() const { return m_text; }
+    void TextSet(const std::string &text);
+    const std::string &TextGet() const { return m_text; }
 
-    void SetFont(const std::string &id);
+    void FontSet(const std::string &id);
     const std::string &GetFont() const { return m_font; }
 
     void SizeSet(float size);
     float SizeGet() const { return m_size; }
 
-    void SetWordwrap(bool wordwrap);
-    bool GetWordwrap() const { return m_wordwrap; }
+    void WordwrapSet(bool wordwrap);
+    bool WordwrapGet() const { return m_wordwrap; }
 
-    void SetColor(const Color &color);
-    const Color &GetColor() const { return m_color_text; }
+    void ColorSet(const Color &color);
+    const Color &ColorGet() const { return m_color_text; }
 
-    void SetInteractive(InteractivityMode interactive);
-    InteractivityMode GetInteractive() const { return m_interactive; }
+    void InteractiveSet(InteractivityMode interactive);
+    InteractivityMode InteractiveGet() const { return m_interactive; }
 
-    void SetCursor(int position);
-    int GetCursor() const { return m_cursor; }
+    void CursorSet(int position);
+    int CursorGet() const { return m_cursor; }
 
-    void SetSelection();  // clear
-    void SetSelection(int start, int end);
-    bool GetSelection(int *start, int *end) const;
+    void SelectionClear();  // clear
+    void SelectionSet(int start, int end);
+    bool SelectionGet(int *start, int *end) const;
 
-    void SetScroll(const Vector &scroll);
-    const Vector &GetScroll() const { return m_scroll; }
+    void ScrollSet(const Vector &scroll);
+    const Vector &ScrollGet() const { return m_scroll; }
 
-    void SetColorSelection(const Color &color);
-    const Color &GetColorSelection() const { return m_color_selection; }
+    void ColorSelectionSet(const Color &color);
+    const Color &ColorSelectionGet() const { return m_color_selection; }
 
-    void SetColorSelected(const Color &color);
-    const Color &GetColorSelected() const { return m_color_selected; }
+    void ColorSelectedSet(const Color &color);
+    const Color &ColorSelectedGet() const { return m_color_selected; }
 
   protected:
     virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, TypeStaticGet()); Frame::luaF_Register(L); }

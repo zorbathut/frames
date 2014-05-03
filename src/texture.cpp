@@ -16,7 +16,7 @@ namespace Frames {
     return new Texture(name, parent);
   }
 
-  void Texture::SetTexture(const std::string &id) {
+  void Texture::TextureSet(const std::string &id) {
     // work work work
     m_texture_id = id;
     m_texture = EnvironmentGet()->GetTextureManager()->TextureFromId(id);
@@ -28,11 +28,11 @@ namespace Frames {
   /*static*/ void Texture::luaF_RegisterFunctions(lua_State *L) {
     Frame::luaF_RegisterFunctions(L);
 
-    luaF_RegisterFunction(L, TypeStaticGet(), "SetTexture", luaF_SetTexture);
-    luaF_RegisterFunction(L, TypeStaticGet(), "GetTexture", luaF_GetTexture);
+    luaF_RegisterFunction(L, TypeStaticGet(), "TextureSet", luaF_SetTexture);
+    luaF_RegisterFunction(L, TypeStaticGet(), "TextureGet", luaF_GetTexture);
 
-    luaF_RegisterFunction(L, TypeStaticGet(), "SetTint", luaF_SetTint);
-    luaF_RegisterFunction(L, TypeStaticGet(), "GetTint", luaF_GetTint);
+    luaF_RegisterFunction(L, TypeStaticGet(), "TintSet", luaF_SetTint);
+    luaF_RegisterFunction(L, TypeStaticGet(), "TintGet", luaF_GetTint);
   }
 
   void Texture::RenderElement(detail::Renderer *renderer) const {
@@ -41,7 +41,7 @@ namespace Frames {
     if (m_texture) {
       Color tint = m_tint * Color(1, 1, 1, renderer->AlphaGet());
 
-      renderer->SetTexture(m_texture.Get());
+      renderer->TextureSet(m_texture.Get());
 
       float u = TopGet();
       float d = BottomGet();
@@ -83,7 +83,7 @@ namespace Frames {
     luaF_checkparams(L, 2);
     Texture *self = luaF_checkframe<Texture>(L, 1);
 
-    self->SetTexture(luaL_checkstring(L, 2));
+    self->TextureSet(luaL_checkstring(L, 2));
 
     return 0;
   }
@@ -92,7 +92,7 @@ namespace Frames {
     luaF_checkparams(L, 1);
     Texture *self = luaF_checkframe<Texture>(L, 1);
 
-    lua_pushstring(L, self->GetTexture().c_str());
+    lua_pushstring(L, self->TextureGet().c_str());
 
     return 1;
   }

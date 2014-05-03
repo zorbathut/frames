@@ -157,14 +157,14 @@ namespace Frames {
           lastadjust = 0;
         } else {
           linewidth += m_characters.back()->GetAdvance();
-          if (m_characters.back()->GetTexture()) {
-            lastadjust = m_characters.back()->GetAdvance() - m_characters.back()->GetTexture()->WidthGet();
+          if (m_characters.back()->TextureGet()) {
+            lastadjust = m_characters.back()->GetAdvance() - m_characters.back()->TextureGet()->WidthGet();
           } else {
             lastadjust = m_characters.back()->GetAdvance();
           }
         }
 
-        m_quads += !!m_characters.back()->GetTexture();
+        m_quads += !!m_characters.back()->TextureGet();
       }
       m_fullWidth = std::max(m_fullWidth, linewidth + lastadjust);
     }
@@ -220,7 +220,7 @@ namespace Frames {
       if (bmp && bmp->bitmap.buffer) {
         m_texture = parent->EnvironmentGet()->GetTextureManager()->TextureFromConfig(
               TextureConfig::CreateUnmanagedRaw(parent->EnvironmentGet(), bmp->bitmap.width, bmp->bitmap.rows, TextureConfig::MODE_A, bmp->bitmap.buffer, bmp->bitmap.width),
-              parent->GetTexture()
+              parent->TextureGet()
         );
 
         m_offset_x = (float)bmp->left;
@@ -277,8 +277,8 @@ namespace Frames {
 
         // calculate the distance this character will go
         float charbound = tx;
-        if (chr->GetTexture()) {
-          charbound += chr->GetTexture()->WidthGet();
+        if (chr->TextureGet()) {
+          charbound += chr->TextureGet()->WidthGet();
         }
 
         if (wordwrap && charbound > width) {
@@ -363,7 +363,7 @@ namespace Frames {
       offset.y = (float)(int)std::floor(offset.y + 0.5f);
 
       // todo: maybe precache this stuff so it becomes a memcpy?
-      renderer->SetTexture(m_parent->GetTexture().Get());
+      renderer->TextureSet(m_parent->TextureGet().Get());
 
       Renderer::Vertex *vertexes = renderer->Request(m_parent->GetQuads() * 4);
 
@@ -372,10 +372,10 @@ namespace Frames {
         Renderer::Vertex *vertex = vertexes + cquad * 4;
         const CharacterInfoPtr &character = m_parent->GetCharacter(i);
 
-        if (character->GetTexture()) {
+        if (character->TextureGet()) {
           Vector origin = Vector(bounds.s.x + m_coordinates[i].x - offset.x, bounds.s.y + m_coordinates[i].y - offset.y);
         
-          if (Renderer::WriteCroppedTexRect(vertex, Rect(origin, origin + Vector((float)character->GetTexture()->WidthGet(), (float)character->GetTexture()->HeightGet())), character->GetTexture()->BoundsGet(), color, bounds)) {
+          if (Renderer::WriteCroppedTexRect(vertex, Rect(origin, origin + Vector((float)character->TextureGet()->WidthGet(), (float)character->TextureGet()->HeightGet())), character->TextureGet()->BoundsGet(), color, bounds)) {
             cquad++;
           }
         }

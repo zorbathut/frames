@@ -58,7 +58,7 @@ namespace Frames {
 
       FT_Face GetFace(float size);
 
-      const TextureBackingPtr &GetTexture() const { return m_texture; }
+      const TextureBackingPtr &TextureGet() const { return m_texture; }
 
       void ShutdownText(TextInfo *tinfo);
       void ShutdownCharacter(CharacterInfo *cinfo);
@@ -107,7 +107,7 @@ namespace Frames {
       TextLayoutPtr GetLayout(float width, bool wordwrap);
 
       float GetFullWidth() const { return m_fullWidth; }
-      const TextureBackingPtr &GetTexture() const { return m_parent->GetTexture(); }
+      const TextureBackingPtr &TextureGet() const { return m_parent->TextureGet(); }
 
       int GetCharacterCount() const { return (int)m_characters.size(); }  // we will never have more than 2 billion characters
       const CharacterInfoPtr &GetCharacter(int index) const { return m_characters[index]; }
@@ -139,7 +139,7 @@ namespace Frames {
     public:
       CharacterInfo(FontInfoPtr parent, float size, int character);
 
-      const TextureChunkPtr &GetTexture() const { return m_texture; }
+      const TextureChunkPtr &TextureGet() const { return m_texture; }
 
       float GetOffsetX() const { return m_offset_x; }
       float GetOffsetY() const { return m_offset_y; }
