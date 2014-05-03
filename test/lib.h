@@ -62,7 +62,7 @@ private:
 
 class VerbLog : Frames::detail::Noncopyable {
 public:
-  VerbLog();
+  VerbLog(const std::string &suffix = "");
   ~VerbLog();
 
   void Snapshot();  // auto-snapshot on exit
@@ -76,9 +76,13 @@ public:
 
 private:
   void RecordEvent(Frames::Handle *);
+  void RecordEvent(Frames::Handle *, int p1);
+  void RecordEvent(Frames::Handle *, const Frames::Vector &p1);
 
   void RecordResult(const std::string &str);
   std::string m_records;
+
+  std::string m_suffix;
 
   std::map<std::string, Frames::Layout *> m_nameUniqueTest;
 

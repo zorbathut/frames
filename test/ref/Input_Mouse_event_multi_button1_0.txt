@@ -1,0 +1,23 @@
+Begin log
+Event Layout::Event::MouseMove ((150, 150)) on Root.a
+Event Layout::Event::MouseOver on Root.a
+Event Layout::Event::MouseButtonDown (1) on Root.a
+Event Layout::Event::MouseRightDown on Root.a
+Event Layout::Event::MouseOut on Root.a
+Event Layout::Event::MouseMove ((250, 250)) on Root.b
+Event Layout::Event::MouseMoveoutside ((250, 250)) on Root.a
+Event Layout::Event::MouseOver on Root.b
+Event Layout::Event::MouseButtonUp (1) on Root.b
+Event Layout::Event::MouseRightUp on Root.b
+Event Layout::Event::MouseButtonUpoutside (1) on Root.a
+Event Layout::Event::MouseRightUpoutside on Root.a
+Event Layout::Event::MouseButtonDown (1) on Root.b
+Event Layout::Event::MouseRightDown on Root.b
+Event Layout::Event::MouseOut on Root.b
+Event Layout::Event::MouseMove ((150, 150)) on Root.a
+Event Layout::Event::MouseMoveoutside ((150, 150)) on Root.b
+Event Layout::Event::MouseOver on Root.a
+Event Layout::Event::MouseButtonUp (1) on Root.a
+Event Layout::Event::MouseRightUp on Root.a
+Event Layout::Event::MouseButtonUpoutside (1) on Root.b
+Event Layout::Event::MouseRightUpoutside on Root.b

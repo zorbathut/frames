@@ -179,7 +179,11 @@ void TestEnvironment::AllowErrors() {
   m_logger->AllowErrors();
 }
 
-VerbLog::VerbLog() {
+VerbLog::VerbLog(const std::string &suffix) {
+  if (!suffix.empty()) {
+    m_suffix = "_" + suffix;
+  }
+
   m_records += "Begin log\n"; // this is honestly just for some code laziness in VerbLog, an empty record vector is treated specially
 }
 
@@ -194,13 +198,21 @@ VerbLog::~VerbLog() {
 }
 
 void VerbLog::Snapshot() {
-  TestCompareStrings("event", m_records);
+  TestCompareStrings("event" + m_suffix, m_records);
 
   m_records.clear();
 }
 
 void VerbLog::RecordEvent(Frames::Handle *handle) {
   RecordResult(Frames::detail::Format("Event %s on %s", handle->GetVerb()->GetName(), handle->GetTarget()->DebugGetName()));
+}
+
+void VerbLog::RecordEvent(Frames::Handle *handle, int p1) {
+  RecordResult(Frames::detail::Format("Event %s (%d) on %s", handle->GetVerb()->GetName(), p1, handle->GetTarget()->DebugGetName()));
+}
+
+void VerbLog::RecordEvent(Frames::Handle *handle, const Frames::Vector &p1) {
+  RecordResult(Frames::detail::Format("Event %s (%s) on %s", handle->GetVerb()->GetName(), p1, handle->GetTarget()->DebugGetName()));
 }
 
 void VerbLog::RecordResult(const std::string &str) {

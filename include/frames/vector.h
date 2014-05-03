@@ -1,6 +1,8 @@
 #ifndef FRAMES_VECTOR
 #define FRAMES_VECTOR
 
+#include <ostream>
+
 namespace Frames {
   /// Represents a 2d location or direction.
   /** This is nothing more than a pair of floats tied together. As is usual with Vector classes, the actual meaning of this structure depends strongly on its context. */
@@ -10,6 +12,7 @@ namespace Frames {
 
     float x, y;
   };
+  std::ostream &operator<<(std::ostream &str, const Vector &rhs);
   
   inline Vector operator+(const Vector &lhs, const Vector &rhs) {
     return Vector(lhs.x + rhs.x, lhs.y + rhs.y);
