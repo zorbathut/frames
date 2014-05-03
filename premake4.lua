@@ -117,6 +117,7 @@ solution "Frames"
     language "C++"
     location(path)
     files "test/*.cpp"
+    files "test/*.h"
     debugdir "test"
     
     configuration "x32"
