@@ -17,9 +17,6 @@ namespace Frames {
 
     static Text *Create(const std::string &name, Layout *parent);
 
-    static const char *TypeStaticGet();
-    virtual const char *TypeGet() const { return TypeStaticGet(); }
-
     void SetText(const std::string &text);
     const std::string &GetText() const { return m_text; }
 

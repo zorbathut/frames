@@ -14,9 +14,6 @@ namespace Frames {
   public:
     static Frame *Create(const std::string &name, Layout *parent);
 
-    static const char *TypeStaticGet();
-    virtual const char *TypeGet() const { return TypeStaticGet(); }
-
     // --------- PinSet
 
     /// Creates or redefines a single anchor \ref layoutbasics "link".

@@ -41,7 +41,13 @@ namespace Frames {
     virtual const detail::Rtti *RttiVirtualGet() const { return &s_rtti; } \
     template <typename T> friend T *Cast(Layout *); \
     template <typename T> friend const T *Cast(const Layout *); \
-    template <typename T> friend const detail::Rtti *detail::InitHelper();
+    template <typename T> friend const detail::Rtti *detail::InitHelper(); \
+  public: \
+    /** \quick Returns a human-readable type string for this class. */ \
+    static const char *TypeStaticGet(); \
+    /** \quick Returns a human-readable type string for this instance. */ \
+    virtual const char *TypeGet() const { return TypeStaticGet(); } \
+  private:
 
   /// Base class containing location and layout information for all Frames elements.
   /**
@@ -285,13 +291,7 @@ namespace Frames {
     };
     
   public:
-    // --------- Typing and identification
-
-    /// Returns a human-readable type string for this class.
-    static const char *TypeStaticGet();
-    /// Returns a human-readable type string for this instance.
-    /** Must be overloaded in all subclasses (see Texture for an example). */
-    virtual const char *TypeGet() const { return TypeStaticGet(); }
+    // --------- Identification
 
     /// Returns the name of this layout.
     const std::string &NameGet() const { return m_name; }

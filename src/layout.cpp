@@ -50,7 +50,6 @@ namespace Frames {
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyUp, (Input::Key kev));
 
   detail::Rtti Layout::s_rtti(0); // special case, null terminator; other examples should use FRAMES_DEFINE_RTTI
-
   /*static*/ const char *Layout::TypeStaticGet() {
     return "Layout";
   }

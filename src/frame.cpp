@@ -15,10 +15,6 @@ namespace Frames {
     return new Frame(name, parent);
   }
 
-  /*static*/ const char *Frame::TypeStaticGet() {
-    return "Frame";
-  }
-
   void Frame::SetBackground(const Color &color) {
     if (color != m_bg) {
       m_bg = color;

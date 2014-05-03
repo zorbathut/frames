@@ -20,9 +20,6 @@ namespace Frames {
 
   public:
     static Raw *Create(const std::string &name, Layout *parent);
-
-    static const char *TypeStaticGet();
-    virtual const char *TypeGet() const { return TypeStaticGet(); }
     
   protected:
     virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, TypeStaticGet()); Frame::luaF_Register(L); }

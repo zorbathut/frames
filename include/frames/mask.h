@@ -13,9 +13,6 @@ namespace Frames {
   public:
     static Mask *Create(const std::string &name, Layout *parent);
 
-    static const char *TypeStaticGet();
-    virtual const char *TypeGet() const { return TypeStaticGet(); }
-
   protected:
     virtual bool MouseMaskingTest(float x, float y);
 

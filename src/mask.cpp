@@ -14,10 +14,6 @@ namespace Frames {
     return new Mask(name, parent);
   }
 
-  /*static*/ const char *Mask::TypeStaticGet() {
-    return "Mask";
-  }
-
   bool Mask::MouseMaskingTest(float x, float y) {
     return x >= LeftGet() && y >= TopGet() && x < RightGet() && y < BottomGet();
   }

@@ -16,10 +16,6 @@ namespace Frames {
     return new Texture(name, parent);
   }
 
-  /*static*/ const char *Texture::TypeStaticGet() {
-    return "Texture";
-  }
-
   void Texture::SetTexture(const std::string &id) {
     // work work work
     m_texture_id = id;

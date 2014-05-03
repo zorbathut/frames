@@ -17,10 +17,6 @@ namespace Frames {
     return new Text(name, parent);
   }
 
-  /*static*/ const char *Text::TypeStaticGet() {
-    return "Text";
-  }
-
   void Text::SetText(const std::string &text) {
     if (m_text != text) {
       m_text = text;

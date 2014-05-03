@@ -16,10 +16,6 @@ namespace Frames {
     return new Raw(name, parent);
   }
 
-  /*static*/ const char *Raw::TypeStaticGet() {
-    return "Raw";
-  }
-
   /*static*/ void Raw::luaF_RegisterFunctions(lua_State *L) {
     Frame::luaF_RegisterFunctions(L);
   }
