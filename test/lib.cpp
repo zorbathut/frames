@@ -180,6 +180,7 @@ void TestEnvironment::AllowErrors() {
 }
 
 VerbLog::VerbLog() {
+  m_records += "Begin log\n"; // this is honestly just for some code laziness in VerbLog, an empty record vector is treated specially
 }
 
 VerbLog::~VerbLog() {

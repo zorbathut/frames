@@ -41,10 +41,6 @@ TEST(Input, Ordering) {
 
   // very thorough testing
   for (int i = 0; i < (1 << 3); ++i) {
-    if (i == 0) {
-      continue; // no actual input hooks, this is silly
-    }
-
     a->SetInputMode((i & (1 << 0)) ? Frames::Layout::IM_ALL : Frames::Layout::IM_NONE);
     b->SetInputMode((i & (1 << 1)) ? Frames::Layout::IM_ALL : Frames::Layout::IM_NONE);
     c->SetInputMode((i & (1 << 2)) ? Frames::Layout::IM_ALL : Frames::Layout::IM_NONE);

@@ -1,4 +1,6 @@
-Event Layout::Event::MouseOver on Root.b
-Event Layout::Event::MouseLeftDown on Root.b
-Event Layout::Event::MouseLeftDown on Root.b
-Event Layout::Event::MouseOut on Root.b
+Begin log
+Event Layout::Event::MouseOver on Root.a
+Event Layout::Event::MouseLeftDown on Root.a
+Event Layout::Event::MouseLeftDown on Root.a
+Event Layout::Event::MouseLeftDown on Root.a
+Event Layout::Event::MouseOut on Root.a
