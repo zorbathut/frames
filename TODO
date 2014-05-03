@@ -1,8 +1,6 @@
 
 === DOCS
 
-* Rename Texture to Sprite
-
 * Configuration subsystem
   * Configuration
   * Stream

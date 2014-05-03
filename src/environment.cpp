@@ -9,8 +9,8 @@
 #include "frames/texture_manager.h"
 
 // these exist just for the lua init
+#include "frames/sprite.h"
 #include "frames/text.h"
-#include "frames/texture.h"
 #include "frames/mask.h"
 #include "frames/raw.h"
 
@@ -429,7 +429,7 @@ namespace Frames {
     // Register our built-in frames
     LuaRegisterFrame<Frame>(L);
     LuaRegisterFrame<Text>(L);
-    LuaRegisterFrame<Texture>(L);
+    LuaRegisterFrame<Sprite>(L);
     LuaRegisterFrame<Mask>(L);
     LuaRegisterFrame<Raw>(L);
     

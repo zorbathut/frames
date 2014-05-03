@@ -1,4 +1,4 @@
-// The Texture class
+// The Sprite class
 
 #ifndef FRAMES_TEXTURE
 #define FRAMES_TEXTURE
@@ -7,12 +7,12 @@
 #include "frames/texture_manager.h"
 
 namespace Frames {
-  class Texture : public Frame {
+  class Sprite : public Frame {
     FRAMES_DECLARE_RTTI();
     friend class Environment;
 
   public:
-    static Texture *Create(const std::string &name, Layout *parent);
+    static Sprite *Create(const std::string &name, Layout *parent);
 
     void TextureSet(const std::string &id);
     const std::string &TextureGet() const { return m_texture_id; }
@@ -27,8 +27,8 @@ namespace Frames {
     static void luaF_RegisterFunctions(lua_State *L);
 
   private:
-    Texture(const std::string &name, Layout *parent);
-    virtual ~Texture();
+    Sprite(const std::string &name, Layout *parent);
+    virtual ~Sprite();
 
     virtual void RenderElement(detail::Renderer *renderer) const;
 

@@ -1,5 +1,5 @@
 
-#include "frames/texture.h"
+#include "frames/sprite.h"
 
 #include "frames/cast.h"
 #include "frames/environment.h"
@@ -10,13 +10,13 @@
 #include "frames/os_gl.h"
 
 namespace Frames {
-  FRAMES_DEFINE_RTTI(Texture, Frame);
+  FRAMES_DEFINE_RTTI(Sprite, Frame);
 
-  Texture *Texture::Create(const std::string &name, Layout *parent) {
-    return new Texture(name, parent);
+  Sprite *Sprite::Create(const std::string &name, Layout *parent) {
+    return new Sprite(name, parent);
   }
 
-  void Texture::TextureSet(const std::string &id) {
+  void Sprite::TextureSet(const std::string &id) {
     // work work work
     m_texture_id = id;
     m_texture = EnvironmentGet()->GetTextureManager()->TextureFromId(id);
@@ -25,7 +25,7 @@ namespace Frames {
     HeightDefaultSet((float)m_texture->HeightGet());
   }
 
-  /*static*/ void Texture::luaF_RegisterFunctions(lua_State *L) {
+  /*static*/ void Sprite::luaF_RegisterFunctions(lua_State *L) {
     Frame::luaF_RegisterFunctions(L);
 
     luaF_RegisterFunction(L, TypeStaticGet(), "TextureSet", luaF_SetTexture);
@@ -35,7 +35,7 @@ namespace Frames {
     luaF_RegisterFunction(L, TypeStaticGet(), "TintGet", luaF_GetTint);
   }
 
-  void Texture::RenderElement(detail::Renderer *renderer) const {
+  void Sprite::RenderElement(detail::Renderer *renderer) const {
     Frame::RenderElement(renderer);
 
     if (m_texture) {
@@ -73,33 +73,33 @@ namespace Frames {
     }
   }
 
-  Texture::Texture(const std::string &name, Layout *parent) :
+  Sprite::Sprite(const std::string &name, Layout *parent) :
       Frame(name, parent),
       m_tint(1, 1, 1, 1)
   { };
-  Texture::~Texture() { };
+  Sprite::~Sprite() { };
 
-  /*static*/ int Texture::luaF_SetTexture(lua_State *L) {
+  /*static*/ int Sprite::luaF_SetTexture(lua_State *L) {
     luaF_checkparams(L, 2);
-    Texture *self = luaF_checkframe<Texture>(L, 1);
+    Sprite *self = luaF_checkframe<Sprite>(L, 1);
 
     self->TextureSet(luaL_checkstring(L, 2));
 
     return 0;
   }
 
-  /*static*/ int Texture::luaF_GetTexture(lua_State *L) {
+  /*static*/ int Sprite::luaF_GetTexture(lua_State *L) {
     luaF_checkparams(L, 1);
-    Texture *self = luaF_checkframe<Texture>(L, 1);
+    Sprite *self = luaF_checkframe<Sprite>(L, 1);
 
     lua_pushstring(L, self->TextureGet().c_str());
 
     return 1;
   }
 
-  /*static*/ int Texture::luaF_SetTint(lua_State *L) {
+  /*static*/ int Sprite::luaF_SetTint(lua_State *L) {
     luaF_checkparams(L, 4, 5);
-    Texture *self = luaF_checkframe<Texture>(L, 1);
+    Sprite *self = luaF_checkframe<Sprite>(L, 1);
 
     Color color(1, 1, 1, 1);
     color.r = (float)luaL_checknumber(L, 2);
@@ -114,9 +114,9 @@ namespace Frames {
     return 0;
   }
 
-  /*static*/ int Texture::luaF_GetTint(lua_State *L) {
+  /*static*/ int Sprite::luaF_GetTint(lua_State *L) {
     luaF_checkparams(L, 1);
-    Texture *self = luaF_checkframe<Texture>(L, 1);
+    Sprite *self = luaF_checkframe<Sprite>(L, 1);
 
     lua_pushnumber(L, self->m_tint.r);
     lua_pushnumber(L, self->m_tint.g);

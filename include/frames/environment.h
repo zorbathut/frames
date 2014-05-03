@@ -180,7 +180,7 @@ namespace Frames {
 
     // For access to manager Get functions
     friend class Text;
-    friend class Texture;
+    friend class Sprite;
     friend class detail::CharacterInfo;
     friend class detail::FontInfo;
     friend class detail::TextureBacking;

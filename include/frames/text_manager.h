@@ -1,4 +1,4 @@
-// Texture/font coordinator
+// Font coordinator
 
 #ifndef FRAMES_TEXT_MANAGER
 #define FRAMES_TEXT_MANAGER
