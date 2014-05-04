@@ -1,6 +1,9 @@
 
 === DOCS
 
+* Refcount the Resource system
+* TextureConfig -> Texture
+
 * Configuration subsystem
   * Configuration
   * TextureConfig
@@ -11,6 +14,8 @@
   * Text
   * Texture
   * Raw
+
+* Deep docs
 
 === TWEAK
 

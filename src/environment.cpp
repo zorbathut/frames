@@ -221,19 +221,19 @@ namespace Frames {
   }
 
   void Environment::Render(const Layout *root) {
-    Performance perf(this, 0.3f, 0.5f, 0.3f);
+    Performance perf(this, "Environment.Render", Color(0.3f, 0.5f, 0.3f));
 
     if (!root) {
       root = m_root;
     }
 
     if (root->EnvironmentGet() != this) {
-      ConfigurationGet().logger->LogError("Attempt to render a frame through an unrelated environment");
+      ConfigurationGet().LoggerGet()->LogError("Attempt to render a frame through an unrelated environment");
       return;
     }
 
     {
-      Performance perf(this, 1, 0, 0);
+      Performance perf(this, "Environment.Render.Resolve", Color(1, 0, 0));
       // We want to batch up events if possible (todo: is this the case? which is faster - flushing as they go, or flushing all at once?) so, two nested loops
       while (!m_invalidated.empty()) {
         while (!m_invalidated.empty()) {
@@ -248,20 +248,20 @@ namespace Frames {
     }
 
     {
-      Performance perf(this, 0.5f, 0.8f, 0.5f);
+      Performance perf(this, "Environment.Render.Process", Color(0.5f, 0.8f, 0.5f));
 
       {
-        Performance perf(this, 0.4f, 0.2f, 0.2f);
+        Performance perf(this, "Environment.Render.Process.Begin", Color(0.4f, 0.2f, 0.2f));
         m_renderer->Begin((int)m_root->WidthGet(), (int)m_root->HeightGet());
       }
 
       {
-        Performance perf(this, 0.8f, 0.6f, 0.6f);
+        Performance perf(this, "Environment.Render.Process.Render", Color(0.8f, 0.6f, 0.6f));
         root->Render(m_renderer);
       }
 
       {
-        Performance perf(this, 0.4f, 0.2f, 0.2f);
+        Performance perf(this, "Environment.Render.Process.End", Color(0.4f, 0.2f, 0.2f));
         m_renderer->End();
       }
     }
@@ -740,15 +740,11 @@ namespace Frames {
     m_lua_environments.erase(L); // and we're done!
   }
   
-  Environment::Performance::Performance(Environment *env, float r, float g, float b) : m_env(env) { // handle left uninitialized intentionally
-    if (m_env->ConfigurationGet().performance) {
-      m_handle = m_env->ConfigurationGet().performance->Push(r, g, b);
-    }
+  Environment::Performance::Performance(Environment *env, const char *name, const Color &color) : m_env(env) {
+    m_handle = m_env->ConfigurationGet().PerformanceGet()->Push(name, color);
   }
   Environment::Performance::~Performance() {
-    if (m_env->ConfigurationGet().performance) {
-      m_env->ConfigurationGet().performance->Pop(m_handle);
-    }
+    m_env->ConfigurationGet().PerformanceGet()->Pop(m_handle);
   }
 
   unsigned int Environment::RegisterFrame() {
@@ -769,28 +765,33 @@ namespace Frames {
 
     m_config = config;
 
-    if (!m_config.logger) {
-      m_config.logger = Ptr<Configuration::Logger>(new Configuration::Logger());
+    // Reset config values to defaults, if uninitialized
+    if (!m_config.LoggerGet()) {
+      m_config.LoggerSet(Ptr<Configuration::Logger>(new Configuration::Logger()));
     }
 
-    if (!m_config.textureFromId) {
-      m_config.textureFromId = Ptr<Configuration::TextureFromId>(new Configuration::TextureFromId());
+    if (!m_config.PerformanceGet()) {
+      m_config.PerformanceSet(Ptr<Configuration::Performance>(new Configuration::Performance()));
     }
 
-    if (!m_config.streamFromId) {
-      m_config.streamFromId = Ptr<Configuration::StreamFromId>(new Configuration::StreamFromId());
+    if (!m_config.ClipboardGet()) {
+      m_config.ClipboardSet(Ptr<Configuration::Clipboard>(new Configuration::Clipboard()));
     }
 
-    if (!m_config.pathFromId) {
-      m_config.pathFromId = Ptr<Configuration::PathFromId>(new Configuration::PathFromId());
+    if (!m_config.TextureFromIdGet()) {
+      m_config.TextureFromIdSet(Ptr<Configuration::TextureFromId>(new Configuration::TextureFromId()));
     }
 
-    if (!m_config.textureFromStream) {
-      m_config.textureFromStream = Ptr<Configuration::TextureFromStream>(new Configuration::TextureFromStream());
+    if (!m_config.StreamFromIdGet()) {
+      m_config.StreamFromIdSet(Ptr<Configuration::StreamFromId>(new Configuration::StreamFromId()));
     }
 
-    if (!m_config.clipboard) {
-      m_config.clipboard = Ptr<Configuration::Clipboard>(new Configuration::Clipboard());
+    if (!m_config.PathFromIdGet()) {
+      m_config.PathFromIdSet(Ptr<Configuration::PathFromId>(new Configuration::PathFromId()));
+    }
+
+    if (!m_config.TextureFromStreamGet()) {
+      m_config.TextureFromStreamSet(Ptr<Configuration::TextureFromStream>(new Configuration::TextureFromStream()));
     }
     
     // easier to handle it on our own, and we won't be creating environments often enough for this to be a performance hit

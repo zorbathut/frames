@@ -447,7 +447,7 @@ namespace Frames {
 
     TextInfoPtr TextManager::GetTextInfo(const std::string &font, float size, const std::string &text) {
       if (!m_fonts.left.count(font)) {
-        Stream *stream = m_env->ConfigurationGet().streamFromId->Create(m_env, font);
+        Stream *stream = m_env->ConfigurationGet().StreamFromIdGet()->Create(m_env, font);
         if (!stream) {
           m_env->LogError(Frames::detail::Format("Unable to find font \"%s\"", font));
           m_fonts.insert(boost::bimap<std::string, FontInfo *>::value_type(font, new FontInfo(m_env, 0)));

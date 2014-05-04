@@ -192,7 +192,7 @@ namespace Frames {
       m_select(0),
       m_cursor(0)
   {
-    m_font = EnvironmentGet()->ConfigurationGet().fontDefaultId;
+    m_font = EnvironmentGet()->ConfigurationGet().FontDefaultIdGet();
 
     WidthDefaultSet(0);
     HeightDefaultSet(20);
@@ -394,7 +394,7 @@ namespace Frames {
     } else if ((key == Input::Key::C && EnvironmentGet()->Input_MetaGet().ctrl) || (m_interactive == INTERACTIVE_SELECT && key == Input::Key::X && EnvironmentGet()->Input_MetaGet().ctrl)) { // if we're in select mode, interpret cut as copy
       // copy to clipboard
       if (m_cursor != m_select) {
-        EnvironmentGet()->ConfigurationGet().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
+        EnvironmentGet()->ConfigurationGet().ClipboardGet()->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
       }
     }
 
@@ -498,7 +498,7 @@ namespace Frames {
     } else if (key == Input::Key::X && EnvironmentGet()->Input_MetaGet().ctrl) {
       // cut to clipboard
       if (m_cursor != m_select) {
-        EnvironmentGet()->ConfigurationGet().clipboard->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
+        EnvironmentGet()->ConfigurationGet().ClipboardGet()->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
 
         // chop out that text
         int ncursor = std::min(m_cursor, m_select);
@@ -508,11 +508,13 @@ namespace Frames {
       }
     } else if (key == Input::Key::V && EnvironmentGet()->Input_MetaGet().ctrl) {
       // paste from clipboard
-      std::string clipboard = EnvironmentGet()->ConfigurationGet().clipboard->Get();
-      int ncursor = m_cursor + (int)clipboard.size();
-      TextSet(m_text.substr(0, std::min(m_cursor, m_select)) + clipboard + m_text.substr(std::max(m_cursor, m_select)));
-      CursorSet(ncursor);
-      SelectionClear();
+      std::string clipboard = EnvironmentGet()->ConfigurationGet().ClipboardGet()->Get();
+      if (!clipboard.empty()) {
+        int ncursor = m_cursor + (int)clipboard.size();
+        TextSet(m_text.substr(0, std::min(m_cursor, m_select)) + clipboard + m_text.substr(std::max(m_cursor, m_select)));
+        CursorSet(ncursor);
+        SelectionClear();
+      }
     }
   }
 

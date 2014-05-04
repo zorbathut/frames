@@ -162,12 +162,12 @@ namespace Frames {
     void LuaUnregister(lua_State *L);
 
     // ==== Logging and debugging
-    void LogError(const std::string &log) { if (m_config.logger) m_config.logger->LogError(log); }
-    void LogDebug(const std::string &log) { if (m_config.logger) m_config.logger->LogDebug(log); }
+    void LogError(const std::string &log) { m_config.LoggerGet()->LogError(log); }
+    void LogDebug(const std::string &log) { m_config.LoggerGet()->LogDebug(log); }
 
     class Performance {
     public:
-      Performance(Environment *env, float r, float g, float b);
+      Performance(Environment *env, const char *name, const Color &color);
       ~Performance();
 
     private:

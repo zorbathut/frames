@@ -12,7 +12,7 @@
 #include <windows.h>
 
 namespace Frames {
-  Configuration::Configuration() : logger(0), textureFromId(0), streamFromId(0), pathFromId(0), textureFromStream(0), clipboard(0), performance(0) { };
+  Configuration::Configuration() { };
 
   void Configuration::Logger::LogError(const std::string &log) {
     std::printf("Frame error: %s", log.c_str());
@@ -23,10 +23,10 @@ namespace Frames {
   }
 
   TextureConfig Configuration::TextureFromId::Create(Environment *env, const std::string &id) {
-    Stream *stream = env->ConfigurationGet().streamFromId->Create(env, id);
+    Stream *stream = env->ConfigurationGet().StreamFromIdGet()->Create(env, id);
 
     if (stream) {
-      TextureConfig rv = env->ConfigurationGet().textureFromStream->Create(env, stream);
+      TextureConfig rv = env->ConfigurationGet().TextureFromStreamGet()->Create(env, stream);
       delete stream;
       return rv;
     }
@@ -35,7 +35,7 @@ namespace Frames {
   }
 
   Stream *Configuration::StreamFromId::Create(Environment *env, const std::string &id) {
-    std::string path = env->ConfigurationGet().pathFromId->Process(env, id);
+    std::string path = env->ConfigurationGet().PathFromIdGet()->Process(env, id);
     if (!path.empty()) {
       return StreamFile::Create(path);
     }

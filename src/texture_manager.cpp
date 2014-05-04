@@ -95,7 +95,7 @@ namespace Frames {
 
       m_env->LogDebug(detail::Format("Attempting to load texture %s", id));
 
-      TextureConfig conf = m_env->ConfigurationGet().textureFromId->Create(m_env, id);
+      TextureConfig conf = m_env->ConfigurationGet().TextureFromIdGet()->Create(m_env, id);
 
       TextureChunkPtr rv = TextureFromConfig(conf);
 
