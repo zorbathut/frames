@@ -217,7 +217,7 @@ namespace Frames {
 
       if (bmp && bmp->bitmap.buffer) {
         m_texture = parent->EnvironmentGet()->GetTextureManager()->TextureFromConfig(
-              Texture::CreateUnmanagedRaw(parent->EnvironmentGet(), bmp->bitmap.width, bmp->bitmap.rows, Texture::MODE_A, bmp->bitmap.buffer, bmp->bitmap.width),
+              Texture::CreateRawUnmanaged(parent->EnvironmentGet(), bmp->bitmap.width, bmp->bitmap.rows, Texture::FORMAT_A, bmp->bitmap.buffer, bmp->bitmap.width),
               parent->TextureGet()
         );
 

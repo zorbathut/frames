@@ -87,10 +87,10 @@ namespace Frames {
       return Ptr<Texture>();
     }
 
-    tinfo = Texture::CreateManagedRaw(env, png_get_image_width(png_ptr, info_ptr), png_get_image_height(png_ptr, info_ptr), Texture::MODE_RGBA);
+    tinfo = Texture::CreateRawManaged(env, png_get_image_width(png_ptr, info_ptr), png_get_image_height(png_ptr, info_ptr), Texture::FORMAT_RGBA);
     
     for(int i = 0; i < (int)png_get_image_height(png_ptr, info_ptr); ++i)
-      ul.push_back(tinfo->Raw_GetData() + i * tinfo->WidthGet() * 4);
+      ul.push_back(tinfo->RawDataGet() + i * tinfo->WidthGet() * 4);
     png_read_image(png_ptr, (png_byte**)&ul[0]);
         
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
@@ -211,10 +211,10 @@ namespace Frames {
   	jpeg_read_header(&info, true);
     jpeg_start_decompress(&info);
 
-    rv = Texture::CreateManagedRaw(env, info.image_width, info.image_height, (info.num_components == 3 ? Texture::MODE_RGB : Texture::MODE_L));
+    rv = Texture::CreateRawManaged(env, info.image_width, info.image_height, (info.num_components == 3 ? Texture::FORMAT_RGB : Texture::FORMAT_L));
 
     for (int y = 0; y < (int)info.image_height; ++y) {
-      unsigned char *row = rv->Raw_GetData() + y * rv->Raw_GetStride();
+      unsigned char *row = rv->RawDataGet() + y * rv->RawStrideGet();
       if (jpeg_read_scanlines(&info, &row, 1) != 1) {
         jpeg_destroy_decompress(&info);
         return Ptr<Texture>();
