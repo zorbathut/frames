@@ -13,11 +13,11 @@ namespace Frames {
   namespace Loader {
     namespace PNG {
       bool Is(const Ptr<Stream> &stream);
-      Texture Load(Environment *env, const Ptr<Stream> &stream);
+      Ptr<Texture> Load(Environment *env, const Ptr<Stream> &stream);
     }
     namespace JPG {
       bool Is(const Ptr<Stream> &stream);
-      Texture Load(Environment *env, const Ptr<Stream> &stream);
+      Ptr<Texture> Load(Environment *env, const Ptr<Stream> &stream);
     }
   }
 }

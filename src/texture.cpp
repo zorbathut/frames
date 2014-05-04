@@ -18,29 +18,29 @@ namespace Frames {
     }
   }
 
-  /*static*/ Texture Texture::CreateManagedRaw(Environment *env, int width, int height, Type mode) {
-    Texture rv;
-    rv.m_mode = RAW;
-    rv.m_width = width;
-    rv.m_height = height;
-    rv.m_env = env;
-    rv.m_raw_type = mode;
-    rv.m_raw_stride = width * GetBPP(mode);
-    rv.m_raw_data = new unsigned char[rv.m_raw_stride * rv.m_height];
-    rv.m_raw_refcount = new int(1);
+  /*static*/ Ptr<Texture> Texture::CreateManagedRaw(Environment *env, int width, int height, Type mode) {
+    Ptr<Texture> rv(new Texture);
+    rv->m_mode = RAW;
+    rv->m_width = width;
+    rv->m_height = height;
+    rv->m_env = env;
+    rv->m_raw_type = mode;
+    rv->m_raw_stride = width * GetBPP(mode);
+    rv->m_raw_data = new unsigned char[rv->m_raw_stride * rv->m_height];
+    rv->m_raw_owned = true;
     return rv;
   }
 
-  /*static*/ Texture Texture::CreateUnmanagedRaw(Environment *env, int width, int height, Type mode, unsigned char *data, int stride) {
-    Texture rv;
-    rv.m_mode = RAW;
-    rv.m_width = width;
-    rv.m_height = height;
-    rv.m_env = env;
-    rv.m_raw_type = mode;
-    rv.m_raw_stride = stride;
-    rv.m_raw_data = data;
-    rv.m_raw_refcount = 0;
+  /*static*/ Ptr<Texture> Texture::CreateUnmanagedRaw(Environment *env, int width, int height, Type mode, unsigned char *data, int stride) {
+    Ptr<Texture> rv(new Texture);
+    rv->m_mode = RAW;
+    rv->m_width = width;
+    rv->m_height = height;
+    rv->m_env = env;
+    rv->m_raw_type = mode;
+    rv->m_raw_stride = stride;
+    rv->m_raw_data = data;
+    rv->m_raw_owned = false;
     return rv;
   }
 
@@ -49,85 +49,16 @@ namespace Frames {
     m_width(0),
     m_height(0),
     m_raw_data(0),
-    m_raw_refcount(0),
+    m_raw_owned(false),
     m_raw_stride(0),
     m_raw_type(MODE_RGBA),
     m_env(0)
   {
-  }
-
-  Texture::Texture(const Texture &rhs) :
-    m_mode(NIL),
-    m_width(0),
-    m_height(0),
-    m_raw_data(0),
-    m_raw_refcount(0),
-    m_raw_stride(0),
-    m_raw_type(MODE_RGBA),
-    m_env(0)
-  {
-    *this = rhs;  // just easier to do it this way
   }
 
   Texture::~Texture() {
-    if (m_mode == NIL) {
-    } else if (m_mode == RAW) {
-      if (m_raw_refcount) {
-        --*m_raw_refcount;
-        if (!*m_raw_refcount) {
-          delete m_raw_refcount;
-          delete [] m_raw_data;
-        }
-      }
-    } else {
-      if (m_env) {
-        m_env->LogError("Unknown Texture type");
-      }
-    }
-  }
-
-  void Texture::operator=(const Texture &rhs) {
-    // first, deallocate if needed
-    if (m_mode == NIL) {
-    } else if (m_mode == RAW) {
-      if (m_raw_refcount) {
-        --*m_raw_refcount;
-        if (!*m_raw_refcount) {
-          delete m_raw_refcount;
-          delete [] m_raw_data;
-        }
-      }
-      m_raw_data = 0;
-      m_raw_refcount = 0;
-      m_raw_stride = 0;
-      m_raw_type = MODE_RGBA;
-    } else {
-      if (m_env) {
-        m_env->LogError("Unknown Texture type");
-      }
-    }
-
-    m_mode = rhs.m_mode;
-
-    m_width = rhs.m_width;
-    m_height = rhs.m_height;
-
-    m_env = rhs.m_env; // not sure I like the idea of changing envs, but
-
-    if (m_mode == NIL) {
-    } else if (m_mode == RAW) {
-      m_raw_data = rhs.m_raw_data;
-      m_raw_refcount = rhs.m_raw_refcount;
-      m_raw_stride = rhs.m_raw_stride;
-      m_raw_type = rhs.m_raw_type;
-      if (m_raw_refcount) {
-        ++*m_raw_refcount;
-      }
-    } else {
-      if (m_env) {
-        m_env->LogError("Unknown Texture type");
-      }
+    if (m_raw_owned) {
+      delete [] m_raw_data;
     }
   }
 }
-

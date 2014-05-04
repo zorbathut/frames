@@ -210,9 +210,9 @@ TEST(Input, Mouse) {
 TEST(Input, Meta) {
   TestEnvironment env;
 
-  EXPECT_TRUE(env->Input_MetaGet().shift == false);
-  EXPECT_TRUE(env->Input_MetaGet().alt == false);
-  EXPECT_TRUE(env->Input_MetaGet().ctrl == false);
+  EXPECT_EQ(false, env->Input_MetaGet().shift);
+  EXPECT_EQ(false, env->Input_MetaGet().alt);
+  EXPECT_EQ(false, env->Input_MetaGet().ctrl);
 
   Frames::Input::Meta meta;
   meta.shift = true;
@@ -221,9 +221,9 @@ TEST(Input, Meta) {
 
   env->Input_MetaSet(meta);
 
-  EXPECT_TRUE(env->Input_MetaGet().shift == true);
-  EXPECT_TRUE(env->Input_MetaGet().alt == true);
-  EXPECT_TRUE(env->Input_MetaGet().ctrl == true);
+  EXPECT_EQ(true, env->Input_MetaGet().shift);
+  EXPECT_EQ(true, env->Input_MetaGet().alt);
+  EXPECT_EQ(true, env->Input_MetaGet().ctrl);
 
   // not exactly complicated
 }

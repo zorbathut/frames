@@ -35,24 +35,24 @@ namespace Frames {
       png_error(png_ptr, "unexpected EOF");
   }
 
-  Texture Loader::PNG::Load(Environment *env, const Ptr<Stream> &stream) {
+  Ptr<Texture> Loader::PNG::Load(Environment *env, const Ptr<Stream> &stream) {
     png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     if (!png_ptr) {
-      return Texture();
+      return Ptr<Texture>();
     }
 
     png_infop info_ptr = png_create_info_struct(png_ptr);
     if (!info_ptr) {
       png_destroy_read_struct(&png_ptr, NULL, NULL);
-      return Texture();
+      return Ptr<Texture>();
     }
 
-    Texture tinfo;  // tinfo created here so its destructor will trigger if the longjmp is hit
+    Ptr<Texture> tinfo;  // tinfo created here so its destructor will trigger if the longjmp is hit
     std::vector<unsigned char *> ul;
     
     if(setjmp(png_jmpbuf(png_ptr))) {
       png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-      return Texture();
+      return Ptr<Texture>();
     }
     
     png_set_read_fn(png_ptr, stream.Get(), PngReader);
@@ -84,13 +84,13 @@ namespace Frames {
         !(png_get_channels(png_ptr, info_ptr) == 4 || png_get_channels(png_ptr, info_ptr) == 3) ||
         !(png_get_color_type(png_ptr, info_ptr) == PNG_COLOR_TYPE_RGBA || png_get_color_type(png_ptr, info_ptr) == PNG_COLOR_TYPE_RGB)) {
       png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-      return Texture();
+      return Ptr<Texture>();
     }
 
     tinfo = Texture::CreateManagedRaw(env, png_get_image_width(png_ptr, info_ptr), png_get_image_height(png_ptr, info_ptr), Texture::MODE_RGBA);
     
     for(int i = 0; i < (int)png_get_image_height(png_ptr, info_ptr); ++i)
-      ul.push_back(tinfo.Raw_GetData() + i * tinfo.WidthGet() * 4);
+      ul.push_back(tinfo->Raw_GetData() + i * tinfo->WidthGet() * 4);
     png_read_image(png_ptr, (png_byte**)&ul[0]);
         
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
@@ -176,8 +176,8 @@ namespace Frames {
     void JpegMemorySource(j_decompress_ptr info, const unsigned char *buffer, int buffer_size) {}
   }
 
-  Texture Loader::JPG::Load(Environment *env, const Ptr<Stream> &stream) {
-    Texture rv; // rv created here to deallocate if we hit the setjmp
+  Ptr<Texture> Loader::JPG::Load(Environment *env, const Ptr<Stream> &stream) {
+    Ptr<Texture> rv; // rv created here to deallocate if we hit the setjmp
     jpeg_decompress_struct info;
 
     // Set up the error handler. If jpeglib runs into an error at any future point, it will
@@ -189,7 +189,7 @@ namespace Frames {
     jerr.env = env;
     if (setjmp(jerr.setjmp_buffer)) {
       jpeg_destroy_decompress(&info);
-      return Texture();
+      return Ptr<Texture>();
     }
     
     // Set up the memory source
@@ -214,10 +214,10 @@ namespace Frames {
     rv = Texture::CreateManagedRaw(env, info.image_width, info.image_height, (info.num_components == 3 ? Texture::MODE_RGB : Texture::MODE_L));
 
     for (int y = 0; y < (int)info.image_height; ++y) {
-      unsigned char *row = rv.Raw_GetData() + y * rv.Raw_GetStride();
+      unsigned char *row = rv->Raw_GetData() + y * rv->Raw_GetStride();
       if (jpeg_read_scanlines(&info, &row, 1) != 1) {
         jpeg_destroy_decompress(&info);
-        return Texture();
+        return Ptr<Texture>();
       }
     }
     

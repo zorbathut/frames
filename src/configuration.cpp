@@ -22,15 +22,14 @@ namespace Frames {
     std::printf("Frame debug: %s", log.c_str());
   }
 
-  Texture Configuration::TextureFromId::Create(Environment *env, const std::string &id) {
+  Ptr<Texture> Configuration::TextureFromId::Create(Environment *env, const std::string &id) {
     Ptr<Stream> stream = env->ConfigurationGet().StreamFromIdGet()->Create(env, id);
 
     if (stream) {
-      Texture rv = env->ConfigurationGet().TextureFromStreamGet()->Create(env, stream);
-      return rv;
+      return env->ConfigurationGet().TextureFromStreamGet()->Create(env, stream);
     }
 
-    return Texture();
+    return Ptr<Texture>();
   }
 
   Ptr<Stream> Configuration::StreamFromId::Create(Environment *env, const std::string &id) {
@@ -46,13 +45,13 @@ namespace Frames {
     return id;
   }
 
-  Texture Configuration::TextureFromStream::Create(Environment *env, const Ptr<Stream> &stream) {
+  Ptr<Texture> Configuration::TextureFromStream::Create(Environment *env, const Ptr<Stream> &stream) {
     if (Loader::PNG::Is(stream))
       return Loader::PNG::Load(env, stream);
     else if (Loader::JPG::Is(stream))
       return Loader::JPG::Load(env, stream);
     else
-      return Texture(); // give up
+      return Ptr<Texture>(); // give up
   }
 
   // win32 only. TODO: split into crossplatform

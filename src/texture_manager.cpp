@@ -95,7 +95,7 @@ namespace Frames {
 
       m_env->LogDebug(detail::Format("Attempting to load texture %s", id));
 
-      Texture conf = m_env->ConfigurationGet().TextureFromIdGet()->Create(m_env, id);
+      Ptr<Texture> conf = m_env->ConfigurationGet().TextureFromIdGet()->Create(m_env, id);
 
       TextureChunkPtr rv = TextureFromConfig(conf);
 
@@ -109,8 +109,8 @@ namespace Frames {
       return rv;
     }
 
-    TextureChunkPtr TextureManager::TextureFromConfig(const Texture &conf, TextureBackingPtr in_backing /*= 0*/) {
-      if (conf.GetMode() == Texture::RAW) {
+    TextureChunkPtr TextureManager::TextureFromConfig(const Ptr<Texture> &tex, TextureBackingPtr in_backing /*= 0*/) {
+      if (tex->GetMode() == Texture::RAW) {
         // time to GL-ize it
         // for now we're just putting it into its own po2 texture
 
@@ -121,20 +121,20 @@ namespace Frames {
         int gl_tex_mode = GL_RGBA;
         int input_tex_mode = GL_RGBA;
 
-        if (conf.Raw_TypeGet() == Texture::MODE_RGBA) {
+        if (tex->Raw_TypeGet() == Texture::MODE_RGBA) {
           gl_tex_mode = GL_RGBA;
           input_tex_mode = GL_RGBA;
-        } else if (conf.Raw_TypeGet() == Texture::MODE_RGB) {
+        } else if (tex->Raw_TypeGet() == Texture::MODE_RGB) {
           gl_tex_mode = GL_RGBA;
           input_tex_mode = GL_RGB;
-        } else if (conf.Raw_TypeGet() == Texture::MODE_L) {
+        } else if (tex->Raw_TypeGet() == Texture::MODE_L) {
           gl_tex_mode = GL_LUMINANCE;
           input_tex_mode = GL_LUMINANCE;
-        } else if (conf.Raw_TypeGet() == Texture::MODE_A) {
+        } else if (tex->Raw_TypeGet() == Texture::MODE_A) {
           gl_tex_mode = GL_ALPHA;
           input_tex_mode = GL_ALPHA;
         } else {
-          m_env->LogError(detail::Format("Unrecognized raw type %d in texture", conf.Raw_TypeGet()));
+          m_env->LogError(detail::Format("Unrecognized raw type %d in texture", tex->Raw_TypeGet()));
           return TextureChunkPtr();
         }
 
@@ -143,19 +143,19 @@ namespace Frames {
         } else {
           backing.Reset(new TextureBacking(m_env));
 
-          backing->Allocate(detail::ClampToPowerOf2(conf.WidthGet()), detail::ClampToPowerOf2(conf.HeightGet()), gl_tex_mode);
+          backing->Allocate(detail::ClampToPowerOf2(tex->WidthGet()), detail::ClampToPowerOf2(tex->HeightGet()), gl_tex_mode);
 
           m_backing.insert(backing.Get());  // "safe", because the backing stores enough data that it will clean this up when it's destroyed
         }
 
-        std::pair<int, int> origin = backing->AllocateSubtexture(conf.WidthGet(), conf.HeightGet());
+        std::pair<int, int> origin = backing->AllocateSubtexture(tex->WidthGet(), tex->HeightGet());
 
-        //m_env->LogDebug(detail::Format("Allocating %d/%d to %d/%d", conf.WidthGet(), conf.HeightGet(), origin.first, origin.second));
+        //m_env->LogDebug(detail::Format("Allocating %d/%d to %d/%d", tex->WidthGet(), tex->HeightGet(), origin.first, origin.second));
 
         TextureChunkPtr chunk(new TextureChunk());
         chunk->m_backing = backing;
-        chunk->m_texture_width = conf.WidthGet();
-        chunk->m_texture_height = conf.HeightGet();
+        chunk->m_texture_width = tex->WidthGet();
+        chunk->m_texture_height = tex->HeightGet();
         chunk->m_bounds.s.x = (float)origin.first / backing->m_surface_width;
         chunk->m_bounds.s.y = (float)origin.second / backing->m_surface_width;
         chunk->m_bounds.e.x = chunk->m_bounds.s.x + (float)chunk->m_texture_width / backing->m_surface_width;
@@ -165,24 +165,11 @@ namespace Frames {
         glPixelStorei(GL_PACK_ALIGNMENT, 1);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        if (conf.Raw_GetStride() == Texture::GetBPP(conf.Raw_TypeGet()) * conf.WidthGet()) {
-          //m_env->LogError(detail::Format("Doing the serious stride, %d vs %d (%d/%d)", conf.Raw_GetStride(), Texture::GetBPP(conf.Raw_TypeGet()) * conf.WidthGet(), Texture::GetBPP(conf.Raw_TypeGet()), conf.WidthGet()));
-          /*{
-            const char map[] = " .,+|#";
-            for (int y = 0; y < chunk->m_texture_height; ++y) {
-              std::string row;
-              for (int x = 0; x < chunk->m_texture_width; ++x) {
-                int val = conf.Raw_GetData()[x + y * chunk->m_texture_width];
-                row += map[val * 6 / 256];
-              }
-              m_env->LogDebug(row);
-            }
-          }*/
-          glTexSubImage2D(GL_TEXTURE_2D, 0, origin.first, origin.second, chunk->m_texture_width, chunk->m_texture_height, input_tex_mode, GL_UNSIGNED_BYTE, conf.Raw_GetData());
+        if (tex->Raw_GetStride() == Texture::GetBPP(tex->Raw_TypeGet()) * tex->WidthGet()) {
+          glTexSubImage2D(GL_TEXTURE_2D, 0, origin.first, origin.second, chunk->m_texture_width, chunk->m_texture_height, input_tex_mode, GL_UNSIGNED_BYTE, tex->Raw_GetData());
         } else {
-          //m_env->LogError(detail::Format("Doing the nonserious stride, %d vs %d (%d/%d)", conf.Raw_GetStride(), Texture::GetBPP(conf.Raw_TypeGet()) * conf.WidthGet(), Texture::GetBPP(conf.Raw_TypeGet()), conf.WidthGet()));
-          for (int y = 0; y < conf.HeightGet(); ++y) {
-            glTexSubImage2D(GL_TEXTURE_2D, 0, origin.first, origin.second + y, chunk->m_texture_width, 1, input_tex_mode, GL_UNSIGNED_BYTE, conf.Raw_GetData() + y * conf.Raw_GetStride());
+          for (int y = 0; y < tex->HeightGet(); ++y) {
+            glTexSubImage2D(GL_TEXTURE_2D, 0, origin.first, origin.second + y, chunk->m_texture_width, 1, input_tex_mode, GL_UNSIGNED_BYTE, tex->Raw_GetData() + y * tex->Raw_GetStride());
           }
         }
 
@@ -193,7 +180,7 @@ namespace Frames {
 
         return chunk;
       } else {
-        m_env->LogError("Unknown texture config type");
+        m_env->LogError("Unknown texture type");
         return TextureChunkPtr();
       }
     }

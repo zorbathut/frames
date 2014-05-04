@@ -3,10 +3,12 @@
 #ifndef TEXTURE_CONFIG
 #define TEXTURE_CONFIG
 
+#include "frames/ptr.h"
+
 namespace Frames {
   class Environment;
 
-  class Texture {
+  class Texture : public Refcountable<Texture> {
   public:
     enum Type {
       MODE_RGBA, // 8bpc, 32bpp, laid out as RGBA
@@ -18,14 +20,11 @@ namespace Frames {
 
     enum Mode { NIL, RAW };
 
-    static Texture CreateManagedRaw(Environment *env, int width, int height, Type mode);
-    static Texture CreateUnmanagedRaw(Environment *env, int width, int height, Type mode, unsigned char *data, int stride);
+    static Ptr<Texture> CreateManagedRaw(Environment *env, int width, int height, Type mode);
+    static Ptr<Texture> CreateUnmanagedRaw(Environment *env, int width, int height, Type mode, unsigned char *data, int stride);
 
     Texture();
-    Texture(const Texture &rhs);
     ~Texture();
-
-    void operator=(const Texture &rhs);
 
     Mode GetMode() const { return m_mode; }
 
@@ -44,8 +43,8 @@ namespace Frames {
     int m_height;
 
     unsigned char *m_raw_data;
-    int *m_raw_refcount;  // null for not owned, otherwise pointer to shared refcount
     int m_raw_stride;
+    bool m_raw_owned;
     Type m_raw_type;
 
     Environment *m_env;
