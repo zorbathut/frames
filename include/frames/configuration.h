@@ -12,7 +12,9 @@
 namespace Frames {
   class Environment;
   class Stream;
+  typedef Ptr<Stream> StreamPtr;
   class Texture;
+  typedef Ptr<Texture> TexturePtr;
 
   /// All configuration data that needs to be provided for a functioning Environment.
   /** Every Environment contains a Configuration. If a Configuration isn't provided when the Environment is constructed, a default Configuration will be built.
@@ -34,9 +36,11 @@ namespace Frames {
       Technically, the entire Frames system is left in an inconsistent and unpredictable state after a single Error, although the code does make an attempt to clean up and avoid crashes. */
       virtual void LogError(const std::string &log);
 
-      /// Called when debug output is requested.
+      /// Called when debug output is logged.
+      /** This tends to be pretty spammy. It's very helpful for analyzing what's going on internally, but you may want to disable it by default or provide some convenient way of filtering it. */
       virtual void LogDebug(const std::string &log);
     };
+    typedef Ptr<Logger> LoggerPtr;
 
     /// Clipboard access for copy-paste behavior on Text frames.
     /** Default behavior uses the standard Windows global clipboard. */
@@ -50,6 +54,7 @@ namespace Frames {
       /// Called to retrieve the clipboard contents. Empty string is interpreted as no clipboard contents.
       virtual std::string Get();
     };
+    typedef Ptr<Clipboard> ClipboardPtr;
 
     /// Hooks for a performance monitoring system.
     /** Push() will be called with a human-readable name and a color ID code intended for use in visual profilers. It may return an opaque void* that will be provided in Pop().
@@ -67,6 +72,7 @@ namespace Frames {
       // End a profiling block.
       virtual void Pop(void *) {}
     };
+    typedef Ptr<Performance> PerformancePtr;
 
     /// Creates a Texture from a resource ID.
     /** See \ref resources "Resources" for more detail.
@@ -77,8 +83,9 @@ namespace Frames {
       virtual ~TextureFromId() {}
 
       /// Returns a new Texture associated with an environment and resource ID.
-      virtual Ptr<Texture> Create(Environment *env, const std::string &id);
+      virtual TexturePtr Create(Environment *env, const std::string &id);
     };
+    typedef Ptr<TextureFromId> TextureFromIdPtr;
 
     /// Creates a Stream from a resource ID.
     /** See \ref resources "Resources" for more detail.
@@ -89,8 +96,9 @@ namespace Frames {
       virtual ~StreamFromId() {}
 
       /// Returns a new Stream associated with an environment and resource ID.
-      virtual Ptr<Stream> Create(Environment *env, const std::string &id);
+      virtual StreamPtr Create(Environment *env, const std::string &id);
     };
+    typedef Ptr<StreamFromId> StreamFromIdPtr;
 
     /// Creates a path from a resource ID.
     /** See \ref resources "Resources" for more detail.
@@ -103,6 +111,7 @@ namespace Frames {
       /// Returns a path associated with an environment and resource ID.
       virtual std::string Process(Environment *env, const std::string &id);
     };
+    typedef Ptr<PathFromId> PathFromIdPtr;
 
     /// Creates a Texture from a Stream.
     /** See \ref resources "Resources" for more detail.
@@ -113,43 +122,44 @@ namespace Frames {
       virtual ~TextureFromStream() {}
 
       /// Returns a new Texture associated with an environment and created from the given Stream.
-      virtual Ptr<Texture> Create(Environment *env, const Ptr<Stream> &stream);
+      virtual TexturePtr Create(Environment *env, const StreamPtr &stream);
     };
+    typedef Ptr<TextureFromStream> TextureFromStreamPtr;
 
     /// Sets the Configuration's Logger module.
-    void LoggerSet(const Ptr<Logger> &logger) { m_logger = logger; }
+    void LoggerSet(const LoggerPtr &logger) { m_logger = logger; }
     /// Gets the Configuration's Logger module.
-    const Ptr<Logger> &LoggerGet() const { return m_logger;  }
+    const LoggerPtr &LoggerGet() const { return m_logger;  }
 
     /// Sets the Configuration's Clipboard module.
-    void ClipboardSet(const Ptr<Clipboard> &clipboard) { m_clipboard = clipboard; }
+    void ClipboardSet(const ClipboardPtr &clipboard) { m_clipboard = clipboard; }
     /// Gets the Configuration's Clipboard module.
-    const Ptr<Clipboard> &ClipboardGet() const { return m_clipboard; }
+    const ClipboardPtr &ClipboardGet() const { return m_clipboard; }
 
     /// Sets the Configuration's Performance module.
-    void PerformanceSet(const Ptr<Performance> &performance) { m_performance = performance; }
+    void PerformanceSet(const PerformancePtr &performance) { m_performance = performance; }
     /// Gets the Configuration's Performance module.
-    const Ptr<Performance> &PerformanceGet() const { return m_performance; }
+    const PerformancePtr &PerformanceGet() const { return m_performance; }
 
     /// Sets the Configuration's TextureFromId module.
-    void TextureFromIdSet(const Ptr<TextureFromId> &textureFromId) { m_textureFromId = textureFromId; }
+    void TextureFromIdSet(const TextureFromIdPtr &textureFromId) { m_textureFromId = textureFromId; }
     /// Gets the Configuration's TextureFromId module.
-    const Ptr<TextureFromId> &TextureFromIdGet() const { return m_textureFromId; }
+    const TextureFromIdPtr &TextureFromIdGet() const { return m_textureFromId; }
 
     /// Sets the Configuration's StreamFromId module.
-    void StreamFromIdSet(const Ptr<StreamFromId> &streamFromId) { m_streamFromId = streamFromId; }
+    void StreamFromIdSet(const StreamFromIdPtr &streamFromId) { m_streamFromId = streamFromId; }
     /// Gets the Configuration's StreamFromId module.
-    const Ptr<StreamFromId> &StreamFromIdGet() const { return m_streamFromId; }
+    const StreamFromIdPtr &StreamFromIdGet() const { return m_streamFromId; }
 
     /// Sets the Configuration's PathFromId module.
-    void PathFromIdSet(const Ptr<PathFromId> &pathFromId) { m_pathFromId = pathFromId; }
+    void PathFromIdSet(const PathFromIdPtr &pathFromId) { m_pathFromId = pathFromId; }
     /// Gets the Configuration's PathFromId module.
-    const Ptr<PathFromId> &PathFromIdGet() const { return m_pathFromId; }
+    const PathFromIdPtr &PathFromIdGet() const { return m_pathFromId; }
 
     /// Sets the Configuration's TextureFromStream module.
-    void TextureFromStreamSet(const Ptr<TextureFromStream> &textureFromStream) { m_textureFromStream = textureFromStream; }
+    void TextureFromStreamSet(const TextureFromStreamPtr &textureFromStream) { m_textureFromStream = textureFromStream; }
     /// Gets the Configuration's TextureFromStream module.
-    const Ptr<TextureFromStream> &TextureFromStreamGet() const { return m_textureFromStream; }
+    const TextureFromStreamPtr &TextureFromStreamGet() const { return m_textureFromStream; }
 
     /// Sets the Configuration's default font ID.
     void FontDefaultIdSet(const std::string &fontDefaultId) { m_fontDefaultId = fontDefaultId; }
@@ -157,14 +167,14 @@ namespace Frames {
     const std::string &FontDefaultIdGet() const { return m_fontDefaultId; }
 
   private:
-    Ptr<Logger> m_logger;
-    Ptr<Clipboard> m_clipboard;
-    Ptr<Performance> m_performance;
+    LoggerPtr m_logger;
+    ClipboardPtr m_clipboard;
+    PerformancePtr m_performance;
 
-    Ptr<TextureFromId> m_textureFromId;
-    Ptr<StreamFromId> m_streamFromId;
-    Ptr<PathFromId> m_pathFromId;
-    Ptr<TextureFromStream> m_textureFromStream;
+    TextureFromIdPtr m_textureFromId;
+    StreamFromIdPtr m_streamFromId;
+    PathFromIdPtr m_pathFromId;
+    TextureFromStreamPtr m_textureFromStream;
     std::string m_fontDefaultId;
   };
 }

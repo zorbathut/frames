@@ -14,7 +14,7 @@ namespace Frames {
     // =======================================
     // FONTINFO
 
-    FontInfo::FontInfo(Environment *env, const Ptr<Stream> &stream) : m_env(env), m_face_size(0) {
+    FontInfo::FontInfo(Environment *env, const StreamPtr &stream) : m_env(env), m_face_size(0) {
       // Hacky fallback for now: read the entire stream to a vector, then we just point to the vector. Later we'll do actual stream reading.
       if (stream) {
         while (true) {
@@ -445,10 +445,10 @@ namespace Frames {
 
     TextInfoPtr TextManager::GetTextInfo(const std::string &font, float size, const std::string &text) {
       if (!m_fonts.left.count(font)) {
-        Ptr<Stream> stream = m_env->ConfigurationGet().StreamFromIdGet()->Create(m_env, font);
+        StreamPtr stream = m_env->ConfigurationGet().StreamFromIdGet()->Create(m_env, font);
         if (!stream) {
           m_env->LogError(Frames::detail::Format("Unable to find font \"%s\"", font));
-          m_fonts.insert(boost::bimap<std::string, FontInfo *>::value_type(font, new FontInfo(m_env, Ptr<Stream>())));
+          m_fonts.insert(boost::bimap<std::string, FontInfo *>::value_type(font, new FontInfo(m_env, StreamPtr())));
         } else {
           m_fonts.insert(boost::bimap<std::string, FontInfo *>::value_type(font, new FontInfo(m_env, stream)));
         }

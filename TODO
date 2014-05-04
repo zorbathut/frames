@@ -1,8 +1,6 @@
 
 === DOCS
 
-* Add Ptr variants for things
-
 * Frame types
   * Frame (mostly done)
   * Mask

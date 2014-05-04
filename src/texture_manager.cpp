@@ -95,7 +95,7 @@ namespace Frames {
 
       m_env->LogDebug(detail::Format("Attempting to load texture %s", id));
 
-      Ptr<Texture> conf = m_env->ConfigurationGet().TextureFromIdGet()->Create(m_env, id);
+      TexturePtr conf = m_env->ConfigurationGet().TextureFromIdGet()->Create(m_env, id);
 
       TextureChunkPtr rv = TextureFromConfig(conf);
 
@@ -109,7 +109,7 @@ namespace Frames {
       return rv;
     }
 
-    TextureChunkPtr TextureManager::TextureFromConfig(const Ptr<Texture> &tex, TextureBackingPtr in_backing /*= 0*/) {
+    TextureChunkPtr TextureManager::TextureFromConfig(const TexturePtr &tex, TextureBackingPtr in_backing /*= 0*/) {
       if (tex->TypeGet() == Texture::RAW) {
         // time to GL-ize it
         // for now we're just putting it into its own po2 texture

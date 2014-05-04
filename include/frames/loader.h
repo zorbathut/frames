@@ -8,16 +8,18 @@
 namespace Frames {
   class Environment;
   class Stream;
+  typedef Ptr<Stream> StreamPtr;
   class Texture;
+  typedef Ptr<Texture> TexturePtr;
 
   namespace Loader {
     namespace PNG {
-      bool Is(const Ptr<Stream> &stream);
-      Ptr<Texture> Load(Environment *env, const Ptr<Stream> &stream);
+      bool Is(const StreamPtr &stream);
+      TexturePtr Load(Environment *env, const StreamPtr &stream);
     }
     namespace JPG {
-      bool Is(const Ptr<Stream> &stream);
-      Ptr<Texture> Load(Environment *env, const Ptr<Stream> &stream);
+      bool Is(const StreamPtr &stream);
+      TexturePtr Load(Environment *env, const StreamPtr &stream);
     }
   }
 }

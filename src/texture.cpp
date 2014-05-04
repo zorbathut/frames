@@ -18,13 +18,13 @@ namespace Frames {
     }
   }
 
-  /*static*/ Ptr<Texture> Texture::CreateRawManaged(Environment *env, int width, int height, Format format) {
+  /*static*/ TexturePtr Texture::CreateRawManaged(Environment *env, int width, int height, Format format) {
     int stride = width * RawBPPGet(format);
     return CreateRawUnmanaged(env, width, height, format, new unsigned char[stride * height], stride, true);
   }
 
-  /*static*/ Ptr<Texture> Texture::CreateRawUnmanaged(Environment *env, int width, int height, Format format, unsigned char *data, int stride, bool takeOwnership /*= false*/) {
-    Ptr<Texture> rv(new Texture);
+  /*static*/ TexturePtr Texture::CreateRawUnmanaged(Environment *env, int width, int height, Format format, unsigned char *data, int stride, bool takeOwnership /*= false*/) {
+    TexturePtr rv(new Texture);
     rv->m_type = RAW;
     rv->m_format = format;
     rv->m_width = width;

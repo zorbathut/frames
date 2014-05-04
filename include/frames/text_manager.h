@@ -24,24 +24,24 @@
 namespace Frames {
   class Environment;
   class Stream;
+  typedef Ptr<Stream> StreamPtr;
 
   namespace detail {
     class TextureBacking;
-    class TextureChunk;
     typedef Ptr<TextureBacking> TextureBackingPtr;
+    class TextureChunk;
     typedef Ptr<TextureChunk> TextureChunkPtr;
 
     class FontInfo;
+    typedef Ptr<FontInfo> FontInfoPtr;
     class TextInfo;
+    typedef Ptr<TextInfo> TextInfoPtr;
     class CharacterInfo;
+    typedef Ptr<CharacterInfo> CharacterInfoPtr;
     class TextLayout;
+    typedef Ptr<TextLayout> TextLayoutPtr;
 
     class Renderer;
-
-    typedef Ptr<FontInfo> FontInfoPtr;
-    typedef Ptr<TextInfo> TextInfoPtr;
-    typedef Ptr<CharacterInfo> CharacterInfoPtr;
-    typedef Ptr<TextLayout> TextLayoutPtr;
 
     // Note: This is all probably a bit overdesigned and needs some cleanup
 
@@ -51,7 +51,7 @@ namespace Frames {
     class FontInfo : public Refcountable<FontInfo> {
       friend class Refcountable<FontInfo>;
     public:
-      FontInfo(Environment *env, const Ptr<Stream> &stream);
+      FontInfo(Environment *env, const StreamPtr &stream);
 
       TextInfoPtr GetTextInfo(float size, const std::string &text);
       CharacterInfoPtr GetCharacterInfo(float size, int character); // character is, as usual, a UCS-4 codepoint

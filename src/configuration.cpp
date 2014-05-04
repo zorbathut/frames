@@ -22,36 +22,36 @@ namespace Frames {
     std::printf("Frame debug: %s", log.c_str());
   }
 
-  Ptr<Texture> Configuration::TextureFromId::Create(Environment *env, const std::string &id) {
-    Ptr<Stream> stream = env->ConfigurationGet().StreamFromIdGet()->Create(env, id);
+  TexturePtr Configuration::TextureFromId::Create(Environment *env, const std::string &id) {
+    StreamPtr stream = env->ConfigurationGet().StreamFromIdGet()->Create(env, id);
 
     if (stream) {
       return env->ConfigurationGet().TextureFromStreamGet()->Create(env, stream);
     }
 
-    return Ptr<Texture>();
+    return TexturePtr();
   }
 
-  Ptr<Stream> Configuration::StreamFromId::Create(Environment *env, const std::string &id) {
+  StreamPtr Configuration::StreamFromId::Create(Environment *env, const std::string &id) {
     std::string path = env->ConfigurationGet().PathFromIdGet()->Process(env, id);
     if (!path.empty()) {
       return StreamFile::Create(path);
     }
 
-    return Ptr<Stream>();
+    return StreamPtr();
   }
 
   std::string Configuration::PathFromId::Process(Environment *env, const std::string &id) {
     return id;
   }
 
-  Ptr<Texture> Configuration::TextureFromStream::Create(Environment *env, const Ptr<Stream> &stream) {
+  TexturePtr Configuration::TextureFromStream::Create(Environment *env, const StreamPtr &stream) {
     if (Loader::PNG::Is(stream))
       return Loader::PNG::Load(env, stream);
     else if (Loader::JPG::Is(stream))
       return Loader::JPG::Load(env, stream);
     else
-      return Ptr<Texture>(); // give up
+      return TexturePtr(); // give up
   }
 
   // win32 only. TODO: split into crossplatform

@@ -8,6 +8,9 @@
 namespace Frames {
   class Environment;
 
+  class Texture;
+  typedef Ptr<Texture> TexturePtr;
+
   /// Represents the raw data forming a graphics texture.
   /** Used to give data to Frames so Frames can create a texture out of it. This class is intended to provide data in multiple forms, from raw binary to highly compressed hardware textures.
   
@@ -28,10 +31,10 @@ namespace Frames {
 
     /// Creates a Texture with a given width, height, and format, with the Texture entirely responsible for allocation and deallocation.
     /** Texture will be created containing all 0 values. Use RawDataGet() to modify the data before using this Texture. */
-    static Ptr<Texture> CreateRawManaged(Environment *env, int width, int height, Format format);
+    static TexturePtr CreateRawManaged(Environment *env, int width, int height, Format format);
     /// Creates a Texture with a given width, height, and format, referencing an existing block of data.
     /** If takeOwnership is true, the Texture will automatically deallocate data using the Environment's allocator. */
-    static Ptr<Texture> CreateRawUnmanaged(Environment *env, int width, int height, Format format, unsigned char *data, int stride, bool takeOwnership = false);
+    static TexturePtr CreateRawUnmanaged(Environment *env, int width, int height, Format format, unsigned char *data, int stride, bool takeOwnership = false);
 
     /// Creates a NIL Texture.
     /** This is not valid to pass to any function expecting a Texture. */

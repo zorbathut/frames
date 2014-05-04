@@ -13,6 +13,15 @@
 #include <vector>
 
 namespace Frames {
+  class Stream;
+  typedef Ptr<Stream> StreamPtr;
+
+  class StreamFile;
+  typedef Ptr<StreamFile> StreamFilePtr;
+
+  class StreamBuffer;
+  typedef Ptr<StreamBuffer> StreamBufferPtr;
+
   /// Interface for reading serialized data from a generic source.
   /** Frames Streams do not currently support any sort of asynchronous reading; this is planned for the future. */
   class Stream : public Refcountable<Stream> {
@@ -39,7 +48,7 @@ namespace Frames {
   public:
     /// Creates a StreamFile referring to a given file.
     /** Returns NULL if the file does not exist or cannot be read. */
-    static Ptr<Stream> Create(const std::string &fname);
+    static StreamFilePtr Create(const std::string &fname);
     ~StreamFile();
 
     virtual int64_t Read(unsigned char *target, int64_t bytes);
@@ -58,7 +67,7 @@ namespace Frames {
   public:
     /// Creates a StreamBuffer referring to given data.
     /** For simplicity, this data is copied inside the StreamBuffer. */
-    static Ptr<Stream> Create(const std::vector<unsigned char> &data);
+    static StreamBufferPtr Create(const std::vector<unsigned char> &data);
     ~StreamBuffer();
 
     virtual int64_t Read(unsigned char *target, int64_t bytes);

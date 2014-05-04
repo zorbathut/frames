@@ -257,10 +257,10 @@ void TestSnapshot(TestEnvironment &env) {
   // Grab our source file (or try to)
   std::vector<unsigned char> reference;
   {
-    Frames::Ptr<Frames::Stream> stream = Frames::StreamFile::Create(testNames.testName);
+    Frames::StreamPtr stream = Frames::StreamFile::Create(testNames.testName);
     if (stream)
     {
-      Frames::Ptr<Frames::Texture> tex = Frames::Loader::PNG::Load(*env, stream);
+      Frames::TexturePtr tex = Frames::Loader::PNG::Load(*env, stream);
       EXPECT_EQ(Frames::Texture::RAW, tex->TypeGet());
       EXPECT_EQ(Frames::Texture::FORMAT_RGBA_8, tex->FormatGet());
       EXPECT_EQ(4, Frames::Texture::RawBPPGet(Frames::Texture::FORMAT_RGBA_8));

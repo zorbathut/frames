@@ -5,10 +5,10 @@
 #include <cstring>
 
 namespace Frames {
-  Ptr<Stream> StreamFile::Create(const std::string &fname) {
+  StreamFilePtr StreamFile::Create(const std::string &fname) {
     std::FILE *fil = fopen(fname.c_str(), "rb");
-    if (!fil) return Ptr<Stream>();
-    return Ptr<Stream>(new StreamFile(fil));
+    if (!fil) return StreamFilePtr();
+    return StreamFilePtr(new StreamFile(fil));
   }
 
   int64_t StreamFile::Read(unsigned char *target, int64_t bytes) { return fread(target, 1, (size_t)bytes, m_file); } // TODO deal with 64-bit file sizes someday
@@ -18,8 +18,8 @@ namespace Frames {
   StreamFile::StreamFile(std::FILE *file) : m_file(file) { }
   StreamFile::~StreamFile() { fclose(m_file); }
   
-  Ptr<Stream> StreamBuffer::Create(const std::vector<unsigned char> &data) {
-    return Ptr<Stream>(new StreamBuffer(data));
+  StreamBufferPtr StreamBuffer::Create(const std::vector<unsigned char> &data) {
+    return StreamBufferPtr(new StreamBuffer(data));
   }
 
   int64_t StreamBuffer::Read(unsigned char *target, int64_t bytes) {

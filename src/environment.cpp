@@ -767,31 +767,31 @@ namespace Frames {
 
     // Reset config values to defaults, if uninitialized
     if (!m_config.LoggerGet()) {
-      m_config.LoggerSet(Ptr<Configuration::Logger>(new Configuration::Logger()));
+      m_config.LoggerSet(Configuration::LoggerPtr(new Configuration::Logger()));
     }
 
     if (!m_config.PerformanceGet()) {
-      m_config.PerformanceSet(Ptr<Configuration::Performance>(new Configuration::Performance()));
+      m_config.PerformanceSet(Configuration::PerformancePtr(new Configuration::Performance()));
     }
 
     if (!m_config.ClipboardGet()) {
-      m_config.ClipboardSet(Ptr<Configuration::Clipboard>(new Configuration::Clipboard()));
+      m_config.ClipboardSet(Configuration::ClipboardPtr(new Configuration::Clipboard()));
     }
 
     if (!m_config.TextureFromIdGet()) {
-      m_config.TextureFromIdSet(Ptr<Configuration::TextureFromId>(new Configuration::TextureFromId()));
+      m_config.TextureFromIdSet(Configuration::TextureFromIdPtr(new Configuration::TextureFromId()));
     }
 
     if (!m_config.StreamFromIdGet()) {
-      m_config.StreamFromIdSet(Ptr<Configuration::StreamFromId>(new Configuration::StreamFromId()));
+      m_config.StreamFromIdSet(Configuration::StreamFromIdPtr(new Configuration::StreamFromId()));
     }
 
     if (!m_config.PathFromIdGet()) {
-      m_config.PathFromIdSet(Ptr<Configuration::PathFromId>(new Configuration::PathFromId()));
+      m_config.PathFromIdSet(Configuration::PathFromIdPtr(new Configuration::PathFromId()));
     }
 
     if (!m_config.TextureFromStreamGet()) {
-      m_config.TextureFromStreamSet(Ptr<Configuration::TextureFromStream>(new Configuration::TextureFromStream()));
+      m_config.TextureFromStreamSet(Configuration::TextureFromStreamPtr(new Configuration::TextureFromStream()));
     }
     
     // easier to handle it on our own, and we won't be creating environments often enough for this to be a performance hit
