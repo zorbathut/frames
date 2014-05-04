@@ -52,8 +52,6 @@ namespace Frames {
       return Loader::PNG::Load(env, stream);
     else if (Loader::JPG::Is(stream))
       return Loader::JPG::Load(env, stream);
-    /*else if (Loader::DDS::Is(stream))
-      typeHint = ImageType::DDS;*/
     else
       return TextureConfig(); // give up
   }

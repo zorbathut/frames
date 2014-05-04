@@ -20,7 +20,7 @@ namespace Frames {
         while (true) {
           const int BUFFERSIZE = 32768;
           unsigned char buffer[BUFFERSIZE];
-          int read = stream->Read(buffer, BUFFERSIZE);
+          int read = (int)stream->Read(buffer, BUFFERSIZE); // cast is safe, buffersize will never be 64-bit
           if (read) {
             m_face_data.insert(m_face_data.end(), buffer, buffer + read);
           }

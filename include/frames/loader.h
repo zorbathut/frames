@@ -17,10 +17,6 @@ namespace Frames {
       bool Is(Stream *stream);
       TextureConfig Load(Environment *env, Stream *stream);
     }
-    namespace DDS {
-      bool Is(Stream *stream);
-      TextureConfig Load(Environment *env, Stream *stream);
-    }
   }
 }
 

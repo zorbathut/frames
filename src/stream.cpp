@@ -11,8 +11,8 @@ namespace Frames {
     return new StreamFile(fil);
   }
 
-  int StreamFile::Read(unsigned char *target, int bytes) { return (int)fread(target, 1, bytes, m_file); } // safe to cast because our input is "int" anyway, so it can't possibly read more than that
-  bool StreamFile::Seek(int offset) { return !fseek(m_file, offset, SEEK_SET); }
+  int64_t StreamFile::Read(unsigned char *target, int64_t bytes) { return fread(target, 1, (size_t)bytes, m_file); } // TODO deal with 64-bit file sizes someday
+  bool StreamFile::Seek(int64_t offset) { return !fseek(m_file, (long)offset, SEEK_SET); }
   bool StreamFile::Seekable() const { return true; }
 
   StreamFile::StreamFile(std::FILE *file) : m_file(file) { }
@@ -22,14 +22,14 @@ namespace Frames {
     return new StreamBuffer(data);
   }
 
-  int StreamBuffer::Read(unsigned char *target, int bytes) {
-    int bytestoread = std::min(bytes, (int)m_data.size() - m_index);
-    std::memcpy(target, &m_data[m_index], bytestoread);
+  int64_t StreamBuffer::Read(unsigned char *target, int64_t bytes) {
+    int64_t bytestoread = std::min(bytes, (int64_t)m_data.size() - m_index);
+    std::memcpy(target, &m_data[m_index], (size_t)bytestoread);
     m_index += bytestoread;
     return bytestoread;
   }
-  bool StreamBuffer::Seek(int offset) {
-    if (offset < 0 || offset > (int)m_data.size()) {
+  bool StreamBuffer::Seek(int64_t offset) {
+    if (offset < 0 || offset > (int64_t)m_data.size()) {
       return false;
     }
     m_index = offset;

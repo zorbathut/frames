@@ -18,7 +18,7 @@ extern "C" {
 namespace Frames {
   bool Loader::PNG::Is(Stream *stream) {
     unsigned char tag[8];
-    int got = stream->Read(tag, 8);
+    int64_t got = stream->Read(tag, 8);
     bool rv = false;
     if (got == 8) {
       rv = !png_sig_cmp(tag, 0, 8);
@@ -30,7 +30,7 @@ namespace Frames {
   void PngReader(png_structp png_ptr, png_bytep data, png_size_t length) {
     Stream *istr = (Stream*)png_get_io_ptr(png_ptr);
     
-    int ct = istr->Read(data, (int)length); // if you have a 2gb png, at least this means you won't read all of it
+    int64_t ct = istr->Read(data, (int)length); // if you have a 2gb png, at least this means you won't read all of it
     if(ct != length)
       png_error(png_ptr, "unexpected EOF");
   }
@@ -100,7 +100,7 @@ namespace Frames {
 
   bool Loader::JPG::Is(Stream *stream) {
     unsigned char tag[3];
-    int got = stream->Read(tag, 3);
+    int64_t got = stream->Read(tag, 3);
     bool rv = false;
     if (got == 3) {
       rv =  (tag[0] == 0xFF && tag[1] == 0xD8 && tag[2] == 0xFF);
@@ -146,7 +146,7 @@ namespace Frames {
       JpegBufferManager *jerr = (JpegBufferManager*)info->src;
 
       jerr->pub.next_input_byte = jerr->buffer;
-      jerr->pub.bytes_in_buffer = jerr->stream->Read(jerr->buffer, JPEG_BUFFER_SIZE);
+      jerr->pub.bytes_in_buffer = (size_t)jerr->stream->Read(jerr->buffer, JPEG_BUFFER_SIZE); // not really concerned about 5gb jpgs here
 
       return TRUE;
     }

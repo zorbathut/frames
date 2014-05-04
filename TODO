@@ -3,9 +3,6 @@
 
 * Configuration subsystem
   * Configuration
-  * Stream
-  * StreamFile
-  * StreamBuffer
   * TextureConfig
 
 * Frame types
@@ -32,6 +29,9 @@
 
 * Add DX11
   * Test DX11
+
+* Split Loaders into their own libs
+  * Test
 
 === TESTING
 
