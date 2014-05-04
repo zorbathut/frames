@@ -6,7 +6,7 @@
 namespace Frames {
   class Environment;
 
-  class TextureConfig {
+  class Texture {
   public:
     enum Type {
       MODE_RGBA, // 8bpc, 32bpp, laid out as RGBA
@@ -18,14 +18,14 @@ namespace Frames {
 
     enum Mode { NIL, RAW };
 
-    static TextureConfig CreateManagedRaw(Environment *env, int width, int height, Type mode);
-    static TextureConfig CreateUnmanagedRaw(Environment *env, int width, int height, Type mode, unsigned char *data, int stride);
+    static Texture CreateManagedRaw(Environment *env, int width, int height, Type mode);
+    static Texture CreateUnmanagedRaw(Environment *env, int width, int height, Type mode, unsigned char *data, int stride);
 
-    TextureConfig();
-    TextureConfig(const TextureConfig &rhs);
-    ~TextureConfig();
+    Texture();
+    Texture(const Texture &rhs);
+    ~Texture();
 
-    void operator=(const TextureConfig &rhs);
+    void operator=(const Texture &rhs);
 
     Mode GetMode() const { return m_mode; }
 

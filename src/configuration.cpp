@@ -4,7 +4,7 @@
 #include "frames/environment.h"
 #include "frames/loader.h"
 #include "frames/stream.h"
-#include "frames/texture_config.h"
+#include "frames/texture.h"
 
 #include <cstdio>
 #include <cstring>
@@ -22,15 +22,15 @@ namespace Frames {
     std::printf("Frame debug: %s", log.c_str());
   }
 
-  TextureConfig Configuration::TextureFromId::Create(Environment *env, const std::string &id) {
+  Texture Configuration::TextureFromId::Create(Environment *env, const std::string &id) {
     Ptr<Stream> stream = env->ConfigurationGet().StreamFromIdGet()->Create(env, id);
 
     if (stream) {
-      TextureConfig rv = env->ConfigurationGet().TextureFromStreamGet()->Create(env, stream);
+      Texture rv = env->ConfigurationGet().TextureFromStreamGet()->Create(env, stream);
       return rv;
     }
 
-    return TextureConfig();
+    return Texture();
   }
 
   Ptr<Stream> Configuration::StreamFromId::Create(Environment *env, const std::string &id) {
@@ -46,13 +46,13 @@ namespace Frames {
     return id;
   }
 
-  TextureConfig Configuration::TextureFromStream::Create(Environment *env, const Ptr<Stream> &stream) {
+  Texture Configuration::TextureFromStream::Create(Environment *env, const Ptr<Stream> &stream) {
     if (Loader::PNG::Is(stream))
       return Loader::PNG::Load(env, stream);
     else if (Loader::JPG::Is(stream))
       return Loader::JPG::Load(env, stream);
     else
-      return TextureConfig(); // give up
+      return Texture(); // give up
   }
 
   // win32 only. TODO: split into crossplatform

@@ -11,7 +11,7 @@
 #include <frames/stream.h>
 #include <frames/layout.h>
 #include <frames/loader.h>
-#include <frames/texture_config.h>
+#include <frames/texture.h>
 
 #include <png.h>
 
@@ -260,10 +260,10 @@ void TestSnapshot(TestEnvironment &env) {
     Frames::Ptr<Frames::Stream> stream = Frames::StreamFile::Create(testNames.testName);
     if (stream)
     {
-      Frames::TextureConfig tex = Frames::Loader::PNG::Load(*env, stream);
-      EXPECT_EQ(Frames::TextureConfig::RAW, tex.GetMode());
-      EXPECT_EQ(Frames::TextureConfig::MODE_RGBA, tex.Raw_TypeGet());
-      EXPECT_EQ(4, Frames::TextureConfig::GetBPP(Frames::TextureConfig::MODE_RGBA));
+      Frames::Texture tex = Frames::Loader::PNG::Load(*env, stream);
+      EXPECT_EQ(Frames::Texture::RAW, tex.GetMode());
+      EXPECT_EQ(Frames::Texture::MODE_RGBA, tex.Raw_TypeGet());
+      EXPECT_EQ(4, Frames::Texture::GetBPP(Frames::Texture::MODE_RGBA));
       EXPECT_EQ(tex.WidthGet() * 4, tex.Raw_GetStride());
       reference.resize(tex.WidthGet() * tex.HeightGet() * 4);
       memcpy(&reference[0], tex.Raw_GetData(), tex.WidthGet() * tex.HeightGet() * 4);

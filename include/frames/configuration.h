@@ -12,7 +12,7 @@
 namespace Frames {
   class Environment;
   class Stream;
-  class TextureConfig;
+  class Texture;
 
   /// All configuration data that needs to be provided for a functioning Environment.
   /** Every Environment contains a Configuration. If a Configuration isn't provided when the Environment is constructed, a default Configuration will be built.
@@ -77,7 +77,7 @@ namespace Frames {
       virtual ~TextureFromId() {}
 
       /// Returns a new Texture associated with an environment and resource ID.
-      virtual TextureConfig Create(Environment *env, const std::string &id);
+      virtual Texture Create(Environment *env, const std::string &id);
     };
 
     /// Creates a Stream from a resource ID.
@@ -113,7 +113,7 @@ namespace Frames {
       virtual ~TextureFromStream() {}
 
       /// Returns a new Texture associated with an environment and created from the given Stream.
-      virtual TextureConfig Create(Environment *env, const Ptr<Stream> &stream);
+      virtual Texture Create(Environment *env, const Ptr<Stream> &stream);
     };
 
     /// Sets the Configuration's Logger module.

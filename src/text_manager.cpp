@@ -6,7 +6,7 @@
 #include "frames/environment.h"
 #include "frames/renderer.h"
 #include "frames/stream.h"
-#include "frames/texture_config.h"
+#include "frames/texture.h"
 #include "frames/texture_manager.h"
 
 namespace Frames {
@@ -217,7 +217,7 @@ namespace Frames {
 
       if (bmp && bmp->bitmap.buffer) {
         m_texture = parent->EnvironmentGet()->GetTextureManager()->TextureFromConfig(
-              TextureConfig::CreateUnmanagedRaw(parent->EnvironmentGet(), bmp->bitmap.width, bmp->bitmap.rows, TextureConfig::MODE_A, bmp->bitmap.buffer, bmp->bitmap.width),
+              Texture::CreateUnmanagedRaw(parent->EnvironmentGet(), bmp->bitmap.width, bmp->bitmap.rows, Texture::MODE_A, bmp->bitmap.buffer, bmp->bitmap.width),
               parent->TextureGet()
         );
 

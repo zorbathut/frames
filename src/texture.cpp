@@ -1,11 +1,11 @@
 
-#include "frames/texture_config.h"
+#include "frames/texture.h"
 
 #include "frames/environment.h"
 
 namespace Frames {
 
-  int TextureConfig::GetBPP(Type type) {
+  int Texture::GetBPP(Type type) {
     if (type == MODE_RGBA) {
       return 4;
     } else if (type == MODE_RGB) {
@@ -18,8 +18,8 @@ namespace Frames {
     }
   }
 
-  /*static*/ TextureConfig TextureConfig::CreateManagedRaw(Environment *env, int width, int height, Type mode) {
-    TextureConfig rv;
+  /*static*/ Texture Texture::CreateManagedRaw(Environment *env, int width, int height, Type mode) {
+    Texture rv;
     rv.m_mode = RAW;
     rv.m_width = width;
     rv.m_height = height;
@@ -31,8 +31,8 @@ namespace Frames {
     return rv;
   }
 
-  /*static*/ TextureConfig TextureConfig::CreateUnmanagedRaw(Environment *env, int width, int height, Type mode, unsigned char *data, int stride) {
-    TextureConfig rv;
+  /*static*/ Texture Texture::CreateUnmanagedRaw(Environment *env, int width, int height, Type mode, unsigned char *data, int stride) {
+    Texture rv;
     rv.m_mode = RAW;
     rv.m_width = width;
     rv.m_height = height;
@@ -44,7 +44,7 @@ namespace Frames {
     return rv;
   }
 
-  TextureConfig::TextureConfig() : 
+  Texture::Texture() : 
     m_mode(NIL),
     m_width(0),
     m_height(0),
@@ -56,7 +56,7 @@ namespace Frames {
   {
   }
 
-  TextureConfig::TextureConfig(const TextureConfig &rhs) :
+  Texture::Texture(const Texture &rhs) :
     m_mode(NIL),
     m_width(0),
     m_height(0),
@@ -69,7 +69,7 @@ namespace Frames {
     *this = rhs;  // just easier to do it this way
   }
 
-  TextureConfig::~TextureConfig() {
+  Texture::~Texture() {
     if (m_mode == NIL) {
     } else if (m_mode == RAW) {
       if (m_raw_refcount) {
@@ -81,12 +81,12 @@ namespace Frames {
       }
     } else {
       if (m_env) {
-        m_env->LogError("Unknown TextureConfig type");
+        m_env->LogError("Unknown Texture type");
       }
     }
   }
 
-  void TextureConfig::operator=(const TextureConfig &rhs) {
+  void Texture::operator=(const Texture &rhs) {
     // first, deallocate if needed
     if (m_mode == NIL) {
     } else if (m_mode == RAW) {
@@ -103,7 +103,7 @@ namespace Frames {
       m_raw_type = MODE_RGBA;
     } else {
       if (m_env) {
-        m_env->LogError("Unknown TextureConfig type");
+        m_env->LogError("Unknown Texture type");
       }
     }
 
@@ -125,7 +125,7 @@ namespace Frames {
       }
     } else {
       if (m_env) {
-        m_env->LogError("Unknown TextureConfig type");
+        m_env->LogError("Unknown Texture type");
       }
     }
   }

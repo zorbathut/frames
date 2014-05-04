@@ -1,8 +1,8 @@
 
 === DOCS
 
-* Refcount the Resource system
-* TextureConfig -> Texture
+* Refcount Texture
+* De-suck Texture
 
 * Configuration subsystem
   * Configuration
