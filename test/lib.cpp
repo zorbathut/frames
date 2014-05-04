@@ -257,7 +257,7 @@ void TestSnapshot(TestEnvironment &env) {
   // Grab our source file (or try to)
   std::vector<unsigned char> reference;
   {
-    Frames::StreamFile *stream = Frames::StreamFile::Create(testNames.testName);
+    Frames::Ptr<Frames::Stream> stream = Frames::StreamFile::Create(testNames.testName);
     if (stream)
     {
       Frames::TextureConfig tex = Frames::Loader::PNG::Load(*env, stream);
@@ -267,7 +267,6 @@ void TestSnapshot(TestEnvironment &env) {
       EXPECT_EQ(tex.WidthGet() * 4, tex.Raw_GetStride());
       reference.resize(tex.WidthGet() * tex.HeightGet() * 4);
       memcpy(&reference[0], tex.Raw_GetData(), tex.WidthGet() * tex.HeightGet() * 4);
-      delete stream;
     }
   }
 

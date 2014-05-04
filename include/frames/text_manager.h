@@ -51,7 +51,7 @@ namespace Frames {
     class FontInfo : public Refcountable<FontInfo> {
       friend class Refcountable<FontInfo>;
     public:
-      FontInfo(Environment *env, Stream *stream);
+      FontInfo(Environment *env, const Ptr<Stream> &stream);
 
       TextInfoPtr GetTextInfo(float size, const std::string &text);
       CharacterInfoPtr GetCharacterInfo(float size, int character); // character is, as usual, a UCS-4 codepoint

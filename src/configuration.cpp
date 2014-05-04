@@ -23,31 +23,30 @@ namespace Frames {
   }
 
   TextureConfig Configuration::TextureFromId::Create(Environment *env, const std::string &id) {
-    Stream *stream = env->ConfigurationGet().StreamFromIdGet()->Create(env, id);
+    Ptr<Stream> stream = env->ConfigurationGet().StreamFromIdGet()->Create(env, id);
 
     if (stream) {
       TextureConfig rv = env->ConfigurationGet().TextureFromStreamGet()->Create(env, stream);
-      delete stream;
       return rv;
     }
 
     return TextureConfig();
   }
 
-  Stream *Configuration::StreamFromId::Create(Environment *env, const std::string &id) {
+  Ptr<Stream> Configuration::StreamFromId::Create(Environment *env, const std::string &id) {
     std::string path = env->ConfigurationGet().PathFromIdGet()->Process(env, id);
     if (!path.empty()) {
       return StreamFile::Create(path);
     }
 
-    return 0;
+    return Ptr<Stream>();
   }
 
   std::string Configuration::PathFromId::Process(Environment *env, const std::string &id) {
     return id;
   }
 
-  TextureConfig Configuration::TextureFromStream::Create(Environment *env, Stream *stream) {
+  TextureConfig Configuration::TextureFromStream::Create(Environment *env, const Ptr<Stream> &stream) {
     if (Loader::PNG::Is(stream))
       return Loader::PNG::Load(env, stream);
     else if (Loader::JPG::Is(stream))

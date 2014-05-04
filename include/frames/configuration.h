@@ -89,7 +89,7 @@ namespace Frames {
       virtual ~StreamFromId() {}
 
       /// Returns a new Stream associated with an environment and resource ID.
-      virtual Stream *Create(Environment *env, const std::string &id);
+      virtual Ptr<Stream> Create(Environment *env, const std::string &id);
     };
 
     /// Creates a path from a resource ID.
@@ -113,7 +113,7 @@ namespace Frames {
       virtual ~TextureFromStream() {}
 
       /// Returns a new Texture associated with an environment and created from the given Stream.
-      virtual TextureConfig Create(Environment *env, Stream *stream);
+      virtual TextureConfig Create(Environment *env, const Ptr<Stream> &stream);
     };
 
     /// Sets the Configuration's Logger module.

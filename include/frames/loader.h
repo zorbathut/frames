@@ -3,6 +3,8 @@
 #ifndef FRAMES_LOADER
 #define FRAMES_LOADER
 
+#include "frames/ptr.h"
+
 namespace Frames {
   class Environment;
   class Stream;
@@ -10,12 +12,12 @@ namespace Frames {
 
   namespace Loader {
     namespace PNG {
-      bool Is(Stream *stream);
-      TextureConfig Load(Environment *env, Stream *stream);
+      bool Is(const Ptr<Stream> &stream);
+      TextureConfig Load(Environment *env, const Ptr<Stream> &stream);
     }
     namespace JPG {
-      bool Is(Stream *stream);
-      TextureConfig Load(Environment *env, Stream *stream);
+      bool Is(const Ptr<Stream> &stream);
+      TextureConfig Load(Environment *env, const Ptr<Stream> &stream);
     }
   }
 }

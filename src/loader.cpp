@@ -16,7 +16,7 @@ extern "C" {
 #include <vector>
 
 namespace Frames {
-  bool Loader::PNG::Is(Stream *stream) {
+  bool Loader::PNG::Is(const Ptr<Stream> &stream) {
     unsigned char tag[8];
     int64_t got = stream->Read(tag, 8);
     bool rv = false;
@@ -35,7 +35,7 @@ namespace Frames {
       png_error(png_ptr, "unexpected EOF");
   }
 
-  TextureConfig Loader::PNG::Load(Environment *env, Stream *stream) {
+  TextureConfig Loader::PNG::Load(Environment *env, const Ptr<Stream> &stream) {
     png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     if (!png_ptr) {
       return TextureConfig();
@@ -55,7 +55,7 @@ namespace Frames {
       return TextureConfig();
     }
     
-    png_set_read_fn(png_ptr, stream, PngReader);
+    png_set_read_fn(png_ptr, stream.Get(), PngReader);
     
     png_read_info(png_ptr, info_ptr);
     
@@ -98,7 +98,7 @@ namespace Frames {
     return tinfo;
   }
 
-  bool Loader::JPG::Is(Stream *stream) {
+  bool Loader::JPG::Is(const Ptr<Stream> &stream) {
     unsigned char tag[3];
     int64_t got = stream->Read(tag, 3);
     bool rv = false;
@@ -176,7 +176,7 @@ namespace Frames {
     void JpegMemorySource(j_decompress_ptr info, const unsigned char *buffer, int buffer_size) {}
   }
 
-  TextureConfig Loader::JPG::Load(Environment *env, Stream *stream) {
+  TextureConfig Loader::JPG::Load(Environment *env, const Ptr<Stream> &stream) {
     TextureConfig rv; // rv created here to deallocate if we hit the setjmp
     jpeg_decompress_struct info;
 
@@ -205,7 +205,7 @@ namespace Frames {
     buffer.pub.term_source = detail::JpegTerminate;
     buffer.pub.next_input_byte = 0;
     buffer.pub.bytes_in_buffer = 0;
-    buffer.stream = stream;
+    buffer.stream = stream.Get();
 
     // Decompress the jpg image
   	jpeg_read_header(&info, true);
