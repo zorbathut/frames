@@ -87,7 +87,7 @@ namespace Frames {
       return Ptr<Texture>();
     }
 
-    tinfo = Texture::CreateRawManaged(env, png_get_image_width(png_ptr, info_ptr), png_get_image_height(png_ptr, info_ptr), Texture::FORMAT_RGBA);
+    tinfo = Texture::CreateRawManaged(env, png_get_image_width(png_ptr, info_ptr), png_get_image_height(png_ptr, info_ptr), Texture::FORMAT_RGBA_8);
     
     for(int i = 0; i < (int)png_get_image_height(png_ptr, info_ptr); ++i)
       ul.push_back(tinfo->RawDataGet() + i * tinfo->WidthGet() * 4);
@@ -211,7 +211,7 @@ namespace Frames {
   	jpeg_read_header(&info, true);
     jpeg_start_decompress(&info);
 
-    rv = Texture::CreateRawManaged(env, info.image_width, info.image_height, (info.num_components == 3 ? Texture::FORMAT_RGB : Texture::FORMAT_L));
+    rv = Texture::CreateRawManaged(env, info.image_width, info.image_height, (info.num_components == 3 ? Texture::FORMAT_RGB_8 : Texture::FORMAT_L_8));
 
     for (int y = 0; y < (int)info.image_height; ++y) {
       unsigned char *row = rv->RawDataGet() + y * rv->RawStrideGet();

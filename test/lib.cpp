@@ -262,8 +262,8 @@ void TestSnapshot(TestEnvironment &env) {
     {
       Frames::Ptr<Frames::Texture> tex = Frames::Loader::PNG::Load(*env, stream);
       EXPECT_EQ(Frames::Texture::RAW, tex->TypeGet());
-      EXPECT_EQ(Frames::Texture::FORMAT_RGBA, tex->FormatGet());
-      EXPECT_EQ(4, Frames::Texture::GetBPP(Frames::Texture::FORMAT_RGBA));
+      EXPECT_EQ(Frames::Texture::FORMAT_RGBA_8, tex->FormatGet());
+      EXPECT_EQ(4, Frames::Texture::RawBPPGet(Frames::Texture::FORMAT_RGBA_8));
       EXPECT_EQ(tex->WidthGet() * 4, tex->RawStrideGet());
       reference.resize(tex->WidthGet() * tex->HeightGet() * 4);
       memcpy(&reference[0], tex->RawDataGet(), tex->WidthGet() * tex->HeightGet() * 4);

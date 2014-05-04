@@ -121,16 +121,16 @@ namespace Frames {
         int gl_tex_mode = GL_RGBA;
         int input_tex_mode = GL_RGBA;
 
-        if (tex->FormatGet() == Texture::FORMAT_RGBA) {
+        if (tex->FormatGet() == Texture::FORMAT_RGBA_8) {
           gl_tex_mode = GL_RGBA;
           input_tex_mode = GL_RGBA;
-        } else if (tex->FormatGet() == Texture::FORMAT_RGB) {
+        } else if (tex->FormatGet() == Texture::FORMAT_RGB_8) {
           gl_tex_mode = GL_RGBA;
           input_tex_mode = GL_RGB;
-        } else if (tex->FormatGet() == Texture::FORMAT_L) {
+        } else if (tex->FormatGet() == Texture::FORMAT_L_8) {
           gl_tex_mode = GL_LUMINANCE;
           input_tex_mode = GL_LUMINANCE;
-        } else if (tex->FormatGet() == Texture::FORMAT_A) {
+        } else if (tex->FormatGet() == Texture::FORMAT_A_8) {
           gl_tex_mode = GL_ALPHA;
           input_tex_mode = GL_ALPHA;
         } else {
@@ -165,7 +165,7 @@ namespace Frames {
         glPixelStorei(GL_PACK_ALIGNMENT, 1);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        if (tex->RawStrideGet() == Texture::GetBPP(tex->FormatGet()) * tex->WidthGet()) {
+        if (tex->RawStrideGet() == Texture::RawBPPGet(tex->FormatGet()) * tex->WidthGet()) {
           glTexSubImage2D(GL_TEXTURE_2D, 0, origin.first, origin.second, chunk->m_texture_width, chunk->m_texture_height, input_tex_mode, GL_UNSIGNED_BYTE, tex->RawDataGet());
         } else {
           for (int y = 0; y < tex->HeightGet(); ++y) {
