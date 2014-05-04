@@ -1,13 +1,7 @@
 
 === DOCS
 
-* De-suck Texture
-
 * Add Ptr variants for things
-
-* Configuration subsystem
-  * Configuration
-  * TextureConfig
 
 * Frame types
   * Frame (mostly done)
@@ -15,6 +9,8 @@
   * Text
   * Texture
   * Raw
+
+* Final pass
 
 * Deep docs
 
