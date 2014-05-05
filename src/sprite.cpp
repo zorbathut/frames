@@ -3,7 +3,6 @@
 
 #include "frames/cast.h"
 #include "frames/environment.h"
-#include "frames/lua.h"
 #include "frames/renderer.h"
 #include "frames/texture_manager.h"
 
@@ -23,16 +22,6 @@ namespace Frames {
     
     WidthDefaultSet((float)m_texture->WidthGet());
     HeightDefaultSet((float)m_texture->HeightGet());
-  }
-
-  /*static*/ void Sprite::luaF_RegisterFunctions(lua_State *L) {
-    Frame::luaF_RegisterFunctions(L);
-
-    luaF_RegisterFunction(L, TypeStaticGet(), "TextureSet", luaF_SetTexture);
-    luaF_RegisterFunction(L, TypeStaticGet(), "TextureGet", luaF_GetTexture);
-
-    luaF_RegisterFunction(L, TypeStaticGet(), "TintSet", luaF_SetTint);
-    luaF_RegisterFunction(L, TypeStaticGet(), "TintGet", luaF_GetTint);
   }
 
   void Sprite::RenderElement(detail::Renderer *renderer) const {
@@ -78,52 +67,5 @@ namespace Frames {
       m_tint(1, 1, 1, 1)
   { };
   Sprite::~Sprite() { };
-
-  /*static*/ int Sprite::luaF_SetTexture(lua_State *L) {
-    luaF_checkparams(L, 2);
-    Sprite *self = luaF_checkframe<Sprite>(L, 1);
-
-    self->TextureSet(luaL_checkstring(L, 2));
-
-    return 0;
-  }
-
-  /*static*/ int Sprite::luaF_GetTexture(lua_State *L) {
-    luaF_checkparams(L, 1);
-    Sprite *self = luaF_checkframe<Sprite>(L, 1);
-
-    lua_pushstring(L, self->TextureGet().c_str());
-
-    return 1;
-  }
-
-  /*static*/ int Sprite::luaF_SetTint(lua_State *L) {
-    luaF_checkparams(L, 4, 5);
-    Sprite *self = luaF_checkframe<Sprite>(L, 1);
-
-    Color color(1, 1, 1, 1);
-    color.r = (float)luaL_checknumber(L, 2);
-    color.g = (float)luaL_checknumber(L, 3);
-    color.b = (float)luaL_checknumber(L, 4);
-    if (lua_gettop(L) == 5) {
-      color.a = (float)luaL_checknumber(L, 5);
-    }
-
-    self->m_tint = color;
-
-    return 0;
-  }
-
-  /*static*/ int Sprite::luaF_GetTint(lua_State *L) {
-    luaF_checkparams(L, 1);
-    Sprite *self = luaF_checkframe<Sprite>(L, 1);
-
-    lua_pushnumber(L, self->m_tint.r);
-    lua_pushnumber(L, self->m_tint.g);
-    lua_pushnumber(L, self->m_tint.b);
-    lua_pushnumber(L, self->m_tint.a);
-
-    return 4;
-  }
 }
 

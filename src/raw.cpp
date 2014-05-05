@@ -16,10 +16,6 @@ namespace Frames {
     return new Raw(name, parent);
   }
 
-  /*static*/ void Raw::luaF_RegisterFunctions(lua_State *L) {
-    Frame::luaF_RegisterFunctions(L);
-  }
-
   void Raw::RenderElement(detail::Renderer *renderer) const {
     Frame::RenderElement(renderer);
 

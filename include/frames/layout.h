@@ -6,7 +6,6 @@
 #include "frames/delegate.h"
 #include "frames/detail.h"
 #include "frames/event.h"
-#include "frames/lua.h"
 #include "frames/input.h"
 #include "frames/noncopyable.h"
 #include "frames/vector.h"
@@ -17,8 +16,6 @@
 #include <set>
 #include <map>
 #include <string>
-
-struct lua_State;
 
 namespace Frames {
   class Environment;
@@ -163,22 +160,11 @@ namespace Frames {
         rv.m_priority = priority;
         
         rv.m_type = TYPE_NATIVE;
-        memcpy(rv.c.nativeDelegate, &din, sizeof(din)); // TODO: this is probably slower than necessary, but type aliasing makes it a nightmare otherwise
+        memcpy(rv.nativeDelegate, &din, sizeof(din)); // TODO: this is probably slower than necessary, but type aliasing makes it a nightmare otherwise
         
         return rv;
       }
       
-      static FECallback CreateLua(lua_State *L, int handle, float priority) {
-        FECallback rv;
-        rv.m_priority = priority;
-        
-        rv.m_type = TYPE_LUA;
-        rv.c.lua.L = L;
-        rv.c.lua.handle = handle;
-        
-        return rv;
-      }
-
       struct Sorter {
         bool operator()(const FECallback &lhs, const FECallback &rhs) const;
       };
@@ -187,11 +173,8 @@ namespace Frames {
         if (m_type == TYPE_NATIVE) {
           // TODO: This is *definitely* slower than necessary. Fix this!
           Delegate<void (Handle *)> dg;
-          memcpy(&dg, c.nativeDelegate, sizeof(dg));
+          memcpy(&dg, nativeDelegate, sizeof(dg));
           dg(eh);
-        } else if (m_type == TYPE_LUA) {
-          int stackfront = luaF_prepare(eh);
-          luaF_call(stackfront);
         }
       }
       
@@ -199,26 +182,14 @@ namespace Frames {
         if (m_type == TYPE_NATIVE) {
           // TODO: This is *definitely* slower than necessary. Fix this!
           Delegate<void (Handle *, P1)> dg;
-          memcpy(&dg, c.nativeDelegate, sizeof(dg));
+          memcpy(&dg, nativeDelegate, sizeof(dg));
           dg(eh, p1);
-        } else if (m_type == TYPE_LUA) {
-          int stackfront = luaF_prepare(eh);
-          ::Frames::luaF_push(c.lua.L, p1);
-          luaF_call(stackfront);
         }
       }
       
       bool NativeIs() const { return m_type == TYPE_NATIVE; }
       template<typename T> bool NativeCallbackEqual(Delegate<T> din) const {
-        return NativeIs() && memcmp(&din, c.nativeDelegate, sizeof(din)) == 0;
-      }
-      
-      bool LuaIs() const { return m_type == TYPE_LUA; }
-      bool LuaEnvironmentEqual(lua_State *L) const {
-        return LuaIs() && c.lua.L == L;
-      }
-      bool LuaHandleEqual(lua_State *L, int handle) const {
-        return LuaIs() && c.lua.L == L && c.lua.handle == handle;
+        return NativeIs() && memcmp(&din, nativeDelegate, sizeof(din)) == 0;
       }
       
       float PriorityGet() const { return m_priority; }
@@ -236,23 +207,13 @@ namespace Frames {
       enum { TYPE_ERASED, TYPE_INVALID, TYPE_NATIVE, TYPE_LUA } m_type;
       
       // the delegate itself - this is not the right type, it is casted appropriately by Call
-      union {
-        char nativeDelegate[sizeof(Delegate<void ()>)];
-        struct {
-          lua_State *L;
-          int handle;
-        } lua;
-      } c;
+      char nativeDelegate[sizeof(Delegate<void ()>)];
 
       float m_priority;
       
       // "mutable" because they don't contribute to the sorting, so we need them to be modifiable even when used as multiset key
       mutable bool m_destroy;
       mutable int m_lock;
-      
-      // Lua infrastructure
-      int luaF_prepare(Handle *eh) const;  // prepares the function pointer and early parameters
-      void luaF_call(int stackfront) const;
     };
     
     typedef std::multiset<FECallback, FECallback::Sorter> EventMultiset;
@@ -378,11 +339,6 @@ namespace Frames {
     /// Returns the environment.
     Environment *EnvironmentGet() const { return m_env; }
 
-    // --------- Lua
-
-    /// Pushes a handle to this layout onto a Lua stack.
-    void luaF_push(lua_State *L) const;
-
     // --------- Debug
 
     /// Dumps comprehensive layout information to the debug log.
@@ -411,14 +367,6 @@ namespace Frames {
     /// Called after this frame's children have been rendered.
     /** Overload this for post-render cleanup. If this frame has no children, may not be called at all. Must call (super)::RenderElementPreChild *after* it does its own work. */
     virtual void RenderElementPostChild(detail::Renderer *renderer) const {};
-
-    // Lua
-    virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, TypeStaticGet()); } // see Layout::luaF_Register for what yours should look like
-    void luaF_RegisterWorker(lua_State *L, const char *name) const;
-
-    static void luaF_RegisterFunctions(lua_State *L);
-
-    static void luaF_RegisterFunction(lua_State *L, const char *owner, const char *name, int(*func)(lua_State *));
 
   private:
     Layout(const std::string &name, Environment *env);
@@ -532,8 +480,6 @@ namespace Frames {
     // Event system
     EventLookup m_events;
     void EventDestroy(EventLookup::iterator eventTable, EventMultiset::iterator toBeRemoved);
-    
-    void luaF_ClearEvents_Recursive(lua_State *L);
 
     // Obliterate buffering (sort of related to the event system) - todo make this take up less space
     int m_obliterate_lock;
@@ -543,27 +489,6 @@ namespace Frames {
 
     // Global environment
     Environment *m_env;
-
-    // Lua bindings
-    static int luaF_LeftGet(lua_State *L);
-    static int luaF_RightGet(lua_State *L);
-    static int luaF_TopGet(lua_State *L);
-    static int luaF_BottomGet(lua_State *L);
-    static int luaF_BoundsGet(lua_State *L);
-
-    static int luaF_WidthGet(lua_State *L);
-    static int luaF_HeightGet(lua_State *L);
-
-    static int luaF_ChildrenGet(lua_State *L);
-
-    static int luaF_NameGet(lua_State *L);
-    static int luaF_NameFullGet(lua_State *L);
-    static int luaF_TypeGet(lua_State *L);
-    
-    static int luaF_EventAttach(lua_State *L);
-    static int luaF_EventDetach(lua_State *L);
-    
-    static int luaF_DebugDumpLayout(lua_State *L);
   };
 
   // Debug code

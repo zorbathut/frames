@@ -16,10 +16,6 @@ namespace Frames {
   protected:
     virtual bool MouseMaskingTest(float x, float y);
 
-    virtual void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, TypeStaticGet()); Frame::luaF_Register(L); }
-
-    static void luaF_RegisterFunctions(lua_State *L);
-
   private:
     Mask(const std::string &name, Layout *parent);
     virtual ~Mask();

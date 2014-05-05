@@ -14,8 +14,6 @@
 #include <set>
 #include <map>
 
-struct lua_State;
-
 namespace Frames {
   class Frame;
   class Layout;
@@ -154,13 +152,6 @@ namespace Frames {
 
     const Configuration &ConfigurationGet() { return m_config; }
 
-    // ==== Scripting languages
-    // Lua
-    void LuaRegister(lua_State *L, bool hasErrorHandle = false); // if error handle is true, top element of the stack will be popped
-    template<typename T> void LuaRegisterFrame(lua_State *L); // needed only if you create third-party frames - Frame will automatically register its internal frame types
-    void LuaRegisterEvent(lua_State *L, VerbBase *feb);
-    void LuaUnregister(lua_State *L);
-
     // ==== Logging and debugging
     void LogError(const std::string &log) { m_config.LoggerGet()->LogError(log); }
     void LogDebug(const std::string &log) { m_config.LoggerGet()->LogDebug(log); }
@@ -192,7 +183,6 @@ namespace Frames {
 
     // Utility functions and parameters
     void Init(const Configuration &config);
-    template<typename T> void LuaRegisterFrameLookup(lua_State *L);
 
     void MarkInvalidated(Layout *layout);
     void UnmarkInvalidated(Layout *layout); // This is currently very slow.
@@ -232,21 +222,6 @@ namespace Frames {
     std::map<int, Layout *> m_buttonDown;
     Vector m_mouse;
     Input::Meta m_lastMeta; // stores the shift/ctrl/alt states
-
-    // Lua
-    class LuaStackChecker {
-    public:
-      LuaStackChecker(lua_State *L, Environment *env, int offset = 0);
-      ~LuaStackChecker();
-
-    private:
-      int m_depth;
-      lua_State *m_L;
-      Environment *m_env;
-    };
-    std::set<lua_State *> m_lua_environments;
-    void Lua_PushErrorHandler(lua_State *L);
-    static int luaF_errorDefault(lua_State *L);
   };
 }
 

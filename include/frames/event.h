@@ -5,8 +5,6 @@
 #include "frames/noncopyable.h"
 #include "frames/delegate.h"
 
-#include "os_lua.h"
-
 namespace Frames {
   class Layout;
   
@@ -50,9 +48,6 @@ namespace Frames {
     /// Returns the Verb this event refers to.
     /** If this is part of a Dive or Bubble series, this will return the specific Verb that is being called. */
     const VerbBase *VerbGet() const { return m_verb; }
-    
-    /// Pushes this Handle onto a lua stack.
-    void luaF_push(lua_State *L);
     
   private:
     friend class Layout;

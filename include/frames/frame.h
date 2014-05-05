@@ -88,39 +88,8 @@ namespace Frames {
     virtual ~Frame();
 
     virtual void RenderElement(detail::Renderer *renderer) const;
-
-    void luaF_Register(lua_State *L) const { luaF_RegisterWorker(L, TypeStaticGet()); Layout::luaF_Register(L); }
-
-    static void luaF_RegisterFunctions(lua_State *L);
-
   private:
     Color m_bg;
-
-    // Lua bindings
-    static int luaF_PinSet(lua_State *L);
-
-    static int luaF_WidthSet(lua_State *L);
-    static int luaF_HeightSet(lua_State *L);
-
-    static int luaF_ParentSet(lua_State *L);
-    static int luaF_ParentGet(lua_State *L);
-
-    static int luaF_LayerSet(lua_State *L);
-    static int luaF_LayerGet(lua_State *L);
-
-    static int luaF_ImplementationSet(lua_State *L);
-    static int luaF_ImplementationGet(lua_State *L);
-
-    static int luaF_VisibleSet(lua_State *L);
-    static int luaF_VisibleGet(lua_State *L);
-
-    static int luaF_AlphaSet(lua_State *L);
-    static int luaF_AlphaGet(lua_State *L);
-
-    static int luaF_SetBackground(lua_State *L);
-    static int luaF_GetBackground(lua_State *L);
-
-    static int luaF_Obliterate(lua_State *L);
   };
 }
 

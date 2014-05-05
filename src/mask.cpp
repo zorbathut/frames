@@ -18,10 +18,6 @@ namespace Frames {
     return x >= LeftGet() && y >= TopGet() && x < RightGet() && y < BottomGet();
   }
 
-  /*static*/ void Mask::luaF_RegisterFunctions(lua_State *L) {
-    Frame::luaF_RegisterFunctions(L);
-  }
-
   void Mask::RenderElementPreChild(detail::Renderer *renderer) const {
     Frame::RenderElementPreChild(renderer);
 

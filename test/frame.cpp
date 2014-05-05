@@ -146,8 +146,6 @@ TEST(Layout, Error) {
   subject->SizeClear(Frames::Axis(-1));
   subject->SizeClear(Frames::Axis(2));
 
-  subject->luaF_push(0);
-
   subject->InputModeSet(Frames::Layout::InputMode(-1));
   subject->InputModeSet(Frames::Layout::InputMode(2));
 
