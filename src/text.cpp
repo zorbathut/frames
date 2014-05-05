@@ -51,7 +51,7 @@ namespace Frames {
     }
   }
 
-  void Text::ColorSet(const Color &color) {
+  void Text::ColorTextSet(const Color &color) {
     m_color_text = color;
     // no need to update layout, this hasn't changed the layout at all
   }
@@ -123,11 +123,16 @@ namespace Frames {
     }
   }
 
-  bool Text::SelectionGet(int *start, int *end) const {
-    *start = std::min(m_select, m_cursor);
-    *end = std::max(m_select, m_cursor);
-
+  bool Text::SelectionActiveGet() const {
     return m_select != m_cursor;
+  }
+
+  int Text::SelectionBeginGet() const {
+    return std::min(m_select, m_cursor);
+  }
+
+  int Text::SelectionEndGet() const {
+    return std::max(m_select, m_cursor);
   }
 
   void Text::ScrollSet(const Vector &scroll) {
@@ -138,7 +143,7 @@ namespace Frames {
     m_color_selection = color;
   }
 
-  void Text::ColorSelectedSet(const Color &color) {
+  void Text::ColorTextSelectedSet(const Color &color) {
     m_color_selected = color;
   }
 
@@ -304,8 +309,8 @@ namespace Frames {
     int pos = m_layout->GetCharacterFromCoordinate(EnvironmentGet()->Input_MouseGet() + m_scroll - Vector(LeftGet(), TopGet()));
 
     // We want to change the cursor position, but still preserve the selection, which takes a little effort
-    int start, end;
-    SelectionGet(&start, &end);
+    int start = SelectionBeginGet();
+    int end = SelectionEndGet();
     if (start == CursorGet()) {
       SelectionSet(pos, end);
     } else {
@@ -321,8 +326,8 @@ namespace Frames {
     int pos = m_layout->GetCharacterFromCoordinate(pt + m_scroll - Vector(LeftGet(), TopGet()));
 
     // We want to change the cursor position, but still preserve the selection, which takes a little effort
-    int start, end;
-    SelectionGet(&start, &end);
+    int start = SelectionBeginGet();
+    int end = SelectionEndGet();
     if (start == CursorGet()) {
       SelectionSet(pos, end);
     } else {

@@ -8,48 +8,99 @@
 #include "frames/text_manager.h"
 
 namespace Frames {
+  /// Used to render and edit text.
+  /** Text can act as a read-only text display, a selectable-but-not-editable text box, or a full editable textbox. It supports optional wordwrap. It can resize itself to fit whatever is currently contained in it.
+  
+  Note that Text is not intended for huge amounts of text in one frame. If your text can fit on one or two screens, you're fine, but putting an entire novel into it may cause performance issues.*/ // TODO feature request
   class Text : public Frame {
     FRAMES_DECLARE_RTTI();
     friend class Environment;
 
   public:
-    enum InteractivityMode { INTERACTIVE_NONE, INTERACTIVE_SELECT, INTERACTIVE_CURSOR, INTERACTIVE_EDIT };
-
+    /// Creates a new Text.
     static Text *Create(Layout *parent, const std::string &name);
 
+    /// Sets the text currently displayed. 
+    /** The cursor will be left at the same character location. */
     void TextSet(const std::string &text);
+    /// Gets the text currently displayed.
     const std::string &TextGet() const { return m_text; }
 
+    /// Sets the font used to render text, given by ID.
+    /** See \ref resources "Resources" for details on Frames's resource system. */
     void FontSet(const std::string &id);
+    /// Gets the ID of the font used to render text.
     const std::string &GetFont() const { return m_font; }
 
+    /// Sets the size of the font.
+    /** This is currently in arbitrary undefined units - this will change at some point in the future. */
     void SizeSet(float size);
+    /// Gets the size of the font.
     float SizeGet() const { return m_size; }
 
+    /// Sets the wordwrap flag.
+    /** If wordwrap is enabled, text will wrap at the width of the text frame. If wordwrap is disabled, the text frame will be able to scroll horizontally. */
     void WordwrapSet(bool wordwrap);
+    /// Gets the wordwrap flag.
     bool WordwrapGet() const { return m_wordwrap; }
 
-    void ColorSet(const Color &color);
-    const Color &ColorGet() const { return m_color_text; }
-
+    /// Sets the color of the text.
+    void ColorTextSet(const Color &color);
+    /// Gets the color of the text.
+    const Color &ColorTextGet() const { return m_color_text; }
+    
+    /// List of interactivity settings allowed.
+    enum InteractivityMode {
+      INTERACTIVE_NONE, //< No interactivity at all.
+      INTERACTIVE_SELECT, //< Allows text selection with the mouse, plus copy to clipboard.
+      INTERACTIVE_CURSOR, //< Allows a cursor, text selection with mouse and keyboard, and copy to clipboard.
+      INTERACTIVE_EDIT, //< Allows full text editing with mouse and keyboard.
+    };
+    /// Sets the interactivity mode.
     void InteractiveSet(InteractivityMode interactive);
+    /// Gets the interactivity mode.
     InteractivityMode InteractiveGet() const { return m_interactive; }
 
+    /// Sets the cursor position.
+    /** Cursor position is done in terms of the character that the cursor is placed directly before.
+    0 places the cursor at the beginning of the textfield; TextGet().size() places the cursor at the end of the textfield.
+    
+    Also scrolls the textbox as appropriate to keep the cursor in view. */
     void CursorSet(int position);
+    /// Gets the cursor position.
     int CursorGet() const { return m_cursor; }
 
-    void SelectionClear();  // clear
+    /// Unselects all text.
+    void SelectionClear();
+    /// Selects the given text range.
+    /** See CursorSet for cursor semantics.
+    
+    If the cursor was not already at the start or end of the selection, places the cursor at the end. */
     void SelectionSet(int start, int end);
-    bool SelectionGet(int *start, int *end) const;
+    /// Gets whether text is selected or not.
+    bool SelectionActiveGet() const;
+    /// Gets the beginning of the active selection.
+    /** May not be called if no selection is active. */
+    int SelectionBeginGet() const;
+    /// Gets the end of the active selection.
+    /** May not be called if no selection is active. */
+    int SelectionEndGet() const;
 
+    /// Sets the scroll position of the text field.
+    /** The Text field will be translated by the inverse of this, such that the text at this coordinate will now be at the top-left corner. */
     void ScrollSet(const Vector &scroll);
+    /// Gets the scroll position of the text field.
     const Vector &ScrollGet() const { return m_scroll; }
 
+    /// Sets the background color of the text-selection box.
     void ColorSelectionSet(const Color &color);
+    /// Gets the background color of the text-selection box.
     const Color &ColorSelectionGet() const { return m_color_selection; }
 
-    void ColorSelectedSet(const Color &color);
-    const Color &ColorSelectedGet() const { return m_color_selected; }
+    /// Sets the color of selected text.
+    void ColorTextSelectedSet(const Color &color);
+    /// Gets the color of selected text.
+    const Color &ColorTextSelectedGet() const { return m_color_selected; }
 
   private:
     Text(Layout *parent, const std::string &name);
