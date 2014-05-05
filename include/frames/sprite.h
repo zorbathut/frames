@@ -7,18 +7,29 @@
 #include "frames/texture_manager.h"
 
 namespace Frames {
+  /// Used to render a texture.
+  /** The texture will be resized to fill the Sprite, possibly distorting its aspect ratio. */
   class Sprite : public Frame {
     FRAMES_DECLARE_RTTI();
     friend class Environment;
 
   public:
+    /// Creates a new Raw.
     static Sprite *Create(Layout *parent, const std::string &name);
 
+    /// Sets the texture by ID.
+    /** See \ref resources "Resources" for details on Frames's resource system.
+    
+    The Sprite's default size will be set to the native size of the texture, in pixels.*/
     void TextureSet(const std::string &id);
+    /// Gets the current texture ID.
     const std::string &TextureGet() const { return m_texture_id; }
 
+    // Experimental, disabled for documentation
+    /// @cond EXPERIMENTAL
     void EXPERIMENTAL_TintSet(Color color);
     Color EXPERIMENTAL_TintGet() const { return m_tint; }
+    /// @endcond
 
   private:
     Sprite(Layout *parent, const std::string &name);

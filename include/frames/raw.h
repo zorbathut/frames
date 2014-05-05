@@ -6,6 +6,10 @@
 #include "frames/frame.h"
 
 namespace Frames {
+  /// Used for deferring to user code for rendering.
+  /** Raw is used for injecting arbitrary draw calls in the middle of the standard Frames rendering. When this frame would be rendered, the Render event handlers will be called.
+  
+  At the moment, there's no offical documentation on what parts of the rendering state need to be returned to default values. This will be provided later - for now, consider this to be an interface in flux. */
   class Raw : public Frame {
   public:
     FRAMES_VERB_DECLARE_BEGIN
@@ -19,6 +23,7 @@ namespace Frames {
     friend class Environment;
 
   public:
+    /// Creates a new Raw.
     static Raw *Create(Layout *parent, const std::string &name);
     
   private:
