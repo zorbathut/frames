@@ -7,11 +7,16 @@
 #include "frames/layout.h"
 
 namespace Frames {
+  /// The basic component of Frames UIs.
+  /** The Frame is the fundamental building block of the UI. It represents a rectangular area in space, aligned along the Scene axes. A Frame has exactly one parent and any number of children, each of which are also Frames.
+
+  Frame itself is generally invisible, although SetBackground is provided for prototyping and debug output. If Frame is set to non-visible, all of its children will also be hidden. */
   class Frame : public Layout {
     FRAMES_DECLARE_RTTI();
     friend class Environment;
 
   public:
+    /// Creates a new Frame.
     static Frame *Create(Layout *parent, const std::string &name);
 
     // --------- PinSet
@@ -80,7 +85,10 @@ namespace Frames {
     /** Also destroys all \ref layoutbasics "links" to and from these layouts. It is undefined behavior to refer to this frame or any of its children after this function is called. */
     inline void Obliterate() { return zinternalObliterate(); }
 
+    /// Sets the background color.
+    /** The background color will be drawn as a solid rectangle of the desired color. This is intended for debugging, although it can also be used for basic UI layout and prototyping. */
     void SetBackground(const Color &color);
+    /// Gets the background color.
     const Color &GetBackground() const { return m_bg; }
 
   protected:
