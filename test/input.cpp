@@ -45,9 +45,9 @@ TEST(Input, Ordering) {
 
   // Create a series of frames, then test movement events
   // Three frames overlapping, a -> b -> c, though we generate them out of order to test layering
-  Frames::Frame *a = Frames::Frame::Create("a", env->RootGet());
-  Frames::Frame *c = Frames::Frame::Create("c", env->RootGet());
-  Frames::Frame *b = Frames::Frame::Create("b", env->RootGet());
+  Frames::Frame *a = Frames::Frame::Create(env->RootGet(), "a");
+  Frames::Frame *c = Frames::Frame::Create(env->RootGet(), "c");
+  Frames::Frame *b = Frames::Frame::Create(env->RootGet(), "b");
 
   a->LayerSet(0);
   b->LayerSet(1);
@@ -106,8 +106,8 @@ TEST(Input, Mouse) {
   TestEnvironment env;
 
   // Two overlapping frames
-  Frames::Frame *a = Frames::Frame::Create("a", env->RootGet());
-  Frames::Frame *b = Frames::Frame::Create("b", env->RootGet());
+  Frames::Frame *a = Frames::Frame::Create(env->RootGet(), "a");
+  Frames::Frame *b = Frames::Frame::Create(env->RootGet(), "b");
 
   a->WidthSet(400);
   a->HeightSet(300);
@@ -231,7 +231,7 @@ TEST(Input, Meta) {
 TEST(Input, Key) {
   TestEnvironment env;
 
-  Frames::Frame *a = Frames::Frame::Create("a", env->RootGet());
+  Frames::Frame *a = Frames::Frame::Create(env->RootGet(), "a");
 
   for (int i = 0; i < 3; ++i) {
     VerbLog log;

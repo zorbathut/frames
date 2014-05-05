@@ -8,7 +8,7 @@
 TEST(Layout, SetBackground) {
   TestEnvironment env;
 
-  Frames::Frame *frame = Frames::Frame::Create("Test", env->RootGet());
+  Frames::Frame *frame = Frames::Frame::Create(env->RootGet(), "Test");
   frame->SetBackground(Frames::Color(1.f, 0.f, 0.f, 0.5f));
   TestSnapshot(env);
 
@@ -25,7 +25,7 @@ TEST(Layout, SetBackground) {
 TEST(Layout, PinSet) {
   TestEnvironment env;
 
-  Frames::Frame *red = Frames::Frame::Create("Test", env->RootGet());
+  Frames::Frame *red = Frames::Frame::Create(env->RootGet(), "Test");
   red->SetBackground(Frames::Color(1.f, 0.f, 0.f, 0.5f)); // Partially transparent so we can see frame intersections
 
   red->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT);
@@ -41,17 +41,17 @@ TEST(Layout, PinSet) {
   red->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT);
   red->PinSet(Frames::BOTTOMRIGHT, env->RootGet(), Frames::CENTER);
 
-  Frames::Frame *green = Frames::Frame::Create("Test", env->RootGet());
+  Frames::Frame *green = Frames::Frame::Create(env->RootGet(), "Test");
   green->SetBackground(Frames::Color(0.f, 1.f, 0.f, 0.5f));
   green->PinSet(Frames::CENTER, env->RootGet(), 0.75f, 0.75f);
   green->PinSet(Frames::TOPRIGHT, env->RootGet(), Frames::CENTERRIGHT);
 
-  Frames::Frame *blue = Frames::Frame::Create("Test", env->RootGet());
+  Frames::Frame *blue = Frames::Frame::Create(env->RootGet(), "Test");
   blue->SetBackground(Frames::Color(0.f, 0.f, 1.f, 0.5f));
   blue->PinSet(Frames::BOTTOMLEFT, env->RootGet(), Frames::CENTER);
   blue->PinSet(Frames::TOPRIGHT, env->RootGet(), Frames::TOPRIGHT);
 
-  Frames::Frame *gray = Frames::Frame::Create("Test", env->RootGet());
+  Frames::Frame *gray = Frames::Frame::Create(env->RootGet(), "Test");
   gray->SetBackground(Frames::Color(0.5f, 0.5f, 0.5f, 0.5f));
   gray->WidthSet((float)env.WidthGet() / 2);
   gray->HeightSet((float)env.HeightGet() / 2);
@@ -98,7 +98,7 @@ TEST(Layout, Layer) {
   {
     Frames::Layout *anchor = env->RootGet();
     for (int i = 0; i < testFrameCount; ++i) {
-      frames[i] = Frames::Frame::Create("Layer", env->RootGet());
+      frames[i] = Frames::Frame::Create(env->RootGet(), "Layer");
       frames[i]->WidthSet(400.f);
       frames[i]->HeightSet(400.f);
       frames[i]->SetBackground(Frames::Color((float)i / testFrameCount, (float)i / testFrameCount, (float)i / testFrameCount, 0.2f));
@@ -132,9 +132,9 @@ TEST(Layout, Error) {
 
   env.AllowErrors();
 
-  Frames::Frame *subject = Frames::Frame::Create("subject", env->RootGet());
-  Frames::Frame *subjectalt = Frames::Frame::Create("subjectalt", env->RootGet());
-  Frames::Frame *subj2 = Frames::Frame::Create("subject2", env2->RootGet());
+  Frames::Frame *subject = Frames::Frame::Create(env->RootGet(), "subject");
+  Frames::Frame *subjectalt = Frames::Frame::Create(env->RootGet(), "subjectalt");
+  Frames::Frame *subj2 = Frames::Frame::Create(env2->RootGet(), "subject2");
 
   // Forged enums
   subject->PinClear(Frames::Anchor(-1));

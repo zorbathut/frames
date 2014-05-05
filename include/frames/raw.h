@@ -19,10 +19,10 @@ namespace Frames {
     friend class Environment;
 
   public:
-    static Raw *Create(const std::string &name, Layout *parent);
+    static Raw *Create(Layout *parent, const std::string &name);
     
   private:
-    Raw(const std::string &name, Layout *parent);
+    Raw(Layout *parent, const std::string &name);
     virtual ~Raw();
 
     virtual void RenderElement(detail::Renderer *renderer) const;

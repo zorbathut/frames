@@ -11,13 +11,13 @@ namespace Frames {
     friend class Environment;
 
   public:
-    static Mask *Create(const std::string &name, Layout *parent);
+    static Mask *Create(Layout *parent, const std::string &name);
 
   protected:
     virtual bool MouseMaskingTest(float x, float y);
 
   private:
-    Mask(const std::string &name, Layout *parent);
+    Mask(Layout *parent, const std::string &name);
     virtual ~Mask();
 
     virtual void RenderElementPreChild(detail::Renderer *renderer) const;

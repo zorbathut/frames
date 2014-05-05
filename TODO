@@ -90,6 +90,10 @@
 
 * frames/textures don't appear until a window gets invalidated
 
+* Scene
+* Stage
+* Canvas
+
 === DOCUMENTATION NECESSITIES
 
 * example runtime

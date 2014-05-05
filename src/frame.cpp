@@ -10,8 +10,8 @@
 namespace Frames {
   FRAMES_DEFINE_RTTI(Frame, Layout);
 
-  Frame *Frame::Create(const std::string &name, Layout *parent) {
-    return new Frame(name, parent);
+  Frame *Frame::Create(Layout *parent, const std::string &name = "") {
+    return new Frame(parent, name);
   }
 
   void Frame::SetBackground(const Color &color) {
@@ -47,8 +47,8 @@ namespace Frames {
     }
   }
 
-  Frame::Frame(const std::string &name, Layout *parent) :
-      Layout(name, parent->EnvironmentGet()),
+  Frame::Frame(Layout *parent, const std::string &name) :
+    Layout(parent->EnvironmentGet(), name),
       m_bg(0, 0, 0, 0)
   {
     ParentSet(parent);

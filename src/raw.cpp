@@ -12,8 +12,8 @@ namespace Frames {
 
   FRAMES_DEFINE_RTTI(Raw, Frame);
   
-  Raw *Raw::Create(const std::string &name, Layout *parent) {
-    return new Raw(name, parent);
+  Raw *Raw::Create(Layout *parent, const std::string &name = "") {
+    return new Raw(parent, name);
   }
 
   void Raw::RenderElement(detail::Renderer *renderer) const {
@@ -32,8 +32,8 @@ namespace Frames {
     renderer->StatePop();
   }
 
-  Raw::Raw(const std::string &name, Layout *parent) :
-      Frame(name, parent)
+  Raw::Raw(Layout *parent, const std::string &name) :
+      Frame(parent, name)
   {  };
   Raw::~Raw() { };
 }

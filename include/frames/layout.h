@@ -370,7 +370,7 @@ namespace Frames {
     virtual void RenderElementPostChild(detail::Renderer *renderer) const {};
 
   private:
-    Layout(const std::string &name, Environment *env);
+    Layout(Environment *env, const std::string &name);
     virtual ~Layout();
 
     // These need to be defined here because Layout actually contains the implementation, but the documentation and function definitions need to show up in frame.h for the sake of documentation.

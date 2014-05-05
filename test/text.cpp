@@ -22,10 +22,10 @@ TEST(Text, Basic) {
   };
   Frames::Text *frames[c_tests] = { 0, };
 
-  Frames::Frame *anchor = Frames::Frame::Create("Test", env->RootGet());
+  Frames::Frame *anchor = Frames::Frame::Create(env->RootGet(), "Test");
   anchor->PinSet(Frames::BOTTOMLEFT, env->RootGet(), Frames::TOPLEFT, 20.f, 0.f);
   for (int i = 0; i < c_tests; ++i) {
-    Frames::Text *tex = Frames::Text::Create("Layer", env->RootGet());
+    Frames::Text *tex = Frames::Text::Create(env->RootGet(), "Layer");
     tex->SizeSet(sizes[i]);
     tex->TextSet(text[i]);
     tex->PinSet(Frames::TOPLEFT, anchor, Frames::BOTTOMLEFT, 0.f, 5.f);

@@ -16,9 +16,9 @@ void WheelEventHook(VerbLog *log, Frames::Layout *frame) {
 TEST(Event, Basic) {
   TestEnvironment env;
 
-  Frames::Frame *branch = Frames::Frame::Create("branch", env->RootGet());
-  Frames::Frame *leaf1 = Frames::Frame::Create("leaf1", branch);
-  Frames::Frame *leaf2 = Frames::Frame::Create("leaf2", branch);
+  Frames::Frame *branch = Frames::Frame::Create(env->RootGet(), "branch");
+  Frames::Frame *leaf1 = Frames::Frame::Create(branch, "leaf1");
+  Frames::Frame *leaf2 = Frames::Frame::Create(branch, "leaf2");
 
   {
     VerbLog log("basic");

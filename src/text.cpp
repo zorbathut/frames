@@ -12,8 +12,8 @@
 namespace Frames {
   FRAMES_DEFINE_RTTI(Text, Frame);
 
-  Text *Text::Create(const std::string &name, Layout *parent) {
-    return new Text(name, parent);
+  Text *Text::Create(Layout *parent, const std::string &name) {
+    return new Text(parent, name);
   }
 
   void Text::TextSet(const std::string &text) {
@@ -142,8 +142,8 @@ namespace Frames {
     m_color_selected = color;
   }
 
-  Text::Text(const std::string &name, Layout *parent) :
-      Frame(name, parent),
+  Text::Text(Layout *parent, const std::string &name) :
+      Frame(parent, name),
       m_size(16),
       m_wordwrap(false),
       m_color_text(1, 1, 1),

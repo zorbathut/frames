@@ -12,7 +12,7 @@ namespace Frames {
     friend class Environment;
 
   public:
-    static Frame *Create(const std::string &name, Layout *parent);
+    static Frame *Create(Layout *parent, const std::string &name);
 
     // --------- PinSet
 
@@ -84,7 +84,7 @@ namespace Frames {
     const Color &GetBackground() const { return m_bg; }
 
   protected:
-    Frame(const std::string &name, Layout *parent);
+    Frame(Layout *parent, const std::string &name);
     virtual ~Frame();
 
     virtual void RenderElement(detail::Renderer *renderer) const;

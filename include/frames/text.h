@@ -15,7 +15,7 @@ namespace Frames {
   public:
     enum InteractivityMode { INTERACTIVE_NONE, INTERACTIVE_SELECT, INTERACTIVE_CURSOR, INTERACTIVE_EDIT };
 
-    static Text *Create(const std::string &name, Layout *parent);
+    static Text *Create(Layout *parent, const std::string &name);
 
     void TextSet(const std::string &text);
     const std::string &TextGet() const { return m_text; }
@@ -52,7 +52,7 @@ namespace Frames {
     const Color &ColorSelectedGet() const { return m_color_selected; }
 
   private:
-    Text(const std::string &name, Layout *parent);
+    Text(Layout *parent, const std::string &name);
     virtual ~Text();
   
     void SizeChanged(Handle *handle);

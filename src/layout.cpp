@@ -231,7 +231,7 @@ namespace Frames {
   }
 
   // DUPLICATE CODE WARNING: Initializers are also used in the parent constructor!
-  Layout::Layout(const std::string &name, Environment *env) :
+  Layout::Layout(Environment *env, const std::string &name) :
       m_resolved(false),
       m_last_width(-1),
       m_last_height(-1),

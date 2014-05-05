@@ -11,8 +11,8 @@
 namespace Frames {
   FRAMES_DEFINE_RTTI(Sprite, Frame);
 
-  Sprite *Sprite::Create(const std::string &name, Layout *parent) {
-    return new Sprite(name, parent);
+  Sprite *Sprite::Create(Layout *parent, const std::string &name = "") {
+    return new Sprite(parent, name);
   }
 
   void Sprite::TextureSet(const std::string &id) {
@@ -62,8 +62,8 @@ namespace Frames {
     }
   }
 
-  Sprite::Sprite(const std::string &name, Layout *parent) :
-      Frame(name, parent),
+  Sprite::Sprite(Layout *parent, const std::string &name) :
+      Frame(parent, name),
       m_tint(1, 1, 1, 1)
   { };
   Sprite::~Sprite() { };

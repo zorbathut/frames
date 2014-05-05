@@ -10,8 +10,8 @@
 namespace Frames {
   FRAMES_DEFINE_RTTI(Mask, Frame);
 
-  Mask *Mask::Create(const std::string &name, Layout *parent) {
-    return new Mask(name, parent);
+  Mask *Mask::Create(Layout *parent, const std::string &name = "") {
+    return new Mask(parent, name);
   }
 
   bool Mask::MouseMaskingTest(float x, float y) {
@@ -30,8 +30,8 @@ namespace Frames {
     Frame::RenderElementPostChild(renderer);
   }
 
-  Mask::Mask(const std::string &name, Layout *parent) :
-      Frame(name, parent)
+  Mask::Mask(Layout *parent, const std::string &name) :
+      Frame(parent, name)
   {
     MouseMaskingFullSet(true);
   };

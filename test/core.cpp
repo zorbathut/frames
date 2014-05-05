@@ -14,11 +14,11 @@ TEST(Core, Cast) {
   TestEnvironment env;
 
   Frames::Layout *layout = env->RootGet();
-  Frames::Layout *frame = Frames::Frame::Create("Frame", layout);
-  Frames::Layout *mask = Frames::Mask::Create("Mask", layout);
-  Frames::Layout *raw = Frames::Raw::Create("Raw", layout);
-  Frames::Layout *sprite = Frames::Sprite::Create("Sprite", layout);
-  Frames::Layout *text = Frames::Text::Create("Text", layout);
+  Frames::Layout *frame = Frames::Frame::Create(layout, "Frame");
+  Frames::Layout *mask = Frames::Mask::Create(layout, "Mask");
+  Frames::Layout *raw = Frames::Raw::Create(layout, "Raw");
+  Frames::Layout *sprite = Frames::Sprite::Create(layout, "Sprite");
+  Frames::Layout *text = Frames::Text::Create(layout, "Text");
 
   EXPECT_NE((Frames::Layout *)0, Frames::Cast<Frames::Layout>(layout));
   EXPECT_NE((Frames::Layout *)0, Frames::Cast<Frames::Layout>(frame));

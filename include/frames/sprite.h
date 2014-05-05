@@ -12,17 +12,16 @@ namespace Frames {
     friend class Environment;
 
   public:
-    static Sprite *Create(const std::string &name, Layout *parent);
+    static Sprite *Create(Layout *parent, const std::string &name);
 
     void TextureSet(const std::string &id);
     const std::string &TextureGet() const { return m_texture_id; }
 
-    // EXPERIMENTAL
-    void TintSet(Color color);
-    Color TintGet() const { return m_tint; }
+    void EXPERIMENTAL_TintSet(Color color);
+    Color EXPERIMENTAL_TintGet() const { return m_tint; }
 
   private:
-    Sprite(const std::string &name, Layout *parent);
+    Sprite(Layout *parent, const std::string &name);
     virtual ~Sprite();
 
     virtual void RenderElement(detail::Renderer *renderer) const;

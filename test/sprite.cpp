@@ -8,9 +8,9 @@
 TEST(Sprite, Basic) {
   TestEnvironment env;
 
-  Frames::Sprite *a = Frames::Sprite::Create("A", env->RootGet());
-  Frames::Sprite *b = Frames::Sprite::Create("A", env->RootGet());
-  Frames::Sprite *c = Frames::Sprite::Create("A", env->RootGet());
+  Frames::Sprite *a = Frames::Sprite::Create(env->RootGet(), "a");
+  Frames::Sprite *b = Frames::Sprite::Create(env->RootGet(), "b");
+  Frames::Sprite *c = Frames::Sprite::Create(env->RootGet(), "c");
 
   a->TextureSet("p1_front.png");
   b->TextureSet("p2_front.png");
