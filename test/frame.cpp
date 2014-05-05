@@ -5,7 +5,7 @@
 
 #include "lib.h"
 
-TEST(Layout, BackgroundSet) {
+TEST(Layout, Background) {
   TestEnvironment env;
 
   Frames::Frame *frame = Frames::Frame::Create(env->RootGet(), "Test");
@@ -22,7 +22,7 @@ TEST(Layout, BackgroundSet) {
   TestSnapshot(env);
 };
 
-TEST(Layout, PinSet) {
+TEST(Layout, Pin) {
   TestEnvironment env;
 
   Frames::Frame *red = Frames::Frame::Create(env->RootGet(), "Test");
