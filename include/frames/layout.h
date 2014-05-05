@@ -150,7 +150,7 @@ namespace Frames {
     struct FECallback {
     public:
       // NOTE: this works because delegate is POD
-      FECallback() : m_type(TYPE_INVALID), m_priority(0), m_destroy(false), m_lock(0) { }
+      FECallback() : m_priority(0), m_destroy(false), m_lock(0) { }
       ~FECallback() { }
       
       template<typename T> static FECallback CreateNative(Delegate<T> din, float priority) {
@@ -158,9 +158,8 @@ namespace Frames {
         
         FECallback rv;
         rv.m_priority = priority;
-        
-        rv.m_type = TYPE_NATIVE;
-        memcpy(rv.nativeDelegate, &din, sizeof(din)); // TODO: this is probably slower than necessary, but type aliasing makes it a nightmare otherwise
+
+        rv.DelegateGet<T>() = din;
         
         return rv;
       }
@@ -170,26 +169,15 @@ namespace Frames {
       };
       
       void Call(Handle *eh) const {
-        if (m_type == TYPE_NATIVE) {
-          // TODO: This is *definitely* slower than necessary. Fix this!
-          Delegate<void (Handle *)> dg;
-          memcpy(&dg, nativeDelegate, sizeof(dg));
-          dg(eh);
-        }
+        DelegateGet<void(Handle *)>()(eh);
       }
       
       template <typename P1> void Call(Handle *eh, P1 p1) const {
-        if (m_type == TYPE_NATIVE) {
-          // TODO: This is *definitely* slower than necessary. Fix this!
-          Delegate<void (Handle *, P1)> dg;
-          memcpy(&dg, nativeDelegate, sizeof(dg));
-          dg(eh, p1);
-        }
+        DelegateGet<void(Handle *, P1)>()(eh, p1);
       }
       
-      bool NativeIs() const { return m_type == TYPE_NATIVE; }
       template<typename T> bool NativeCallbackEqual(Delegate<T> din) const {
-        return NativeIs() && memcmp(&din, nativeDelegate, sizeof(din)) == 0;
+        return *reinterpret_cast<const Delegate<T> *>(&m_delegate) == din;
       }
       
       float PriorityGet() const { return m_priority; }
@@ -204,10 +192,14 @@ namespace Frames {
       void Teardown(Environment *env) const;  // cleans up the underlying resources, if any. Not the same as a destructor! This isn't RAII for efficiency reasons. Environment provided for debug hooks.
       
     private:
-      enum { TYPE_ERASED, TYPE_INVALID, TYPE_NATIVE, TYPE_LUA } m_type;
-      
-      // the delegate itself - this is not the right type, it is casted appropriately by Call
-      char nativeDelegate[sizeof(Delegate<void ()>)];
+      // the delegate itself - this is not the right type, it is casted appropriately by DelegateGet
+      Delegate<void()> m_delegate;
+      template<typename T> Delegate<T> &DelegateGet() {
+        return reinterpret_cast<Delegate<T> &>(m_delegate);
+      }
+      template<typename T> const Delegate<T> &DelegateGet() const {
+        return reinterpret_cast<const Delegate<T> &>(m_delegate);
+      }
 
       float m_priority;
       
