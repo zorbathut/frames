@@ -1,6 +1,11 @@
 
 === DOCS
 
+* Finish docs
+  * Environment
+  * Frame protected
+  * Rect constructors
+
 * Final pass
 
 * Deep docs
@@ -89,9 +94,13 @@
 
 === DOXYBUGS
 
+* Enum?
+* flatten class list so Frames::Input::Meta shows up as Input::Meta
+
 * Includes friends in the .hhc
 * public members of private subclass is included
 * overloads look stupid
+* get rid of class hierarchy
 
 === POLISH PASSES BELOW
 

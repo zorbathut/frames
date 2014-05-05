@@ -322,10 +322,11 @@ namespace Frames {
     // --------- Misc
 
     /// Mode for input handling.
-    /**
-    IM_NONE indicates that the frame should not accept input of any kind; any input will pass through transparently.
-    IM_ALL indicates that the frame should accept all kinds of input, and input will not pass to a frame below this one.*/
-    enum InputMode { IM_NONE, IM_ALL, IM_COUNT };
+    enum InputMode {
+      IM_NONE, //< Indicates that the frame should not accept input of any kind; any input will pass through transparently.
+      IM_ALL, //< Indicates that the frame should accept all kinds of input, and input will not pass to a frame below this one.
+      IM_COUNT,
+    };
     /// Sets the input mode.
     void InputModeSet(InputMode imode);
     /// Gets the input mode.

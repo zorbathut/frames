@@ -15,13 +15,13 @@ namespace Frames {
     /// Initializes to an empty pointer.
     Ptr() : p(0) { }
     /// Initializes to an instance of T and takes ownership of that object.
-    /** If you have a T you don't want to be owned by Ptr, call ->Ref_Add() on that T before removing all Ptr references.
+    /** If you have a T you don't want to be owned by Ptr, call ->RefAdd() on that T before removing all Ptr references.
 
-    Obviously, it will now be your responsibility to call ->Ref_Release() the appropriate number of times. */
-    explicit Ptr(T *p) : p(p) { if (p) p->Ref_Add(); }
-    Ptr(const Ptr &rhs) : p(rhs.p) { if (p) p->Ref_Add(); }
-    template <typename U> Ptr(const Ptr<U> &rhs) : p(rhs.p) { if (p) p->Ref_Add(); }
-    ~Ptr() { if (p) p->Ref_Release(); }
+    Obviously, it will now be your responsibility to call ->RefRelease() the appropriate number of times. */
+    explicit Ptr(T *p) : p(p) { if (p) p->RefAdd(); }
+    Ptr(const Ptr &rhs) : p(rhs.p) { if (p) p->RefAdd(); }
+    template <typename U> Ptr(const Ptr<U> &rhs) : p(rhs.p) { if (p) p->RefAdd(); }
+    ~Ptr() { if (p) p->RefRelease(); }
 
     Ptr &operator=(const Ptr &rhs) { this_type(rhs).Swap(*this); return *this; }
 
@@ -65,10 +65,10 @@ namespace Frames {
     /** Exposed so this can be linked with your own reference count system.
 
     Also useful for forcing an object to never be automatically cleaned up, in the case of global persistent singletons. */
-    void Ref_Add() { ++m_refs; }
+    void RefAdd() { ++m_refs; }
     /// Decrements the internal refcount.
     /** As this may destroy this object, we strongly advise against accessing this object after calling this function. */
-    void Ref_Release() { --m_refs; if (!m_refs) delete (T*)this; }  // Casts to T* in order to avoid requiring a virtual destructor, or indeed, any virtual functions.
+    void RefRelease() { --m_refs; if (!m_refs) delete (T*)this; }  // Casts to T* in order to avoid requiring a virtual destructor, or indeed, any virtual functions.
 
   private:
     int m_refs;
