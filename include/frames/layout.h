@@ -211,16 +211,16 @@ namespace Frames {
     typedef std::multiset<Callback, Callback::Sorter> EventMultiset;
     typedef std::map<const VerbBase *, std::multiset<Callback, Callback::Sorter> > EventLookup;
     
-    class FEIterator {
+    class CallbackIterator {
     public:
-      FEIterator();
-      FEIterator(Layout *target, const VerbBase *event);
-      FEIterator(const FEIterator &itr);
-      void operator=(const FEIterator &itr);
-      ~FEIterator();
+      CallbackIterator();
+      CallbackIterator(Layout *target, const VerbBase *event);
+      CallbackIterator(const CallbackIterator &itr);
+      void operator=(const CallbackIterator &itr);
+      ~CallbackIterator();
       
       void Setup(Handle *handle) {
-        handle->SetContext(LayoutGet(), EventGet());
+        handle->SetContext(LayoutGet(), VerbGet());
       }
       const Callback &Get() const;
       bool Complete() const;
@@ -231,7 +231,7 @@ namespace Frames {
       void IndexNext();
       
       Layout *LayoutGet();
-      const VerbBase *EventGet();
+      const VerbBase *VerbGet();
       
       enum State { STATE_DIVE, STATE_MAIN, STATE_BUBBLE, STATE_COMPLETE };
       State m_state;
@@ -354,13 +354,19 @@ namespace Frames {
     void HeightDefaultSet(float size) { return SizeDefaultSet(Y, size); }
 
     /// Called when this frame is rendered.
-    /** Overload this to create your own frame types. Must call (super)::RenderElement before it does its own work. */
+    /** Overload this to create your own frame types. Must call (super)::RenderElement before it does its own work.
+    
+    While this function is being called, it is undefined behavior to call *any* non-Get function provided by Frames and associated with this Environment.*/
     virtual void RenderElement(detail::Renderer *renderer) const {};
     /// Called before this frame's children have been rendered.
-    /** Overload this for pre-render setup. If this frame has no children, may not be called at all. Must call (super)::RenderElementPreChild before it does its own work. */
+    /** Overload this for pre-render setup. If this frame has no children, may not be called at all. Must call (super)::RenderElementPreChild before it does its own work.
+    
+    While this function is being called, it is undefined behavior to call *any* non-Get function provided by Frames and associated with this Environment.*/
     virtual void RenderElementPreChild(detail::Renderer *renderer) const {};
     /// Called after this frame's children have been rendered.
-    /** Overload this for post-render cleanup. If this frame has no children, may not be called at all. Must call (super)::RenderElementPreChild *after* it does its own work. */
+    /** Overload this for post-render cleanup. If this frame has no children, may not be called at all. Must call (super)::RenderElementPreChild *after* it does its own work.
+    
+    While this function is being called, it is undefined behavior to call *any* non-Get function provided by Frames and associated with this Environment.*/
     virtual void RenderElementPostChild(detail::Renderer *renderer) const {};
 
   private:

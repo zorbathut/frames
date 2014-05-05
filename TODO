@@ -1,10 +1,6 @@
 
 === DOCS
 
-* FEIterator rename
-* EventGet -> VerbGet
-* Event -> Verb in general
-
 * Frame types
   * Frame (mostly done)
   * Mask

@@ -965,9 +965,9 @@ namespace Frames {
     
   }
 
-  Layout::FEIterator::FEIterator() : m_state(STATE_COMPLETE), m_diveIndex(0), m_target(0), m_event(0) { };
+  Layout::CallbackIterator::CallbackIterator() : m_state(STATE_COMPLETE), m_diveIndex(0), m_target(0), m_event(0) { };
 
-  Layout::FEIterator::FEIterator(Layout *target, const VerbBase *event) : m_state(STATE_DIVE), m_diveIndex(0), m_target(target), m_event(event) { // set to STATE_DIVE so that NextIndex() does the right thing
+  Layout::CallbackIterator::CallbackIterator(Layout *target, const VerbBase *event) : m_state(STATE_DIVE), m_diveIndex(0), m_target(target), m_event(event) { // set to STATE_DIVE so that NextIndex() does the right thing
     target->Obliterate_Lock();
     
     if (event->DiveGet()) {
@@ -990,11 +990,11 @@ namespace Frames {
     }
   };
   
-  Layout::FEIterator::FEIterator(const FEIterator &itr) : m_state(STATE_COMPLETE), m_diveIndex(0), m_target(0), m_event(0) {
+  Layout::CallbackIterator::CallbackIterator(const CallbackIterator &itr) : m_state(STATE_COMPLETE), m_diveIndex(0), m_target(0), m_event(0) {
     *this = itr;
   }
   
-  void Layout::FEIterator::operator=(const FEIterator &itr) {
+  void Layout::CallbackIterator::operator=(const CallbackIterator &itr) {
     if (this == &itr) return;
     
     if (m_state != STATE_COMPLETE) {
@@ -1030,7 +1030,7 @@ namespace Frames {
     }
   }
   
-  Layout::FEIterator::~FEIterator() {
+  Layout::CallbackIterator::~CallbackIterator() {
     if (m_state != STATE_COMPLETE) {
       IteratorUnlock(m_current);
     }
@@ -1040,15 +1040,15 @@ namespace Frames {
     }
   }
   
-  const Layout::Callback &Layout::FEIterator::Get() const {
+  const Layout::Callback &Layout::CallbackIterator::Get() const {
     return *m_current;
   }
   
-  bool Layout::FEIterator::Complete() const {
+  bool Layout::CallbackIterator::Complete() const {
     return m_state == STATE_COMPLETE;
   }
   
-  void Layout::FEIterator::Next() {
+  void Layout::CallbackIterator::Next() {
     EventMultiset::iterator last = m_current;
     ++m_current;
     
@@ -1063,7 +1063,7 @@ namespace Frames {
     IteratorUnlock(last);
   }
   
-  void Layout::FEIterator::IteratorUnlock(EventMultiset::iterator itr) {
+  void Layout::CallbackIterator::IteratorUnlock(EventMultiset::iterator itr) {
     itr->LockFlagDecrement();
     if (!itr->LockFlagGet() && itr->DestroyFlagGet()) {
       // TIME TO DESTROY
@@ -1083,7 +1083,7 @@ namespace Frames {
     }
   }
   
-  void Layout::FEIterator::IndexNext() {
+  void Layout::CallbackIterator::IndexNext() {
     while (true) {
       if (m_state == STATE_DIVE) {
         if (m_diveIndex == 0) {
@@ -1108,7 +1108,7 @@ namespace Frames {
       }
       
       Layout *layout = LayoutGet();
-      const VerbBase *event = EventGet();
+      const VerbBase *event = VerbGet();
       
       // TODO: can probably be optimized by not doing a ton of lookups
       if (layout->m_events.count(event)) {
@@ -1120,7 +1120,7 @@ namespace Frames {
     }
   }
   
-  Layout *Layout::FEIterator::LayoutGet() {
+  Layout *Layout::CallbackIterator::LayoutGet() {
     if (m_state == STATE_DIVE || m_state == STATE_BUBBLE) {
       return m_dives[m_diveIndex];
     } else {
@@ -1128,7 +1128,7 @@ namespace Frames {
     }
   }
   
-  const VerbBase *Layout::FEIterator::EventGet() {
+  const VerbBase *Layout::CallbackIterator::VerbGet() {
     if (m_state == STATE_DIVE) {
       return m_event->DiveGet();
     } else if (m_state == STATE_BUBBLE) {
