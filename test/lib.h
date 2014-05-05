@@ -81,7 +81,7 @@ private:
   void RecordEvent(Frames::Handle *handle, Frames::Input::Key p1);
   void RecordEvent(Frames::Handle *handle, const std::string &p1);
 
-  void RecordResult(const std::string &str);
+  void RecordResult(Frames::Handle *handle, const std::string &params);
   std::string m_records;
 
   std::string m_suffix;

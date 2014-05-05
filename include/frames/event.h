@@ -45,18 +45,35 @@ namespace Frames {
     /// Returns the Layout this event refers to.
     /** If this is part of a Dive or Bubble series, this will return the Layout that is the destination of the series. */
     Layout *TargetGet() const { return m_target; }
+
     /// Returns the Verb this event refers to.
     /** If this is part of a Dive or Bubble series, this will return the specific Verb that is being called. */
     const VerbBase *VerbGet() const { return m_verb; }
+
+    /// Returns the Layout this event is currently traversing.
+    /** If this is not part of a Dive or Bubble series, this will be equivalent to TargetGet. */
+    Layout *TargetContextGet() const { return m_targetContext; }
+
+    /// Returns the Verb this event is currently traversing.
+    /** If this is not part of a Dive or Bubble series, this will be equivalent to VerbGet. */
+    const VerbBase *VerbContextGet() const { return m_verbContext; }
     
   private:
     friend class Layout;
 
-    Handle(Layout *target, const VerbBase *verb) : m_target(target), m_verb(verb) {}
+    Handle(Layout *target, const VerbBase *verb) : m_target(target), m_verb(verb), m_targetContext(target), m_verbContext(verb) {}
     ~Handle() {} // TODO - clean up handles in Lua?
+
+    void SetContext(Layout *target, const VerbBase *verb) {
+      m_targetContext = target;
+      m_verbContext = verb;
+    }
 
     Layout *m_target;
     const VerbBase *m_verb;
+
+    Layout *m_targetContext;
+    const VerbBase *m_verbContext;
   };
 
   /// Type-specific Verb class.

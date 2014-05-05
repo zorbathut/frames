@@ -204,28 +204,37 @@ void VerbLog::Snapshot() {
 }
 
 void VerbLog::RecordEvent(Frames::Handle *handle) {
-  RecordResult(Frames::detail::Format("Event %s on %s", handle->VerbGet()->NameGet(), handle->TargetGet()->DebugNameGet()));
+  RecordResult(handle, "");
 }
 
 void VerbLog::RecordEvent(Frames::Handle *handle, int p1) {
-  RecordResult(Frames::detail::Format("Event %s (%d) on %s", handle->VerbGet()->NameGet(), p1, handle->TargetGet()->DebugNameGet()));
+  RecordResult(handle, Frames::detail::Format("%d", p1));
 }
 
 void VerbLog::RecordEvent(Frames::Handle *handle, const Frames::Vector &p1) {
-  RecordResult(Frames::detail::Format("Event %s (%s) on %s", handle->VerbGet()->NameGet(), p1, handle->TargetGet()->DebugNameGet()));
+  RecordResult(handle, Frames::detail::Format("%s", p1));
 }
 
 void VerbLog::RecordEvent(Frames::Handle *handle, Frames::Input::Key p1) {
-  RecordResult(Frames::detail::Format("Event %s (%s) on %s", handle->VerbGet()->NameGet(), Frames::Input::StringFromKey(p1), handle->TargetGet()->DebugNameGet()));
+  RecordResult(handle, Frames::detail::Format("%s", Frames::Input::StringFromKey(p1)));
 }
 
 void VerbLog::RecordEvent(Frames::Handle *handle, const std::string &p1) {
-  RecordResult(Frames::detail::Format("Event %s (%s) on %s", handle->VerbGet()->NameGet(), p1, handle->TargetGet()->DebugNameGet()));
+  RecordResult(handle, Frames::detail::Format("%s", p1));
 }
 
-void VerbLog::RecordResult(const std::string &str) {
-  m_records += str;
-  m_records += "\n";
+void VerbLog::RecordResult(Frames::Handle *handle, const std::string &params) {
+  std::string current;
+  if (handle->TargetGet() != handle->TargetContextGet() || handle->VerbGet() != handle->VerbContextGet()) {
+    current = Frames::detail::Format(" (currently %s on %s)", handle->VerbContextGet()->NameGet(), handle->TargetContextGet()->DebugNameGet());
+  }
+
+  std::string param;
+  if (!params.empty()) {
+    param = Frames::detail::Format(" (%s)", params);
+  }
+
+  m_records += Frames::detail::Format("Event %s%s on %s%s\n", handle->VerbGet()->NameGet(), param, handle->TargetGet()->DebugNameGet(), current);
 }
 
 void TestSnapshot(TestEnvironment &env) {

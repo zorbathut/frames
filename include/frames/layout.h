@@ -219,6 +219,9 @@ namespace Frames {
       void operator=(const FEIterator &itr);
       ~FEIterator();
       
+      void Setup(Handle *handle) {
+        handle->SetContext(LayoutGet(), EventGet());
+      }
       const Callback &Get() const;
       bool Complete() const;
       void Next();

@@ -1,0 +1,5 @@
+Begin log
+Event Layout::Event::Move on Root
+Event Layout::Event::Move on Root.branch
+Event Layout::Event::Move on Root.branch.leaf1
+Event Layout::Event::Move on Root.branch.leaf2

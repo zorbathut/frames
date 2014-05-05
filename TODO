@@ -1,8 +1,9 @@
 
 === DOCS
 
-* FECallback simplify
-* Testing
+* FEIterator rename
+* EventGet -> VerbGet
+* Event -> Verb in general
 
 * Frame types
   * Frame (mostly done)
@@ -42,7 +43,7 @@
 * Events
 
 * Frames
-  * Text is the big one here
+  * Text is the big one here, especially everything involving editing
 
 === BUILDING
 
