@@ -2,9 +2,8 @@
 === DOCS
 
 * Frame types
-  * Mask
   * Text
-  * Texture
+  * Sprite
   * Raw
 
 * Final pass
