@@ -87,10 +87,11 @@
 * Stage
 * Canvas
 
-=== DOCUMENTATION NECESSITIES
+=== DOXYBUGS
 
-* example runtime
-* fix the debug hook provided for environment
+* Includes friends in the .hhc
+* public members of private subclass is included
+* overloads look stupid
 
 === POLISH PASSES BELOW
 

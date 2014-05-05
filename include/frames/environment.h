@@ -156,8 +156,11 @@ namespace Frames {
     void LogError(const std::string &log) { m_config.LoggerGet()->LogError(log); }
     void LogDebug(const std::string &log) { m_config.LoggerGet()->LogDebug(log); }
 
+    /// Does performance monitoring of scope blocks.
     class Performance {
     public:
+      /// Begins a new performance block.
+      /** name and color will be passed verbatim to \ref Configuration::Performance "Configuration's Performance" class. */
       Performance(Environment *env, const char *name, const Color &color);
       ~Performance();
 

@@ -40,9 +40,9 @@ namespace Frames {
     template <typename T> friend const T *Cast(const Layout *); \
     template <typename T> friend const detail::Rtti *detail::InitHelper(); \
   public: \
-    /** \quick Returns a human-readable type string for this class. */ \
+    /** \brief Returns a human-readable type string for this class. */ \
     static const char *TypeStaticGet(); \
-    /** \quick Returns a human-readable type string for this instance. */ \
+    /** \brief Returns a human-readable type string for this instance. */ \
     virtual const char *TypeGet() const { return TypeStaticGet(); } \
   private:
 

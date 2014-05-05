@@ -7,6 +7,6 @@ require "scripts/lib/util"
 
 os.execute("rm -rf doc/Frames* doc/html")
 
-os.execute("doxygen doc/Doxyfile")
+os.execute('"/cygdrive/c/Program Files/doxygen/bin/doxygen.exe" doc/Doxyfile')
 
 os.execute('cd doc/html ; "/cygdrive/c/Program Files (x86)/HTML Help Workshop/hhc" index.hhp ; mv index.chm ../Frames.chm ; rm index.hh*')

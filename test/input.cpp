@@ -60,9 +60,9 @@ TEST(Input, Ordering) {
   c->WidthSet(400);
   c->HeightSet(300);
 
-  a->SetBackground(Frames::Color(1, 0, 0, 0.8f));
-  b->SetBackground(Frames::Color(0, 1, 0, 0.8f));
-  c->SetBackground(Frames::Color(0, 0, 1, 0.8f));
+  a->BackgroundSet(Frames::Color(1, 0, 0, 0.8f));
+  b->BackgroundSet(Frames::Color(0, 1, 0, 0.8f));
+  c->BackgroundSet(Frames::Color(0, 0, 1, 0.8f));
 
   a->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 100, 100);
   b->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 200, 200);
@@ -114,8 +114,8 @@ TEST(Input, Mouse) {
   b->WidthSet(400);
   b->HeightSet(300);
 
-  a->SetBackground(Frames::Color(1, 0, 0, 0.8f));
-  b->SetBackground(Frames::Color(0, 1, 0, 0.8f));
+  a->BackgroundSet(Frames::Color(1, 0, 0, 0.8f));
+  b->BackgroundSet(Frames::Color(0, 1, 0, 0.8f));
 
   a->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 100, 100);
   b->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 200, 200);

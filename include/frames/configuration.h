@@ -17,9 +17,10 @@ namespace Frames {
   typedef Ptr<Texture> TexturePtr;
 
   /// All configuration data that needs to be provided for a functioning Environment.
-  /** Every Environment contains a Configuration. If a Configuration isn't provided when the Environment is constructed, a default Configuration will be built.
+  /**
+  Every Environment contains a Configuration. If a Configuration isn't provided when the Environment is constructed, a default Configuration will be built.
   
-  Most Configuration settings are designed as a class that can be inherited from. The class's default behavior is available on request, using standard inheritance behavior. */
+  Most Configuration settings are designed as a class that can be inherited from. The default behavior is available by calling the base class's members. */
   struct Configuration {
   public:
     Configuration();
@@ -40,9 +41,10 @@ namespace Frames {
       /** This tends to be pretty spammy. It's very helpful for analyzing what's going on internally, but you may want to disable it by default or provide some convenient way of filtering it. */
       virtual void LogDebug(const std::string &log);
     };
+    /// Refcounted Logger typedef.
     typedef Ptr<Logger> LoggerPtr;
 
-    /// Clipboard access for copy-paste behavior on Text frames.
+    /// Provides clipboard access for copy-paste behavior on Text frames.
     /** Default behavior uses the standard Windows global clipboard. */
     class Clipboard : public Refcountable<Clipboard> {
     public:
@@ -54,6 +56,7 @@ namespace Frames {
       /// Called to retrieve the clipboard contents. Empty string is interpreted as no clipboard contents.
       virtual std::string Get();
     };
+    /// Refcounted Clipboard typedef.
     typedef Ptr<Clipboard> ClipboardPtr;
 
     /// Hooks for a performance monitoring system.
@@ -72,9 +75,10 @@ namespace Frames {
       // End a profiling block.
       virtual void Pop(void *) {}
     };
+    /// Refcounted Performance typedef.
     typedef Ptr<Performance> PerformancePtr;
 
-    /// Creates a Texture from a resource ID.
+    /// Creates a Texture from a \ref resources "resource ID".
     /** See \ref resources "Resources" for more detail.
     
     Default behavior is to use the configuration StreamFromId and the configuration TextureFromStream in order to produce the result. */
@@ -85,9 +89,10 @@ namespace Frames {
       /// Returns a new Texture associated with an environment and resource ID.
       virtual TexturePtr Create(Environment *env, const std::string &id);
     };
+    /// Refcounted TextureFromId typedef.
     typedef Ptr<TextureFromId> TextureFromIdPtr;
 
-    /// Creates a Stream from a resource ID.
+    /// Creates a Stream from a \ref resources "resource ID".
     /** See \ref resources "Resources" for more detail.
     
     Default behavior is to use the configuration PathFromId to create a path, then to create a StreamFile given that path. */
@@ -98,9 +103,10 @@ namespace Frames {
       /// Returns a new Stream associated with an environment and resource ID.
       virtual StreamPtr Create(Environment *env, const std::string &id);
     };
+    /// Refcounted StreamFromId typedef.
     typedef Ptr<StreamFromId> StreamFromIdPtr;
 
-    /// Creates a path from a resource ID.
+    /// Creates a path from a \ref resources "resource ID".
     /** See \ref resources "Resources" for more detail.
     
     Default behavior is to return to given path verbatim. */
@@ -111,6 +117,7 @@ namespace Frames {
       /// Returns a path associated with an environment and resource ID.
       virtual std::string Process(Environment *env, const std::string &id);
     };
+    /// Refcounted PathFromId typedef.
     typedef Ptr<PathFromId> PathFromIdPtr;
 
     /// Creates a Texture from a Stream.
@@ -124,6 +131,7 @@ namespace Frames {
       /// Returns a new Texture associated with an environment and created from the given Stream.
       virtual TexturePtr Create(Environment *env, const StreamPtr &stream);
     };
+    /// Refcounted TextureFromStream typedef.
     typedef Ptr<TextureFromStream> TextureFromStreamPtr;
 
     /// Sets the Configuration's Logger module.

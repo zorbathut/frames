@@ -76,7 +76,7 @@ namespace Frames {
     const VerbBase *m_verbContext;
   };
 
-  /// Type-specific Verb class.
+  /// Represents a type of event.
   /** A Verb represents an event category that can be called on a Layout. */
   template <typename Parameters> class Verb : public VerbBase {
   private:
@@ -94,6 +94,7 @@ namespace Frames {
     typedef Delegate<typename detail::FunctionPrefix<Handle*, Parameters>::T> TypeDelegate;
   };
 
+  /// Represents a type of event with Sink and Bubble behavior.
   template <typename Parameters> class VerbPackage : public Verb<Parameters> {
   public:
     /// Constructor for VerbPackages.
@@ -111,6 +112,7 @@ namespace Frames {
   This is a convenience macro that will place layout verbs into a Verb class.
   It's not strictly necessary if you want a different Verb layout - Verbs are just singletons and don't care where they live - but if you want to follow library conventions, its use is recommended. */
   #define FRAMES_VERB_DECLARE_BEGIN \
+    /** \brief Container for class-specific verbs. */ \
     class Event { \
       Event();  /* intentionally left undefined, this is not meant to be instantiated */ \
       ~Event(); \

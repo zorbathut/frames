@@ -14,7 +14,7 @@ namespace Frames {
     return new Frame(parent, name);
   }
 
-  void Frame::SetBackground(const Color &color) {
+  void Frame::BackgroundSet(const Color &color) {
     if (color != m_bg) {
       m_bg = color;
     }
