@@ -759,15 +759,15 @@ namespace Frames {
   }
 
   bool Layout::EventHookedIs(const VerbBase &event) const {
-    std::map<const VerbBase *, std::multiset<FECallback, FECallback::Sorter> >::const_iterator itr = m_events.find(&event);
+    std::map<const VerbBase *, std::multiset<Callback, Callback::Sorter> >::const_iterator itr = m_events.find(&event);
     if (itr == m_events.end()) {
       // no handles, we're good
       return false;
     }
     
     // We now need to iterate over all events just in case they're all destroy-flagged
-    const std::multiset<FECallback, FECallback::Sorter> &eventSet = itr->second;
-    for (std::multiset<FECallback, FECallback::Sorter>::const_iterator itr = eventSet.begin(); itr != eventSet.end(); ++itr) {
+    const std::multiset<Callback, Callback::Sorter> &eventSet = itr->second;
+    for (std::multiset<Callback, Callback::Sorter>::const_iterator itr = eventSet.begin(); itr != eventSet.end(); ++itr) {
       if (!itr->DestroyFlagGet()) {
         return true;
       }
@@ -957,11 +957,11 @@ namespace Frames {
     // Todo: queue up movement events
   }
 
-  bool Layout::FECallback::Sorter::operator()(const Layout::FECallback &lhs, const Layout::FECallback &rhs) const {
+  bool Layout::Callback::Sorter::operator()(const Layout::Callback &lhs, const Layout::Callback &rhs) const {
     return lhs.m_priority < rhs.m_priority;
   }
   
-  void Layout::FECallback::Teardown(Environment *env) const {
+  void Layout::Callback::Teardown(Environment *env) const {
     
   }
 
@@ -1040,7 +1040,7 @@ namespace Frames {
     }
   }
   
-  const Layout::FECallback &Layout::FEIterator::Get() const {
+  const Layout::Callback &Layout::FEIterator::Get() const {
     return *m_current;
   }
   

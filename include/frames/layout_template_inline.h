@@ -9,7 +9,7 @@
 
 namespace Frames {
   template <typename Parameters> void Layout::EventAttach(const Verb<Parameters> &event, typename Verb<Parameters>::TypeDelegate handler, float priority /*= 0.0*/) {
-    m_events[&event].insert(FECallback::CreateNative(handler, priority));
+    m_events[&event].insert(Callback::CreateNative(handler, priority));
   }
     
   template <typename Parameters> void Layout::EventDetach(const Verb<Parameters> &event, typename Verb<Parameters>::TypeDelegate handler, float priority /*= detail::Undefined*/) {
@@ -17,10 +17,10 @@ namespace Frames {
       return;
     }
     
-    std::multiset<FECallback, FECallback::Sorter> &eventSet = m_events.find(&event)->second;
+    std::multiset<Callback, Callback::Sorter> &eventSet = m_events.find(&event)->second;
     
     // TODO: Make this faster if it ever becomes a bottleneck!
-    for (std::multiset<FECallback, FECallback::Sorter>::iterator itr = eventSet.begin(); itr != eventSet.end(); ++itr) {
+    for (std::multiset<Callback, Callback::Sorter>::iterator itr = eventSet.begin(); itr != eventSet.end(); ++itr) {
       if (!itr->DestroyFlagGet() && itr->NativeCallbackEqual(handler) && (detail::IsUndefined(priority) || itr->PriorityGet() == priority)) {
         EventDestroy(m_events.find(&event), itr);
         return;

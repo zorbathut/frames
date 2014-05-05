@@ -147,16 +147,16 @@ namespace Frames {
     // Event system
     
     // Must function properly when copied by value!
-    struct FECallback {
+    struct Callback {
     public:
       // NOTE: this works because delegate is POD
-      FECallback() : m_priority(0), m_destroy(false), m_lock(0) { }
-      ~FECallback() { }
+      Callback() : m_priority(0), m_destroy(false), m_lock(0) { }
+      ~Callback() { }
       
-      template<typename T> static FECallback CreateNative(Delegate<T> din, float priority) {
+      template<typename T> static Callback CreateNative(Delegate<T> din, float priority) {
         BOOST_STATIC_ASSERT(sizeof(Delegate<T>) == sizeof(Delegate<void ()>));
         
-        FECallback rv;
+        Callback rv;
         rv.m_priority = priority;
 
         rv.DelegateGet<T>() = din;
@@ -165,7 +165,7 @@ namespace Frames {
       }
       
       struct Sorter {
-        bool operator()(const FECallback &lhs, const FECallback &rhs) const;
+        bool operator()(const Callback &lhs, const Callback &rhs) const;
       };
       
       void Call(Handle *eh) const {
@@ -208,8 +208,8 @@ namespace Frames {
       mutable int m_lock;
     };
     
-    typedef std::multiset<FECallback, FECallback::Sorter> EventMultiset;
-    typedef std::map<const VerbBase *, std::multiset<FECallback, FECallback::Sorter> > EventLookup;
+    typedef std::multiset<Callback, Callback::Sorter> EventMultiset;
+    typedef std::map<const VerbBase *, std::multiset<Callback, Callback::Sorter> > EventLookup;
     
     class FEIterator {
     public:
@@ -219,7 +219,7 @@ namespace Frames {
       void operator=(const FEIterator &itr);
       ~FEIterator();
       
-      const FECallback &Get() const;
+      const Callback &Get() const;
       bool Complete() const;
       void Next();
       
