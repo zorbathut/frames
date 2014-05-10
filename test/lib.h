@@ -18,7 +18,7 @@ namespace Frames {
 // Sets up a working test environment
 class TestSDLEnvironment : Frames::detail::Noncopyable {
 public:
-  TestSDLEnvironment();
+  TestSDLEnvironment(int width, int height);
   ~TestSDLEnvironment();
 
   int WidthGet() const;
@@ -39,7 +39,7 @@ class TestLogger;
 
 class TestEnvironment : Frames::detail::Noncopyable {
 public:
-  TestEnvironment(bool startSDL = true);
+  TestEnvironment(bool startSDL = true, int width = 1280, int height = 720);
   ~TestEnvironment();
 
   Frames::Environment *operator*() { return m_env; }
@@ -109,7 +109,7 @@ private:
   std::vector<DetacherBase *> m_detachers;
 };
 
-void TestSnapshot(TestEnvironment &env);
+void TestSnapshot(TestEnvironment &env, std::string fname = "");  // non-const-reference so we can just modify it
 void HaltAndRender(TestEnvironment &env); // Intended for debugging with an attached graphics debugger
 
 #endif

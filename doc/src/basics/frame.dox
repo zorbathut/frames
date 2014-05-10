@@ -6,7 +6,7 @@ By default, a Frame is invisible and cannot be interacted with. For the purposes
 
 Here's some example Frames:
 
-(frame image here)
+\image html framebasics_example.png
 
 In the above image, we show exclusively non-overlapping Frames for the sake of demonstration, but Frames can also overlap.
 

@@ -70,7 +70,7 @@ void TestCompareStrings(const std::string &family, const std::string &data) {
   EXPECT_TRUE(data == testsrc);
 }
 
-TestSDLEnvironment::TestSDLEnvironment() : m_win(0), m_glContext(0) {
+TestSDLEnvironment::TestSDLEnvironment(int width, int height) : m_win(0), m_glContext(0) {
   EXPECT_EQ(0, SDL_Init(SDL_INIT_VIDEO));
 
   SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
@@ -79,11 +79,11 @@ TestSDLEnvironment::TestSDLEnvironment() : m_win(0), m_glContext(0) {
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-  m_win = SDL_CreateWindow("Frames test harness", 100, 100, 1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+  m_win = SDL_CreateWindow("Frames test harness", 100, 100, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
   EXPECT_TRUE(m_win != NULL);
 
-  m_width = 1280;
-  m_height = 720;
+  m_width = width;
+  m_height = height;
 
   m_glContext = SDL_GL_CreateContext(m_win);
   EXPECT_TRUE(m_glContext != 0);
@@ -153,9 +153,9 @@ private:
   bool m_allowErrors;
 };
 
-TestEnvironment::TestEnvironment(bool startSDL) : m_env(0), m_sdl(0) {
+TestEnvironment::TestEnvironment(bool startSDL, int width, int height) : m_env(0), m_sdl(0) {
   if (startSDL) {
-    m_sdl = new TestSDLEnvironment();
+    m_sdl = new TestSDLEnvironment(width, height);
   }
 
   Frames::Configuration config;
@@ -237,14 +237,25 @@ void VerbLog::RecordResult(Frames::Handle *handle, const std::string &params) {
   m_records += Frames::detail::Format("Event %s%s on %s%s\n", handle->VerbGet()->NameGet(), param, handle->TargetGet()->DebugNameGet(), current);
 }
 
-void TestSnapshot(TestEnvironment &env) {
+void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
   // Do the render
   glClearColor(0, 0, 0, 1);
   glClear(GL_COLOR_BUFFER_BIT);
   env->ResizeRoot(env.WidthGet(), env.HeightGet());
   env->Render();
 
-  TestNames testNames = GetTestNames("screen", ".png");
+  TestNames testNames;
+  if (fname.empty()) {
+    testNames = GetTestNames("screen", ".png");
+  } else {
+    testNames.testName = fname + ".png";
+    // write to the "input" file if that file doesn't exist
+    if (!std::ifstream(fname.c_str())) {
+      testNames.resultName = testNames.testName;
+    } else {
+      testNames.resultName = fname + "_result" + ".png";
+    }
+  }
   
   // We now have our test filename
 

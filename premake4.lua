@@ -118,6 +118,9 @@ solution "Frames"
     location(path)
     files "test/*.cpp"
     files "test/*.h"
+    files "test/doc/*.cpp"
+    files "test/doc/*.h"
+    includedirs "test"
     debugdir "test"
     
     configuration "x32"
