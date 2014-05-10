@@ -1,0 +1,22 @@
+/** \page basicsframe
+
+Frame is the fundamental component of all UIs. A Frame is a rectangular axis-aligned area in a Scene.
+
+By default, a Frame is invisible and cannot be interacted with. For the purposes of this documentation, Frames are generally colored with Frame::BackgroundSet so that they are visible.
+
+Here's some example Frames:
+
+(frame image here)
+
+In the above image, we show exclusively non-overlapping Frames for the sake of demonstration, but Frames can also overlap.
+
+All Frames have exactly one parent, and any Frame may have any number of children. A Frame's children are always rendered directly on top of that Frame. Each Frame has a "layer" number; a frame's children are rendered in order of increasing layer, such that the topmost frame in a set is the one with the largest Layer.
+
+(frame image here)
+
+As you can see above, layer numbers can be small, large, fractional, or negative. By default, all frames are created with a layer of zero.
+
+(frame image here)
+
+Layer numbers are meaningful only within the scope of a single Frame's children. In the above image, the orange frame set to layer 100 is located
+below the purple frame with layer 10. This is because Orange is the child of Red, while Purple is the child of Blue, and Blue's layer is higher than that of Red. All of Red's children will be drawn before any of Blue's children, regardless of any Layer comparisons between the two.*/
