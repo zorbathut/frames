@@ -11,8 +11,7 @@ namespace Frames {
   template <typename Parameters> class VerbPackage;
 
   /// Base class for type-specific Verbs.
-  /**
-  This contains all members of Verb that do not require information about the verb parameter types.
+  /** This contains all members of Verb that do not require information about the verb parameter types.
 
   See Verb for detailed information. */
   class VerbBase : detail::Noncopyable {
@@ -38,8 +37,7 @@ namespace Frames {
   };
 
   /// Event handle for storing metainformation and providing callbacks.
-  /**
-  A Handle is provided for every event handler call. This handle has a limited lifetime - it is available only until the termination of that event call.*/
+  /** A Handle is provided for every event handler call. This handle has a limited lifetime - it is available only until the termination of that event call.*/
   class Handle : detail::Noncopyable {
   public:
     /// Returns the Layout this event refers to.
@@ -108,8 +106,7 @@ namespace Frames {
   };
 
   /// Should be called before any uses of FRAMES_VERB_DECLARE or FRAMES_VERB_DECLARE_BUBBLE.
-  /**
-  This is a convenience macro that will place layout verbs into a Verb class.
+  /** This is a convenience macro that will place layout verbs into a Verb class.
   It's not strictly necessary if you want a different Verb layout - Verbs are just singletons and don't care where they live - but if you want to follow library conventions, its use is recommended. */
   #define FRAMES_VERB_DECLARE_BEGIN \
     /** \brief Container for class-specific verbs. */ \
@@ -119,17 +116,20 @@ namespace Frames {
     public:
 
   /// Declares a verb with the given name and parameter list.
-  /**
-  Example usages:
+  /** Example usages:
 
   FRAMES_VERB_DECLARE(HelloWorld, ());
   FRAMES_VERB_DECLARE(HelloWorldWithParameter, (int parameterName));
-  FRAMES_VERB_DECLARE(HelloWorldWithParameters, (int parameter1, const std::string &parameter2)); */
+  FRAMES_VERB_DECLARE(HelloWorldWithParameters, (int parameter1, const std::string &parameter2));
+  
+  After declaration, use FRAMES_VERB_DEFINE in a single .cpp file in order to instantiate the objects. */
   #define FRAMES_VERB_DECLARE(eventname, paramlist) \
     static Verb<void paramlist> eventname;
 
   /// Declares a Dive/Bubble verb with the given name and parameter list.
-  /** Besides macro name, usage is identical to that of FRAMES_VERB_DECLARE. */
+  /** Besides macro names, usage is identical to that of FRAMES_VERB_DECLARE.
+  
+  After declaration, use FRAMES_VERB_DEFINE_BUBBLE in a single .cpp file in order to instantiate the objects. */
   #define FRAMES_VERB_DECLARE_BUBBLE(eventname, paramlist) \
     static VerbPackage<void paramlist> eventname;
 

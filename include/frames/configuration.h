@@ -17,8 +17,7 @@ namespace Frames {
   typedef Ptr<Texture> TexturePtr;
 
   /// All configuration data that needs to be provided for a functioning Environment.
-  /**
-  Every Environment contains a Configuration. If a Configuration isn't provided when the Environment is constructed, a default Configuration will be built.
+  /** Every Environment contains a Configuration. If a Configuration isn't provided when the Environment is constructed, a default Configuration will be built.
   
   Most Configuration settings are designed as a class that can be inherited from. The default behavior is available by calling the base class's members. */
   struct Configuration {

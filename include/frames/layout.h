@@ -47,8 +47,7 @@ namespace Frames {
   private:
 
   /// Base class containing location and layout information for all Frames elements.
-  /**
-  A Layout includes all information needed to calculate and update the position and ordering of an element in an Environment. The vast majority of all Layouts are actually \ref Frame "Frames"; the only exception is the Root layout.
+  /** A Layout includes all information needed to calculate and update the position and ordering of an element in an Environment. The vast majority of all Layouts are actually \ref Frame "Frames"; the only exception is the Root layout.
   
   Layout includes all update-related functions as protected members, most of which are exposed by Frame.*/
   class Layout : detail::Noncopyable {
@@ -279,8 +278,7 @@ namespace Frames {
     Layout *ParentGet() const { return m_parent; }
 
     /// Returns the layout underneath a given coordinate in the context of mouse input.
-    /**
-    This can be used to find out what frame would be hit by a mouse even at a certain coordinate. */
+    /** This can be used to find out what frame would be hit by a mouse even at a certain coordinate. */
     Layout *ProbeAsMouse(float x, float y);
 
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
