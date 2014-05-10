@@ -278,8 +278,10 @@ namespace Frames {
     /// Returns the parent. Guaranteed to be non-null unless this is Root.
     Layout *ParentGet() const { return m_parent; }
 
-    /// Returns the highest input-accepting frame located at the given coordinates.
-    Layout *LayoutUnderGet(float x, float y);
+    /// Returns the layout underneath a given coordinate in the context of mouse input.
+    /**
+    This can be used to find out what frame would be hit by a mouse even at a certain coordinate. */
+    Layout *ProbeAsMouse(float x, float y);
 
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
 

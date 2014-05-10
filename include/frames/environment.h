@@ -134,11 +134,22 @@ namespace Frames {
     bool Input_KeyUp(const Input::Key &key);
     
     // ==== Focus
-    Layout *FocusGet() { return m_focus; }
-    const Layout *FocusGet() const { return m_focus; }
+    /// Sets the key focus to the given Layout.
+    /**
+    The key focus directs all key input to a specific Layout (more commonly, Frame). Without a focus, key input will not be consumed.
+    
+    Call with a parameter of 0 to clear the key focus.*/
     void FocusSet(Layout *layout);
+    /// Gets the current key focus.
+    Layout *FocusGet() { return m_focus; }
+    /// Gets the current key focus.
+    const Layout *FocusGet() const { return m_focus; }
+    
 
     // ==== Rendering
+    /// Renders a tree of Frames.
+    /**
+    This can be used to render a subtree if the desired subroot is passed as a parameter, otherwise it will start from the root. */
     void Render(const Layout *root = 0);
 
     /// Informs the environment that the rendering environment has resized.
@@ -147,21 +158,40 @@ namespace Frames {
     void ResizeRoot(int x, int y);
     
     // ==== Introspection
+    /// Returns the root layout.
+    /**
+    The root layout is the bottom-most Layout. Everything is a child of this. */
     Layout *RootGet() { return m_root; }
-    Layout *LayoutUnderGet(float x, float y);
+    /// Returns the root layout.
+    /**
+    The root layout is the bottom-most Layout. Everything is a child of this. */
+    const Layout *RootGet() const { return m_root; }
 
+    /// Returns the layout underneath a given coordinate in the context of mouse input.
+    /**
+    This can be used to find out what frame would be hit by a mouse even at a certain coordinate. */
+    Layout *ProbeAsMouse(float x, float y);
+
+    /// Returns the environment's Configuration.
     const Configuration &ConfigurationGet() { return m_config; }
 
     // ==== Logging and debugging
+    /// Logs a string to the Logger's Error path.
     void LogError(const std::string &log) { m_config.LoggerGet()->LogError(log); }
+    /// Logs a string to the Logger's Debug path.
     void LogDebug(const std::string &log) { m_config.LoggerGet()->LogDebug(log); }
 
     /// Does performance monitoring of scope blocks.
+    /**
+    Monitoring is RAII-managed - merely create an Environment::Performance object with the appropriate scope, then its destructor will finish the performance block at the appropriate time.
+    
+    Be careful if using weird scope-manipulation techniques - Environment::Performance objects must be strictly LIFO. */
     class Performance {
     public:
       /// Begins a new performance block.
       /** name and color will be passed verbatim to \ref Configuration::Performance "Configuration's Performance" class. */
       Performance(Environment *env, const char *name, const Color &color);
+      /// Ends a performance block.
       ~Performance();
 
     private:

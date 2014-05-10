@@ -45,7 +45,7 @@ namespace Frames {
     float x = (float)ix;
     float y = (float)iy;
 
-    Layout *updated = LayoutUnderGet(x, y);
+    Layout *updated = ProbeAsMouse(x, y);
     m_mouse = Vector(x, y);
 
     bool mouseover = false;
@@ -255,9 +255,9 @@ namespace Frames {
     }
   }
 
-  Layout *Environment::LayoutUnderGet(float x, float y) {
+  Layout *Environment::ProbeAsMouse(float x, float y) {
     // TODO: de-invalidate
-    return m_root->LayoutUnderGet(x, y);
+    return m_root->ProbeAsMouse(x, y);
   }
   
   Environment::Performance::Performance(Environment *env, const char *name, const Color &color) : m_env(env) {

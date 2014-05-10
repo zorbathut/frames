@@ -92,10 +92,13 @@ namespace Frames {
     const Color &BackgroundGet() const { return m_bg; }
 
   protected:
+    /// Creates a new Frame with the given parameters. "parent" must be non-null.
     Frame(Layout *parent, const std::string &name);
     virtual ~Frame();
 
+    /// Renders the Frame background. See Layout::RenderElement for inheritance info.
     virtual void RenderElement(detail::Renderer *renderer) const;
+
   private:
     Color m_bg;
   };

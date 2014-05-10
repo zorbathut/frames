@@ -2,23 +2,11 @@
 === DOCS
 
 * Finish docs
-  * Environment
-  * Frame protected
-  * Rect constructors
-
-* Final pass
+  * "/** " search
 
 * Deep docs
 
-=== TWEAK
-
-* Linux?
-* Clang?
-* Clang Static?
-
-* FindChild
-
-* Redesign Lua API sanely
+* Final pass
 
 === INTEGRATION
 
@@ -30,6 +18,16 @@
 
 * Split Loaders into their own libs
   * Test
+
+=== TWEAK
+
+* Linux?
+* Clang?
+* Clang Static?
+
+* FindChild
+
+* Redesign Lua API sanely
 
 === TESTING
 
