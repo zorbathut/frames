@@ -12,8 +12,6 @@
       <tab type="user" url="@ref basicsintro" title="Intro" />
       <tab type="user" url="@ref basicsframe" title="Frame" />
       <tab type="user" url="@ref basicspinning" title="Basic Pinning" />
-      <tab type="user" url="@ref basicsscene" title="Scene" />
-      <tab type="user" url="@ref basicspoint" title="Point" />
       <tab type="user" url="@ref basicspinningadv" title="Advanced Pinning" />
       <tab type="user" url="@ref basicsresources" title="Resources" />
       <tab type="user" url="@ref basicsexamples" title="Examples" />
