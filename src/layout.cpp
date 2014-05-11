@@ -211,7 +211,7 @@ namespace Frames {
   Frame *Layout::ChildGetByName(const std::string &name, bool implementation /*= false*/) const {
     const ChildrenList &targetList = implementation ? m_children_implementation : m_children_nonimplementation;
 
-    for (ChildrenList::iterator itr = targetList.begin(); itr != targetList.end(); ++itr) {
+    for (ChildrenList::const_iterator itr = targetList.begin(); itr != targetList.end(); ++itr) {
       if ((*itr)->NameGet() == name) {
         return *itr;
       }
