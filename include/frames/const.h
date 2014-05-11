@@ -1,7 +1,9 @@
-// Constant values
+// Constant values and associated debug output
 
 #ifndef FRAMES_CONST
 #define FRAMES_CONST
+
+#include <string>
 
 namespace Frames {
   enum Axis { X, Y }; // axes
@@ -35,6 +37,11 @@ namespace Frames {
   }; // axes
 
   extern const float Nil;
+
+  /// Converts a point into a human-readable string.
+  std::string DescriptorFromPoint(float x, float y);
+  /// Converts a point into a human-readable string.
+  std::string DescriptorFromPoint(Anchor anchor);
 }
 
 #endif
