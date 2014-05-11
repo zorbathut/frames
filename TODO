@@ -2,13 +2,26 @@
 === DOCS
 
 * Deep docs
+  * need to put a thorough description of pinning somewhere
 
 * Final pass
 
 === TWEAK
 
+* ChildrenImplementationGet
+
 * really need a global assert function
 * tinyformat global assert
+
+* Fix non-pixel-perfect lines (solution?)
+  * Custom code with shader to do the right thing
+    * nasty, not portable
+  * Add support for rotating Sprites
+    * needed anyway; semantics aren't entirely clear, however
+  * Add Canvas, with support for full vector art
+    * massive amount of code
+      * not happening right now
+  * 
 
 === INTEGRATION
 
