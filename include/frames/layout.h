@@ -141,7 +141,7 @@ namespace Frames {
     friend class Frame; // constructor, private functions that modify state
     friend class Mask; // solely for MouseMasking
     
-    struct FrameOrderSorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
+    struct FrameOrderSorter { bool operator()(const Frame *lhs, const Frame *rhs) const; };
     
     // Event system
     
@@ -284,7 +284,7 @@ namespace Frames {
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
 
     /// Type used to store a list of children, sorted from bottom to top. Conforms to std::set's interface; may not be a std::set.
-    typedef std::set<Layout *, FrameOrderSorter> ChildrenList;
+    typedef std::set<Frame *, FrameOrderSorter> ChildrenList;
 
     /// Returns the children of this frame.
     /** Pass in "true" for implementation to get only children with the Implementation flag set. Otherwise, you'll get only children without that flag set. */
@@ -411,8 +411,8 @@ namespace Frames {
     void zinternalObliterate();
 
     // Layout utility
-    void ChildAdd(Layout *child);
-    void ChildRemove(Layout *child);
+    void ChildAdd(Frame *child);
+    void ChildRemove(Frame *child);
 
     // Rendering
     void Render(detail::Renderer *renderer) const;

@@ -5,6 +5,7 @@
 #include "frames/detail_format.h"
 #include "frames/environment.h"
 #include "frames/event_definition.h"
+#include "frames/frame.h"
 #include "frames/rect.h"
 #include "frames/renderer.h"
 
@@ -685,6 +686,12 @@ namespace Frames {
       return;
     }
 
+    Frame *frame = Cast<Frame>(this);
+    if (!frame) {
+      FRAMES_LAYOUT_CHECK(false, ":ParentSet() attempted on a non-frame");
+      return;
+    }
+
     if (!layout) {
       FRAMES_LAYOUT_CHECK(false, ":ParentSet() attempted with null parent");
       return;
@@ -697,12 +704,12 @@ namespace Frames {
 
     // First, remove ourselves from our old parent
     if (m_parent) {
-      m_parent->ChildRemove(this);
+      m_parent->ChildRemove(frame);
     }
 
     m_parent = layout;
 
-    m_parent->ChildAdd(this);
+    m_parent->ChildAdd(frame);
   }
 
   void Layout::zinternalLayerSet(float layer) {
@@ -710,15 +717,21 @@ namespace Frames {
       return;
     }
 
+    Frame *frame = Cast<Frame>(this);
+    if (!frame) {
+      FRAMES_LAYOUT_CHECK(false, ":LayerSet() attempted on a non-frame");
+      return;
+    }
+
     // We take ourselves out of our parents' list so we can change our layer without breaking the sort
     if (m_parent) {
-      m_parent->ChildRemove(this);
+      m_parent->ChildRemove(frame);
     }
 
     m_layer = layer;
 
     if (m_parent) {
-      m_parent->ChildAdd(this);
+      m_parent->ChildAdd(frame);
     }
   }
 
@@ -727,15 +740,21 @@ namespace Frames {
       return;
     }
 
+    Frame *frame = Cast<Frame>(this);
+    if (!frame) {
+      FRAMES_LAYOUT_CHECK(false, ":ImplementationSet() attempted on a non-frame");
+      return;
+    }
+
     // We take ourselves out of our parents' list so we can change our strata without breaking the sort
     if (m_parent) {
-      m_parent->ChildRemove(this);
+      m_parent->ChildRemove(frame);
     }
 
     m_implementation = implementation;
 
     if (m_parent) {
-      m_parent->ChildAdd(this);
+      m_parent->ChildAdd(frame);
     }
   }
 
@@ -786,12 +805,12 @@ namespace Frames {
     m_inputMode = imode;
   }
   
-  void Layout::ChildAdd(Layout *child) {
+  void Layout::ChildAdd(Frame *child) {
     m_children.insert(child);
     (child->zinternalImplementationGet() ? m_children_implementation : m_children_nonimplementation).insert(child);
   }
 
-  void Layout::ChildRemove(Layout *child) {
+  void Layout::ChildRemove(Frame *child) {
     m_children.erase(child);
     (child->zinternalImplementationGet() ? m_children_implementation : m_children_nonimplementation).erase(child);
   }
@@ -882,7 +901,13 @@ namespace Frames {
 
     // Detach ourselves from our parent
     if (m_parent) {
-      m_parent->ChildRemove(this);
+      Frame *frame = Cast<Frame>(this);
+      if (!frame) {
+        FRAMES_LAYOUT_CHECK(false, ":Obliterate() called on a non-frame that somehow has a parent");
+        return;
+      }
+
+      m_parent->ChildRemove(frame);
     }
     m_parent = 0;
 
@@ -1138,7 +1163,7 @@ namespace Frames {
     }
   }
   
-  bool Layout::FrameOrderSorter::operator()(const Layout *lhs, const Layout *rhs) const {
+  bool Layout::FrameOrderSorter::operator()(const Frame *lhs, const Frame *rhs) const {
     if (lhs->zinternalImplementationGet() != rhs->zinternalImplementationGet())
       return lhs->zinternalImplementationGet() < rhs->zinternalImplementationGet();
     if (lhs->zinternalLayerGet() != rhs->zinternalLayerGet())
