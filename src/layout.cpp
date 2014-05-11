@@ -666,13 +666,23 @@ namespace Frames {
       }
     }
 
-    if (detail::IsNil(myx) != detail::IsNil(xofs)) {
-      FRAMES_LAYOUT_CHECK(false, "PinSet provided with only one of destination-point and offset for X axis");
+    if (detail::IsNil(myx) && !detail::IsNil(xofs) && xofs != 0) {
+      FRAMES_LAYOUT_CHECK(false, "PinSet given non-zero X offset with nil X anchor; must have zero or nil X offset when X anchor isn't being set");
       return;
     }
 
-    if (detail::IsNil(myy) != detail::IsNil(yofs)) {
-      FRAMES_LAYOUT_CHECK(false, "PinSet provided with only one of destination-point and offset for Y axis");
+    if (detail::IsNil(myy) && !detail::IsNil(yofs) && yofs != 0) {
+      FRAMES_LAYOUT_CHECK(false, "PinSet given non-zero Y offset with nil Y anchor; must have zero or nil Y offset when Y anchor isn't being set");
+      return;
+    }
+
+    if (!detail::IsNil(myx) && detail::IsNil(xofs)) {
+      FRAMES_LAYOUT_CHECK(false, "PinSet given nil X offset with non-nil X anchor; must have non-nil offset when X anchor is being set");
+      return;
+    }
+
+    if (!detail::IsNil(myy) && detail::IsNil(yofs)) {
+      FRAMES_LAYOUT_CHECK(false, "PinSet given nil Y offset with non-nil Y anchor; must have non-nil offset when Y anchor is being set");
       return;
     }
 

@@ -256,17 +256,17 @@ TEST(Layout, Error) {
   subject->PinSet(Frames::TOP, subjectalt, Frames::LEFT);
 
   // Offset mismatches
-  subject->PinSet(Frames::TOPLEFT, subjectalt, Frames::TOPLEFT, Frames::Nil, 0.0f);
-  subject->PinSet(Frames::TOPLEFT, subjectalt, Frames::TOPLEFT, 0.0f, Frames::Nil);
+  subject->PinSet(Frames::TOPLEFT, subjectalt, Frames::TOPLEFT, Frames::Nil, 1.0f);
+  subject->PinSet(Frames::TOPLEFT, subjectalt, Frames::TOPLEFT, 1.0f, Frames::Nil);
   subject->PinSet(Frames::TOPLEFT, subjectalt, Frames::TOPLEFT, Frames::Nil, Frames::Nil);
 
-  subject->PinSet(Frames::LEFT, subjectalt, Frames::LEFT, Frames::Nil, 0.0f);
+  subject->PinSet(Frames::LEFT, subjectalt, Frames::LEFT, Frames::Nil, 1.0f);
   subject->PinSet(Frames::LEFT, subjectalt, Frames::LEFT, Frames::Nil, Frames::Nil);
-  subject->PinSet(Frames::LEFT, subjectalt, Frames::LEFT, 0.0f, 0.0f);
+  subject->PinSet(Frames::LEFT, subjectalt, Frames::LEFT, 1.0f, 1.0f);
 
-  subject->PinSet(Frames::TOP, subjectalt, Frames::TOP, 0.0f, Frames::Nil);
+  subject->PinSet(Frames::TOP, subjectalt, Frames::TOP, 1.0f, Frames::Nil);
   subject->PinSet(Frames::TOP, subjectalt, Frames::TOP, Frames::Nil, Frames::Nil);
-  subject->PinSet(Frames::TOP, subjectalt, Frames::TOP, 0.0f, 0.0f);
+  subject->PinSet(Frames::TOP, subjectalt, Frames::TOP, 1.0f, 1.0f);
 }
 
 TEST(Layout, ChildGet) {
