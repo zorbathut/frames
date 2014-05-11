@@ -12,7 +12,7 @@ In the above image, we show exclusively non-overlapping Frames for the sake of d
 
 All Frames have exactly one parent, and any Frame may have any number of children. A Frame's children are always rendered directly on top of that Frame. Each Frame has a "layer" number; a frame's children are rendered in order of increasing layer, such that the topmost frame in a set is the one with the largest Layer.
 
-(frame image here)
+\image html framebasics_layering.png
 
 As you can see above, layer numbers can be small, large, fractional, or negative. By default, all frames are created with a layer of zero.
 

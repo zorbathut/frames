@@ -250,7 +250,7 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
   } else {
     testNames.testName = fname + ".png";
     // write to the "input" file if that file doesn't exist
-    if (!std::ifstream(fname.c_str())) {
+    if (!std::ifstream(testNames.testName.c_str())) {
       testNames.resultName = testNames.testName;
     } else {
       testNames.resultName = fname + "_result" + ".png";
