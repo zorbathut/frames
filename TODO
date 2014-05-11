@@ -5,6 +5,12 @@
 
 * Final pass
 
+=== TWEAK
+
+* Protected cons/dest/renderelement on all frame types.
+* really need a global assert function
+* tinyformat global assert
+
 === INTEGRATION
 
 * Split OGL into its own lib
@@ -68,7 +74,6 @@
 
 === PROGRESSION
 
-* really need a global assert function
 * Better global register setup
 * improve C++ API
 
