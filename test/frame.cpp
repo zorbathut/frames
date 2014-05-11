@@ -57,6 +57,52 @@ TEST(Layout, Pin) {
   gray->HeightSet((float)env.HeightGet() / 2);
   gray->PinSet(Frames::CENTER, 0, Frames::Nil, Frames::Nil, (float)env.WidthGet() / 4, (float)env.HeightGet() / 4 * 3);
 
+  {
+    Frames::Layout::PinAxis axis = green->PinGet(Frames::X, 0.5);
+    EXPECT_EQ(true, axis.valid);
+    EXPECT_EQ(env->RootGet(), axis.target);
+    EXPECT_EQ(0.75f, axis.point);
+    EXPECT_EQ(0.f, axis.offset);
+  }
+
+  {
+    Frames::Layout::PinAxis axis = green->PinGet(Frames::Y, 0.5);
+    EXPECT_EQ(true, axis.valid);
+    EXPECT_EQ(env->RootGet(), axis.target);
+    EXPECT_EQ(0.75f, axis.point);
+    EXPECT_EQ(0.f, axis.offset);
+  }
+
+  {
+    Frames::Layout::PinPoint point = green->PinGet(Frames::CENTER);
+    EXPECT_EQ(true, point.valid);
+    EXPECT_EQ(env->RootGet(), point.target);
+    EXPECT_EQ(Frames::Vector(0.75f, 0.75f), point.point);
+    EXPECT_EQ(Frames::Vector(0.f, 0.f), point.offset);
+  }
+
+  {
+    Frames::Layout::PinPoint point = green->PinGet(Frames::TOPRIGHT);
+    EXPECT_EQ(true, point.valid);
+    EXPECT_EQ(env->RootGet(), point.target);
+    EXPECT_EQ(Frames::Vector(1.f, 0.5f), point.point);
+    EXPECT_EQ(Frames::Vector(0.f, 0.f), point.offset);
+  }
+
+  {
+    // a point we technically never set, but still one we can describe
+    Frames::Layout::PinPoint point = green->PinGet(Frames::TOPCENTER);
+    EXPECT_EQ(true, point.valid);
+    EXPECT_EQ(env->RootGet(), point.target);
+    EXPECT_EQ(Frames::Vector(0.75f, 0.5f), point.point);
+    EXPECT_EQ(Frames::Vector(0.f, 0.f), point.offset);
+  }
+
+  {
+    Frames::Layout::PinPoint point = green->PinGet(Frames::BOTTOMLEFT);
+    EXPECT_EQ(false, point.valid);
+  }
+
   TestSnapshot(env);
 
   red->ConstraintClearAll();
@@ -85,8 +131,43 @@ TEST(Layout, Pin) {
 
   gray->PinSet(Frames::TOP, blue, Frames::BOTTOM);
   gray->HeightSet(100.f);
-  
+
   TestSnapshot(env);
+
+  {
+    Frames::Layout::PinAxis axis = green->PinGet(Frames::X, 0);
+    EXPECT_EQ(true, axis.valid);
+    EXPECT_EQ(env->RootGet(), axis.target);
+    EXPECT_EQ(0.f, axis.point);
+    EXPECT_EQ(0.f, axis.offset);
+  }
+
+  {
+    Frames::Layout::PinAxis axis = green->PinGet(Frames::X, 1);
+    EXPECT_EQ(true, axis.valid);
+    EXPECT_EQ(env->RootGet(), axis.target);
+    EXPECT_EQ(1.f, axis.point);
+    EXPECT_EQ(0.f, axis.offset);
+  }
+
+  {
+    Frames::Layout::PinAxis axis = green->PinGet(Frames::Y, 0);
+    EXPECT_EQ(true, axis.valid);
+    EXPECT_EQ(red, axis.target);
+    EXPECT_EQ(1.f, axis.point);
+    EXPECT_EQ(0.f, axis.offset);
+  }
+
+  {
+    Frames::Layout::PinAxis axis = green->PinGet(Frames::Y, 1);
+    EXPECT_EQ(false, axis.valid);
+  }
+
+  {
+    // the top part is valid; the right isn't
+    Frames::Layout::PinPoint point = green->PinGet(Frames::TOPRIGHT);
+    EXPECT_EQ(false, point.valid);
+  }
 };
 
 TEST(Layout, Layer) {
@@ -159,6 +240,9 @@ TEST(Layout, Error) {
   subject->PinSet(Frames::Anchor(Frames::ANCHOR_COUNT), subjectalt, Frames::TOPLEFT);
   subject->PinSet(Frames::TOPLEFT, subjectalt, Frames::Anchor(-1));
   subject->PinSet(Frames::TOPLEFT, subjectalt, Frames::Anchor(Frames::ANCHOR_COUNT));
+
+  subject->PinGet(Frames::Axis(-1), 0);
+  subject->PinGet(Frames::Axis(2), 0);
 
   // Target errors
   subject->PinSet(Frames::TOPLEFT, subj2, Frames::TOPLEFT);

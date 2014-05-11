@@ -253,9 +253,58 @@ namespace Frames {
 
     // --------- Layout accessors
 
-    /// Returns the position of an anchor along a given axis.
+    /// Contains the information required to describe a single-axis Pin.
+    struct PinAxis {
+      /// Constructs a default non-valid pin.
+      PinAxis() : valid(false), target(0), point(0), offset(0) {}
+      /// Constructs a valid pin.
+      PinAxis(const Layout *target, float point, float offset) : valid(true), target(target), point(point), offset(offset) {}
+
+      /// Indicates if this pin data is valid.
+      bool valid;
+      /// Target layout for this pin.
+      const Layout *target;
+      /// Single-axis point that this pin targets.
+      float point;
+      /// Offset of this pin.
+      float offset;
+    };
+    /// Returns information on a Pin.
+    PinAxis PinGet(Axis axis, float mypt) const;
+
+    /// Contains the information required to describe a two-axis Pin.
+    struct PinPoint {
+      /// Constructs a default non-valid pin.
+      PinPoint() : valid(false), target(0), point(Vector(Nil, Nil)), offset(Vector(Nil, Nil)) {}
+      /// Constructs a valid pin.
+      PinPoint(const Layout *target, const Vector &point, const Vector &offset) : valid(true), target(target), point(point), offset(offset) {}
+
+      /// Indicates if this pin data is valid.
+      bool valid;
+      /// Target layout for this pin.
+      const Layout *target;
+      /// Point that this pin targets.
+      Vector point;
+      /// Offset of this pin.
+      Vector offset;
+    };
+    /// Returns information on a Pin.
+    /** Will return an invalid Point if either axis is not anchored, or if both axes are anchored, but to different targets. */
+    PinPoint PinGet(Anchor anchor) const;
+    /// Returns information on a Pin.
+    /** Will return an invalid Point if either axis is not anchored, or if both axes are anchored, but to different targets. */
+    PinPoint PinGet(float x, float y) const;
+
+    /// Returns the position of an axis point.
     /** See \ref layoutbasics for details. */
     float PointGet(Axis axis, float pt) const;
+    /// Returns the position of a point.
+    /** See \ref layoutbasics for details. */
+    Vector PointGet(Anchor anchor) const;
+    /// Returns the position of a point.
+    /** See \ref layoutbasics for details. */
+    Vector PointGet(float x, float y) const;
+
     /// Returns the left edge's position.
     float LeftGet() const { return PointGet(X, 0); }
     /// Returns the right edge's position.

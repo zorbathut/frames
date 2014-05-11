@@ -54,6 +54,53 @@ namespace Frames {
     return "Layout";
   }
 
+  Layout::PinAxis Layout::PinGet(Axis axis, float mypt) const {
+    if (!(axis == X || axis == Y)) {
+      FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
+      return PinAxis();
+    }
+
+    const AxisData &ax = m_axes[axis];
+    for (int i = 0; i < 2; ++i) {
+      if (ax.connections[i].point_mine == mypt) {
+        return PinAxis(ax.connections[i].link, ax.connections[i].point_link, ax.connections[i].offset);
+      }
+    }
+
+    return PinAxis();
+  }
+
+  Layout::PinPoint Layout::PinGet(Anchor anchor) const {
+    if (anchor < 0 || anchor >= ANCHOR_COUNT) {
+      FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
+      return PinPoint();
+    }
+
+    return PinGet(detail::c_anchorLookup[anchor].x, detail::c_anchorLookup[anchor].y);
+  }
+
+  Layout::PinPoint Layout::PinGet(float x, float y) const {
+    PinAxis pinX, pinY;
+    if (!detail::IsNil(x)) {
+      pinX = PinGet(X, x);
+      if (!pinX.valid) {
+        return PinPoint();
+      }
+    }
+    if (!detail::IsNil(y)) {
+      pinY = PinGet(Y, y);
+      if (!pinY.valid) {
+        return PinPoint();
+      }
+    }
+
+    if (!detail::IsNil(x) && !detail::IsNil(y) && pinX.target != pinY.target) {
+      return PinPoint();
+    }
+
+    return PinPoint(!detail::IsNil(x) ? pinX.target : pinY.target, Vector(pinX.point, pinY.point), Vector(pinX.offset, pinY.offset));
+  }
+
   float Layout::PointGet(Axis axis, float pt) const {
     if (!(axis == X || axis == Y)) {
       FRAMES_LAYOUT_CHECK(false, "Axis is invalid");
@@ -140,6 +187,19 @@ namespace Frames {
     float rv = PointGet(axis, connect->point_mine) + (pt - connect->point_mine) * SizeGet(axis);
     m_env->LayoutStack_Pop();
     return rv;
+  }
+
+  Vector Layout::PointGet(Anchor anchor) const {
+    if (anchor < 0 || anchor >= ANCHOR_COUNT) {
+      FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
+      return Vector();
+    }
+
+    return PointGet(detail::c_anchorLookup[anchor].x, detail::c_anchorLookup[anchor].y);
+  }
+
+  Vector Layout::PointGet(float x, float y) const {
+    return Vector(PointGet(X, x), PointGet(Y, y));
   }
 
   Rect Layout::BoundsGet() const {

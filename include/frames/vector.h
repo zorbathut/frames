@@ -30,6 +30,10 @@ namespace Frames {
     lhs.y -= rhs.y;
   }
 
+  inline bool operator==(const Vector &lhs, const Vector &rhs) {
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+  }
+
   namespace detail {
     // prototyped so we can call it without including utility.h
     float Clamp(float current, float min, float max);
