@@ -43,7 +43,7 @@ namespace Frames {
   }
 
   #define FRAMES_DEFINE_RTTI(derived, base) \
-    detail::Rtti derived::s_rtti(detail::InitHelper<base>()); \
+    ::Frames::detail::Rtti derived::s_rtti(::Frames::detail::InitHelper<base>()); \
     /*static*/ const char *derived::TypeStaticGet() { \
       return #derived; \
     }

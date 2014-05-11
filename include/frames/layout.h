@@ -33,12 +33,12 @@ namespace Frames {
   }
 
   #define FRAMES_DECLARE_RTTI() \
-    static detail::Rtti s_rtti; \
-    static const detail::Rtti *RttiStaticGet() { return &s_rtti; } \
-    virtual const detail::Rtti *RttiVirtualGet() const { return &s_rtti; } \
+    static ::Frames::detail::Rtti s_rtti; \
+    static const ::Frames::detail::Rtti *RttiStaticGet() { return &s_rtti; } \
+    virtual const ::Frames::detail::Rtti *RttiVirtualGet() const { return &s_rtti; } \
     template <typename T> friend T *Cast(Layout *); \
     template <typename T> friend const T *Cast(const Layout *); \
-    template <typename T> friend const detail::Rtti *detail::InitHelper(); \
+    template <typename T> friend const ::Frames::detail::Rtti *::Frames::detail::InitHelper(); \
   public: \
     /** \brief Returns a human-readable type string for this class. */ \
     static const char *TypeStaticGet(); \
