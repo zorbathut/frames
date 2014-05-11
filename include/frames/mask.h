@@ -22,10 +22,12 @@ namespace Frames {
     /// Creates a new Mask.
     static Mask *Create(Layout *parent, const std::string &name);
 
-  private:
+  protected:
+    /// Creates a new Mask with the given parameters. "parent" must be non-null.
     Mask(Layout *parent, const std::string &name);
     virtual ~Mask();
 
+  private:
     virtual bool MouseMaskingTest(float x, float y);
 
     virtual void RenderElementPreChild(detail::Renderer *renderer) const;

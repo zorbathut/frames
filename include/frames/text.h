@@ -102,15 +102,19 @@ namespace Frames {
     /// Gets the color of selected text.
     const Color &ColorTextSelectedGet() const { return m_color_selected; }
 
-  private:
+  protected:
+    /// Creates a new Text with the given parameters. "parent" must be non-null.
     Text(Layout *parent, const std::string &name);
     virtual ~Text();
+
+    /// Renders the Text.
+    virtual void RenderElement(detail::Renderer *renderer) const;
+
+  private:
   
     void SizeChanged(Handle *handle);
     void UpdateLayout();
     void ScrollToCursor();
-
-    virtual void RenderElement(detail::Renderer *renderer) const;
 
     std::string m_font;
     std::string m_text;

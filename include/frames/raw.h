@@ -25,11 +25,13 @@ namespace Frames {
   public:
     /// Creates a new Raw.
     static Raw *Create(Layout *parent, const std::string &name);
-    
-  private:
+   
+  protected:
+    /// Creates a new Raw with the given parameters. "parent" must be non-null.
     Raw(Layout *parent, const std::string &name);
     virtual ~Raw();
 
+    /// Renders the Raw and fires the appropriate event.
     virtual void RenderElement(detail::Renderer *renderer) const;
   };
 }
