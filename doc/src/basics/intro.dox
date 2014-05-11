@@ -2,4 +2,4 @@
 
 This section is devoted to basic working knowledge of the principles of Frames. We'll go through all of the fundamental building blocks and explain them, along with examples.
 
-As an added bonus, all graphics in this section were generated with Frames itself as part of the library's unit tests. The source files can be found in test/doc. */
+All graphics in this section were generated with Frames itself as part of the library's unit tests. The source files can be found in test/doc. */
