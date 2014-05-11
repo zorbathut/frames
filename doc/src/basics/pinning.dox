@@ -1,0 +1,44 @@
+/** \page pinning
+
+Frames are placed and oriented using two tools. The first is size constraints, where you can fix the width and/or height of the frame at a known value. The second is pinning.
+
+\image html pinningbasics_intro.png
+
+Pinning forces a location on a frame to be placed relative to a location on another frame. In the above example (a series of resource bars for an ARPG), the health bar is placed relative to the screen bounds, the energy bar is placed relative to the health bar, and the stamina bar is placed relative to the energy bar. If the size of the energy bar were to change, perhaps to add yet another resource type:
+
+\image html pinningbasics_resize.png
+
+the stamina bar would automatically move to keep its constraint valid.
+
+(This is a good time to reiterate that all documentation images are built by Frames itself, and the code is available under test/doc. The difference between the two above images is exactly one line of code.)
+
+All pins include an offset. If the offset is (0,0), then the pin locks the two points together at precisely the same location. Otherwise, the pinned point is placed at a position offset to the target point. We've used offsets in the above example to separate the bars.
+
+All pins are permanent until either frame is destroyed, the pin is removed, or the pin is changed. When a frame's position is changed, all pins that depend on that position will update immediately.
+
+(image)
+
+Pin constraints are always unidirectional. The frame with the pin placed on it will move to conform to the targeted frame, not vice-versa.
+
+(image)
+(image)
+
+The four most common named points are TOPLEFT, TOPRIGHT, BOTTOMLEFT, and BOTTOMRIGHT, representing the corners of a frame. In this example, the bars are constrained to each other through corner pins, and the numeric indicators are also constrained to their parent bars via pins.
+
+Keep in mind that pins do not have to travel "up" the parent hierarchy. The health, energy, and stamina bars are siblings, and are still linked via pins.
+
+(image)
+(image)
+
+Also of frequent use is CENTER. In this image, we've moved the numeric indicators to the middle of the bars to make them more visible. As the text becomes shorter or longer, the text frame will automatically move to keep its CENTER point constrained to the CENTER point of the healthbar.
+
+Remember that any point can be pinned to any other point. Our UI designers have added a small indicator widget to the top-right corner of the filled section of the healthbar by pinning the indicator's CENTER to the filled healthbar's TOPRIGHT.
+
+(image)
+(image)
+
+There are also four edge center points, CENTERLEFT, CENTERRIGHT, TOPCENTER, and BOTTOMCENTER. We've used these to align the descriptive labels to be vertically centered. This is why, when we made the energy bar taller in the second image, the Energy text remained vertically centered relative to it.
+
+To demonstrate TOPCENTER and BOTTOMCENTER we've added status text to the bottom, horizontally centered below the stamina bar.
+
+*/
