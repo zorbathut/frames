@@ -6,12 +6,14 @@ unzip testdata.zip || exit 1
 unzip test-$target-$platform-$configuration.zip || exit 1
 unzip debugruntime.zip || exit 1
 rm *.zip
+set +e
 if [ "$configuration" == "release" ]; then
   (cd test && ../bin/$target/$platform/test/test.exe)
 else
   (cd test && ../bin/$target/$platform/test/testd.exe)
 fi
 RES=$?
+set -e
 pwd
 zip -r result-$target-$platform-$configuration.zip test/ref/* || exit 1
 exit $RES
