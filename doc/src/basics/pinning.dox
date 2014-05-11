@@ -16,7 +16,7 @@ All pins include an offset. If the offset is (0,0), then the pin locks the two p
 
 All pins are permanent until either frame is destroyed, the pin is removed, or the pin is changed. When a frame's position is changed, all pins that depend on that position will update immediately.
 
-(image)
+\image html pinningbasics_unidirectional.png
 
 Pin constraints are always unidirectional. The frame with the pin placed on it will move or resize to conform to the targeted frame, not vice-versa.
 
