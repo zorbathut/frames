@@ -184,3 +184,28 @@ TEST(Layout, Error) {
   subject->PinSet(Frames::TOP, subjectalt, Frames::TOP, Frames::Nil, Frames::Nil);
   subject->PinSet(Frames::TOP, subjectalt, Frames::TOP, 0.0f, 0.0f);
 }
+
+TEST(Layout, ChildGet) {
+  TestEnvironment env;
+  
+  Frames::Frame *parent = Frames::Frame::Create(env->RootGet(), "parent");
+  Frames::Frame *sibling = Frames::Frame::Create(env->RootGet(), "sibling");
+  Frames::Frame *child = Frames::Frame::Create(parent, "child");
+  Frames::Frame *implementation = Frames::Frame::Create(parent, "implementation");
+  implementation->ImplementationSet(true);
+
+  EXPECT_EQ(parent, env->RootGet()->ChildGetByName("parent"));
+  EXPECT_EQ(sibling, env->RootGet()->ChildGetByName("sibling"));
+  EXPECT_EQ(0, env->RootGet()->ChildGetByName("child"));
+  EXPECT_EQ(0, env->RootGet()->ChildGetByName("invalid"));
+
+  EXPECT_EQ(0, parent->ChildGetByName("parent"));
+  EXPECT_EQ(0, parent->ChildGetByName("sibling"));
+  EXPECT_EQ(child, parent->ChildGetByName("child"));
+  EXPECT_EQ(0, parent->ChildGetByName("implementation"));
+  EXPECT_EQ(0, parent->ChildGetByName("invalid"));
+
+  EXPECT_EQ(0, parent->ChildGetByName("child", true));
+  EXPECT_EQ(implementation, parent->ChildGetByName("implementation", true));
+  EXPECT_EQ(0, parent->ChildGetByName("invalid", true));
+}

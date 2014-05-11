@@ -289,6 +289,12 @@ namespace Frames {
     /// Returns the children of this frame.
     /** Pass in "true" for implementation to get only children with the Implementation flag set. Otherwise, you'll get only children without that flag set. */
     const ChildrenList &ChildrenGet(bool implementation = false) { return implementation ? m_children_implementation : m_children_nonimplementation; }
+
+    /// Returns a child of this frame with the given name.
+    /** Returns NULL if no such child exists. If multiple children exist with that name, no guarantee is provided about which one it picks.
+    
+    Pass in "true" for implementation to get only children with the Implementation flag set. Otherwise, you'll get only children without that flag set. */
+    Frame *ChildGetByName(const std::string &name, bool implementation = false) const;
     
     // --------- State
 
