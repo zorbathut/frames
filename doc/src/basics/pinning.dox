@@ -18,7 +18,7 @@ All pins are permanent until either frame is destroyed, the pin is removed, or t
 
 (image)
 
-Pin constraints are always unidirectional. The frame with the pin placed on it will move to conform to the targeted frame, not vice-versa.
+Pin constraints are always unidirectional. The frame with the pin placed on it will move or resize to conform to the targeted frame, not vice-versa.
 
 (image)
 (image)
