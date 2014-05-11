@@ -21,7 +21,7 @@ namespace Frames {
 
     // --------- PinSet
 
-    /// Creates or redefines a single anchor \ref layoutbasics "link".
+    /// Creates or redefines a single \ref layoutbasics "pin".
     /** It is generally recommended to use the other PinSet overloads before this one. See \ref layoutbasics for more information. */
     inline void PinSet(Axis axis, float mypt, const Layout *link, float theirpt, float offset = 0.f) { return zinternalPinSet(axis, mypt, link, theirpt, offset); }
     /// Clears a single \ref layoutbasics "link".
