@@ -14,7 +14,7 @@ All Frames have exactly one parent, and any Frame may have any number of childre
 
 \image html framebasics_layering.png
 
-As you can see above, layer numbers can be small, large, fractional, or negative. By default, all frames are created with a layer of zero.
+Layer numbers can be small, large, fractional, or negative. By default, all frames are created with a layer of zero.
 
 \image html framebasics_hierarchy.png
 
@@ -22,4 +22,4 @@ Layer numbers are meaningful only within the scope of a single Frame's children.
 
 In programmer terms, the Frame hierarchy forms a tree, and rendering is depth-first.
 
-This also demonstrates that the parent/child relationship does not dictate positioning or render area - a child can render well out of bounds of a parent, just as Orange is rendering outside the bounds of Red.*/
+The parent/child relationship does not dictate positioning or render area - a child can render well out of bounds of a parent, just as Orange is rendering outside the bounds of Red.*/
