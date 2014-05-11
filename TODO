@@ -7,8 +7,6 @@
 
 === TWEAK
 
-* "Remove" redundant anchors
-* Protected cons/dest/renderelement on all frame types.
 * really need a global assert function
 * tinyformat global assert
 

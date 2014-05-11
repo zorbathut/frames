@@ -76,24 +76,25 @@ TEST(Core, Format) {
 };
 
 TEST(Core, Const) {
+  // Will always accept the canonical form
   EXPECT_EQ("TOPLEFT", Frames::DescriptorFromPoint(Frames::TOPLEFT));
-  EXPECT_EQ("LEFTTOP", Frames::DescriptorFromPoint(Frames::LEFTTOP));
+  EXPECT_EQ("TOPLEFT", Frames::DescriptorFromPoint(Frames::LEFTTOP));
   EXPECT_EQ("TOPCENTER", Frames::DescriptorFromPoint(Frames::TOPCENTER));
-  EXPECT_EQ("CENTERTOP", Frames::DescriptorFromPoint(Frames::CENTERTOP));
+  EXPECT_EQ("TOPCENTER", Frames::DescriptorFromPoint(Frames::CENTERTOP));
   EXPECT_EQ("TOPRIGHT", Frames::DescriptorFromPoint(Frames::TOPRIGHT));
-  EXPECT_EQ("RIGHTTOP", Frames::DescriptorFromPoint(Frames::RIGHTTOP));
+  EXPECT_EQ("TOPRIGHT", Frames::DescriptorFromPoint(Frames::RIGHTTOP));
   EXPECT_EQ("CENTERLEFT", Frames::DescriptorFromPoint(Frames::CENTERLEFT));
-  EXPECT_EQ("LEFTCENTER", Frames::DescriptorFromPoint(Frames::LEFTCENTER));
+  EXPECT_EQ("CENTERLEFT", Frames::DescriptorFromPoint(Frames::LEFTCENTER));
   EXPECT_EQ("CENTER", Frames::DescriptorFromPoint(Frames::CENTER));
-  EXPECT_EQ("CENTERCENTER", Frames::DescriptorFromPoint(Frames::CENTERCENTER));
+  EXPECT_EQ("CENTER", Frames::DescriptorFromPoint(Frames::CENTERCENTER));
   EXPECT_EQ("CENTERRIGHT", Frames::DescriptorFromPoint(Frames::CENTERRIGHT));
-  EXPECT_EQ("RIGHTCENTER", Frames::DescriptorFromPoint(Frames::RIGHTCENTER));
+  EXPECT_EQ("CENTERRIGHT", Frames::DescriptorFromPoint(Frames::RIGHTCENTER));
   EXPECT_EQ("BOTTOMLEFT", Frames::DescriptorFromPoint(Frames::BOTTOMLEFT));
-  EXPECT_EQ("LEFTBOTTOM", Frames::DescriptorFromPoint(Frames::LEFTBOTTOM));
+  EXPECT_EQ("BOTTOMLEFT", Frames::DescriptorFromPoint(Frames::LEFTBOTTOM));
   EXPECT_EQ("BOTTOMCENTER", Frames::DescriptorFromPoint(Frames::BOTTOMCENTER));
-  EXPECT_EQ("CENTERBOTTOM", Frames::DescriptorFromPoint(Frames::CENTERBOTTOM));
+  EXPECT_EQ("BOTTOMCENTER", Frames::DescriptorFromPoint(Frames::CENTERBOTTOM));
   EXPECT_EQ("BOTTOMRIGHT", Frames::DescriptorFromPoint(Frames::BOTTOMRIGHT));
-  EXPECT_EQ("RIGHTBOTTOM", Frames::DescriptorFromPoint(Frames::RIGHTBOTTOM));
+  EXPECT_EQ("BOTTOMRIGHT", Frames::DescriptorFromPoint(Frames::RIGHTBOTTOM));
   EXPECT_EQ("LEFT", Frames::DescriptorFromPoint(Frames::LEFT));
   EXPECT_EQ("CENTERX", Frames::DescriptorFromPoint(Frames::CENTERX));
   EXPECT_EQ("RIGHT", Frames::DescriptorFromPoint(Frames::RIGHT));
