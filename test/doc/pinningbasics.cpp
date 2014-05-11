@@ -30,8 +30,6 @@ private:
     const float lineang = 0.6f;
 
     glLineWidth(1.0f);
-    glEnable(GL_LINE_SMOOTH);
-    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
     glColor3f(1.0f, 1.0f, 0.0f);
     glBegin(GL_LINES);
     glVertex2f(bounds.s.x, bounds.s.y);
