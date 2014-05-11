@@ -55,4 +55,3 @@ namespace Frames {
   }
   Frame::~Frame() { }
 }
-
