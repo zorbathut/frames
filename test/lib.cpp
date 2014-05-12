@@ -323,7 +323,26 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
   }
 
   EXPECT_EQ(reference.size(), pixels.size());
-  EXPECT_TRUE(pixels == reference);
+
+  if (reference.size() == pixels.size()) {
+    int different = 0;
+    int outsidebounds = 0;
+    for (int i = 0; i < pixels.size(); ++i) {
+      int diff = abs((int)pixels[i] - (int)reference[i]);
+      if (diff > 0) {
+        different++;
+      }
+      if (diff > 2) {
+        outsidebounds++;
+      }
+    }
+    
+    EXPECT_EQ(0, outsidebounds);
+    if (different) {
+      GTEST_LOG_(WARNING) << "Mismatched pixels within bounds: " << different;
+    }
+  }
+  
 }
 
 void HaltAndRender(TestEnvironment &env) {
