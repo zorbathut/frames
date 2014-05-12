@@ -38,10 +38,8 @@ namespace Frames {
       const float dx = WidthGet() / 2;
       const float dy = HeightGet() / 2;
 
-      const float rad = m_angle / 360 * detail::Pi * 2;
-
-      const float s = sin(rad);
-      const float c = cos(rad);
+      const float s = sin(m_angle);
+      const float c = cos(m_angle);
 
       detail::Renderer::Vertex *v = renderer->Request(4);
 

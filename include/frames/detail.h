@@ -79,6 +79,7 @@ namespace Frames {
     template<typename IT> struct MakeConstRef { typedef typename boost::add_lvalue_reference<typename boost::add_const<typename boost::remove_reference<IT>::type>::type>::type T; };
 
     static const float Pi = 3.14159265358979323846f; // C++, why do you not define this :(
+    static const float Tau = Pi * 2;
   };
 }
 

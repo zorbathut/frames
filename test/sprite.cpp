@@ -30,7 +30,7 @@ TEST(Sprite, Basic) {
 
 TEST(Sprite, Rotation) {
   TestEnvironment env;
-  const float span[] = { 22.5, 45, 90, 180, 360 };
+  const float span[] = { Frames::detail::Tau / 16, Frames::detail::Tau / 8, Frames::detail::Tau / 4, Frames::detail::Tau / 2, Frames::detail::Tau };
   const float sub = 8;
   const int spans = sizeof(span) / sizeof(*span);
 

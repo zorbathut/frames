@@ -27,7 +27,7 @@ namespace Frames {
 
     // Experimental, disabled for documentation
     /// @cond EXPERIMENTAL
-    void EXPERIMENTAL_RotateSet(float angleDegrees) { m_angle = angleDegrees; }
+    void EXPERIMENTAL_RotateSet(float angle) { m_angle = angle; }
     float EXPERIMENTAL_RotateGet() const { return m_angle; }
 
     void EXPERIMENTAL_TintSet(Color color);
