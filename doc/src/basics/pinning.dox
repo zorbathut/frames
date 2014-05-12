@@ -1,4 +1,4 @@
-/** \page pinning
+/** \page basicspinning
 
 Frames are placed and oriented using two tools. The first is size constraints, where you can fix the width and/or height of the frame at a known value. The second is pinning.
 
