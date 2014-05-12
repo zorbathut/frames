@@ -77,6 +77,8 @@ namespace Frames {
     template<typename NR, typename R, typename P1, typename P2, typename P3, typename P4> struct FunctionRv<NR, R (P1, P2, P3, P4)> { typedef NR T(P1, P2, P3, P4); };
     
     template<typename IT> struct MakeConstRef { typedef typename boost::add_lvalue_reference<typename boost::add_const<typename boost::remove_reference<IT>::type>::type>::type T; };
+
+    static const float Pi = 3.14159265358979323846f; // C++, why do you not define this :(
   };
 }
 

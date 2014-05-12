@@ -27,6 +27,9 @@ namespace Frames {
 
     // Experimental, disabled for documentation
     /// @cond EXPERIMENTAL
+    void EXPERIMENTAL_RotateSet(float angleDegrees) { m_angle = angleDegrees; }
+    float EXPERIMENTAL_RotateGet() const { return m_angle; }
+
     void EXPERIMENTAL_TintSet(Color color);
     Color EXPERIMENTAL_TintGet() const { return m_tint; }
     /// @endcond
@@ -42,6 +45,8 @@ namespace Frames {
   private:
     std::string m_texture_id;
     detail::TextureChunkPtr m_texture;
+
+    float m_angle;
 
     Color m_tint;
   };

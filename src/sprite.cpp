@@ -32,21 +32,27 @@ namespace Frames {
 
       renderer->TextureSet(m_texture.Get());
 
-      float u = TopGet();
-      float d = BottomGet();
-      float l = LeftGet();
-      float r = RightGet();
+      const float cx = PointGet(X, 0.5);
+      const float cy = PointGet(Y, 0.5);
+
+      const float dx = WidthGet() / 2;
+      const float dy = HeightGet() / 2;
+
+      const float rad = m_angle / 360 * detail::Pi * 2;
+
+      const float s = sin(rad);
+      const float c = cos(rad);
 
       detail::Renderer::Vertex *v = renderer->Request(4);
 
-      v[0].p.x = l; v[0].p.y = u;
-      v[1].p.x = r; v[1].p.y = u;
-      v[2].p.x = r; v[2].p.y = d;
-      v[3].p.x = l; v[3].p.y = d;
+      v[0].p.x = cx - dx * c + dy * s; v[0].p.y = cy - dx * s - dy * c;
+      v[1].p.x = cx + dx * c + dy * s; v[1].p.y = cy + dx * s - dy * c;
+      v[2].p.x = cx + dx * c - dy * s; v[2].p.y = cy + dx * s + dy * c;
+      v[3].p.x = cx - dx * c - dy * s; v[3].p.y = cy - dx * s + dy * c;
 
       v[0].t = m_texture->BoundsGet().s;
       v[2].t = m_texture->BoundsGet().e;
-      
+
       v[1].t.x = v[2].t.x;
       v[1].t.y = v[0].t.y;
       
@@ -64,7 +70,8 @@ namespace Frames {
 
   Sprite::Sprite(Layout *parent, const std::string &name) :
       Frame(parent, name),
-      m_tint(1, 1, 1, 1)
+      m_tint(1, 1, 1, 1),
+      m_angle(0)
   { };
   Sprite::~Sprite() { };
 }
