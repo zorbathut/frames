@@ -24,7 +24,7 @@ namespace Frames {
 
   int64_t StreamBuffer::Read(unsigned char *target, int64_t bytes) {
     int64_t bytestoread = std::min(bytes, (int64_t)m_data.size() - m_index);
-    std::memcpy(target, &m_data[m_index], (size_t)bytestoread);
+    std::memcpy(target, &m_data[(size_t)m_index], (size_t)bytestoread);
     m_index += bytestoread;
     return bytestoread;
   }

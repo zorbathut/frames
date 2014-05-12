@@ -327,7 +327,7 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
   if (reference.size() == pixels.size()) {
     int different = 0;
     int outsidebounds = 0;
-    for (int i = 0; i < pixels.size(); ++i) {
+    for (int i = 0; i < (int)pixels.size(); ++i) {
       int diff = abs((int)pixels[i] - (int)reference[i]);
       if (diff > 0) {
         different++;
