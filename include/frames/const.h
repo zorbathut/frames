@@ -6,6 +6,8 @@
 #include <string>
 
 namespace Frames {
+  struct Vector;
+
   enum Axis { X, Y }; // axes
   enum Anchor {
     TOPLEFT,
@@ -42,6 +44,9 @@ namespace Frames {
   std::string DescriptorFromPoint(float x, float y);
   /// Converts a point into a human-readable string.
   std::string DescriptorFromPoint(Anchor anchor);
+
+  /// Retrieves coordinates for an anchor point
+  Vector PointFromAnchor(Anchor anchor);
 }
 
 #endif

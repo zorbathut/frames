@@ -43,4 +43,14 @@ namespace Frames {
     }
     return textRep[anchor];
   }
+
+  /// Retrieves coordinates for an anchor point
+  Vector PointFromAnchor(Anchor anchor) {
+    if (anchor < 0 || anchor >= ANCHOR_COUNT) {
+      // TODO: barf
+      return Vector(0.f, 0.f);
+    }
+
+    return Vector(detail::c_anchorLookup[anchor].x, detail::c_anchorLookup[anchor].y);
+  }
 }
