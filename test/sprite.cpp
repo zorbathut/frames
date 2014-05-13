@@ -54,3 +54,14 @@ TEST(Sprite, Rotation) {
 
   TestSnapshot(env);
 }
+
+TEST(Sprite, Sampling) {
+  TestEnvironment env;
+
+  Frames::Sprite *sprite = Frames::Sprite::Create(env->RootGet(), "Sprite");
+
+  sprite->TextureSet("checkerboard.png");
+  sprite->PinSet(Frames::CENTER, env->RootGet(), Frames::CENTER);
+
+  TestSnapshot(env);
+}
