@@ -13,8 +13,6 @@
 * really need a global assert function
 * tinyformat global assert
 
-* Antialias sprite edges
-
 === INTEGRATION
 
 * Split OGL into its own lib
