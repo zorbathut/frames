@@ -336,15 +336,25 @@ namespace Frames {
     typedef std::set<Frame *, FrameOrderSorter> ChildrenList;
 
     /// Returns the children of this frame.
-    /** Pass in "true" for implementation to get only children with the Implementation flag set. Otherwise, you'll get only children without that flag set. */
-    const ChildrenList &ChildrenGet(bool implementation = false) { return implementation ? m_children_implementation : m_children_nonimplementation; }
+    /** Does not include implementation-flagged children. */
+    const ChildrenList &ChildrenGet() { return m_children_nonimplementation; }
+
+    /// Returns the children of this frame.
+    /** Includes only implementation-flagged children. */
+    const ChildrenList &ChildrenImplementationGet() { return m_children_implementation; }
 
     /// Returns a child of this frame with the given name.
     /** Returns NULL if no such child exists. If multiple children exist with that name, no guarantee is provided about which one it picks.
     
-    Pass in "true" for implementation to get only children with the Implementation flag set. Otherwise, you'll get only children without that flag set. */
-    Frame *ChildGetByName(const std::string &name, bool implementation = false) const;
-    
+    Does not include implementation-flagged children. */
+    Frame *ChildGetByName(const std::string &name) const;
+
+    /// Returns a child of this frame with the given name.
+    /** Returns NULL if no such child exists. If multiple children exist with that name, no guarantee is provided about which one it picks.
+
+    Includes only implementation-flagged children. */
+    Frame *ChildImplementationGetByName(const std::string &name) const;
+
     // --------- State
 
     /// Sets the visibility flag.

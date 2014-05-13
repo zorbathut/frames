@@ -8,7 +8,6 @@
 
 === TWEAK
 
-* ChildrenImplementationGet
 * Strict warnings on deploy
 
 * really need a global assert function

@@ -289,7 +289,7 @@ TEST(Layout, ChildGet) {
   EXPECT_EQ(0, parent->ChildGetByName("implementation"));
   EXPECT_EQ(0, parent->ChildGetByName("invalid"));
 
-  EXPECT_EQ(0, parent->ChildGetByName("child", true));
-  EXPECT_EQ(implementation, parent->ChildGetByName("implementation", true));
-  EXPECT_EQ(0, parent->ChildGetByName("invalid", true));
+  EXPECT_EQ(0, parent->ChildImplementationGetByName("child"));
+  EXPECT_EQ(implementation, parent->ChildImplementationGetByName("implementation"));
+  EXPECT_EQ(0, parent->ChildImplementationGetByName("invalid"));
 }

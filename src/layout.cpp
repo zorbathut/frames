@@ -268,10 +268,18 @@ namespace Frames {
     return 0;
   }
 
-  Frame *Layout::ChildGetByName(const std::string &name, bool implementation /*= false*/) const {
-    const ChildrenList &targetList = implementation ? m_children_implementation : m_children_nonimplementation;
+  Frame *Layout::ChildGetByName(const std::string &name) const {
+    for (ChildrenList::const_iterator itr = m_children_nonimplementation.begin(); itr != m_children_nonimplementation.end(); ++itr) {
+      if ((*itr)->NameGet() == name) {
+        return *itr;
+      }
+    }
 
-    for (ChildrenList::const_iterator itr = targetList.begin(); itr != targetList.end(); ++itr) {
+    return 0;
+  }
+
+  Frame *Layout::ChildImplementationGetByName(const std::string &name) const {
+    for (ChildrenList::const_iterator itr = m_children_implementation.begin(); itr != m_children_implementation.end(); ++itr) {
       if ((*itr)->NameGet() == name) {
         return *itr;
       }
