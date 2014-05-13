@@ -448,12 +448,31 @@ namespace Frames {
     void zinternalPinClearAll(Axis axis);
 
     void zinternalPinSet(Anchor myanchor, const Layout *link, Anchor theiranchor);
+    void zinternalPinSet(Anchor myanchor, const Layout *link, Anchor theiranchor, const Vector &ofs);
     void zinternalPinSet(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs);
+    void zinternalPinSet(Anchor myanchor, const Layout *link, const Vector &their);
+    void zinternalPinSet(Anchor myanchor, const Layout *link, const Vector &their, const Vector &ofs);
+    void zinternalPinSet(Anchor myanchor, const Layout *link, const Vector &their, float xofs, float yofs);
     void zinternalPinSet(Anchor myanchor, const Layout *link, float theirx, float theiry);
+    void zinternalPinSet(Anchor myanchor, const Layout *link, float theirx, float theiry, const Vector &ofs);
     void zinternalPinSet(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs);
+    void zinternalPinSet(const Vector &my, const Layout *link, Anchor theiranchor);
+    void zinternalPinSet(const Vector &my, const Layout *link, Anchor theiranchor, const Vector &ofs);
+    void zinternalPinSet(const Vector &my, const Layout *link, Anchor theiranchor, float xofs, float yofs);
+    void zinternalPinSet(const Vector &my, const Layout *link, const Vector &their);
+    void zinternalPinSet(const Vector &my, const Layout *link, const Vector &their, const Vector &ofs);
+    void zinternalPinSet(const Vector &my, const Layout *link, const Vector &their, float xofs, float yofs);
+    void zinternalPinSet(const Vector &my, const Layout *link, float theirx, float theiry);
+    void zinternalPinSet(const Vector &my, const Layout *link, float theirx, float theiry, const Vector &ofs);
+    void zinternalPinSet(const Vector &my, const Layout *link, float theirx, float theiry, float xofs, float yofs);
     void zinternalPinSet(float myx, float myy, const Layout *link, Anchor theiranchor);
+    void zinternalPinSet(float myx, float myy, const Layout *link, Anchor theiranchor, const Vector &ofs);
     void zinternalPinSet(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs);
+    void zinternalPinSet(float myx, float myy, const Layout *link, const Vector &their);
+    void zinternalPinSet(float myx, float myy, const Layout *link, const Vector &their, const Vector &ofs);
+    void zinternalPinSet(float myx, float myy, const Layout *link, const Vector &their, float xofs, float yofs);
     void zinternalPinSet(float myx, float myy, const Layout *link, float theirx, float theiry);
+    void zinternalPinSet(float myx, float myy, const Layout *link, float theirx, float theiry, const Vector &ofs);
     void zinternalPinSet(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs);
 
     void zinternalSizeSet(Axis axis, float size);

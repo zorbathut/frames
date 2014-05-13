@@ -36,17 +36,55 @@ namespace Frames {
     /// PinSet variant for \ref layoutbasics "linking" two \ref Anchor "Anchors".
     inline void PinSet(Anchor myanchor, const Layout *link, Anchor theiranchor) { return zinternalPinSet(myanchor, link, theiranchor); }
     /// PinSet variant for \ref layoutbasics "linking" two \ref Anchor "Anchors" with an offset.
+    inline void PinSet(Anchor myanchor, const Layout *link, Anchor theiranchor, const Vector &ofs) { return zinternalPinSet(myanchor, link, theiranchor, ofs); }
+    /// PinSet variant for \ref layoutbasics "linking" two \ref Anchor "Anchors" with an offset.
     inline void PinSet(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs) { return zinternalPinSet(myanchor, link, theiranchor, xofs, yofs); }
+    /// PinSet variant for \ref layoutbasics "linking" an Anchor to a relative point.
+    inline void PinSet(Anchor myanchor, const Layout *link, const Vector &their) { return zinternalPinSet(myanchor, link, their); }
+    /// PinSet variant for \ref layoutbasics "linking" an Anchor to a relative point with an offset.
+    inline void PinSet(Anchor myanchor, const Layout *link, const Vector &their, const Vector &ofs) { return zinternalPinSet(myanchor, link, their, ofs); }
+    /// PinSet variant for \ref layoutbasics "linking" an Anchor to a relative point with an offset.
+    inline void PinSet(Anchor myanchor, const Layout *link, const Vector &their, float xofs, float yofs) { return zinternalPinSet(myanchor, link, their, xofs, yofs); }
     /// PinSet variant for \ref layoutbasics "linking" an Anchor to a relative point.
     inline void PinSet(Anchor myanchor, const Layout *link, float theirx, float theiry) { return zinternalPinSet(myanchor, link, theirx, theiry); }
     /// PinSet variant for \ref layoutbasics "linking" an Anchor to a relative point with an offset.
+    inline void PinSet(Anchor myanchor, const Layout *link, float theirx, float theiry, const Vector &ofs) { return zinternalPinSet(myanchor, link, theirx, theiry, ofs); }
+    /// PinSet variant for \ref layoutbasics "linking" an Anchor to a relative point with an offset.
     inline void PinSet(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs) { return zinternalPinSet(myanchor, link, theirx, theiry, xofs, yofs); }
+    /// PinSet variant for \ref layoutbasics "linking" a relative point to an Anchor.
+    inline void PinSet(const Vector &my, const Layout *link, Anchor theiranchor) { return zinternalPinSet(my, link, theiranchor); }
+    /// PinSet variant for \ref layoutbasics "linking" a relative point to an Anchor with an offset.
+    inline void PinSet(const Vector &my, const Layout *link, Anchor theiranchor, const Vector &ofs) { return zinternalPinSet(my, link, theiranchor, ofs); }
+    /// PinSet variant for \ref layoutbasics "linking" a relative point to an Anchor with an offset.
+    inline void PinSet(const Vector &my, const Layout *link, Anchor theiranchor, float xofs, float yofs) { return zinternalPinSet(my, link, theiranchor, xofs, yofs); }
+    /// PinSet variant for \ref layoutbasics "linking" two relative points.
+    inline void PinSet(const Vector &my, const Layout *link, const Vector &their) { return zinternalPinSet(my, link, their); }
+    /// PinSet variant for \ref layoutbasics "linking" two relative points with an offset.
+    inline void PinSet(const Vector &my, const Layout *link, const Vector &their, const Vector &ofs) { return zinternalPinSet(my, link, their, ofs); }
+    /// PinSet variant for \ref layoutbasics "linking" two relative points with an offset.
+    inline void PinSet(const Vector &my, const Layout *link, const Vector &their, float xofs, float yofs) { return zinternalPinSet(my, link, their, xofs, yofs); }
+    /// PinSet variant for \ref layoutbasics "linking" two relative points.
+    inline void PinSet(const Vector &my, const Layout *link, float theirx, float theiry) { return zinternalPinSet(my, link, theirx, theiry); }
+    /// PinSet variant for \ref layoutbasics "linking" two relative points with an offset.
+    inline void PinSet(const Vector &my, const Layout *link, float theirx, float theiry, const Vector &ofs) { return zinternalPinSet(my, link, theirx, theiry, ofs); }
+    /// PinSet variant for \ref layoutbasics "linking" two relative points with an offset.
+    inline void PinSet(const Vector &my, const Layout *link, float theirx, float theiry, float xofs, float yofs) { return zinternalPinSet(my, link, theirx, theiry, xofs, yofs); }
     /// PinSet variant for \ref layoutbasics "linking" a relative point to an Anchor.
     inline void PinSet(float myx, float myy, const Layout *link, Anchor theiranchor) { return zinternalPinSet(myx, myy, link, theiranchor); }
     /// PinSet variant for \ref layoutbasics "linking" a relative point to an Anchor with an offset.
+    inline void PinSet(float myx, float myy, const Layout *link, Anchor theiranchor, const Vector &ofs) { return zinternalPinSet(myx, myy, link, theiranchor, ofs); }
+    /// PinSet variant for \ref layoutbasics "linking" a relative point to an Anchor with an offset.
     inline void PinSet(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs) { return zinternalPinSet(myx, myy, link, theiranchor, xofs, yofs); }
     /// PinSet variant for \ref layoutbasics "linking" two relative points.
+    inline void PinSet(float myx, float myy, const Layout *link, const Vector &their) { return zinternalPinSet(myx, myy, link, their); }
+    /// PinSet variant for \ref layoutbasics "linking" two relative points with an offset.
+    inline void PinSet(float myx, float myy, const Layout *link, const Vector &their, const Vector &ofs) { return zinternalPinSet(myx, myy, link, their, ofs); }
+    /// PinSet variant for \ref layoutbasics "linking" two relative points with an offset.
+    inline void PinSet(float myx, float myy, const Layout *link, const Vector &their, float xofs, float yofs) { return zinternalPinSet(myx, myy, link, their, xofs, yofs); }
+    /// PinSet variant for \ref layoutbasics "linking" two relative points.
     inline void PinSet(float myx, float myy, const Layout *link, float theirx, float theiry) { return zinternalPinSet(myx, myy, link, theirx, theiry); }
+    /// PinSet variant for \ref layoutbasics "linking" two relative points with an offset.
+    inline void PinSet(float myx, float myy, const Layout *link, float theirx, float theiry, const Vector &ofs) { return zinternalPinSet(myx, myy, link, theirx, theiry, ofs); }
     /// PinSet variant for \ref layoutbasics "linking" two relative points with an offset.
     inline void PinSet(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs) { return zinternalPinSet(myx, myy, link, theirx, theiry, xofs, yofs); }
 

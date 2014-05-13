@@ -559,7 +559,7 @@ namespace Frames {
     zinternalSizeClear(axis);
   }
 
-  // PinSet adapters
+  // PinSet anchor adapters
   // All the anchor versions just transform themselves into no-anchor versions first
   void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, Anchor theiranchor) {
     if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
@@ -621,6 +621,28 @@ namespace Frames {
 
     zinternalPinSet(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
   }
+
+  // PinSet vector adapters
+  // All the vector adapters just unroll, possibly calling an anchor adapter after unrolling
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, Anchor theiranchor, const Vector &ofs) { zinternalPinSet(myanchor, link, theiranchor, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, const Vector &their) { zinternalPinSet(myanchor, link, their.x, their.y); }
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, const Vector &their, const Vector &ofs) { zinternalPinSet(myanchor, link, their.x, their.y, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, const Vector &their, float xofs, float yofs) { zinternalPinSet(myanchor, link, their.x, their.y, xofs, yofs); }
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, float theirx, float theiry, const Vector &ofs) { zinternalPinSet(myanchor, link, theirx, theiry, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *link, Anchor theiranchor) { zinternalPinSet(my.x, my.y, link, theiranchor); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *link, Anchor theiranchor, const Vector &ofs) { zinternalPinSet(my.x, my.y, link, theiranchor, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *link, Anchor theiranchor, float xofs, float yofs) { zinternalPinSet(my.x, my.y, link, theiranchor, xofs, yofs); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *link, const Vector &their) { zinternalPinSet(my.x, my.y, link, their.x, their.y); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *link, const Vector &their, const Vector &ofs) { zinternalPinSet(my.x, my.y, link, their.x, their.y, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *link, const Vector &their, float xofs, float yofs) { zinternalPinSet(my.x, my.y, link, their.x, their.y, xofs, yofs); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *link, float theirx, float theiry) { zinternalPinSet(my.x, my.y, link, theirx, theiry); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *link, float theirx, float theiry, const Vector &ofs) { zinternalPinSet(my.x, my.y, link, theirx, theiry, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *link, float theirx, float theiry, float xofs, float yofs) { zinternalPinSet(my.x, my.y, link, theirx, theiry, xofs, yofs); }
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, Anchor theiranchor, const Vector &ofs) { zinternalPinSet(myx, myy, link, theiranchor, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, const Vector &their) { zinternalPinSet(myx, myy, link, their.x, their.y); }
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, const Vector &their, const Vector &ofs) { zinternalPinSet(myx, myy, link, their.x, their.y, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, const Vector &their, float xofs, float yofs) { zinternalPinSet(myx, myy, link, their.x, their.y, xofs, yofs); }
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, float theirx, float theiry, const Vector &ofs) { zinternalPinSet(myx, myy, link, theirx, theiry, ofs.x, ofs.y); }
 
   void Layout::zinternalPinSet(float myx, float myy, const Layout *link, float theirx, float theiry) {
     if (detail::IsNil(myx) && detail::IsNil(myy)) {
