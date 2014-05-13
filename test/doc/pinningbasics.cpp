@@ -162,3 +162,60 @@ TEST(Pinningbasics, Unidirectional) {
 
   TestSnapshot(env, "ref/doc/pinningbasics_unidirectional");
 }
+
+void ShowPosition(Frames::Layout *root, Frames::Frame *target, Frames::Anchor anchor, Frames::Anchor tanchor) {
+  Frames::Frame *overlay = root->ChildGetByName("Overlay");
+  if (!overlay) {
+    overlay = Frames::Frame::Create(root, "Overlay");
+  }
+
+  Frames::Sprite *reticle = Frames::Sprite::Create(overlay, "Reticle");
+  Frames::Text *text = Frames::Text::Create(overlay, "Text");
+
+  reticle->TextureSet("sqtarget.png");
+
+  Frames::Vector inverted = Frames::PointFromAnchor(tanchor);
+  inverted.x = 1 - inverted.x;
+  inverted.y = 1 - inverted.y;
+
+  reticle->PinSet(Frames::CENTER, target, anchor);
+  text->PinSet(inverted, reticle, tanchor, (inverted.x * 2 - 1) * -5, (inverted.y * 2 - 1) * -5);
+
+  text->TextSet(Frames::DescriptorFromPoint(anchor));
+  text->ColorTextSet(Frames::Color(1.f, 1.f, 0.f));
+  text->FontSet("geo_1.ttf");
+}
+
+TEST(Pinningbasics, Position) {
+  TestEnvironment env(true, 640, 360);
+
+  Frames::Frame *frame = Frames::Frame::Create(env->RootGet(), "Frame");
+  frame->BackgroundSet(tdc::red);
+
+  frame->WidthSet(200);
+  frame->HeightSet(200);
+
+  frame->PinSet(Frames::CENTER, env->RootGet(), Frames::CENTER);
+
+  ShowPosition(env->RootGet(), frame, Frames::TOPLEFT, Frames::TOPLEFT);
+  ShowPosition(env->RootGet(), frame, Frames::TOPRIGHT, Frames::TOPRIGHT);
+  ShowPosition(env->RootGet(), frame, Frames::BOTTOMLEFT, Frames::BOTTOMLEFT);
+  ShowPosition(env->RootGet(), frame, Frames::BOTTOMRIGHT, Frames::BOTTOMRIGHT);
+
+  TestSnapshot(env, "ref/doc/pinningbasics_anchor_corner");
+
+  env->RootGet()->ChildGetByName("Overlay")->Obliterate();
+
+  ShowPosition(env->RootGet(), frame, Frames::CENTER, Frames::BOTTOMCENTER);
+  
+  TestSnapshot(env, "ref/doc/pinningbasics_anchor_center");
+
+  env->RootGet()->ChildGetByName("Overlay")->Obliterate();
+
+  ShowPosition(env->RootGet(), frame, Frames::TOPCENTER, Frames::TOPCENTER);
+  ShowPosition(env->RootGet(), frame, Frames::BOTTOMCENTER, Frames::BOTTOMCENTER);
+  ShowPosition(env->RootGet(), frame, Frames::CENTERLEFT, Frames::CENTERLEFT);
+  ShowPosition(env->RootGet(), frame, Frames::CENTERRIGHT, Frames::CENTERRIGHT);
+
+  TestSnapshot(env, "ref/doc/pinningbasics_anchor_edge");
+}
