@@ -143,7 +143,9 @@ namespace Frames {
         } else {
           backing.Reset(new TextureBacking(m_env));
 
-          backing->Allocate(detail::ClampToPowerOf2(tex->WidthGet()), detail::ClampToPowerOf2(tex->HeightGet()), gl_tex_mode);
+          // currently ignoring power-of-two textures
+          //backing->Allocate(detail::ClampToPowerOf2(tex->WidthGet()), detail::ClampToPowerOf2(tex->HeightGet()), gl_tex_mode);
+          backing->Allocate(tex->WidthGet(), tex->HeightGet(), gl_tex_mode);
 
           m_backing.insert(backing.Get());  // "safe", because the backing stores enough data that it will clean this up when it's destroyed
         }
