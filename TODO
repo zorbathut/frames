@@ -14,7 +14,7 @@
 * really need a global assert function
 * tinyformat global assert
 
-* Fix non-pixel-perfect lines (solution?)
+* Antialias sprite edges
 
 === INTEGRATION
 

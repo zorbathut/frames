@@ -3,14 +3,14 @@
 
 #include <frames/cast.h>
 #include <frames/frame.h>
+#include <frames/sprite.h>
 #include <frames/text.h>
-#include <frames/raw.h>
 #include <frames/detail_format.h>
 
 #include "lib.h"
 #include "doc/colors.h"
 
-class Arrow : public Frames::Raw {
+class Arrow : public Frames::Frame {
   FRAMES_DECLARE_RTTI();
 public:
   static Arrow *Create(Frames::Layout *parent, const std::string &name) {
@@ -18,34 +18,38 @@ public:
   }
 
 private:
-  Arrow(Frames::Layout *parent, const std::string &name) : Raw(parent, name) {
-    EventAttach(Frames::Raw::Event::Render, Frames::Delegate<void(Frames::Handle*)>(this, &Arrow::Render));
+  Arrow(Frames::Layout *parent, const std::string &name) : Frame(parent, name) {
+    m_head = Frames::Sprite::Create(this, "Head");
+    m_body = Frames::Sprite::Create(this, "Body");
+
+    m_head->TextureSet("linehead.png");
+    m_body->TextureSet("linebody.png");
+
+    m_head->ImplementationSet(true);
+    m_body->ImplementationSet(true);
+
+    m_head->WidthSet(m_head->WidthGet() + 0.1f); // hack job to deal with texture edges; remove once the antialiased sprite boundaries are in
+
+    m_body->PinSet(Frames::CENTER, this, Frames::CENTER);
+
+    EventAttach(Frames::Layout::Event::Size, Frames::Delegate<void(Frames::Handle*)>(this, &Arrow::Reorient));
   }
 
-  void Render(Frames::Handle *) {
-    Frames::Rect bounds = BoundsGet();
-
-    float ang = atan2(bounds.e.x - bounds.s.x, bounds.e.y - bounds.s.y);
-    const float linelen = 8;
-    const float lineang = 0.6f;
-
-    glLineWidth(1.0f);
-    glEnable(GL_LINE_SMOOTH);
-    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-    glColor3f(1.0f, 1.0f, 0.0f);
-    glBegin(GL_LINES);
-    glVertex2f(bounds.s.x, bounds.s.y);
-    glVertex2f(bounds.e.x, bounds.e.y);
-    glVertex2f(bounds.e.x, bounds.e.y);
-    glVertex2f(bounds.e.x - sin(ang + lineang) * linelen, bounds.e.y - cos(ang + lineang) * linelen);
-    glVertex2f(bounds.e.x, bounds.e.y);
-    glVertex2f(bounds.e.x - sin(ang - lineang) * linelen, bounds.e.y - cos(ang - lineang) * linelen);
-    glEnd();
+  void Reorient(Frames::Handle *handle) {
+    float ang = -atan2(WidthGet(), HeightGet());
+    float dist = sqrt(WidthGet() * WidthGet() + HeightGet() * HeightGet());
+    m_head->EXPERIMENTAL_RotateSet(ang);
+    m_body->EXPERIMENTAL_RotateSet(ang);
+    m_head->PinSet(Frames::CENTER, this, 1 - m_head->HeightGet() / dist / 2, 1 - m_head->HeightGet() / dist / 2);
+    m_body->HeightSet(dist);
   }
+
+  Frames::Sprite *m_head;
+  Frames::Sprite *m_body;
 };
-FRAMES_DEFINE_RTTI(Arrow, Frames::Raw);
+FRAMES_DEFINE_RTTI(Arrow, Frames::Frame);
 
-void AddDebugDisplay(Frames::Layout *root, Frames::Layout *target, Frames::Anchor point, Frames::Anchor texanchor = Frames::CENTERLEFT, float tdx = 5, float tdy = 0) {
+void AddDebugDisplay(Frames::Layout *root, Frames::Layout *target, Frames::Anchor point, Frames::Anchor texanchor = Frames::CENTERLEFT, float tdx = 7, float tdy = 0) {
   Frames::Frame *arrows = root->ChildGetByName("Arrows");
   if (!arrows) {
     arrows = Frames::Frame::Create(root, "Arrows");
@@ -71,8 +75,7 @@ void AddDebugDisplay(Frames::Layout *root, Frames::Layout *target, Frames::Ancho
   tex->FontSet("geo_1.ttf");
 }
 
-// Disabled because the lines aren't pixel-perfect. TODO fix
-TEST(Pinningbasics, DISABLED_Example) {
+TEST(Pinningbasics, Example) {
   TestEnvironment env(true, 640, 360);
 
   Frames::Frame *health = Frames::Frame::Create(env->RootGet(), "Health");
@@ -126,8 +129,7 @@ TEST(Pinningbasics, DISABLED_Example) {
   TestSnapshot(env, "ref/doc/pinningbasics_resize");
 }
 
-// Disabled because the lines aren't pixel-perfect. TODO fix
-TEST(Pinningbasics, DISABLED_Unidirectional) {
+TEST(Pinningbasics, Unidirectional) {
   TestEnvironment env(true, 640, 360);
 
   for (int i = 0; i < 3; ++i) {
