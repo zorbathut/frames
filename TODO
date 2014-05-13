@@ -94,9 +94,10 @@
 
 * frames/textures don't appear until a window gets invalidated
 
-* Scene
-* Stage
-* Canvas
+* Scene - coordinate system transformations
+* Stage - animations
+* Canvas - freeform drawing, tiled textures
+* Lightbox - record what's underneath it, mutate it in some fashion (glow, shadow, etc)
 
 === DOXYBUGS
 
