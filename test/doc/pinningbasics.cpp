@@ -28,7 +28,7 @@ private:
     m_head->ImplementationSet(true);
     m_body->ImplementationSet(true);
 
-    m_head->WidthSet(m_head->WidthGet() + 0.1f); // hack job to deal with texture edges; remove once the antialiased sprite boundaries are in
+    m_head->WidthSet(m_head->WidthGet());
 
     m_body->PinSet(Frames::CENTER, this, Frames::CENTER);
 
