@@ -21,6 +21,13 @@ namespace Frames {
     return Vector(lhs.x - rhs.x, lhs.y - rhs.y);
   }
 
+  inline Vector operator*(const Vector &lhs, float rhs) {
+    return Vector(lhs.x * rhs, lhs.y * rhs);
+  }
+  inline Vector operator/(const Vector &lhs, float rhs) {
+    return Vector(lhs.x / rhs, lhs.y / rhs);
+  }
+
   inline void operator+=(Vector &lhs, const Vector &rhs) {
     lhs.x += rhs.x;
     lhs.y += rhs.y;
@@ -30,8 +37,20 @@ namespace Frames {
     lhs.y -= rhs.y;
   }
 
+  inline void operator*=(Vector &lhs, float rhs) {
+    lhs.x *= rhs;
+    lhs.y *= rhs;
+  }
+  inline void operator/=(Vector &lhs, float rhs) {
+    lhs.x /= rhs;
+    lhs.y /= rhs;
+  }
+
   inline bool operator==(const Vector &lhs, const Vector &rhs) {
     return lhs.x == rhs.x && lhs.y == rhs.y;
+  }
+  inline bool operator!=(const Vector &lhs, const Vector &rhs) {
+    return lhs.x != rhs.x || lhs.y != rhs.y;
   }
 
   namespace detail {
