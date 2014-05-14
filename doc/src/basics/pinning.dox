@@ -21,23 +21,23 @@ All pins are permanent until either frame is destroyed, the pin is removed, or t
 Pin constraints are always unidirectional. The frame with the pin placed on it will move or resize to conform to the targeted frame, not vice-versa.
 
 \image html pinningbasics_anchor_corner.png
-(image)
+\image html pinningbasics_usage_corner.png
 
-The four most common named points are TOPLEFT, TOPRIGHT, BOTTOMLEFT, and BOTTOMRIGHT, representing the corners of a frame. In this example, the bars are constrained to each other through corner pins, and the numeric indicators are also constrained to their parent bars via pins.
+The four most common named points are TOPLEFT, TOPRIGHT, BOTTOMLEFT, and BOTTOMRIGHT, representing the corners of a frame. In this example, the bars are constrained to each other through corner pins, and the new numeric indicators are also constrained to their parent bars via pins.
 
 Keep in mind that pins do not have to travel "up" the parent hierarchy. The health, energy, and stamina bars are siblings, and are still linked via pins.
 
 \image html pinningbasics_anchor_center.png
-(image)
+\image html pinningbasics_usage_center.png
 
 Also of frequent use is CENTER. In this image, we've moved the numeric indicators to the middle of the bars to make them more visible. As the text becomes shorter or longer, the text frame will automatically move to keep its CENTER point constrained to the CENTER point of the healthbar.
 
 Remember that any point can be pinned to any other point. Our UI designers have added a small indicator widget to the top-right corner of the filled section of the healthbar by pinning the indicator's CENTER to the filled healthbar's TOPRIGHT.
 
 \image html pinningbasics_anchor_edge.png
-(image)
+\image html pinningbasics_usage_center.png
 
-There are also four edge center points, CENTERLEFT, CENTERRIGHT, TOPCENTER, and BOTTOMCENTER. We've used these to align the descriptive labels to be vertically centered. This is why, when we made the energy bar taller in the second image, the Energy text remained vertically centered relative to it.
+There are also four edge center points, CENTERLEFT, CENTERRIGHT, TOPCENTER, and BOTTOMCENTER. We've used these to align the descriptive labels to be vertically centered. This is why, when we made the energy bar taller in the second image on this page, the Energy text remained vertically centered relative to it.
 
 To demonstrate TOPCENTER and BOTTOMCENTER we've added status text to the bottom, horizontally centered below the stamina bar.
 

@@ -21,35 +21,49 @@ private:
   Arrow(Frames::Layout *parent, const std::string &name) : Frame(parent, name) {
     m_head = Frames::Sprite::Create(this, "Head");
     m_body = Frames::Sprite::Create(this, "Body");
+    m_reticle = Frames::Sprite::Create(this, "Reticle");
 
     m_head->TextureSet("linehead.png");
     m_body->TextureSet("linebody.png");
+    m_reticle->TextureSet("sqtarget.png");
 
     m_head->ImplementationSet(true);
     m_body->ImplementationSet(true);
+    m_reticle->ImplementationSet(true);
 
     m_head->WidthSet(m_head->WidthGet());
 
     m_body->PinSet(Frames::CENTER, this, Frames::CENTER);
+    m_reticle->PinSet(Frames::CENTER, this, Frames::CENTER);
 
     EventAttach(Frames::Layout::Event::Size, Frames::Delegate<void(Frames::Handle*)>(this, &Arrow::Reorient));
   }
 
   void Reorient(Frames::Handle *handle) {
-    float ang = -atan2(WidthGet(), HeightGet());
-    float dist = sqrt(WidthGet() * WidthGet() + HeightGet() * HeightGet());
-    m_head->EXPERIMENTAL_RotateSet(ang);
-    m_body->EXPERIMENTAL_RotateSet(ang);
-    m_head->PinSet(Frames::CENTER, this, 1 - m_head->HeightGet() / dist / 2, 1 - m_head->HeightGet() / dist / 2);
-    m_body->HeightSet(dist);
+    if (WidthGet() || HeightGet()) {
+      m_head->VisibleSet(true);
+      m_body->VisibleSet(true);
+      m_reticle->VisibleSet(false);
+      float ang = -atan2(WidthGet(), HeightGet());
+      float dist = sqrt(WidthGet() * WidthGet() + HeightGet() * HeightGet());
+      m_head->EXPERIMENTAL_RotateSet(ang);
+      m_body->EXPERIMENTAL_RotateSet(ang);
+      m_head->PinSet(Frames::CENTER, this, 1 - m_head->HeightGet() / dist / 2, 1 - m_head->HeightGet() / dist / 2);
+      m_body->HeightSet(dist);
+    } else {
+      m_head->VisibleSet(false);
+      m_body->VisibleSet(false);
+      m_reticle->VisibleSet(true);
+    }
   }
 
   Frames::Sprite *m_head;
   Frames::Sprite *m_body;
+  Frames::Sprite *m_reticle;
 };
 FRAMES_DEFINE_RTTI(Arrow, Frames::Frame);
 
-void AddDebugDisplay(Frames::Layout *root, Frames::Layout *target, Frames::Anchor point, Frames::Anchor texanchor = Frames::CENTERLEFT, float tdx = 7, float tdy = 0) {
+void AddDebugDisplay(Frames::Layout *root, Frames::Layout *target, Frames::Anchor point, Frames::Anchor texanchor = Frames::CENTERLEFT, float tdx = 7, float tdy = 0, bool newl = false) {
   Frames::Frame *arrows = root->ChildGetByName("Arrows");
   if (!arrows) {
     arrows = Frames::Frame::Create(root, "Arrows");
@@ -69,7 +83,7 @@ void AddDebugDisplay(Frames::Layout *root, Frames::Layout *target, Frames::Ancho
   arrow->PinSet(Frames::BOTTOMRIGHT, ppt.target, ppt.point.x, ppt.point.y);
 
   Frames::Text *tex = Frames::Text::Create(arrows, "ArrowText");
-  tex->TextSet(Frames::detail::Format("Pin from %s.%s to %s.%s with an offset of %s", target->NameGet(), Frames::DescriptorFromPoint(point), ppt.target->NameGet(), Frames::DescriptorFromPoint(ppt.point.x, ppt.point.y), ppt.offset));
+  tex->TextSet(Frames::detail::Format("Pin from %s.%s to %s.%s%swith an offset of %s", target->NameGet(), Frames::DescriptorFromPoint(point), ppt.target->NameGet(), Frames::DescriptorFromPoint(ppt.point.x, ppt.point.y), newl ? "\n" : " ", ppt.offset));
   tex->PinSet(texanchor, arrow, Frames::CENTER, tdx, tdy);
   tex->ColorTextSet(Frames::Color(1.f, 1.f, 0.f));
   tex->FontSet("geo_1.ttf");
@@ -86,9 +100,9 @@ TEST(Pinningbasics, Example) {
   energy->HeightSet(30);
   stamina->HeightSet(30);
 
-  health->BackgroundSet(tdc::red);
-  energy->BackgroundSet(tdc::green);
-  stamina->BackgroundSet(tdc::blue);
+  health->BackgroundSet(tdc::redDark);
+  energy->BackgroundSet(tdc::greenDark);
+  stamina->BackgroundSet(tdc::blueDark);
 
   health->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 40, 40);
   energy->PinSet(Frames::TOPLEFT, health, Frames::BOTTOMLEFT, 0, 20);
@@ -98,25 +112,25 @@ TEST(Pinningbasics, Example) {
   energy->PinSet(Frames::RIGHT, health, Frames::RIGHT);
   stamina->PinSet(Frames::RIGHT, energy, Frames::RIGHT);
 
-  Frames::Text *healthtext = Frames::Text::Create(env->RootGet(), "HealthText");
-  Frames::Text *energytext = Frames::Text::Create(env->RootGet(), "HealthText");
-  Frames::Text *staminatext = Frames::Text::Create(env->RootGet(), "HealthText");
+  Frames::Text *healthlabel = Frames::Text::Create(env->RootGet(), "HealthLabel");
+  Frames::Text *energylabel = Frames::Text::Create(env->RootGet(), "HealthLabel");
+  Frames::Text *staminalabel = Frames::Text::Create(env->RootGet(), "HealthLabel");
 
-  healthtext->TextSet("Health");
-  energytext->TextSet("Energy");
-  staminatext->TextSet("Stamina");
+  healthlabel->TextSet("Health");
+  energylabel->TextSet("Energy");
+  staminalabel->TextSet("Stamina");
 
-  healthtext->ColorTextSet(tdc::white);
-  energytext->ColorTextSet(tdc::white);
-  staminatext->ColorTextSet(tdc::white);
+  healthlabel->ColorTextSet(tdc::white);
+  energylabel->ColorTextSet(tdc::white);
+  staminalabel->ColorTextSet(tdc::white);
 
-  healthtext->SizeSet(20);
-  energytext->SizeSet(20);
-  staminatext->SizeSet(20);
+  healthlabel->SizeSet(20);
+  energylabel->SizeSet(20);
+  staminalabel->SizeSet(20);
 
-  healthtext->PinSet(Frames::CENTERLEFT, health, Frames::CENTERRIGHT, 20, 0);
-  energytext->PinSet(Frames::CENTERLEFT, energy, Frames::CENTERRIGHT, 20, 0);
-  staminatext->PinSet(Frames::CENTERLEFT, stamina, Frames::CENTERRIGHT, 20, 0);
+  healthlabel->PinSet(Frames::CENTERLEFT, health, Frames::CENTERRIGHT, 20, 0);
+  energylabel->PinSet(Frames::CENTERLEFT, energy, Frames::CENTERRIGHT, 20, 0);
+  staminalabel->PinSet(Frames::CENTERLEFT, stamina, Frames::CENTERRIGHT, 20, 0);
 
   AddDebugDisplay(env->RootGet(), stamina, Frames::TOPLEFT);
   AddDebugDisplay(env->RootGet(), energy, Frames::TOPLEFT);
@@ -127,6 +141,54 @@ TEST(Pinningbasics, Example) {
   energy->HeightSet(60);
 
   TestSnapshot(env, "ref/doc/pinningbasics_resize");
+
+  // add health bar, numeric text
+  const float healthCur = 4628;
+  const float healthMax = 4820;
+  
+  const float energyCur = 100;
+  const float energyMax = 100;
+  
+  const float staminaCur = 377;
+  const float staminaMax = 1245;
+
+  Frames::Text *healthtext = Frames::Text::Create(health, "HealthText");
+  Frames::Text *energytext = Frames::Text::Create(energy, "EnergyText");
+  Frames::Text *staminatext = Frames::Text::Create(stamina, "StaminaText");
+
+  healthtext->TextSet(Frames::detail::Format("%d / %d", healthCur, healthMax));
+  energytext->TextSet(Frames::detail::Format("%d / %d", energyCur, energyMax));
+  staminatext->TextSet(Frames::detail::Format("%d / %d", staminaCur, staminaMax));
+
+  healthtext->PinSet(Frames::BOTTOMRIGHT, health, Frames::BOTTOMRIGHT, -2, -2);
+  energytext->PinSet(Frames::BOTTOMRIGHT, energy, Frames::BOTTOMRIGHT, -2, -2);
+  staminatext->PinSet(Frames::BOTTOMRIGHT, stamina, Frames::BOTTOMRIGHT, -2, -2);
+
+  healthtext->ColorTextSet(tdc::white);
+  energytext->ColorTextSet(tdc::white);
+  staminatext->ColorTextSet(tdc::white);
+
+  AddDebugDisplay(env->RootGet(), healthtext, Frames::BOTTOMRIGHT, Frames::BOTTOMLEFT, 7, 7, true);
+  AddDebugDisplay(env->RootGet(), energytext, Frames::BOTTOMRIGHT, Frames::BOTTOMLEFT, 7, 7, true);
+  AddDebugDisplay(env->RootGet(), staminatext, Frames::BOTTOMRIGHT, Frames::BOTTOMLEFT, 7, 7, true);
+
+  TestSnapshot(env, "ref/doc/pinningbasics_usage_corner");
+
+  env->RootGet()->ChildGetByName("Arrows")->Obliterate();
+
+  healthtext->PinClear(Frames::BOTTOMRIGHT);
+  energytext->PinClear(Frames::BOTTOMRIGHT);
+  staminatext->PinClear(Frames::BOTTOMRIGHT);
+
+  healthtext->PinSet(Frames::CENTER, health, Frames::CENTER);
+  energytext->PinSet(Frames::CENTER, energy, Frames::CENTER);
+  staminatext->PinSet(Frames::CENTER, stamina, Frames::CENTER);
+
+  AddDebugDisplay(env->RootGet(), healthtext, Frames::CENTER, Frames::TOPLEFT, 7.f, 7.f);
+  AddDebugDisplay(env->RootGet(), energytext, Frames::CENTER, Frames::TOPLEFT, 7.f, 7.f);
+  AddDebugDisplay(env->RootGet(), staminatext, Frames::CENTER, Frames::TOPLEFT, 7.f, 7.f);
+
+  TestSnapshot(env, "ref/doc/pinningbasics_usage_center");
 }
 
 TEST(Pinningbasics, Unidirectional) {

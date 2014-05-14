@@ -1,12 +1,16 @@
 
 === DOCS
 
+* Add the marker widget to usage_center
+
 * Deep docs
   * need to put a thorough description of the pin API somewhere
 
 * Final pass
 
 === TWEAK
+
+* Deal with TextureSet failure without crashing
 
 * Strict warnings on deploy
 
@@ -26,7 +30,7 @@
 
 === TWEAK
 
-* smooth lines for docs
+* SRGB? that's a crazy idea, buuuut
 
 * Linux?
 * Clang?
@@ -96,6 +100,8 @@
 * Stage - animations
 * Canvas - freeform drawing, tiled textures
 * Lightbox - record what's underneath it, mutate it in some fashion (glow, shadow, etc)
+* Bounds?
+  * Or are we better off allowing some sort of delegate-style Width or Height?
 
 === DOXYBUGS
 
