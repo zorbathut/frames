@@ -35,7 +35,7 @@ Also of frequent use is CENTER. In this image, we've moved the numeric indicator
 Remember that any point can be pinned to any other point. Our UI designers have added a small indicator widget to the top-right corner of the filled section of the healthbar by pinning the indicator's CENTER to the filled healthbar's TOPRIGHT.
 
 \image html pinningbasics_anchor_edge.png
-\image html pinningbasics_usage_center.png
+\image html pinningbasics_usage_edge.png
 
 There are also four edge center points, CENTERLEFT, CENTERRIGHT, TOPCENTER, and BOTTOMCENTER. We've used these to align the descriptive labels to be vertically centered. This is why, when we made the energy bar taller in the second image on this page, the Energy text remained vertically centered relative to it.
 
