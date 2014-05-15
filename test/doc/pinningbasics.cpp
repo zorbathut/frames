@@ -164,9 +164,9 @@ TEST(Pinningbasics, Example) {
   energytext->PinSet(Frames::BOTTOMRIGHT, energy, Frames::BOTTOMRIGHT, -2, -2);
   staminatext->PinSet(Frames::BOTTOMRIGHT, stamina, Frames::BOTTOMRIGHT, -2, -2);
 
-  healthtext->ColorTextSet(tdc::white);
-  energytext->ColorTextSet(tdc::white);
-  staminatext->ColorTextSet(tdc::white);
+  healthtext->ColorTextSet(tdc::whiteBright);
+  energytext->ColorTextSet(tdc::whiteBright);
+  staminatext->ColorTextSet(tdc::whiteBright);
 
   AddDebugDisplay(env->RootGet(), healthtext, Frames::BOTTOMRIGHT, Frames::BOTTOMLEFT, 7, 7, true);
   AddDebugDisplay(env->RootGet(), energytext, Frames::BOTTOMRIGHT, Frames::BOTTOMLEFT, 7, 7, true);
@@ -175,6 +175,31 @@ TEST(Pinningbasics, Example) {
   TestSnapshot(env, "ref/doc/pinningbasics_usage_corner");
 
   env->RootGet()->ChildGetByName("Arrows")->Obliterate();
+
+  Frames::Frame *healthbar = Frames::Frame::Create(health, "HealthBar");
+  Frames::Frame *energybar = Frames::Frame::Create(energy, "HealthBar");
+  Frames::Frame *staminabar = Frames::Frame::Create(stamina, "HealthBar");
+  
+  // behind the text
+  healthbar->LayerSet(-1);
+  energybar->LayerSet(-1);
+  staminabar->LayerSet(-1);
+
+  healthbar->BackgroundSet(tdc::red);
+  energybar->BackgroundSet(tdc::green);
+  staminabar->BackgroundSet(tdc::blue);
+
+  healthbar->PinSet(Frames::TOPLEFT, health, Frames::TOPLEFT);
+  energybar->PinSet(Frames::TOPLEFT, energy, Frames::TOPLEFT);
+  staminabar->PinSet(Frames::TOPLEFT, stamina, Frames::TOPLEFT);
+
+  healthbar->PinSet(Frames::BOTTOMRIGHT, health, healthCur / healthMax, 1.f);
+  energybar->PinSet(Frames::BOTTOMRIGHT, energy, energyCur / energyMax, 1.f);
+  staminabar->PinSet(Frames::BOTTOMRIGHT, stamina, staminaCur / staminaMax, 1.f);
+
+  Frames::Sprite *indicator = Frames::Sprite::Create(healthbar, "Indicator");
+  indicator->TextureSet("indicator.png");
+  indicator->PinSet(Frames::CENTER, healthbar, Frames::TOPRIGHT);
 
   healthtext->PinClear(Frames::BOTTOMRIGHT);
   energytext->PinClear(Frames::BOTTOMRIGHT);
@@ -188,7 +213,27 @@ TEST(Pinningbasics, Example) {
   AddDebugDisplay(env->RootGet(), energytext, Frames::CENTER, Frames::TOPLEFT, 7.f, 7.f);
   AddDebugDisplay(env->RootGet(), staminatext, Frames::CENTER, Frames::TOPLEFT, 7.f, 7.f);
 
+  AddDebugDisplay(env->RootGet(), indicator, Frames::CENTER, Frames::BOTTOMLEFT, 7, 7, true);
+
   TestSnapshot(env, "ref/doc/pinningbasics_usage_center");
+
+  env->RootGet()->ChildGetByName("Arrows")->Obliterate();
+
+  Frames::Text *status = Frames::Text::Create(env->RootGet(), "StatusText");
+
+  status->ColorTextSet(tdc::white);
+  status->TextSet("Poisoned!");
+  status->SizeSet(20);
+
+  status->PinSet(Frames::TOPCENTER, stamina, Frames::BOTTOMCENTER, 0, 20);
+
+  AddDebugDisplay(env->RootGet(), healthlabel, Frames::LEFTCENTER, Frames::CENTERLEFT, -5, -25, true);
+  AddDebugDisplay(env->RootGet(), energylabel, Frames::LEFTCENTER, Frames::CENTERLEFT, -5, -25, true);
+  AddDebugDisplay(env->RootGet(), staminalabel, Frames::LEFTCENTER, Frames::CENTERLEFT, -5, -25, true);
+
+  AddDebugDisplay(env->RootGet(), status, Frames::CENTERTOP, Frames::TOPLEFT, 7, 0, true);
+
+  TestSnapshot(env, "ref/doc/pinningbasics_usage_edge");
 }
 
 TEST(Pinningbasics, Unidirectional) {

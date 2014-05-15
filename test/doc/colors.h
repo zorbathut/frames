@@ -17,6 +17,7 @@ namespace tdc {
   const Frames::Color purple(0.2f, 0, 0.3f, 1);
 
   const Frames::Color white(0.3f, 0.3f, 0.3f, 1);
+  const Frames::Color whiteBright(0.5f, 0.5f, 0.5f, 1);
 }
 
 #endif
