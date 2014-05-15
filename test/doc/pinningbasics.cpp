@@ -242,8 +242,8 @@ TEST(Pinningbasics, Unidirectional) {
   for (int i = 0; i < 3; ++i) {
     float ofs = i * 100.f;
 
-    Frames::Frame *left = Frames::Frame::Create(env->RootGet(), "Left");
-    Frames::Frame *right = Frames::Frame::Create(env->RootGet(), "Right");
+    Frames::Frame *left = Frames::Frame::Create(env->RootGet(), "Red");
+    Frames::Frame *right = Frames::Frame::Create(env->RootGet(), "Green");
 
     left->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 40, 40 + ofs);
     right->PinSet(Frames::TOPRIGHT, env->RootGet(), Frames::TOPRIGHT, -40, 40 + ofs);
@@ -296,13 +296,21 @@ void ShowPosition(Frames::Layout *root, Frames::Frame *target, Frames::Anchor an
 TEST(Pinningbasics, Position) {
   TestEnvironment env(true, 640, 360);
 
+  Frames::Text *text = Frames::Text::Create(env->RootGet(), "Header");
+
+  text->TextSet("Named anchors provided by Frames");
+  text->PinSet(Frames::CENTERTOP, env->RootGet(), Frames::CENTERTOP, 0, 30);
+  text->SizeSet(30);
+  text->ColorTextSet(Frames::Color(1.f, 1.f, 0.f));
+  text->FontSet("geo_1.ttf");
+
   Frames::Frame *frame = Frames::Frame::Create(env->RootGet(), "Frame");
   frame->BackgroundSet(tdc::red);
 
-  frame->WidthSet(200);
-  frame->HeightSet(200);
+  frame->WidthSet(160);
+  frame->HeightSet(160);
 
-  frame->PinSet(Frames::CENTER, env->RootGet(), Frames::CENTER);
+  frame->PinSet(Frames::CENTER, env->RootGet(), Frames::CENTER, 0, 30);
 
   ShowPosition(env->RootGet(), frame, Frames::TOPLEFT, Frames::TOPLEFT);
   ShowPosition(env->RootGet(), frame, Frames::TOPRIGHT, Frames::TOPRIGHT);

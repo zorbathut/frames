@@ -22,4 +22,6 @@ Layer numbers are meaningful only within the scope of a single Frame's children.
 
 In programmer terms, the Frame hierarchy forms a tree, and rendering is depth-first.
 
-The parent/child relationship does not dictate positioning or render area - a child can render well out of bounds of a parent, just as Orange is rendering outside the bounds of Red.*/
+The parent/child relationship does not dictate positioning or render area - a child can render well out of bounds of a parent, just as Orange is rendering outside the bounds of Red.
+
+Frames are placed and oriented using two tools. The first is size constraints, where you can fix the width and/or height of the frame at a known value. The second is pinning, which can be used for both positioning and sizing relative to other frames.*/
