@@ -2,15 +2,15 @@
 
 Pinning is the most commonly used and most powerful layout tool in Frames. Proper understanding of this tool is highly recommended.
 
-We'll be demonstrating these tools by making a basic MMORPG-style health/energy/stamina meter. An actual game UI would use of artist textures, but this example uses solid colors to highlight the library tools.
+We'll be demonstrating these tools by making a basic MMORPG-style health/energy/stamina meter. An actual game UI would make use of textures, but this example uses solid colors to highlight the layout tools.
 
 First, three stat bars, laid out using pinning.
 
 \image html pinningbasics_intro.png
 
-Pinning forces a location on a frame to be placed relative to a location on another frame. In the above example (a series of resource bars for an ARPG), the health bar is placed relative to the screen bounds, the energy bar is placed relative to the health bar, and the stamina bar is placed relative to the energy bar. These relative distances are listed as an "offset", which, like frame size, is measured in screen pixels.
+Pinning forces a location on a frame to be placed relative to a location on another frame. In the above example the health bar is placed relative to the screen bounds, the energy bar is placed relative to the health bar, and the stamina bar is placed relative to the energy bar. These relative distances are listed as an "offset", which, like frame size, is measured in screen pixels.
 
-Our example uses generally large numbers to squeeze explanatory text in between frame elements; smaller numbers would, of course, give a smaller and tighter UI.
+Our example is using large gaps to squeeze explanatory text in between frame elements; smaller offsets would, of course, give a smaller and tighter UI.
 
 Imagine we change the size of the Energy bar, possibly to add more information or to emphasize its importance.
 
