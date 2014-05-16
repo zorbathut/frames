@@ -28,6 +28,8 @@ Pin constraints are always unidirectional. Their behavior depends on which frame
 
 The frame with the pin placed on it will move or resize to conform to the targeted frame, not vice-versa. In the above example, the bottom corners of a pair of frames have been connected. If Red's corner is pinned to Green's corner, then Red expands to meet Green; conversely, if Green's corner is pinned to Red's corner, then Green expands to meet Red.
 
+This also demonstrates how pinning can be used to change a frame's size. In the above example, the far edges of each frame has been pinned at a static position. When the near edges are pinned as well, the frame is forced to resize in order to satisfy both constraints. This will be discussed in more detail in Advanced Pinning.
+
 Pins are generally attached to named points known as Anchors. We'll list and demonstrate some of them here.
 
 \image html pinningbasics_anchor_corner.png
