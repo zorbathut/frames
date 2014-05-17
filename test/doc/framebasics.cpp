@@ -134,7 +134,7 @@ TEST(Framebasics, Hierarchy) {
   Frames::Frame *rr = HierarchMake(env->RootGet(), env->RootGet(), 340, 50, 1, tdc::blue, "BLUE");
 
   HierarchMake(env->RootGet(), rl, 130, 100, 100, tdc::orange, "ORANGE - Child of RED");
-  HierarchMake(env->RootGet(), rr, 320, 140, 0, tdc::purple, "PURPLE - Child of BLUE");
+  HierarchMake(env->RootGet(), rr, 300, 140, 0, tdc::purple, "PURPLE - Child of BLUE");
 
   TestSnapshot(env, "ref/doc/framebasics_hierarchy");
 };

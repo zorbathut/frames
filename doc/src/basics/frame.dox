@@ -10,7 +10,7 @@ Here's some example Frames:
 
 In the above image, we show exclusively non-overlapping Frames for the sake of demonstration, but Frames can also overlap.
 
-All Frames have exactly one parent, and any Frame may have any number of children. A Frame's children are always rendered directly on top of that Frame. Each Frame has a "layer" number; a frame's children are rendered in order of increasing layer, such that the topmost frame in a set is the one with the largest Layer.
+All Frames have exactly one parent, and any Frame may have any number of children. A Frame's children are always rendered on top of that Frame. Each Frame has a "layer" number; a frame's children are rendered in order of increasing layer, such that the topmost frame in a set is the one with the largest Layer.
 
 \image html framebasics_layering.png
 
