@@ -26,10 +26,11 @@ namespace Frames {
 
       renderer->TextureSet();
 
-      float u = TopGet();
-      float d = BottomGet();
-      float l = LeftGet();
-      float r = RightGet();
+      // clamp to int to avoid rounding errors
+      float u = floor(TopGet() + 0.5);
+      float d = floor(BottomGet() + 0.5);
+      float l = floor(LeftGet() + 0.5);
+      float r = floor(RightGet() + 0.5);
 
       detail::Renderer::Vertex *v = renderer->Request(4);
 
