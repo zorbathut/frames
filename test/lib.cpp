@@ -330,6 +330,9 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
     fclose(fp);
   }
 
+  if (reference.size() != pixels.size()) {
+    GTEST_LOG_(WARNING) << testNames.testName << " issues detected";
+  }
   EXPECT_EQ(reference.size(), pixels.size());
 
   if (reference.size() == pixels.size()) {
@@ -345,6 +348,9 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
       }
     }
     
+    if (outsidebounds || different) {
+      GTEST_LOG_(WARNING) << testNames.testName << " issues detected";
+    }
     EXPECT_EQ(0, outsidebounds);
     if (different) {
       GTEST_LOG_(WARNING) << "Mismatched pixels within bounds: " << different;
