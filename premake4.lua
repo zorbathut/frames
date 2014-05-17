@@ -30,6 +30,8 @@ solution "Frames"
   configurations { "Debug", "Release" }
   platforms { "x32", "x64" }
   
+  flags { "FatalWarnings" }
+  
   -- Paths
   location(path)
   

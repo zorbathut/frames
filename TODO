@@ -12,8 +12,6 @@
 
 * Pull Alpha, merge into Effect
 
-* Strict warnings on deploy
-
 * really need a global assert function
 * tinyformat global assert
 
