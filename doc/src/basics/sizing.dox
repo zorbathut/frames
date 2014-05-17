@@ -6,7 +6,7 @@ All frames have both a width and a height. Each frame has a default size which i
 
 Frames can be resized via SetWidth() and SetHeight(), using measurements in screen pixels. Each axis can be resized independently. As with everything in Frames, the position and size of a frame does not change the position and size of any children frames unless explicitly connected.
 
-(image resize examples)
+\image html sizingbasics_simple.png
 
 Some frames change their default size based on the frame's contents. Sprite tries to resize itself to perfectly fit its texture. Text tries to resize itself horizontally to avoid line wrapping or truncation; it then tries to resize itself vertically to fit all given text.
 
