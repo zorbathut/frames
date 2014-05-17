@@ -7,6 +7,8 @@
 
 #include <GL/gl.h>
 
+#include <cmath>
+
 namespace Frames {
   FRAMES_DEFINE_RTTI(Frame, Layout);
 
@@ -27,10 +29,10 @@ namespace Frames {
       renderer->TextureSet();
 
       // clamp to int to avoid rounding errors
-      float u = floor(TopGet() + 0.5f);
-      float d = floor(BottomGet() + 0.5f);
-      float l = floor(LeftGet() + 0.5f);
-      float r = floor(RightGet() + 0.5f);
+	  float u = std::floor(TopGet() + 0.5f);
+      float d = std::floor(BottomGet() + 0.5f);
+      float l = std::floor(LeftGet() + 0.5f);
+      float r = std::floor(RightGet() + 0.5f);
 
       detail::Renderer::Vertex *v = renderer->Request(4);
 
