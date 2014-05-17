@@ -76,7 +76,7 @@ namespace Frames {
       return PinPoint();
     }
 
-    return PinGet(detail::c_anchorLookup[anchor].x, detail::c_anchorLookup[anchor].y);
+    return PinGet(detail::AnchorLookup[anchor].x, detail::AnchorLookup[anchor].y);
   }
 
   Layout::PinPoint Layout::PinGet(float x, float y) const {
@@ -195,7 +195,7 @@ namespace Frames {
       return Vector();
     }
 
-    return PointGet(detail::c_anchorLookup[anchor].x, detail::c_anchorLookup[anchor].y);
+    return PointGet(detail::AnchorLookup[anchor].x, detail::AnchorLookup[anchor].y);
   }
 
   Vector Layout::PointGet(float x, float y) const {
@@ -529,12 +529,12 @@ namespace Frames {
       return;
     }
 
-    if (!detail::IsNil(detail::c_anchorLookup[anchor].x)) {
-      zinternalPinClear(X, detail::c_anchorLookup[anchor].x);
+    if (!detail::IsNil(detail::AnchorLookup[anchor].x)) {
+      zinternalPinClear(X, detail::AnchorLookup[anchor].x);
     }
 
-    if (!detail::IsNil(detail::c_anchorLookup[anchor].y)) {
-      zinternalPinClear(Y, detail::c_anchorLookup[anchor].y);
+    if (!detail::IsNil(detail::AnchorLookup[anchor].y)) {
+      zinternalPinClear(Y, detail::AnchorLookup[anchor].y);
     }
   }
 
@@ -572,7 +572,7 @@ namespace Frames {
       return;
     }
 
-    zinternalPinSet(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
+    zinternalPinSet(detail::AnchorLookup[myanchor].x, detail::AnchorLookup[myanchor].y, link, detail::AnchorLookup[theiranchor].x, detail::AnchorLookup[theiranchor].y);
   }
   void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
     if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
@@ -585,7 +585,7 @@ namespace Frames {
       return;
     }
     
-    zinternalPinSet(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
+    zinternalPinSet(detail::AnchorLookup[myanchor].x, detail::AnchorLookup[myanchor].y, link, detail::AnchorLookup[theiranchor].x, detail::AnchorLookup[theiranchor].y, xofs, yofs);
   }
   
   void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, float theirx, float theiry) {
@@ -594,7 +594,7 @@ namespace Frames {
       return;
     }
 
-    zinternalPinSet(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry);
+    zinternalPinSet(detail::AnchorLookup[myanchor].x, detail::AnchorLookup[myanchor].y, link, theirx, theiry);
   }
   void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
     if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
@@ -602,7 +602,7 @@ namespace Frames {
       return;
     }
     
-    zinternalPinSet(detail::c_anchorLookup[myanchor].x, detail::c_anchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
+    zinternalPinSet(detail::AnchorLookup[myanchor].x, detail::AnchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
   }
 
   void Layout::zinternalPinSet(float myx, float myy, const Layout *link, Anchor theiranchor) {
@@ -611,7 +611,7 @@ namespace Frames {
       return;
     }
 
-    zinternalPinSet(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y);
+    zinternalPinSet(myx, myy, link, detail::AnchorLookup[theiranchor].x, detail::AnchorLookup[theiranchor].y);
   }
   void Layout::zinternalPinSet(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
     if (theiranchor < 0 || theiranchor >= ANCHOR_COUNT) {
@@ -619,7 +619,7 @@ namespace Frames {
       return;
     }
 
-    zinternalPinSet(myx, myy, link, detail::c_anchorLookup[theiranchor].x, detail::c_anchorLookup[theiranchor].y, xofs, yofs);
+    zinternalPinSet(myx, myy, link, detail::AnchorLookup[theiranchor].x, detail::AnchorLookup[theiranchor].y, xofs, yofs);
   }
 
   // PinSet vector adapters

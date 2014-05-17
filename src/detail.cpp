@@ -12,7 +12,7 @@ BOOST_STATIC_ASSERT(sizeof(float) == sizeof(int));
 
 namespace Frames {
   namespace detail {
-    const Vector c_anchorLookup[ANCHOR_COUNT] = {
+    const Vector AnchorLookup[ANCHOR_COUNT] = {
       Vector(0.f, 0.f),  // TOPLEFT
       Vector(0.5f, 0.f),  // TOPCENTER
       Vector(1.f, 0.f),  // TOPRIGHT

@@ -9,8 +9,8 @@ namespace Frames {
 
   std::string DescriptorFromPoint(float x, float y) {
     for (int i = 0; i < ANCHOR_COUNT; ++i) {
-      if ((x == detail::c_anchorLookup[i].x || detail::IsNil(x) && detail::IsNil(detail::c_anchorLookup[i].x)) &&
-        (y == detail::c_anchorLookup[i].y || detail::IsNil(y) && detail::IsNil(detail::c_anchorLookup[i].y))) {
+      if ((x == detail::AnchorLookup[i].x || detail::IsNil(x) && detail::IsNil(detail::AnchorLookup[i].x)) &&
+        (y == detail::AnchorLookup[i].y || detail::IsNil(y) && detail::IsNil(detail::AnchorLookup[i].y))) {
         return DescriptorFromPoint(Anchor(i));
       }
     }
@@ -51,6 +51,6 @@ namespace Frames {
       return Vector(0.f, 0.f);
     }
 
-    return Vector(detail::c_anchorLookup[anchor].x, detail::c_anchorLookup[anchor].y);
+    return Vector(detail::AnchorLookup[anchor].x, detail::AnchorLookup[anchor].y);
   }
 }

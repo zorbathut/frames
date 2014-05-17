@@ -15,7 +15,7 @@
 
 namespace Frames {
   namespace detail {
-    extern const Vector c_anchorLookup[ANCHOR_COUNT];
+    extern const Vector AnchorLookup[ANCHOR_COUNT];
 
     template<typename T, typename U> T Reinterpret(U u) {
       union { T t; U u; } uni;
