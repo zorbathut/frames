@@ -68,6 +68,7 @@ TEST(Sprite, Sampling) {
 
 TEST(Sprite, Error) {
   TestEnvironment env;
+  env.AllowErrors();
 
   Frames::Sprite *sprite = Frames::Sprite::Create(env->RootGet(), "Sprite");
 
