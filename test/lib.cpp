@@ -153,6 +153,13 @@ private:
   bool m_allowErrors;
 };
 
+class TestPathMunger : public Frames::Configuration::PathFromId {
+public:
+  virtual std::string Process(Frames::Environment *env, const std::string &id) {
+    return "resources/" + id;
+  }
+};
+
 TestEnvironment::TestEnvironment(bool startSDL, int width, int height) : m_env(0), m_sdl(0) {
   if (startSDL) {
     m_sdl = new TestSDLEnvironment(width, height);
@@ -162,6 +169,7 @@ TestEnvironment::TestEnvironment(bool startSDL, int width, int height) : m_env(0
   config.FontDefaultIdSet("LindenHill.otf");
   m_logger = Frames::Ptr<TestLogger>(new TestLogger());
   config.LoggerSet(m_logger);
+  config.PathFromIdSet(Frames::Ptr<TestPathMunger>(new TestPathMunger()));
   m_env = new Frames::Environment(config);
 
   if (startSDL) {
