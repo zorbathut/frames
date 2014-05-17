@@ -14,7 +14,11 @@ Some frames change their default size based on the frame's contents. Sprite trie
 
 Each frame type may respond to resizing as is appropriate to that type. Frame itself has no sizing-sensitive content and will only resize the Background flat-color layer. Sprite will rescale its contents, possibly distorting them in the process. Text will resize the viewport available for text. It will wordwrap if the flag is set and truncate otherwise, although interactive Text fields are capable of scrolling to follow a cursor.
 
-(image sprite other-resize, text other-resize)
+\image html sizingbasics_sprite.png
+
+&nbsp;
+
+\image html sizingbasics_text.png
 
 While frames can be explicitly resized through the SetWidth() and SetHeight() functions, they can also be implicitly resized via pinning.
 

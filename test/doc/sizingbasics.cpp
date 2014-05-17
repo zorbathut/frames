@@ -148,11 +148,118 @@ TEST(Sizingbasics, Resize) {
   sprite1->PinSet(Frames::CENTERBOTTOM, env->RootGet(), Frames::CENTERBOTTOM, -120, 20);
   sprite2->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 10, 10);
   sprite3->PinSet(Frames::TOPLEFT, sprite2, Frames::BOTTOMLEFT);
-  sprite4->PinSet(Frames::CENTER, env->RootGet(), 0.2, 0.4);
+  sprite4->PinSet(Frames::CENTER, env->RootGet(), 0.2f, 0.4f);
 
   text1->PinSet(Frames::CENTER, env->RootGet(), 0.75, 0.25);
   text2->PinSet(Frames::CENTER, env->RootGet(), 0.75, 0.5);
   text3->PinSet(Frames::CENTER, env->RootGet(), 0.75, 0.75);
 
   TestSnapshot(env, "ref/doc/sizingbasics_self");
+}
+
+TEST(Sizingbasics, SpriteResize) {
+  TestEnvironment env(true, 640, 360);
+
+  CreateNameBar(env->RootGet(), "Resized Sprite");
+
+  Frames::Sprite *sprite1 = Frames::Sprite::Create(env->RootGet(), "Example");
+  Frames::Sprite *sprite2 = Frames::Sprite::Create(env->RootGet(), "Example");
+  Frames::Sprite *sprite3 = Frames::Sprite::Create(env->RootGet(), "Example");
+
+  sprite1->BackgroundSet(tdc::red);
+  sprite2->BackgroundSet(tdc::red);
+  sprite3->BackgroundSet(tdc::red);
+
+  sprite1->TextureSet("p1_front.png");
+  sprite2->TextureSet("p1_front.png");
+  sprite3->TextureSet("p1_front.png");
+
+  sprite1->PinSet(Frames::CENTER, env->RootGet(), 1.f / 6, 0.6f);
+  sprite2->PinSet(Frames::CENTER, env->RootGet(), 3.f / 6, 0.6f);
+  sprite3->PinSet(Frames::CENTER, env->RootGet(), 5.f / 6, 0.6f);
+
+  sprite2->WidthSet(66 * 2);
+  sprite2->HeightSet(92 * 2);
+
+  sprite3->WidthSet(66 * 2);
+
+  Annotate(sprite1, "Default size");
+  Annotate(sprite2, "Aspect ratio preserved");
+  Annotate(sprite3, "Aspect ratio ignored");
+
+  TestSnapshot(env, "ref/doc/sizingbasics_sprite");
+}
+
+TEST(Sizingbasics, TextResize) {
+  TestEnvironment env(true, 640, 360);
+
+  CreateNameBar(env->RootGet(), "Resized Text");
+
+  // default
+  // width explicit, no wordwrap
+  // width explicit, height explicit, no wordwrap
+
+  // width explicit with wordwrap
+  // width explicit with wordwrap, height increased
+  // width explicit with wordwrap, height reduced
+
+  Frames::Text *text1 = Frames::Text::Create(env->RootGet(), "Example");
+  Frames::Text *text2 = Frames::Text::Create(env->RootGet(), "Example");
+  Frames::Text *text3 = Frames::Text::Create(env->RootGet(), "Example");
+  Frames::Text *text4 = Frames::Text::Create(env->RootGet(), "Example");
+  Frames::Text *text5 = Frames::Text::Create(env->RootGet(), "Example");
+  Frames::Text *text6 = Frames::Text::Create(env->RootGet(), "Example");
+
+  text1->BackgroundSet(tdc::red);
+  text2->BackgroundSet(tdc::red);
+  text3->BackgroundSet(tdc::red);
+  text4->BackgroundSet(tdc::red);
+  text5->BackgroundSet(tdc::red);
+  text6->BackgroundSet(tdc::red);
+
+  text1->SizeSet(16);
+  text2->SizeSet(16);
+  text3->SizeSet(16);
+  text4->SizeSet(16);
+  text5->SizeSet(16);
+  text6->SizeSet(16);
+
+  text1->TextSet("West of Arkham the hills rise wild.");
+  text2->TextSet("West of Arkham the hills rise wild.");
+  text3->TextSet("West of Arkham the hills rise wild.");
+  text4->TextSet("West of Arkham the hills rise wild.");
+  text5->TextSet("West of Arkham the hills rise wild.");
+  text6->TextSet("West of Arkham the hills rise wild.");
+
+  text1->PinSet(Frames::CENTER, env->RootGet(), 1.f / 6, 2.f / 5);
+  text2->PinSet(Frames::CENTER, env->RootGet(), 3.f / 6, 2.f / 5);
+  text3->PinSet(Frames::CENTER, env->RootGet(), 5.f / 6, 2.f / 5);
+  text4->PinSet(Frames::CENTER, env->RootGet(), 1.f / 6, 4.f / 5);
+  text5->PinSet(Frames::CENTER, env->RootGet(), 3.f / 6, 4.f / 5);
+  text6->PinSet(Frames::CENTER, env->RootGet(), 5.f / 6, 4.f / 5);
+
+  Annotate(text1, "Default size");
+
+  text2->WidthSet(115);
+  Annotate(text2, "Width reduced, height default");
+
+  text3->WidthSet(115);
+  text3->HeightSet(8);
+  Annotate(text3, "Width/height reduced");
+
+  text4->WordwrapSet(true);
+  text4->WidthSet(115);
+  Annotate(text4, "Wordwrap enabled", "Width reduced, height default");
+
+  text5->WordwrapSet(true);
+  text5->WidthSet(115);
+  text5->HeightSet(50);
+  Annotate(text5, "Wordwrap enabled", "Width reduced, height increased");
+
+  text6->WordwrapSet(true);
+  text6->WidthSet(115);
+  text6->HeightSet(22);
+  Annotate(text6, "Wordwrap enabled", "Width/height reduced");
+
+  TestSnapshot(env, "ref/doc/sizingbasics_text");
 }
