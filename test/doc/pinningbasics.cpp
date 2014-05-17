@@ -8,6 +8,7 @@
 #include <frames/detail_format.h>
 
 #include "lib.h"
+#include "doclib.h"
 #include "doc/colors.h"
 
 class Arrow : public Frames::Frame {
@@ -296,13 +297,7 @@ void ShowPosition(Frames::Layout *root, Frames::Frame *target, Frames::Anchor an
 TEST(Pinningbasics, Position) {
   TestEnvironment env(true, 640, 360);
 
-  Frames::Text *text = Frames::Text::Create(env->RootGet(), "Header");
-
-  text->TextSet("Named anchors provided by Frames");
-  text->PinSet(Frames::CENTERTOP, env->RootGet(), Frames::CENTERTOP, 0, 30);
-  text->SizeSet(30);
-  text->ColorTextSet(Frames::Color(1.f, 1.f, 0.f));
-  text->FontSet("geo_1.ttf");
+  CreateNameBar(env->RootGet(), "Named anchors provided by Frames");
 
   Frames::Frame *frame = Frames::Frame::Create(env->RootGet(), "Frame");
   frame->BackgroundSet(tdc::red);
