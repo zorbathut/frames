@@ -65,3 +65,13 @@ TEST(Sprite, Sampling) {
 
   TestSnapshot(env);
 }
+
+TEST(Sprite, Error) {
+  TestEnvironment env;
+
+  Frames::Sprite *sprite = Frames::Sprite::Create(env->RootGet(), "Sprite");
+
+  sprite->TextureSet("idontexist");
+
+  TestSnapshot(env);  // this should be black
+}

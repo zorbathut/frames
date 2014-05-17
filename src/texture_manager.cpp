@@ -110,6 +110,10 @@ namespace Frames {
     }
 
     TextureChunkPtr TextureManager::TextureFromConfig(const TexturePtr &tex, TextureBackingPtr in_backing /*= 0*/) {
+      if (!tex) {
+        return TextureChunkPtr();
+      }
+
       if (tex->TypeGet() == Texture::RAW) {
         // time to GL-ize it
         // for now we're just putting it into its own po2 texture

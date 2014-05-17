@@ -514,7 +514,7 @@ namespace Frames {
     void ObliterateExtractFrom(Axis axis, const Layout *layout);
     void Resolve();
     struct AxisData {
-      AxisData() : size_cached(detail::Undefined), size_set(detail::Undefined), size_default(40) { };
+      AxisData() : size_cached(detail::Undefined), size_set(detail::Undefined), size_default(detail::SizeDefault) {};
 
       mutable float size_cached;
 

@@ -17,11 +17,17 @@ namespace Frames {
 
   void Sprite::TextureSet(const std::string &id) {
     // work work work
-    m_texture_id = id;
     m_texture = EnvironmentGet()->GetTextureManager()->TextureFromId(id);
     
-    WidthDefaultSet((float)m_texture->WidthGet());
-    HeightDefaultSet((float)m_texture->HeightGet());
+    if (m_texture) {
+      m_texture_id = id;
+      WidthDefaultSet((float)m_texture->WidthGet());
+      HeightDefaultSet((float)m_texture->HeightGet());
+    } else {
+      m_texture_id = "";
+      WidthDefaultSet(detail::SizeDefault);
+      HeightDefaultSet(detail::SizeDefault);
+    }
   }
 
   void Sprite::RenderElement(detail::Renderer *renderer) const {

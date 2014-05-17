@@ -8,7 +8,7 @@
 
 === TWEAK
 
-* Deal with TextureSet failure without crashing
+* detail naming convention standardization
 
 * Pull Alpha, merge into Effect
 

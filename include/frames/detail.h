@@ -80,6 +80,8 @@ namespace Frames {
 
     static const float Pi = 3.14159265358979323846f; // C++, why do you not define this :(
     static const float Tau = Pi * 2;
+
+    static const float SizeDefault = 40.f;
   };
 }
 
