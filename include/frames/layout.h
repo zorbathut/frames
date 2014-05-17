@@ -363,12 +363,6 @@ namespace Frames {
     /// Gets the visibility flag.
     bool VisibleGet() const { return m_visible; }
 
-    /// Sets the alpha multiplier.
-    /** Changing the alpha multiplier causes this frame, and all its children, to render partially transparent. Note that this is done on a per-frame basis and will not result in layer-perfect results. */
-    void AlphaSet(float alpha) { m_alpha = alpha; }
-    /// Gets the alpha multiplier.
-    float AlphaGet() const { return m_alpha; }
-
     // --------- Events
 
     /// Attaches a handler to a verb on this layout.
@@ -552,9 +546,6 @@ namespace Frames {
     ChildrenList m_children;  // Authoritative
     ChildrenList m_children_implementation; // Provided only for ChildrenGet
     ChildrenList m_children_nonimplementation; // Provided only for ChildrenGet
-
-    // Rendering effects
-    float m_alpha;
 
     // Input
     bool m_fullMouseMasking;

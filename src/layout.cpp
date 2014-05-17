@@ -322,7 +322,6 @@ namespace Frames {
       m_implementation(false),
       m_parent(0),
       m_visible(true),
-      m_alpha(1),
       m_fullMouseMasking(false),
       m_inputMode(IM_NONE),
       m_name(name),
@@ -934,7 +933,6 @@ namespace Frames {
     }
 
     if (m_visible) {
-      renderer->AlphaPush(AlphaGet());
       RenderElement(renderer);
 
       if (!m_children.empty()) {
@@ -946,8 +944,6 @@ namespace Frames {
 
         RenderElementPostChild(renderer);
       }
-      
-      renderer->AlphaPop();
     }
   }
 
