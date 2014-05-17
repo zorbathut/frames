@@ -32,8 +32,6 @@
 * Clang?
 * Clang Static?
 
-* FindChild
-
 * Redesign Lua API sanely
 
 === TESTING
@@ -89,7 +87,7 @@
 * Effect - Apply a simple effect to all members
 * Postprocess - record what's underneath it, mutate it in some expensive fashion
 * Bounds?
-  * Or are we better off allowing some sort of delegate-style Width or Height?
+  * Or are we better off allowing some sort of delegate-style Width or Height? Freeform dependencies?
 
 * someday, consider how to do Effect/Scene/Stage/Postprocess better
   * maybe some kind of runtime decorator system
