@@ -16,38 +16,38 @@
 namespace Frames {
 
   static const Input::Key c_keyIndex[] = {
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0x00 - 0x07
-    Input::Key::Backspace, Input::Key::Tab, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::Return, Input::Key::INVALID, Input::Key::INVALID, // 0x08 - 0x0f
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::Pause, Input::Key::LockCaps, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0x10 - 0x17
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::Escape, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0x18 - 0x1f
-    Input::Key::Space, Input::Key::PageUp, Input::Key::PageDown, Input::Key::End, Input::Key::Home, Input::Key::Left, Input::Key::Up, Input::Key::Right, // 0x20 - 0x27
-    Input::Key::Down, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::Printscreen, Input::Key::Insert, Input::Key::Delete, Input::Key::INVALID, // 0x28 - 0x2f
-    Input::Key::Num0, Input::Key::Num1, Input::Key::Num2, Input::Key::Num3, Input::Key::Num4, Input::Key::Num5, Input::Key::Num6, Input::Key::Num7, // 0x30 - 0x37
-    Input::Key::Num8, Input::Key::Num9, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0x38 - 0x3f
-    Input::Key::INVALID, Input::Key::A, Input::Key::B, Input::Key::C, Input::Key::D, Input::Key::E, Input::Key::F, Input::Key::G, // 0x40 - 0x47
-    Input::Key::H, Input::Key::I, Input::Key::J, Input::Key::K, Input::Key::L, Input::Key::M, Input::Key::N, Input::Key::O, // 0x48 - 0x4f
-    Input::Key::P, Input::Key::Q, Input::Key::R, Input::Key::S, Input::Key::T, Input::Key::U, Input::Key::V, Input::Key::W, // 0x50 - 0x57
-    Input::Key::X, Input::Key::Y, Input::Key::Z, Input::Key::SystemLeft, Input::Key::SystemRight, Input::Key::Apps, Input::Key::INVALID, Input::Key::INVALID, // 0x58 - 0x5f
-    Input::Key::Numpad0, Input::Key::Numpad1, Input::Key::Numpad2, Input::Key::Numpad3, Input::Key::Numpad4, Input::Key::Numpad5, Input::Key::Numpad6, Input::Key::Numpad7,  // 0x60 - 0x67
-    Input::Key::Numpad8, Input::Key::Numpad9, Input::Key::Multiply, Input::Key::Add, Input::Key::INVALID, Input::Key::Subtract, Input::Key::Decimal, Input::Key::Divide, // 0x68 - 0x6f
-    Input::Key::F1, Input::Key::F2, Input::Key::F3, Input::Key::F4, Input::Key::F5, Input::Key::F6, Input::Key::F7, Input::Key::F8, // 0x70 - 0x77
-    Input::Key::F9, Input::Key::F10, Input::Key::F11, Input::Key::F12, Input::Key::F13, Input::Key::F14, Input::Key::F15, Input::Key::F16, // 0x78 - 0x7f
-    Input::Key::F17, Input::Key::F18, Input::Key::F19, Input::Key::F20, Input::Key::F21, Input::Key::F22, Input::Key::F23, Input::Key::F24, // 0x80 - 0x87
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0x88 - 0x8f
-    Input::Key::LockNum, Input::Key::LockScroll, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0x90 - 0x97
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0x98 - 0x9f
-    Input::Key::ShiftLeft, Input::Key::ShiftRight, Input::Key::ControlLeft, Input::Key::ControlRight, Input::Key::AltLeft, Input::Key::AltRight, Input::Key::INVALID, Input::Key::INVALID, // 0xa0 - 0xa7
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xa8 - 0xaf
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xb0 - 0xb7
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::Semicolon, Input::Key::Equal, Input::Key::Comma, Input::Key::Dash, Input::Key::Period, Input::Key::Slash, // 0xb8 - 0xbf
-    Input::Key::Tilde, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xc0 - 0xc7
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xc8 - 0xcf
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xd0 - 0xd7
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::BracketLeft, Input::Key::Backslash, Input::Key::BracketRight, Input::Key::Quote, Input::Key::INVALID, // 0xd8 - 0xdf
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xe0 - 0xe7
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xe8 - 0xef
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xf0 - 0xf7
-    Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, Input::Key::INVALID, // 0xf8 - 0xff
+    Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0x00 - 0x07
+    Input::Backspace, Input::Tab, Input::INVALID, Input::INVALID, Input::INVALID, Input::Return, Input::INVALID, Input::INVALID, // 0x08 - 0x0f
+    Input::INVALID, Input::INVALID, Input::INVALID, Input::Pause, Input::LockCaps, Input::INVALID, Input::INVALID, Input::INVALID, // 0x10 - 0x17
+    Input::INVALID, Input::INVALID, Input::INVALID, Input::Escape, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0x18 - 0x1f
+    Input::Space, Input::PageUp, Input::PageDown, Input::End, Input::Home, Input::Left, Input::Up, Input::Right, // 0x20 - 0x27
+    Input::Down, Input::INVALID, Input::INVALID, Input::INVALID, Input::Printscreen, Input::Insert, Input::Delete, Input::INVALID, // 0x28 - 0x2f
+    Input::Num0, Input::Num1, Input::Num2, Input::Num3, Input::Num4, Input::Num5, Input::Num6, Input::Num7, // 0x30 - 0x37
+    Input::Num8, Input::Num9, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0x38 - 0x3f
+    Input::INVALID, Input::A, Input::B, Input::C, Input::D, Input::E, Input::F, Input::G, // 0x40 - 0x47
+    Input::H, Input::I, Input::J, Input::K, Input::L, Input::M, Input::N, Input::O, // 0x48 - 0x4f
+    Input::P, Input::Q, Input::R, Input::S, Input::T, Input::U, Input::V, Input::W, // 0x50 - 0x57
+    Input::X, Input::Y, Input::Z, Input::SystemLeft, Input::SystemRight, Input::Apps, Input::INVALID, Input::INVALID, // 0x58 - 0x5f
+    Input::Numpad0, Input::Numpad1, Input::Numpad2, Input::Numpad3, Input::Numpad4, Input::Numpad5, Input::Numpad6, Input::Numpad7,  // 0x60 - 0x67
+    Input::Numpad8, Input::Numpad9, Input::Multiply, Input::Add, Input::INVALID, Input::Subtract, Input::Decimal, Input::Divide, // 0x68 - 0x6f
+    Input::F1, Input::F2, Input::F3, Input::F4, Input::F5, Input::F6, Input::F7, Input::F8, // 0x70 - 0x77
+    Input::F9, Input::F10, Input::F11, Input::F12, Input::F13, Input::F14, Input::F15, Input::F16, // 0x78 - 0x7f
+    Input::F17, Input::F18, Input::F19, Input::F20, Input::F21, Input::F22, Input::F23, Input::F24, // 0x80 - 0x87
+    Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0x88 - 0x8f
+    Input::LockNum, Input::LockScroll, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0x90 - 0x97
+    Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0x98 - 0x9f
+    Input::ShiftLeft, Input::ShiftRight, Input::ControlLeft, Input::ControlRight, Input::AltLeft, Input::AltRight, Input::INVALID, Input::INVALID, // 0xa0 - 0xa7
+    Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0xa8 - 0xaf
+    Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0xb0 - 0xb7
+    Input::INVALID, Input::INVALID, Input::Semicolon, Input::Equal, Input::Comma, Input::Dash, Input::Period, Input::Slash, // 0xb8 - 0xbf
+    Input::Tilde, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0xc0 - 0xc7
+    Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0xc8 - 0xcf
+    Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0xd0 - 0xd7
+    Input::INVALID, Input::INVALID, Input::INVALID, Input::BracketLeft, Input::Backslash, Input::BracketRight, Input::Quote, Input::INVALID, // 0xd8 - 0xdf
+    Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0xe0 - 0xe7
+    Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0xe8 - 0xef
+    Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0xf0 - 0xf7
+    Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, Input::INVALID, // 0xf8 - 0xff
   };
   
   static void InputGatherStandard(HWND window, Input::Sequence *sequence) {

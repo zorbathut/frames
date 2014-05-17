@@ -355,10 +355,10 @@ namespace Frames {
   }
   void Text::EventInternal_KeyDownOrRepeat(Handle *e, Input::Key key) {
     // Things supported for everything interactive
-    if (key == Input::Key::A && EnvironmentGet()->Input_MetaGet().ctrl) {
+    if (key == Input::A && EnvironmentGet()->Input_MetaGet().ctrl) {
       SelectionSet(0, (int)m_text.size());
       CursorSet((int)m_text.size());
-    } else if ((key == Input::Key::C && EnvironmentGet()->Input_MetaGet().ctrl) || (m_interactive == INTERACTIVE_SELECT && key == Input::Key::X && EnvironmentGet()->Input_MetaGet().ctrl)) { // if we're in select mode, interpret cut as copy
+    } else if ((key == Input::C && EnvironmentGet()->Input_MetaGet().ctrl) || (m_interactive == INTERACTIVE_SELECT && key == Input::X && EnvironmentGet()->Input_MetaGet().ctrl)) { // if we're in select mode, interpret cut as copy
       // copy to clipboard
       if (m_cursor != m_select) {
         EnvironmentGet()->ConfigurationGet().ClipboardGet()->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
@@ -376,7 +376,7 @@ namespace Frames {
       // movement-based things
       int newcursor = -1;
       bool hascursor = true;
-      if (key == Input::Key::Left) {
+      if (key == Input::Left) {
         if (EnvironmentGet()->Input_MetaGet().ctrl) {
           // shift a word
           int curs = m_cursor - 2;
@@ -390,7 +390,7 @@ namespace Frames {
         } else {
           newcursor = m_cursor - 1;
         }
-      } else if (key == Input::Key::Right) {
+      } else if (key == Input::Right) {
         if (EnvironmentGet()->Input_MetaGet().ctrl) {
           // shift a word
           int curs = m_cursor + 1;
@@ -403,19 +403,19 @@ namespace Frames {
         } else {
           newcursor = m_cursor + 1;
         }
-      } else if (key == Input::Key::Up) {
+      } else if (key == Input::Up) {
         float lineheight = m_layout->ParentGet()->ParentGet()->GetLineHeight(m_size);
         Vector ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
         ccor.y -= lineheight / 2;
         newcursor = m_layout->GetCharacterFromCoordinate(ccor);
-      } else if (key == Input::Key::Down) {
+      } else if (key == Input::Down) {
         float lineheight = m_layout->ParentGet()->ParentGet()->GetLineHeight(m_size);
         Vector ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
         ccor.y += lineheight * 3 / 2; // need to bump it into the bottom line
         newcursor = m_layout->GetCharacterFromCoordinate(ccor);
-      } else if (key == Input::Key::Home) {
+      } else if (key == Input::Home) {
         newcursor = 0;
-      } else if (key == Input::Key::End) {
+      } else if (key == Input::End) {
         newcursor = (int)m_text.size();
       } else {
         // isn't actually a cursor movement key
@@ -438,7 +438,7 @@ namespace Frames {
       return;
     }
 
-    if (key == Input::Key::Backspace) {
+    if (key == Input::Backspace) {
       if (m_cursor != m_select) {
         // wipe out the selection
         int ncursor = std::min(m_cursor, m_select);
@@ -451,7 +451,7 @@ namespace Frames {
         TextSet(m_text.substr(0, m_cursor - 1) + m_text.substr(m_cursor));
         CursorSet(ncursor);
       }
-    } else if (key == Input::Key::Delete) {
+    } else if (key == Input::Delete) {
       if (m_cursor != m_select) {
         // wipe out the selection
         int ncursor = std::min(m_cursor, m_select);
@@ -462,7 +462,7 @@ namespace Frames {
         // wipe out the character after the cursor
         TextSet(m_text.substr(0, m_cursor) + m_text.substr(m_cursor + 1));
       }
-    } else if (key == Input::Key::X && EnvironmentGet()->Input_MetaGet().ctrl) {
+    } else if (key == Input::X && EnvironmentGet()->Input_MetaGet().ctrl) {
       // cut to clipboard
       if (m_cursor != m_select) {
         EnvironmentGet()->ConfigurationGet().ClipboardGet()->Set(m_text.substr(std::min(m_cursor, m_select), std::abs(m_cursor - m_select)));
@@ -473,7 +473,7 @@ namespace Frames {
         CursorSet(ncursor);
         SelectionClear();
       }
-    } else if (key == Input::Key::V && EnvironmentGet()->Input_MetaGet().ctrl) {
+    } else if (key == Input::V && EnvironmentGet()->Input_MetaGet().ctrl) {
       // paste from clipboard
       std::string clipboard = EnvironmentGet()->ConfigurationGet().ClipboardGet()->Get();
       if (!clipboard.empty()) {
