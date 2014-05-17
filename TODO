@@ -1,10 +1,6 @@
 
 === DOCS
 
-* Introduce the general example we're using at the top
-* Intro before the image, explanation after
-* example header for anchor positions?
-
 * Deep docs
   * need to put a thorough description of the pin API somewhere
 
@@ -13,6 +9,8 @@
 === TWEAK
 
 * Deal with TextureSet failure without crashing
+
+* Pull Alpha, merge into Effect
 
 * Strict warnings on deploy
 
@@ -101,7 +99,8 @@
 * Scene - coordinate system transformations
 * Stage - animations
 * Canvas - freeform drawing, tiled textures
-* Lightbox - record what's underneath it, mutate it in some fashion (glow, shadow, etc)
+* Effect - Apply a simple effect to all members
+* Postprocess - record what's underneath it, mutate it in some expensive fashion
 * Bounds?
   * Or are we better off allowing some sort of delegate-style Width or Height?
 
