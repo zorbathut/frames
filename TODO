@@ -51,12 +51,6 @@
 * Finish documenting Environment
 * Tweak Input?
 
-* Improve streaming API
-* Improve configuration API
-* Improve texture loading API
-  * maybe this should all be done via modifiers after creation?
-  * most of this really doesn't have to exist *at* creation
-
 * Simple examples
   * SDL/GL
 
@@ -79,15 +73,12 @@
 === PROGRESSION
 
 * Better global register setup
-* improve C++ API
 
 * DX support
 
-* redesign event system to use global event IDs
 * rejigger event core to handle remove-while-trigger better
 
 * event for focus change?
-* check text, see if we can toss out more of the englishified names
 * click outside to remove focus
 
 * frames/textures don't appear until a window gets invalidated
@@ -99,6 +90,11 @@
 * Postprocess - record what's underneath it, mutate it in some expensive fashion
 * Bounds?
   * Or are we better off allowing some sort of delegate-style Width or Height?
+
+* someday, consider how to do Effect/Scene/Stage/Postprocess better
+  * maybe some kind of runtime decorator system
+
+* userdata
 
 === DOXYBUGS
 
@@ -112,12 +108,7 @@
 
 === POLISH PASSES BELOW
 
-* guarantee order by some sort of global ID?
-* Move GetParent more into Layout
-
 * NaCl
-
-* SetAlpha
 
 * Raw
 * Figure out 9-slice (much later?)
@@ -146,14 +137,10 @@
   * At some point we should set up something to notify Frames if Lua shuts down first
 
 * pageup/pagedown for textfields
-* at some point we need to figure out mouseover testing and key fallthroughs
-* maybe text really does need to insta-refresh its bounds? :/
-  * not quite sure how that's going to work
 * Refresh mouse position/mouseover when the layout changes
 * Optimization:
   * Propogate acceptance bits upstream
   * Propogate full bounds upstream
-* Make internal-only functions a little more obvious
 * Event queueing/buffering to avoid reentrancy issues
 * Subpixel text rendering
 * Autocorpusing
@@ -163,14 +150,11 @@
   * truncation marker whitespace return
   * glPixelStorei should be saved?
   * font color mappings
-* Internal-prefix every internal function
-  * Privatize more
 * Convert layout engine to ints
 * Build process for cygwin/linux/windows
 * texture deallocation
   * split texture into its own thing
 * async loading for textures someday
-* figure out how to make config cleaner
 * deal with allocation properly
   * remember image loading
   * thorough testing
