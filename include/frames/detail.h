@@ -27,19 +27,14 @@ namespace Frames {
       return detail::Reinterpret<unsigned int>(x) == detail::Reinterpret<unsigned int>(Nil);
     }
 
-    const float Undefined = Reinterpret<float>(0xFFDEADFF);
+    static const float Undefined = Reinterpret<float>(0xFFDEADFF);
     inline bool IsUndefined(float x) {
       return Reinterpret<unsigned int>(x) == detail::Reinterpret<unsigned int>(Undefined);
     }
 
-    const float Processing = Reinterpret<float>(0xFFCAFEFF);
+    static const float Processing = Reinterpret<float>(0xFFCAFEFF);
     inline bool IsProcessing(float x) {
       return Reinterpret<unsigned int>(x) == detail::Reinterpret<unsigned int>(Processing);
-    }
-
-    // not intended to be called by anything, just makes GCC shut up
-    inline float RemoveUnusedVariableWarnings() {
-      return Undefined + Processing + Nil;
     }
 
     inline float Clamp(float current, float min, float max) {

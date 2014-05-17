@@ -5,7 +5,7 @@
 #include "frames/detail_format.h"
 
 namespace Frames {
-  const float Nil = detail::Reinterpret<float>(0xFFF00DFF);
+  static const float Nil = detail::Reinterpret<float>(0xFFF00DFF);
 
   std::string DescriptorFromPoint(float x, float y) {
     for (int i = 0; i < ANCHOR_COUNT; ++i) {
