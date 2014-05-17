@@ -1,4 +1,4 @@
-/** \page basicssizing
+/** \page basicssizing Constraints: Sizing
 
 All frames have both a width and a height. Each frame has a default size which it reverts to if the size isn't explicitly set or constrained via pins (which we'll talk about later). In most cases, this is a default size intended to be easily visible.
 

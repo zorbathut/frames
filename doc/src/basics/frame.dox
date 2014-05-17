@@ -1,4 +1,4 @@
-/** \page basicsframe
+/** \page basicsframe Frame
 
 Frame is the fundamental component of all UIs. A Frame is a rectangular axis-aligned area in a Scene.
 

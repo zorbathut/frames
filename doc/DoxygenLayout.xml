@@ -3,7 +3,6 @@
   <!-- Navigation index tabs for HTML output -->
   <navindex>
     <tab type="mainpage" visible="yes" title="" />
-    <tab type="user" url="@ref mainpage" title="Introduction" />
     <tab type="usergroup" url="@ref gettingstarted" title="Getting Started">
       <tab type="user" url="@ref installation" title="Installation" />
       <tab type="user" url="@ref helloworld" title="Hello, World" />
@@ -15,7 +14,6 @@
       <tab type="user" url="@ref basicspinningadv" title="Constraints: Advanced Pinning" />
       <tab type="user" url="@ref basicsresources" title="Resources" />
       <tab type="user" url="@ref basicsevents" title="Events" />
-      <tab type="user" url="@ref basicsexamples" title="Examples" />
     </tab>
     <tab type="classlist" visible="yes" title="" intro=""/>
     <tab type="classindex" visible="$ALPHABETICAL_INDEX" title=""/> 
