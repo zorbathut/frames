@@ -62,6 +62,6 @@ There are also four edge center points, CENTERLEFT, CENTERRIGHT, TOPCENTER, and 
 
 To demonstrate TOPCENTER and BOTTOMCENTER we've added status text to the bottom, horizontally centered below the stamina bar.
 
-These are the basic tools used to place frames, but they're not the only tools. Check the next page for information on single-axis pins and fractional pins.
+These are the basic tools used to place frames, but they're not the only tools.
 
 */
