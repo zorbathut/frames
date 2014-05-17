@@ -1,7 +1,6 @@
 
 #include <gtest/gtest.h>
 
-#include <frames/cast.h>
 #include <frames/frame.h>
 #include <frames/sprite.h>
 #include <frames/text.h>
@@ -109,4 +108,51 @@ TEST(Sizingbasics, Simple) {
   Annotate(f, "WidthSet(10)", "HeightSet(80)");
   
   TestSnapshot(env, "ref/doc/sizingbasics_simple");
+}
+
+TEST(Sizingbasics, Resize) {
+  TestEnvironment env(true, 640, 360);
+
+  CreateNameBar(env->RootGet(), "Self-sized Sprite and Text");
+
+  Frames::Sprite *sprite1 = Frames::Sprite::Create(env->RootGet(), "Example");
+  Frames::Sprite *sprite2 = Frames::Sprite::Create(env->RootGet(), "Example");
+  Frames::Sprite *sprite3 = Frames::Sprite::Create(env->RootGet(), "Example");
+  Frames::Sprite *sprite4 = Frames::Sprite::Create(env->RootGet(), "Example");
+  Frames::Text *text1 = Frames::Text::Create(env->RootGet(), "Example");
+  Frames::Text *text2 = Frames::Text::Create(env->RootGet(), "Example");
+  Frames::Text *text3 = Frames::Text::Create(env->RootGet(), "Example");
+
+  sprite1->BackgroundSet(tdc::red);
+  sprite2->BackgroundSet(tdc::green);
+  sprite3->BackgroundSet(tdc::blue);
+  // we leave sprite4 transparent intentionally
+  text1->BackgroundSet(tdc::orange);
+  text2->BackgroundSet(tdc::cyan);
+  text3->BackgroundSet(tdc::purple);
+
+  sprite1->TextureSet("Explosion.png");
+  sprite2->TextureSet("mute.png");
+  sprite3->TextureSet("pause.png");
+  sprite4->TextureSet("makhana.png");
+
+  text1->TextSet("The quick brown fox jumps over the lazy dog.");
+  text2->TextSet("The gostak distims the doshes.");
+  text3->TextSet("'Twas brillig, and the slithy toves\nDid gyre and gimble in the wabe.");
+
+  text1->SizeSet(20);
+  text2->SizeSet(30);
+  text3->FontSet("geo_1.ttf");
+  text3->SizeSet(12);
+
+  sprite1->PinSet(Frames::CENTERBOTTOM, env->RootGet(), Frames::CENTERBOTTOM, -120, 20);
+  sprite2->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 10, 10);
+  sprite3->PinSet(Frames::TOPLEFT, sprite2, Frames::BOTTOMLEFT);
+  sprite4->PinSet(Frames::CENTER, env->RootGet(), 0.2, 0.4);
+
+  text1->PinSet(Frames::CENTER, env->RootGet(), 0.75, 0.25);
+  text2->PinSet(Frames::CENTER, env->RootGet(), 0.75, 0.5);
+  text3->PinSet(Frames::CENTER, env->RootGet(), 0.75, 0.75);
+
+  TestSnapshot(env, "ref/doc/sizingbasics_self");
 }
