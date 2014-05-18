@@ -1,0 +1,19 @@
+/** \page advnonhierarchical Non-hierarchical pins
+
+(This section is currently INCOMPLETE)
+
+We've mentioned that pins don't have to follow the parent/child relationship. In fact, there are no restrictions whatsoever on how pins can be arranged. Because children do not, by default, depend on the position of their parent, a parent can depend on the position on its child.
+
+This technique can be useful for things like draggable windows. Make the titlebar a child of the main window, then pin the main window to the titlebar. It's simple to make the title draggable by the mouse. When that happens, the main window will be pulled along with it.
+
+Another trick is that pins on an axis don't have to refer to the same frame. In fact, one of the pins can refer to a frame which, itself, refers back to the original frame.
+
+Imagine a "window" frame, with the top-left corner pinned to some sort of positional anchor. Add a "contents" frame. Pin the top-left corner of "contents" to "window", so the contents follow the window around. Pin the bottom-right corner of "window" back to the bottom-right corner of "contents". Now the window will resize according to the size of "contents".
+
+This can even be nested; imagine a set of widget frames in "contents" that are pinned to the top-left corner of "contents", with the bottom-right corner of "contents" pinned to the bottom-right corner of the contained widgets. Now "contents" will resize according to the widgets, and "window" will then resize according to "contents".
+
+(This all begs for example images; the fact that they don't yet exist is why this section is INCOMPLETE. Please contact the Frames developers if filling this documentation out is a priority for you!)
+
+Frames makes extensive use of caching and lazy evaluation for performance reasons, and complex frame constraint systems like this perform extremely well.
+
+*/

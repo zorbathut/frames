@@ -1,0 +1,23 @@
+/** \page advoverconstraining Overconstraining
+
+(This section is currently INCOMPLETE)
+
+It's possible to attempt adding more pins to a frame than are guaranteed to be satisfied. Even if the extra pin would work with the current frame positions, Frames won't allow you to add it. Keep in mind the behavior of frames as constraints are added. Here's a list of how Frames will behave with certain combinations of constraints.
+
+Size not set, no pins set: Frame remains at default size, top-left point remains at the (0,&nbsp;0) coordinate-space origin.
+
+Size not set, one pin set: Frame remains at default size, Frame moves to satisfy constraint.
+
+Size not set, two pins set: Frame moves and resizes itself to satisfy constraints.
+
+Size not set, three or more pins set: Not allowed; pins past the second will not be registered.
+
+Size set, no pins set: Frame sizes itself as requested, top-left point remains at the (0,&nbsp;0) coordinate-space origin.
+
+Size set, one pin set: Frame sizes itself as requested, Frame moves to satisfy constraint.
+
+Size set, two or more pins set: Not allowed; pins past the first will not be registered.
+
+Attempts to overconstraint a Frame will result in no change to the layout and will be recorded as an error. It is strongly recommended that these errors are displayed in a very loud and noticable fashion.
+
+*/

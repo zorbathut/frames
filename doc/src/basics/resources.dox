@@ -1,3 +1,9 @@
 /** \page basicsresources Resources
 
-Not yet implemented. */
+(This section is currently INCOMPLETE)
+
+All external resources in Frames, currently including both textures and fonts, are referred to as part of a global case-sensitive resource namespace. The members in Configuration control how those resource names are converted into actual resources. Configuration's layout makes it easy to change the resource path, to load raw data streams out of a composite data format such as a .zip or .pak, or to create your own resource loading system as required.
+
+Details will be included later.
+
+*/

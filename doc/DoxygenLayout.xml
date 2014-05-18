@@ -4,14 +4,26 @@
   <navindex>
     <tab type="mainpage" visible="yes" title="" />
     <tab type="usergroup" url="@ref gettingstarted" title="Getting Started">
-      <tab type="user" url="@ref installation" title="Installation" />
-      <tab type="user" url="@ref helloworld" title="Hello, World" />
+      <tab type="usergroup" url="@ref cppintro" title="C++ integration">
+        <tab type="user" url="@ref cppinstall" title="Installation" />
+        <tab type="user" url="@ref cpphelloworld" title="Hello, World" />
+      </tab>
+      <tab type="usergroup" url="@ref ue4intro" title="Unreal Engine 4 integration">
+        <tab type="user" url="@ref ue4install" title="Installation" />
+        <tab type="user" url="@ref ue4helloworld" title="Hello, World" />
+      </tab>
     </tab>
-    <tab type="usergroup" url="@ref basics" title="Basics">
+    <tab type="usergroup" url="@ref basicsintro" title="Basics">
       <tab type="user" url="@ref basicsframe" title="Frame" />
       <tab type="user" url="@ref basicssizing" title="Constraints: Sizing" />
       <tab type="user" url="@ref basicspinning" title="Constraints: Basic Pinning" />
-      <tab type="user" url="@ref basicspinningadv" title="Constraints: Advanced Pinning" />
+      <tab type="usergroup" url="@ref advpinningintro" title="Constraints: Advanced Pinning">
+        <tab type="user" url="@ref advsingle" title="Single-axis pins" />
+        <tab type="user" url="@ref advproportional" title="Proportional pins" />
+        <tab type="user" url="@ref advoverconstraining" title="Overconstraining" />
+        <tab type="user" url="@ref advnonhierarchical" title="Non-hierarchical pins" />
+        <tab type="user" url="@ref advcircular" title="Circular dependencies" />
+     </tab>
       <tab type="user" url="@ref basicsresources" title="Resources" />
       <tab type="user" url="@ref basicsevents" title="Events" />
     </tab>

@@ -1,3 +1,15 @@
 /** \page basicsevents Events
 
-Not yet implemented. */
+(This section is currently INCOMPLETE)
+
+While event handlers are technically associated with frame types for organization's sake, any event can have a handler attached to any frame, although inappropriate events will never be called.
+
+Events are called in order of decreasing priority. Adding and removing events while in the middle of an event handler is fully supported, up to and including removing an event handler in-call. Additionally, events can be called recursively (though obviously you'll want to ensure the recursive calls terminate eventually.)
+
+Some events, mostly input-related events, have Dive and Bubble handlers as well. This lets those events be intercepted and handled by earlier frames in the hierarchy.
+
+When a Dive+Bubble event is triggered, it starts with the Dive section. The event's Dive handler is triggered on a series of frames, starting with Root and traveling down the frame hierarchy to the destination frame. Once Dive has been called on the destination frame, the normal event handler is called on that frame. Finally, the Bubble handler is called in the reverse order, starting on the destination frame and traveling up to Root.
+
+New Events can be created, either statically allocated or dynamically allocated, just by creating a new Frames::Event::Verb object. However, if creating events dynamically, note that all handlers of an event type must be removed before the Verb is destroyed.
+
+*/

@@ -1,0 +1,9 @@
+/** \page advsingle Single-axis pins
+
+(This section is currently INCOMPLETE)
+
+All pins described up until now have been point pins, where a single point on a frame is pinned to another point on a frame. In reality, each point pin consists of a pair of single-axis pins - one pin on the X axis and one pin on the Y axis.
+
+Pins can be placed on individual axes as well. The anchors LEFT, RIGHT, and CENTERX refer only to the X axis, whereas the anchors TOP, BOTTOM, and CENTERY refer only to the Y axis.
+
+The previous example uses a single-axis anchor to size the Energy and Stamina bars. */

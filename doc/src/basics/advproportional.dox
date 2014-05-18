@@ -1,0 +1,11 @@
+/** \page advproportional Proportional pins
+
+(This section is currently INCOMPLETE)
+
+The built-in anchors refer to frame edges and centers. You're not limited to these positions, however. You can define your own locations, relative to any position on a Frame.
+
+The coordinate system used considers (0,&nbsp;0) to be the top-left corner of a Frame and (1,&nbsp;1) to be the bottom-right corner. CENTER is equivalent to (0.5,&nbsp;0.5). You can use any floating-point value as an anchor position - (0.2,&nbsp;0.2), for example, would refer to the point 1/5th to the right edge and 1/5th to the bottom edge.
+
+Although it's extremely uncommon to make use of this, you're not limited to points between 0 and 1. (2,&nbsp;0) would refer to a point that is two Width's rightwards from the left edge, or one Width past the right edge. Similarly, (-1,&nbsp;) would refer to a point one Width left from the left edge.
+
+*/

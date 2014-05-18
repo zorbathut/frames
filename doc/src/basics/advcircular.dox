@@ -1,0 +1,36 @@
+/** \page advcircular Circular dependencies
+
+(This section is currently INCOMPLETE)
+
+A pin must never depend on its own position. This, unfortunately, is not easy to test efficiently at pin creation time. While this doesn't happen often, it can happen with some of the more complex layouts.
+
+A simple example is if we pin the topleft corner on "frame1" to the topleft corner on "frame2", then pin the topleft corner on "frame2" back to the topleft corner on "frame1". Since neither point's location can be traced back to a known location, neither point has a defined location.
+
+While this is an obviously broken situation, a similar problem can occur in more subtle cases.
+
+Take the layout descibred in "\ref advnonhierarchical "Nonhierarchical Pins"". Create a "window" frame representing an entire window. Create a "contents" frame representing the contents of that window. Pin the top-left corner of "contents" to the top-left corner of "window" to keep the contents aligned with the window. Pin the bottom-right corner of "window" to the bottom-right corner of "contents" to automatically resize "window" as appropriate. Finally, for simplicity, set a constant size on "contents".
+
+If you then pin the top-left corner of "window" to some other anchor, everything works properly. Imagine the resolution steps required to find the location of the bottom-right corner of Window:
+
+* Window.BOTTOMRIGHT is pinned to Contents.BOTTOMRIGHT
+* Contents.BOTTOMRIGHT can be calculated given the size of Contents, which we've explicitly set, and Contents.TOPLEFT
+* Contents.TOPLEFT is pinned to Window.TOPLEFT
+* Window.TOPLEFT is pinned to some other anchor
+
+Each of these steps can be calculated and so the layout works properly.
+
+But let's say that we want the window to be centered on the screen. Instead of pinning the top-left corner to some anchor, let's try pinning the center of "window" to the center of Root. Unfortunately, this creates a circular dependency that may not be obvious.
+
+* Window.BOTTOMRIGHT is pinned to Contents.BOTTOMRIGHT
+* Contents.BOTTOMRIGHT can be calculated given the size of Contents, which we've explicitly set, and Contents.TOPLEFT
+* Contents.TOPLEFT is pinned to Window.TOPLEFT
+* Window.TOPLEFT can be calculated given the size of Window and a single other point
+* The size of Window can only be calculated given *two* points. Window.CENTER is pinned to some other anchor, but Window.BOTTOMRIGHT needs to be calculated in order to determine the size of Window
+
+The end result is that the position of Window.BOTTOMRIGHT depends on the position of Window.BOTTOMRIGHT. This breaks the layout system and will generate a layout error.
+
+Frames will generate a detailed diagnostic error (which looks similar to the above) when this happens.
+
+While there are theoretical ways to make this work, they're not yet implemented. The current recommended solution is to avoid this situation entirely and structure your Pins so that they don't cause circular dependencies.
+
+*/

@@ -1,3 +1,17 @@
-/** \page basicspinningadv Constraints: Advanced Pinning
+/** \page advpinningintro Constraints: Advanced Pinning
 
-Not yet implemented. */
+By now you should have an understanding of Frames's basic tools. These subsections demonstrate advanced techniques that can be used for UI layout.
+
+This section is currently INCOMPLETE, as are all subsections.
+
+\ref advsingle "Single-axis pins": Pins that apply only to a single axis, instead of to both axes simultaneously.
+
+\ref advproportional "Proportional pins": Pins that are anchored to an arbitrary point in a Frame instead of to one of the predefined points.
+
+\ref advoverconstraining "Overconstraining": Issues that can arise with too many pins or size constraints.
+
+\ref advnonhierarchical "Nonhierarchical pins": The use of pins that do not conform to a simple tree layout, in order to produce self-resizing windows and other adaptive layouts.
+
+\ref advcircular "Circular dependencies": Issues that can arise with pins that depend on their own location.
+
+*/
