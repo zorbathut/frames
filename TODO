@@ -1,15 +1,10 @@
 
-=== DOCS
-
-* Deep docs
-  * need to put a thorough description of the pin API somewhere
-
-* Final pass
-
 === TWEAK
 
 * really need a global assert function
 * tinyformat global assert
+
+* Convert Environment to Create/Destroy functions
 
 === INTEGRATION
 
@@ -22,15 +17,12 @@
 * Split Loaders into their own libs
   * Test
 
-=== TWEAK
+=== DOCS
 
-* SRGB? that's a crazy idea, buuuut
+* Deep docs
+  * need to put a thorough description of the pin API somewhere
 
-* Linux?
-* Clang?
-* Clang Static?
-
-* Redesign Lua API sanely
+* Final pass
 
 === TESTING
 
@@ -39,21 +31,6 @@
 
 * Frames
   * Text is the big one here, especially everything involving editing
-
-=== BUILDING
-
-* need to figure out how buttons work; this is not complicated but it's being tricky
-
-* Finish documenting Environment
-* Tweak Input?
-
-* Simple examples
-  * SDL/GL
-
-* Convert Environment to Create/Destroy functions
-* Figure out how to document Delegate
-
-* Official release?
 
 === UE4
 
@@ -65,6 +42,25 @@
 * That may be extremely difficult
   * Thoughts:
   * Obliterate is needed - last event fired before shutdown
+
+=== BUILDING
+
+* Simple examples
+  * SDL/GL
+
+* Figure out how to document Delegate
+
+* Official release?
+
+=== TWEAK
+
+* SRGB? that's a crazy idea, buuuut
+
+* Linux?
+* Clang?
+* Clang Static?
+
+* Redesign Lua API sanely
 
 === PROGRESSION
 
