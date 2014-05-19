@@ -16,3 +16,5 @@ Attempted to retrieve key from non-KEYREPEAT Input::Command
 Attempted to retrieve keytext from non-KEYTEXT Input::Command
 Attempted to retrieve texture BPP from invalid Format
 Attempted to retrieve texture BPP from invalid Format
+tinyformat: Too many conversion specifiers in format string
+tinyformat: Not enough conversion specifiers in format string

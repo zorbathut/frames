@@ -136,5 +136,8 @@ TEST(Core, Error) {
   EXPECT_EQ(4, Frames::Texture::RawBPPGet(Frames::Texture::Format(-1)));
   EXPECT_EQ(4, Frames::Texture::RawBPPGet(Frames::Texture::FORMAT_COUNT));
 
+  Frames::detail::Format("%d");
+  Frames::detail::Format("", 2);
+
   Frames::Configuration::Set(Frames::Configuration::Global());  // force it out of scope
 }

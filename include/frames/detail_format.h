@@ -109,7 +109,8 @@ namespace tinyformat {}
 //namespace tfm = tinyformat;
 
 // Error handling; calls assert() by default.
-// #define FRAMES_TINYFORMAT_ERROR(reasonString) your_error_handler(reasonString)
+#include "frames/configuration.h"
+#define FRAMES_TINYFORMAT_ERROR(reason) ::Frames::Configuration::Get().LoggerGet()->LogError(reason)
 
 // Define for C++11 variadic templates which make the code shorter & more
 // general.  If you don't define this, C++11 support is autodetected below.

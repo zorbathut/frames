@@ -1,8 +1,4 @@
 
-=== TWEAK
-
-* tinyformat global assert
-
 === INTEGRATION
 
 * Split OGL into its own lib
