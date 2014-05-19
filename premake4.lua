@@ -104,7 +104,7 @@ solution "Frames"
     kind "StaticLib"
     language "C++"
     location(path)
-    files "src/*.cpp"
+    files "src/core/*.cpp"
     files "include/frames/*.h"
     
     configuration "x32"
