@@ -15,7 +15,7 @@ namespace Frames {
   
   Raw *Raw::Create(Layout *parent, const std::string &name = "") {
     if (!parent) {
-      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to create Raw with null parent");
+      Configuration::Get().LoggerGet()->LogError("Attempted to create Raw with null parent");
       return 0;
     }
     return new Raw(parent, name);

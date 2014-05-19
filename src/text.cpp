@@ -14,7 +14,7 @@ namespace Frames {
 
   Text *Text::Create(Layout *parent, const std::string &name) {
     if (!parent) {
-      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to create Text with null parent");
+      Configuration::Get().LoggerGet()->LogError("Attempted to create Text with null parent");
       return 0;
     }
     return new Text(parent, name);

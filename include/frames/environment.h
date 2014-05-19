@@ -48,7 +48,7 @@ namespace Frames {
 
     /// Initialize an Environment with custom values.
     /** See Configuration for details.*/
-    static EnvironmentPtr Create(const Configuration &config);
+    static EnvironmentPtr Create(const Configuration::Local &config);
 
     // ==== Updates to the state of the environment
 
@@ -154,7 +154,7 @@ namespace Frames {
     Layout *ProbeAsMouse(float x, float y);
 
     /// Returns the environment's Configuration.
-    const Configuration &ConfigurationGet() { return m_config; }
+    const Configuration::Local &ConfigurationGet() { return m_config; }
 
     // ==== Logging and debugging
     /// Logs a string to the Logger's Error path.
@@ -194,7 +194,7 @@ namespace Frames {
     friend class Refcountable<Environment>;
 
     // Private constructor/destructor
-    Environment(const Configuration &config);
+    Environment(const Configuration::Local &config);
     ~Environment();
 
     // Unique ID code
@@ -222,7 +222,7 @@ namespace Frames {
     void DestroyingLayout(Layout *layout);
 
     // Configuration
-    Configuration m_config;
+    Configuration::Local m_config;
 
     // Managers
     detail::TextManager *GetTextManager() { return m_text_manager; }

@@ -14,7 +14,7 @@ namespace Frames {
 
   Frame *Frame::Create(Layout *parent, const std::string &name = "") {
     if (!parent) {
-      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to create Frame with null parent");
+      Configuration::Get().LoggerGet()->LogError("Attempted to create Frame with null parent");
       return 0;
     }
     return new Frame(parent, name);

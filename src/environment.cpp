@@ -11,10 +11,10 @@
 
 namespace Frames {
   /*static*/ EnvironmentPtr Environment::Create() {
-    return Create(Configuration());
+    return Create(Configuration::Local());
   }
 
-  /*static*/ EnvironmentPtr Environment::Create(const Configuration &config) {
+  /*static*/ EnvironmentPtr Environment::Create(const Configuration::Local &config) {
     return EnvironmentPtr(new Environment(config));
   }
 
@@ -199,7 +199,7 @@ namespace Frames {
     }
 
     if (root->EnvironmentGet() != this) {
-      ConfigurationGet().LoggerGet()->LogError("Attempt to render a frame through an unrelated environment");
+      Configuration::Get().LoggerGet()->LogError("Attempt to render a frame through an unrelated environment");
       return;
     }
 
@@ -257,7 +257,7 @@ namespace Frames {
     return m_counter++;
   }
 
-  Environment::Environment(const Configuration &config) {
+  Environment::Environment(const Configuration::Local &config) {
     // init pointers to zero
     m_over = 0;
     m_focus = 0;

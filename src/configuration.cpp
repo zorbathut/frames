@@ -12,7 +12,6 @@
 #include <windows.h>
 
 namespace Frames {
-  Configuration::Configuration() { };
 
   void Configuration::Logger::LogError(const std::string &log) {
     std::printf("Frame error: %s", log.c_str());
@@ -104,22 +103,22 @@ namespace Frames {
     return result;
   }
 
-  ConfigurationGlobal MakeDefault() {
-    ConfigurationGlobal def;
+  Configuration::Global MakeDefault() {
+    Configuration::Global def;
     def.LoggerSet(Configuration::LoggerPtr(new Configuration::Logger()));
     return def;
   }
 
-  static ConfigurationGlobal s_configGlobal = MakeDefault();
+  static Configuration::Global s_configGlobal = MakeDefault();
 
-  void ConfigurationGlobalSet(const ConfigurationGlobal &config) {
+  void Configuration::Set(const Configuration::Global &config) {
     s_configGlobal = config;
     if (!s_configGlobal.LoggerGet()) {
       s_configGlobal.LoggerSet(Configuration::LoggerPtr(new Configuration::Logger()));
     }
   }
 
-  const ConfigurationGlobal &ConfigurationGlobalGet() {
+  const Configuration::Global &Configuration::Get() {
     return s_configGlobal;
   }
 }

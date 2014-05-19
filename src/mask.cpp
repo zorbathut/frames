@@ -13,7 +13,7 @@ namespace Frames {
 
   Mask *Mask::Create(Layout *parent, const std::string &name = "") {
     if (!parent) {
-      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to create Mask with null parent");
+      Configuration::Get().LoggerGet()->LogError("Attempted to create Mask with null parent");
       return 0;
     }
     return new Mask(parent, name);

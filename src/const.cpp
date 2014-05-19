@@ -39,7 +39,7 @@ namespace Frames {
 
   std::string DescriptorFromPoint(Anchor anchor) {
     if (anchor < 0 || anchor >= ANCHOR_COUNT) {
-      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve descriptor from out-of-bounds anchor");
+      Configuration::Get().LoggerGet()->LogError("Attempted to retrieve descriptor from out-of-bounds anchor");
       return "";
     }
     return textRep[anchor];
@@ -48,7 +48,7 @@ namespace Frames {
   /// Retrieves coordinates for an anchor point
   Vector PointFromAnchor(Anchor anchor) {
     if (anchor < 0 || anchor >= ANCHOR_COUNT) {
-      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve point from out-of-bounds anchor");
+      Configuration::Get().LoggerGet()->LogError("Attempted to retrieve point from out-of-bounds anchor");
       return Vector(0.f, 0.f);
     }
 

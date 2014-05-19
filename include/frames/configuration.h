@@ -16,19 +16,12 @@ namespace Frames {
   class Texture;
   typedef Ptr<Texture> TexturePtr;
 
-  /// All configuration data that needs to be provided for a functioning Environment.
-  /** Every Environment contains a Configuration. If a Configuration isn't provided when the Environment is constructed, a default Configuration will be built.
-  
-  Most Configuration settings are designed as a class that can be inherited from. The default behavior is available by calling the base class's members. */
-  class Configuration {
-  public:
-    Configuration();
-
+  namespace Configuration {
     /// Debug logging functionality.
     /** Default behavior outputs to the Debug Log on Windows. */
     class Logger : public Refcountable<Logger> {
     public:
-      virtual ~Logger() { }
+      virtual ~Logger() {}
 
       /// Called when errors are logged.
       /** Errors include anything that is thoroughly incorrect, including invalid parameters and conflicting input.
@@ -47,7 +40,7 @@ namespace Frames {
     /** Default behavior uses the standard Windows global clipboard. */
     class Clipboard : public Refcountable<Clipboard> {
     public:
-      virtual ~Clipboard() { }
+      virtual ~Clipboard() {}
 
       /// Called to set the clipboard contents to a given string.
       virtual void Set(const std::string &dat);
@@ -62,11 +55,11 @@ namespace Frames {
     /** Push() will be called with a human-readable name and a color ID code intended for use in visual profilers. It may return an opaque void* that will be provided in Pop().
 
     It is guaranteed that Push/Pop calls will be done in LIFO order.
-    
+
     Default behavior is a no-op.*/
     class Performance : public Refcountable<Performance> {
     public:
-      virtual ~Performance() { }
+      virtual ~Performance() {}
 
       // Start a profiling block.
       virtual void *Push(const char *name, Color color) { return 0; }
@@ -79,7 +72,7 @@ namespace Frames {
 
     /// Creates a Texture from a \ref resources "resource ID".
     /** See \ref resources "Resources" for more detail.
-    
+
     Default behavior is to use the configuration StreamFromId and the configuration TextureFromStream in order to produce the result. */
     class TextureFromId : public Refcountable<TextureFromId> {
     public:
@@ -93,7 +86,7 @@ namespace Frames {
 
     /// Creates a Stream from a \ref resources "resource ID".
     /** See \ref resources "Resources" for more detail.
-    
+
     Default behavior is to use the configuration PathFromId to create a path, then to create a StreamFile given that path. */
     class StreamFromId : public Refcountable<StreamFromId> {
     public:
@@ -107,7 +100,7 @@ namespace Frames {
 
     /// Creates a path from a \ref resources "resource ID".
     /** See \ref resources "Resources" for more detail.
-    
+
     Default behavior is to return to given path verbatim. */
     class PathFromId : public Refcountable<PathFromId> {
     public:
@@ -133,78 +126,88 @@ namespace Frames {
     /// Refcounted TextureFromStream typedef.
     typedef Ptr<TextureFromStream> TextureFromStreamPtr;
 
-    /// Sets the Configuration's Logger module.
-    void LoggerSet(const LoggerPtr &logger) { m_logger = logger; }
-    /// Gets the Configuration's Logger module.
-    const LoggerPtr &LoggerGet() const { return m_logger;  }
+    /// All configuration data that needs to be provided for a functioning Environment.
+    /** Every Environment contains a Configuration. If a Configuration isn't provided when the Environment is constructed, a default Configuration will be built.
 
-    /// Sets the Configuration's Clipboard module.
-    void ClipboardSet(const ClipboardPtr &clipboard) { m_clipboard = clipboard; }
-    /// Gets the Configuration's Clipboard module.
-    const ClipboardPtr &ClipboardGet() const { return m_clipboard; }
+    Most Configuration settings are designed as a class that can be inherited from. The default behavior is available by calling the base class's members. */
+    class Local {
+    public:
+      Local() { }
 
-    /// Sets the Configuration's Performance module.
-    void PerformanceSet(const PerformancePtr &performance) { m_performance = performance; }
-    /// Gets the Configuration's Performance module.
-    const PerformancePtr &PerformanceGet() const { return m_performance; }
+      /// Sets the Configuration's Logger module.
+      void LoggerSet(const LoggerPtr &logger) { m_logger = logger; }
+      /// Gets the Configuration's Logger module.
+      const LoggerPtr &LoggerGet() const { return m_logger; }
 
-    /// Sets the Configuration's TextureFromId module.
-    void TextureFromIdSet(const TextureFromIdPtr &textureFromId) { m_textureFromId = textureFromId; }
-    /// Gets the Configuration's TextureFromId module.
-    const TextureFromIdPtr &TextureFromIdGet() const { return m_textureFromId; }
+      /// Sets the Configuration's Clipboard module.
+      void ClipboardSet(const ClipboardPtr &clipboard) { m_clipboard = clipboard; }
+      /// Gets the Configuration's Clipboard module.
+      const ClipboardPtr &ClipboardGet() const { return m_clipboard; }
 
-    /// Sets the Configuration's StreamFromId module.
-    void StreamFromIdSet(const StreamFromIdPtr &streamFromId) { m_streamFromId = streamFromId; }
-    /// Gets the Configuration's StreamFromId module.
-    const StreamFromIdPtr &StreamFromIdGet() const { return m_streamFromId; }
+      /// Sets the Configuration's Performance module.
+      void PerformanceSet(const PerformancePtr &performance) { m_performance = performance; }
+      /// Gets the Configuration's Performance module.
+      const PerformancePtr &PerformanceGet() const { return m_performance; }
 
-    /// Sets the Configuration's PathFromId module.
-    void PathFromIdSet(const PathFromIdPtr &pathFromId) { m_pathFromId = pathFromId; }
-    /// Gets the Configuration's PathFromId module.
-    const PathFromIdPtr &PathFromIdGet() const { return m_pathFromId; }
+      /// Sets the Configuration's TextureFromId module.
+      void TextureFromIdSet(const TextureFromIdPtr &textureFromId) { m_textureFromId = textureFromId; }
+      /// Gets the Configuration's TextureFromId module.
+      const TextureFromIdPtr &TextureFromIdGet() const { return m_textureFromId; }
 
-    /// Sets the Configuration's TextureFromStream module.
-    void TextureFromStreamSet(const TextureFromStreamPtr &textureFromStream) { m_textureFromStream = textureFromStream; }
-    /// Gets the Configuration's TextureFromStream module.
-    const TextureFromStreamPtr &TextureFromStreamGet() const { return m_textureFromStream; }
+      /// Sets the Configuration's StreamFromId module.
+      void StreamFromIdSet(const StreamFromIdPtr &streamFromId) { m_streamFromId = streamFromId; }
+      /// Gets the Configuration's StreamFromId module.
+      const StreamFromIdPtr &StreamFromIdGet() const { return m_streamFromId; }
 
-    /// Sets the Configuration's default font ID.
-    void FontDefaultIdSet(const std::string &fontDefaultId) { m_fontDefaultId = fontDefaultId; }
-    /// Gets the Configuration's default font ID.
-    const std::string &FontDefaultIdGet() const { return m_fontDefaultId; }
+      /// Sets the Configuration's PathFromId module.
+      void PathFromIdSet(const PathFromIdPtr &pathFromId) { m_pathFromId = pathFromId; }
+      /// Gets the Configuration's PathFromId module.
+      const PathFromIdPtr &PathFromIdGet() const { return m_pathFromId; }
 
-  private:
-    LoggerPtr m_logger;
-    ClipboardPtr m_clipboard;
-    PerformancePtr m_performance;
+      /// Sets the Configuration's TextureFromStream module.
+      void TextureFromStreamSet(const TextureFromStreamPtr &textureFromStream) { m_textureFromStream = textureFromStream; }
+      /// Gets the Configuration's TextureFromStream module.
+      const TextureFromStreamPtr &TextureFromStreamGet() const { return m_textureFromStream; }
 
-    TextureFromIdPtr m_textureFromId;
-    StreamFromIdPtr m_streamFromId;
-    PathFromIdPtr m_pathFromId;
-    TextureFromStreamPtr m_textureFromStream;
-    std::string m_fontDefaultId;
-  };
+      /// Sets the Configuration's default font ID.
+      void FontDefaultIdSet(const std::string &fontDefaultId) { m_fontDefaultId = fontDefaultId; }
+      /// Gets the Configuration's default font ID.
+      const std::string &FontDefaultIdGet() const { return m_fontDefaultId; }
 
-  /// Configuration data that cannot be associated with a single Environment.
-  /** Some Configuration elements don't have a valid Environment attached. This class allows you to configure log handlers for errors and debug messages without a Configuration available. */
-  class ConfigurationGlobal {
-  public:
-    ConfigurationGlobal() { }
+    private:
+      LoggerPtr m_logger;
+      ClipboardPtr m_clipboard;
+      PerformancePtr m_performance;
 
-    /// Sets the Configuration's Logger module.
-    void LoggerSet(const Configuration::LoggerPtr &logger) { m_logger = logger; }
-    /// Gets the Configuration's Logger module.
-    const Configuration::LoggerPtr &LoggerGet() const { return m_logger; }
+      TextureFromIdPtr m_textureFromId;
+      StreamFromIdPtr m_streamFromId;
+      PathFromIdPtr m_pathFromId;
+      TextureFromStreamPtr m_textureFromStream;
+      std::string m_fontDefaultId;
+    };
 
-  private:
-    Configuration::LoggerPtr m_logger;
-  };
+    /// Configuration data that cannot be associated with a single Environment.
+    /** Some Configuration elements don't have a valid Environment attached. This class allows you to configure log handlers for errors and debug messages without a Configuration available. */
+    class Global {
+    public:
+      Global() { }
 
-  /// Sets the global configuration data.
-  void ConfigurationGlobalSet(const ConfigurationGlobal &config);
+      /// Sets the Configuration's Logger module.
+      void LoggerSet(const LoggerPtr &logger) { m_logger = logger; }
+      /// Gets the Configuration's Logger module.
+      const LoggerPtr &LoggerGet() const { return m_logger; }
 
-  /// Gets the global configuration data.
-  const ConfigurationGlobal &ConfigurationGlobalGet();
+    private:
+      LoggerPtr m_logger;
+    };
+
+
+    /// Sets the global configuration data.
+    void Set(const Global &config);
+
+    /// Gets the global configuration data.
+    const Global &Get();
+  }
 }
 
 #endif

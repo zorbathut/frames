@@ -106,11 +106,11 @@ TEST(Core, Const) {
 
 TEST(Core, Error) {
   {
-    Frames::ConfigurationGlobal cg;
+    Frames::Configuration::Global cg;
     Frames::Ptr<TestLogger> log(new TestLogger());
     cg.LoggerSet(log);
     log->AllowErrors();
-    Frames::ConfigurationGlobalSet(cg);
+    Frames::Configuration::Set(cg);
   }
 
   EXPECT_EQ("", Frames::DescriptorFromPoint(Frames::Anchor(-1)));
@@ -136,5 +136,5 @@ TEST(Core, Error) {
   EXPECT_EQ(4, Frames::Texture::RawBPPGet(Frames::Texture::Format(-1)));
   EXPECT_EQ(4, Frames::Texture::RawBPPGet(Frames::Texture::FORMAT_COUNT));
 
-  Frames::ConfigurationGlobalSet(Frames::ConfigurationGlobal());  // force it out of scope
+  Frames::Configuration::Set(Frames::Configuration::Global());  // force it out of scope
 }

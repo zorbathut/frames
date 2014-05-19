@@ -159,11 +159,11 @@ TestEnvironment::TestEnvironment(bool startSDL, int width, int height) : m_env(0
 
   m_logger = Frames::Ptr<TestLogger>(new TestLogger());
 
-  Frames::ConfigurationGlobal cglobal;
+  Frames::Configuration::Global cglobal;
   cglobal.LoggerSet(m_logger);
-  Frames::ConfigurationGlobalSet(cglobal);
+  Frames::Configuration::Set(cglobal);
 
-  Frames::Configuration config;
+  Frames::Configuration::Local config;
   config.FontDefaultIdSet("LindenHill.otf");
   config.LoggerSet(m_logger);
   config.PathFromIdSet(Frames::Ptr<TestPathMunger>(new TestPathMunger()));
@@ -180,7 +180,7 @@ TestEnvironment::~TestEnvironment() {
   delete m_sdl;
 
   // Reset the configuration system so the logger goes out of scope
-  Frames::ConfigurationGlobalSet(Frames::ConfigurationGlobal());
+  Frames::Configuration::Set(Frames::Configuration::Global());
 }
 
 void TestEnvironment::AllowErrors() {

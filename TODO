@@ -3,8 +3,6 @@
 
 * tinyformat global assert
 
-* ConfigurationEnvironment
-
 === INTEGRATION
 
 * Split OGL into its own lib

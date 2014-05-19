@@ -330,7 +330,7 @@ namespace Frames {
       m_env(0)
   {
     if (!env) {
-      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to create layout without valid environment");
+      Configuration::Get().LoggerGet()->LogError("Attempted to create layout without valid environment");
       return; // The chance of this not crashing is basically zero, but what can you do.
     }
 
