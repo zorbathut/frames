@@ -42,8 +42,8 @@ public:
   TestEnvironment(bool startSDL = true, int width = 1280, int height = 720);
   ~TestEnvironment();
 
-  Frames::Environment *operator*() { return m_env; }
-  Frames::Environment *operator->() { return m_env; }
+  Frames::Environment *operator*() { return m_env.Get(); }
+  Frames::Environment *operator->() { return m_env.Get(); }
 
   int WidthGet() const { return m_sdl->WidthGet(); }
   int HeightGet() const { return m_sdl->HeightGet(); }
@@ -55,7 +55,7 @@ public:
 
 private:
   TestSDLEnvironment *m_sdl; // mostly taken care of with constructor/destructor
-  Frames::Environment *m_env;
+  Frames::EnvironmentPtr m_env;
 
   Frames::Ptr<TestLogger> m_logger; // owned by m_env
 };

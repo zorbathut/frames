@@ -24,7 +24,7 @@ static int sHeight = 720;
 static bool sMinimized = false;
 static bool sShutdown = false; // Easiest way to get feedback from the message handler into the main loop.
 static bool sFocused = true;
-static Frames::Environment *sEnv = NULL;
+static Frames::EnvironmentPtr sEnv;
 
 // Code below this line
 
@@ -96,7 +96,7 @@ LRESULT CALLBACK HandleMessage(HWND window_handle, UINT message, WPARAM wParam, 
   if (sEnv) {
     Frames::Input::Sequence iev;
     if (Frames::InputGatherWin32(&iev, window_handle, message, wParam, lParam)) {
-      iev.Process(sEnv);
+      iev.Process(sEnv.Get());
     }
   }
 
@@ -237,7 +237,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
   SetFocus(window);
 
   // Create our Frames instance
-  sEnv = new Frames::Environment();
+  sEnv = Frames::Environment::Create();
   sEnv->ResizeRoot(sWidth, sHeight);  // Initialize size
 
   // Here's our main loop!
@@ -264,7 +264,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
   }
 
   // Start teardown
-  delete sEnv;
+  sEnv.Reset();
 
   if (sFullscreen && !sMinimized) {
     ChangeDisplaySettings(NULL, 0);

@@ -15,6 +15,8 @@
 #include <map>
 
 namespace Frames {
+  class Environment;
+  typedef Ptr<Environment> EnvironmentPtr;
   class Frame;
   class Layout;
   class VerbBase;
@@ -30,22 +32,23 @@ namespace Frames {
   }
 
   /// Coordinator class for almost all Frames state. Every Frames-using program will contain at least one Environment.
-  /** A Frames::Environment is a self-contained Frames instance. It handles input, owns a hierarchy of \ref Frame "Frames", manages resources, and contains all the configuration data needed to use Frames. Every Frames-using program will contain at least one Environment.
+  /** A Frames::Environment is a self-contained Frames instance. It handles input, owns a hierarchy of \ref Frame "Frames", manages resources, and contains all the configuration data needed to use Frames.
+  Every Frames-using program will contain at least one Environment.
   
-  While Environment is not locked to any individual thread, it is fundamentally single-threaded. It is undefined behavior to call any Environment function, or any function on a Frame owned by an Environment, while any other such function is being run in another thread. However, multiple Environments can be used in parallel without issue. In most cases, it is also valid to call an Environment or Frame function while handling an event dispatch.*/
-  class Environment : detail::Noncopyable {
+  While Environment is not locked to any individual thread, it is fundamentally single-threaded.
+  It is undefined behavior to call any Environment function, or any function on a Frame owned by an Environment, while any other such function is being run in another thread.
+  However, multiple Environments can be used in parallel without issue. In most cases, it is also valid to call an Environment or Frame function while handling an event dispatch.
+  
+  Environment will clean itself up entirely when it is destroyed, including destroying all child \ref Frame "Frames", cleaning up all stored resources and event handles, cleaning up any hooks in scripting languages, and so forth.*/
+  class Environment : public Refcountable<Environment> {
   public:
     /// Initialize an Environment with default values.
-    /** Equivalent to calling Environment(const Configuration &config); with a default-constructed Configuration.*/
-    Environment();
+    /** Equivalent to calling Create(const Configuration &config); with a default-constructed Configuration.*/
+    static EnvironmentPtr Create();
 
     /// Initialize an Environment with custom values.
     /** See Configuration for details.*/
-    Environment(const Configuration &config);
-
-    /// Completely shuts down an Environment.
-    /** Immediately destroys all child \ref Frame "Frames", cleans up all stored resources and event handles, cleans up any hooks in scripting languages, and so forth.*/
-    ~Environment();
+    static EnvironmentPtr Create(const Configuration &config);
 
     // ==== Updates to the state of the environment
 
@@ -187,13 +190,18 @@ namespace Frames {
     friend class detail::TextureBacking;
     friend class detail::TextureChunk;
 
+    // Refcount destructor access
+    friend class Refcountable<Environment>;
+
+    // Private constructor/destructor
+    Environment(const Configuration &config);
+    ~Environment();
+
     // Unique ID code
     unsigned int RegisterFrame();
     unsigned int m_counter;
 
     // Utility functions and parameters
-    void Init(const Configuration &config);
-
     void MarkInvalidated(Layout *layout);
     void UnmarkInvalidated(Layout *layout); // This is currently very slow.
     std::deque<Layout *> m_invalidated;

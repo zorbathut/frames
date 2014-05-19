@@ -10,29 +10,12 @@
 #include <GL/gl.h>
 
 namespace Frames {
-  Environment::Environment() {
-    Configuration config;
-    Init(config);
+  /*static*/ EnvironmentPtr Environment::Create() {
+    return Create(Configuration());
   }
 
-  Environment::Environment(const Configuration &config) {
-    Init(config);
-  }
-
-  Environment::~Environment() {
-    m_root->zinternalObliterate();
-
-    // this flushes everything out of memory
-    while (!m_invalidated.empty()) {
-      Layout *layout = m_invalidated.front();
-      m_invalidated.pop_front();
-
-      layout->Resolve();
-    }
-
-    delete m_text_manager;
-    delete m_renderer;
-    delete m_texture_manager;
+  /*static*/ EnvironmentPtr Environment::Create(const Configuration &config) {
+    return EnvironmentPtr(new Environment(config));
   }
 
   void Environment::ResizeRoot(int x, int y) {
@@ -274,7 +257,7 @@ namespace Frames {
     return m_counter++;
   }
 
-  void Environment::Init(const Configuration &config) {
+  Environment::Environment(const Configuration &config) {
     // init pointers to zero
     m_over = 0;
     m_focus = 0;
@@ -324,6 +307,22 @@ namespace Frames {
     m_renderer = new detail::Renderer(this);
     m_text_manager = new detail::TextManager(this);
     m_texture_manager = new detail::TextureManager(this);
+  }
+
+  Environment::~Environment() {
+    m_root->zinternalObliterate();
+
+    // this flushes everything out of memory
+    while (!m_invalidated.empty()) {
+      Layout *layout = m_invalidated.front();
+      m_invalidated.pop_front();
+
+      layout->Resolve();
+    }
+
+    delete m_text_manager;
+    delete m_renderer;
+    delete m_texture_manager;
   }
 
   void Environment::MarkInvalidated(Layout *layout) {

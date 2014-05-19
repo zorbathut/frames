@@ -4,8 +4,6 @@
 * really need a global assert function
 * tinyformat global assert
 
-* Convert Environment to Create/Destroy functions
-
 === INTEGRATION
 
 * Split OGL into its own lib

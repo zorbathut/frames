@@ -170,7 +170,7 @@ TestEnvironment::TestEnvironment(bool startSDL, int width, int height) : m_env(0
   m_logger = Frames::Ptr<TestLogger>(new TestLogger());
   config.LoggerSet(m_logger);
   config.PathFromIdSet(Frames::Ptr<TestPathMunger>(new TestPathMunger()));
-  m_env = new Frames::Environment(config);
+  m_env = Frames::Environment::Create(config);
 
   if (startSDL) {
     m_env->ResizeRoot(WidthGet(), HeightGet()); // set this up so we can check coordinates, otherwise we'll currently assume there are no coordinates
@@ -179,7 +179,7 @@ TestEnvironment::TestEnvironment(bool startSDL, int width, int height) : m_env(0
 
 TestEnvironment::~TestEnvironment() {
   EXPECT_EQ(GL_NO_ERROR, glGetError()); // verify no GL issues
-  delete m_env;
+  m_env.Reset();
   delete m_sdl;
 }
 
