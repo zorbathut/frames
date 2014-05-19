@@ -2,6 +2,7 @@
 #include "frames/raw.h"
 
 #include "frames/cast.h"
+#include "frames/configuration.h"
 #include "frames/event_definition.h"
 #include "frames/renderer.h"
 
@@ -13,6 +14,10 @@ namespace Frames {
   FRAMES_DEFINE_RTTI(Raw, Frame);
   
   Raw *Raw::Create(Layout *parent, const std::string &name = "") {
+    if (!parent) {
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to create Raw with null parent");
+      return 0;
+    }
     return new Raw(parent, name);
   }
 

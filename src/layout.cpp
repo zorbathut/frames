@@ -329,9 +329,8 @@ namespace Frames {
       m_obliterate_buffered(false),
       m_env(0)
   {
-    // TODO: come up with a better panic button for this? if we have no parent or environment then we have no way to do debug logging. Will need global errors for this.
-    FRAMES_LAYOUT_CHECK(env, "Layout not given environment");
     if (!env) {
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to create layout without valid environment");
       return; // The chance of this not crashing is basically zero, but what can you do.
     }
 

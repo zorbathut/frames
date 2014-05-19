@@ -119,39 +119,31 @@ void TestSDLEnvironment::HandleEvents() {
   }
 }
 
-class TestLogger : public Frames::Configuration::Logger {
-public:
-  TestLogger() : m_allowErrors(false) { }
-  ~TestLogger() {
-    if (m_allowErrors) {
-      EXPECT_FALSE(m_loggedErrors.empty());
+TestLogger::TestLogger() : m_allowErrors(false) { }
+TestLogger::~TestLogger() {
+  if (m_allowErrors) {
+    EXPECT_FALSE(m_loggedErrors.empty());
 
-      TestCompareStrings("error", m_loggedErrors);
-    }
+    TestCompareStrings("error", m_loggedErrors);
+  }
+}
+
+void TestLogger::LogError(const std::string &log) {
+  printf("[ERR] %s\n", log.c_str());
+  if (!m_allowErrors) {
+    GTEST_FAIL();
   }
 
-  virtual void LogError(const std::string &log) {
-    printf("[ERR] %s\n", log.c_str());
-    if (!m_allowErrors) {
-      GTEST_FAIL();
-    }
+  m_loggedErrors += log;
+  m_loggedErrors += "\n";
+}
+void TestLogger::LogDebug(const std::string &log) {
+  printf("[DBG] %s\n", log.c_str());
+}
 
-    m_loggedErrors += log;
-    m_loggedErrors += "\n";
-  }
-  virtual void LogDebug(const std::string &log) {
-    printf("[DBG] %s\n", log.c_str());
-  }
-
-  void AllowErrors() {
-    m_allowErrors = true;
-  }
-
-private:
-  std::string m_loggedErrors;
-
-  bool m_allowErrors;
-};
+void TestLogger::AllowErrors() {
+  m_allowErrors = true;
+}
 
 class TestPathMunger : public Frames::Configuration::PathFromId {
 public:
@@ -165,9 +157,14 @@ TestEnvironment::TestEnvironment(bool startSDL, int width, int height) : m_env(0
     m_sdl = new TestSDLEnvironment(width, height);
   }
 
+  m_logger = Frames::Ptr<TestLogger>(new TestLogger());
+
+  Frames::ConfigurationGlobal cglobal;
+  cglobal.LoggerSet(m_logger);
+  Frames::ConfigurationGlobalSet(cglobal);
+
   Frames::Configuration config;
   config.FontDefaultIdSet("LindenHill.otf");
-  m_logger = Frames::Ptr<TestLogger>(new TestLogger());
   config.LoggerSet(m_logger);
   config.PathFromIdSet(Frames::Ptr<TestPathMunger>(new TestPathMunger()));
   m_env = Frames::Environment::Create(config);
@@ -181,6 +178,9 @@ TestEnvironment::~TestEnvironment() {
   EXPECT_EQ(GL_NO_ERROR, glGetError()); // verify no GL issues
   m_env.Reset();
   delete m_sdl;
+
+  // Reset the configuration system so the logger goes out of scope
+  Frames::ConfigurationGlobalSet(Frames::ConfigurationGlobal());
 }
 
 void TestEnvironment::AllowErrors() {

@@ -2,6 +2,7 @@
 #include "frames/mask.h"
 
 #include "frames/cast.h"
+#include "frames/configuration.h"
 #include "frames/rect.h"
 #include "frames/renderer.h"
 
@@ -11,6 +12,10 @@ namespace Frames {
   FRAMES_DEFINE_RTTI(Mask, Frame);
 
   Mask *Mask::Create(Layout *parent, const std::string &name = "") {
+    if (!parent) {
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to create Mask with null parent");
+      return 0;
+    }
     return new Mask(parent, name);
   }
 

@@ -20,7 +20,7 @@ namespace Frames {
   /** Every Environment contains a Configuration. If a Configuration isn't provided when the Environment is constructed, a default Configuration will be built.
   
   Most Configuration settings are designed as a class that can be inherited from. The default behavior is available by calling the base class's members. */
-  struct Configuration {
+  class Configuration {
   public:
     Configuration();
 
@@ -184,6 +184,27 @@ namespace Frames {
     TextureFromStreamPtr m_textureFromStream;
     std::string m_fontDefaultId;
   };
+
+  /// Configuration data that cannot be associated with a single Environment.
+  /** Some Configuration elements don't have a valid Environment attached. This class allows you to configure log handlers for errors and debug messages without a Configuration available. */
+  class ConfigurationGlobal {
+  public:
+    ConfigurationGlobal() { }
+
+    /// Sets the Configuration's Logger module.
+    void LoggerSet(const Configuration::LoggerPtr &logger) { m_logger = logger; }
+    /// Gets the Configuration's Logger module.
+    const Configuration::LoggerPtr &LoggerGet() const { return m_logger; }
+
+  private:
+    Configuration::LoggerPtr m_logger;
+  };
+
+  /// Sets the global configuration data.
+  void ConfigurationGlobalSet(const ConfigurationGlobal &config);
+
+  /// Gets the global configuration data.
+  const ConfigurationGlobal &ConfigurationGlobalGet();
 }
 
 #endif

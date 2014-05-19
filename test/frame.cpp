@@ -2,6 +2,10 @@
 #include <gtest/gtest.h>
 
 #include <frames/frame.h>
+#include <frames/mask.h>
+#include <frames/raw.h>
+#include <frames/sprite.h>
+#include <frames/text.h>
 
 #include "lib.h"
 
@@ -212,6 +216,7 @@ TEST(Layout, Error) {
   TestEnvironment env2(false);
 
   env.AllowErrors();
+  env2.AllowErrors(); // due to how the test suite works, global errors will show up here (which is actually sorta convenient)
 
   Frames::Frame *subject = Frames::Frame::Create(env->RootGet(), "subject");
   Frames::Frame *subjectalt = Frames::Frame::Create(env->RootGet(), "subjectalt");
@@ -267,6 +272,12 @@ TEST(Layout, Error) {
   subject->PinSet(Frames::TOP, subjectalt, Frames::TOP, 1.0f, Frames::Nil);
   subject->PinSet(Frames::TOP, subjectalt, Frames::TOP, Frames::Nil, Frames::Nil);
   subject->PinSet(Frames::TOP, subjectalt, Frames::TOP, 1.0f, 1.0f);
+
+  EXPECT_EQ(0, Frames::Frame::Create(0, "Null"));
+  EXPECT_EQ(0, Frames::Mask::Create(0, "Null"));
+  EXPECT_EQ(0, Frames::Raw::Create(0, "Null"));
+  EXPECT_EQ(0, Frames::Sprite::Create(0, "Null"));
+  EXPECT_EQ(0, Frames::Text::Create(0, "Null"));
 }
 
 TEST(Layout, ChildGet) {

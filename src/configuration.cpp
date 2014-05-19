@@ -103,4 +103,23 @@ namespace Frames {
     }
     return result;
   }
+
+  ConfigurationGlobal MakeDefault() {
+    ConfigurationGlobal def;
+    def.LoggerSet(Configuration::LoggerPtr(new Configuration::Logger()));
+    return def;
+  }
+
+  static ConfigurationGlobal s_configGlobal = MakeDefault();
+
+  void ConfigurationGlobalSet(const ConfigurationGlobal &config) {
+    s_configGlobal = config;
+    if (!s_configGlobal.LoggerGet()) {
+      s_configGlobal.LoggerSet(Configuration::LoggerPtr(new Configuration::Logger()));
+    }
+  }
+
+  const ConfigurationGlobal &ConfigurationGlobalGet() {
+    return s_configGlobal;
+  }
 }

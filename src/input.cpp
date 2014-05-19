@@ -1,12 +1,13 @@
 
 #include "frames/input.h"
 
+#include "frames/configuration.h"
 #include "frames/environment.h"
 
 namespace Frames {
   const char *Input::StringFromKey(Key key) {
     switch (key) {
-      case Input::INVALID: return "(invalid)"; // TODO: global assert
+      case Input::INVALID: ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve string from invalid key"); return "(invalid)"; // TODO: global assert
       case Input::A: return "a";
       case Input::B: return "b";
       case Input::C: return "c";
@@ -130,7 +131,7 @@ namespace Frames {
       case Input::Backspace: return "Backspace";
       case Input::Tab: return "Tab";
 
-      default: return "(unknown)";  // TODO: global assert
+      default: ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve string from out-of-bounds key"); return "(unknown)";  // TODO: global assert
     }
   }
 
@@ -204,46 +205,77 @@ namespace Frames {
   }
 
   int Input::Command::MouseDownButtonGet() const {
-    // TODO assert
+    if (m_type != Command::MOUSEDOWN) {
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve mouse button from non-MOUSEDOWN Input::Command");
+      return -1;
+    }
     return m_mouseDownButton;
   }
   int Input::Command::MouseUpButtonGet() const {
-    // TODO assert
+    if (m_type != Command::MOUSEUP) {
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve mouse button from non-MOUSEUP Input::Command");
+      return -1;
+    }
     return m_mouseUpButton;
   }
   int Input::Command::MouseWheelDeltaGet() const {
-    // TODO assert
+    if (m_type != Command::MOUSEWHEEL) {
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve mousewheel delta from non-MOUSEWHEEL Input::Command");
+      return 0;
+    }
     return m_mouseWheelDelta;
   }
   int Input::Command::MouseMoveXGet() const {
-    // TODO assert
+    if (m_type != Command::MOUSEMOVE) {
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve mousemove X from non-MOUSEMOVE Input::Command");
+      return 0;
+    }
     return m_mouseMoveX;
   }
   int Input::Command::MouseMoveYGet() const {
-    // TODO assert
+    if (m_type != Command::MOUSEMOVE) {
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve mousemove Y from non-MOUSEMOVE Input::Command");
+      return 0;
+    }
     return m_mouseMoveY;
   }
         
   const Input::Meta &Input::Command::MetaGet() const {
-    // TODO assert
+    if (m_type != Command::METASET) {
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve meta from non-METASET Input::Command");
+      return m_meta;  // not like we have a more sensible alternative
+    }
     return m_meta;
   }
 
   Input::Key Input::Command::KeyDownGet() const {
-    // TODO assert
+    if (m_type != Command::KEYDOWN) {
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve key from non-KEYDOWN Input::Command");
+      return Input::INVALID;
+    }
     return m_keyDown;
   }
   Input::Key Input::Command::KeyUpGet() const {
-    // TODO assert
+    if (m_type != Command::KEYUP) {
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve key from non-KEYUP Input::Command");
+      return Input::INVALID;
+    }
     return m_keyUp;
   }
   Input::Key Input::Command::KeyRepeatGet() const {
-    // TODO assert
+    if (m_type != Command::KEYREPEAT) {
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve key from non-KEYREPEAT Input::Command");
+      return Input::INVALID;
+    }
     return m_keyRepeat;
   }
 
+  static const std::string cEmptyString;
   const std::string &Input::Command::KeyTextGet() const {
-    // TODO assert
+    if (m_type != Command::KEYTEXT) {
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve keytext from non-KEYTEXT Input::Command");
+      return cEmptyString;  // need to return a non-local string
+    }
     return m_keyText;
   }
 

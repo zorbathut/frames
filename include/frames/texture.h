@@ -25,6 +25,7 @@ namespace Frames {
       FORMAT_RGB_8, //< Color data, no alpha channel. 8 bits per channel, 24 bits per pixel. Laid out as RGB. Packed. Will be converted to RGBA for actual textures. Probably slower than FORMAT_RGBA.
       FORMAT_L_8, //< Luminance only. 8 bits per channel, 8 bits per pixel.
       FORMAT_A_8, //< Alpha only. 8 bits per channel, 8 bits per pixel.
+      FORMAT_COUNT,
     };
 
     // ---- Creation

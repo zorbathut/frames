@@ -8,6 +8,7 @@
 #include <frames/raw.h>
 #include <frames/sprite.h>
 #include <frames/text.h>
+#include <frames/texture.h>
 
 #include "lib.h"
 
@@ -62,7 +63,7 @@ TEST(Core, Cast) {
   EXPECT_EQ((Frames::Text *)0, Frames::Cast<Frames::Text>(raw));
   EXPECT_EQ((Frames::Text *)0, Frames::Cast<Frames::Text>(sprite));
   EXPECT_NE((Frames::Text *)0, Frames::Cast<Frames::Text>(text));
-};
+}
 
 TEST(Core, Format) {
   EXPECT_EQ("(0, 0)", Frames::detail::Format("%s", Frames::Vector(0, 0)));
@@ -73,7 +74,7 @@ TEST(Core, Format) {
   EXPECT_EQ("(0, 0.1)", Frames::detail::Format("%s", Frames::Vector(0, 0.1f)));
   EXPECT_EQ("(-0.5, 0)", Frames::detail::Format("%s", Frames::Vector(-0.5f, 0)));
   EXPECT_EQ("(0, -0.1)", Frames::detail::Format("%s", Frames::Vector(0, -0.1f)));
-};
+}
 
 TEST(Core, Const) {
   // Will always accept the canonical form
@@ -101,4 +102,39 @@ TEST(Core, Const) {
   EXPECT_EQ("TOP", Frames::DescriptorFromPoint(Frames::TOP));
   EXPECT_EQ("CENTERY", Frames::DescriptorFromPoint(Frames::CENTERY));
   EXPECT_EQ("BOTTOM", Frames::DescriptorFromPoint(Frames::BOTTOM));
+}
+
+TEST(Core, Error) {
+  {
+    Frames::ConfigurationGlobal cg;
+    Frames::Ptr<TestLogger> log(new TestLogger());
+    cg.LoggerSet(log);
+    log->AllowErrors();
+    Frames::ConfigurationGlobalSet(cg);
+  }
+
+  EXPECT_EQ("", Frames::DescriptorFromPoint(Frames::Anchor(-1)));
+  EXPECT_EQ("", Frames::DescriptorFromPoint(Frames::ANCHOR_COUNT));
+  EXPECT_EQ(Frames::Vector(0.f, 0.f), Frames::PointFromAnchor(Frames::Anchor(-1)));
+  EXPECT_EQ(Frames::Vector(0.f, 0.f), Frames::PointFromAnchor(Frames::ANCHOR_COUNT));
+
+  Frames::Input::StringFromKey(Frames::Input::INVALID);
+  Frames::Input::StringFromKey(Frames::Input::Key(-1));
+
+  Frames::Input::Command cmd;
+  EXPECT_EQ(-1, cmd.MouseDownButtonGet());
+  EXPECT_EQ(-1, cmd.MouseUpButtonGet());
+  EXPECT_EQ(0, cmd.MouseWheelDeltaGet());
+  EXPECT_EQ(0, cmd.MouseMoveXGet());
+  EXPECT_EQ(0, cmd.MouseMoveYGet());
+  cmd.MetaGet();
+  EXPECT_EQ(Frames::Input::INVALID, cmd.KeyDownGet());
+  EXPECT_EQ(Frames::Input::INVALID, cmd.KeyUpGet());
+  EXPECT_EQ(Frames::Input::INVALID, cmd.KeyRepeatGet());
+  EXPECT_EQ("", cmd.KeyTextGet());
+
+  EXPECT_EQ(4, Frames::Texture::RawBPPGet(Frames::Texture::Format(-1)));
+  EXPECT_EQ(4, Frames::Texture::RawBPPGet(Frames::Texture::FORMAT_COUNT));
+
+  Frames::ConfigurationGlobalSet(Frames::ConfigurationGlobal());  // force it out of scope
 }

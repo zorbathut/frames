@@ -12,6 +12,10 @@ namespace Frames {
   FRAMES_DEFINE_RTTI(Sprite, Frame);
 
   Sprite *Sprite::Create(Layout *parent, const std::string &name = "") {
+    if (!parent) {
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to create Sprite with null parent");
+      return 0;
+    }
     return new Sprite(parent, name);
   }
 

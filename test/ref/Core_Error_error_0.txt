@@ -1,0 +1,18 @@
+Attempted to retrieve descriptor from out-of-bounds anchor
+Attempted to retrieve descriptor from out-of-bounds anchor
+Attempted to retrieve point from out-of-bounds anchor
+Attempted to retrieve point from out-of-bounds anchor
+Attempted to retrieve string from invalid key
+Attempted to retrieve string from out-of-bounds key
+Attempted to retrieve mouse button from non-MOUSEDOWN Input::Command
+Attempted to retrieve mouse button from non-MOUSEUP Input::Command
+Attempted to retrieve mousewheel delta from non-MOUSEWHEEL Input::Command
+Attempted to retrieve mousemove X from non-MOUSEMOVE Input::Command
+Attempted to retrieve mousemove Y from non-MOUSEMOVE Input::Command
+Attempted to retrieve meta from non-METASET Input::Command
+Attempted to retrieve key from non-KEYDOWN Input::Command
+Attempted to retrieve key from non-KEYUP Input::Command
+Attempted to retrieve key from non-KEYREPEAT Input::Command
+Attempted to retrieve keytext from non-KEYTEXT Input::Command
+Attempted to retrieve texture BPP from invalid Format
+Attempted to retrieve texture BPP from invalid Format

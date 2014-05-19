@@ -35,7 +35,21 @@ private:
   int m_height;
 };
 
-class TestLogger;
+class TestLogger : public Frames::Configuration::Logger {
+public:
+  TestLogger();
+  ~TestLogger();
+
+  virtual void LogError(const std::string &log);
+  virtual void LogDebug(const std::string &log);
+
+  void AllowErrors();
+
+private:
+  std::string m_loggedErrors;
+
+  bool m_allowErrors;
+};
 
 class TestEnvironment : Frames::detail::Noncopyable {
 public:

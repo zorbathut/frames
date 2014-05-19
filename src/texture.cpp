@@ -13,8 +13,8 @@ namespace Frames {
     } else if (format == FORMAT_L_8 || format == FORMAT_A_8) {
       return 1;
     } else {
-      // TODO global error
-      return 4;
+      ConfigurationGlobalGet().LoggerGet()->LogError("Attempted to retrieve texture BPP from invalid Format");
+      return 4; // . . . sure, whatever
     }
   }
 
