@@ -1,10 +1,6 @@
 
 === INTEGRATION
 
-* Tests
-  * Wrap the buffer
-  * Overflow the buffer
-
 * Split OGL into its own lib
   * Test OGL
 
