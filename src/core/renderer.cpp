@@ -90,6 +90,10 @@ namespace Frames {
     }
 
     Renderer::Vertex *Renderer::Request(int quads) {
+      if (quads > m_verticesQuadcount) {
+        m_env->LogError("Exceeded valid quad count in a single draw call; splitting NYI");
+      }
+
       if (m_verticesQuadpos + quads > m_verticesQuadcount) {
         // we'll have to clear it out
         glBufferData(GL_ARRAY_BUFFER, m_verticesQuadcount * 4 * sizeof(Vertex), 0, GL_STREAM_DRAW);
