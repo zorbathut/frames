@@ -7,8 +7,6 @@
 #include "frames/text_manager.h"
 #include "frames/texture_manager.h"
 
-#include <GL/gl.h>
-
 namespace Frames {
   /*static*/ EnvironmentPtr Environment::Create() {
     return Create(Configuration::Local());

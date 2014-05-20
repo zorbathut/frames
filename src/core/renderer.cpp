@@ -22,41 +22,29 @@ BOOST_STATIC_ASSERT(sizeof(Frames::Color) == sizeof(GLfloat) * 4);
 
 namespace Frames {
   namespace detail {
-    const int bufferElements = 1 << 16; // fit in a ushort
-    const int bufferSize = bufferElements * sizeof(Renderer::Vertex);
-
     Renderer::Renderer(Environment *env) :
         m_env(env),
         m_width(0),
         m_height(0),
-        m_buffer(0),
-        m_buffer_pos(bufferElements),
-        m_last_pos(0),
-        m_last_vertices(0),
-        m_elements(0),
+        m_vertices(0),
+        m_verticesQuadcount(0),
+        m_verticesQuadpos(0),
+        m_verticesLastQuadsize(0),
+        m_verticesLastQuadpos(0),
         m_currentTexture(0)
     {  // set to bufferElements so we create a real buffer when we need it
-      glGenBuffers(1, &m_buffer);
-      glGenBuffers(1, &m_elements);
+      glGenBuffers(1, &m_vertices);
+      glGenBuffers(1, &m_indices);
 
-      // init the elements buffer - later we should think more about how to make this general-purpose, but for now, we won't really have repeated vertices anyway
-      {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elements);
-        vector<GLushort> elements(bufferElements);
-        for (int i = 0; i < (int)elements.size(); ++i) {
-          elements[i] = i;
-        }
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, elements.size() * sizeof(GLushort), &elements[0], GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      }
+      CreateBuffers(1 << 16); // maximum size that will fit in a ushort
 
       // prime our alpha stack
       m_alpha.push_back(1);
     };
 
     Renderer::~Renderer() {
-      glDeleteBuffers(1, &m_buffer);
-      glDeleteBuffers(1, &m_elements);
+      glDeleteBuffers(1, &m_vertices);
+      glDeleteBuffers(1, &m_indices);
     }
 
     void Renderer::Begin(int width, int height) {
@@ -78,8 +66,8 @@ namespace Frames {
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity();
 
-      glBindBuffer(GL_ARRAY_BUFFER, m_buffer);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elements);
+      glBindBuffer(GL_ARRAY_BUFFER, m_vertices);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indices);
 
       glVertexPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, p));
       glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, t));
@@ -101,30 +89,29 @@ namespace Frames {
       StatePop();
     }
 
-    Renderer::Vertex *Renderer::Request(int vertices) {
-      int size = vertices * sizeof(Vertex);
-      if ((int)m_buffer_pos + vertices > bufferElements) {
+    Renderer::Vertex *Renderer::Request(int quads) {
+      if (m_verticesQuadpos + quads > m_verticesQuadcount) {
         // we'll have to clear it out
-        glBufferData(GL_ARRAY_BUFFER, max(size, bufferSize), 0, GL_STREAM_DRAW);
-        m_buffer_pos = 0;
+        glBufferData(GL_ARRAY_BUFFER, m_verticesQuadcount * 4 * sizeof(Vertex), 0, GL_STREAM_DRAW);
+        m_verticesQuadpos = 0;
       }
 
       // now we have acceptable data
-      Vertex *rv = (Vertex*)glMapBufferRange(GL_ARRAY_BUFFER, m_buffer_pos * sizeof(Vertex), size, GL_MAP_UNSYNCHRONIZED_BIT | GL_MAP_WRITE_BIT);
+      Vertex *rv = (Vertex*)glMapBufferRange(GL_ARRAY_BUFFER, m_verticesQuadpos * 4 * sizeof(Vertex), quads * 4 * sizeof(Vertex), GL_MAP_UNSYNCHRONIZED_BIT | GL_MAP_WRITE_BIT);
 
-      m_last_pos = m_buffer_pos;
-      m_last_vertices = vertices;
-      m_buffer_pos += vertices;
+      m_verticesLastQuadpos = m_verticesQuadpos;
+      m_verticesLastQuadsize = quads;
+      m_verticesQuadpos += quads;
 
       return rv;
     }
 
-    void Renderer::Return(int mode, int count /*= -1*/) {
+    void Renderer::Return(int quads /*= -1*/) {
       glUnmapBuffer(GL_ARRAY_BUFFER);
 
-      if (count == -1) count = m_last_vertices;
+      if (quads == -1) quads = m_verticesLastQuadsize;
 
-      glDrawElements(mode, count, GL_UNSIGNED_SHORT, (void*)(m_last_pos * sizeof(GLushort)));
+      glDrawElements(GL_TRIANGLES, quads * 6, GL_UNSIGNED_SHORT, (void*)(m_verticesLastQuadpos * 6 * sizeof(GLushort)));
     }
 
     void Renderer::TextureSet() {
@@ -300,6 +287,25 @@ namespace Frames {
 
     void Renderer::SetScissor(const Rect &rect) {
       glScissor((int)floor(rect.s.x + 0.5f), (int)floor(m_height - rect.e.y + 0.5f), (int)floor(rect.e.x - rect.s.x + 0.5f), (int)floor(rect.e.y - rect.s.y + 0.5f));
+    }
+
+    void Renderer::CreateBuffers(int len) {
+      int quadLen = len / 4;
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indices);
+      vector<GLushort> elements(quadLen * 6);
+      int writepos = 0;
+      for (int i = 0; i < quadLen; ++i) {
+        elements[writepos++] = i * 4 + 0;
+        elements[writepos++] = i * 4 + 1;
+        elements[writepos++] = i * 4 + 3;
+        elements[writepos++] = i * 4 + 1;
+        elements[writepos++] = i * 4 + 2;
+        elements[writepos++] = i * 4 + 3;
+      }
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, elements.size() * sizeof(GLushort), &elements[0], GL_STATIC_DRAW);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+      m_verticesQuadcount = quadLen;
+      m_verticesQuadpos = m_verticesQuadcount; // will force an array rebuild
     }
   }
 }

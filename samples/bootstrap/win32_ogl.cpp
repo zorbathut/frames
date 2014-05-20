@@ -6,6 +6,7 @@
 
 #include <frames/environment.h>
 #include <frames/os_win32.h>
+#include <frames/os_gl.h>
 
 // Configuration here.
 const bool cResizable = true;

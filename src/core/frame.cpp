@@ -5,8 +5,6 @@
 #include "frames/environment.h"
 #include "frames/renderer.h"
 
-#include <GL/gl.h>
-
 #include <cmath>
 
 namespace Frames {
@@ -38,7 +36,7 @@ namespace Frames {
       float l = std::floor(LeftGet() + 0.5f);
       float r = std::floor(RightGet() + 0.5f);
 
-      detail::Renderer::Vertex *v = renderer->Request(4);
+      detail::Renderer::Vertex *v = renderer->Request(1);
 
       v[0].p.x = l; v[0].p.y = u;
       v[1].p.x = r; v[1].p.y = u;
@@ -50,7 +48,7 @@ namespace Frames {
       v[2].c = bgc;
       v[3].c = bgc;
 
-      renderer->Return(GL_QUADS);
+      renderer->Return();
     }
   }
 

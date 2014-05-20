@@ -6,8 +6,6 @@
 #include "frames/renderer.h"
 #include "frames/texture_manager.h"
 
-#include "frames/os_gl.h"
-
 namespace Frames {
   FRAMES_DEFINE_RTTI(Sprite, Frame);
 
@@ -51,7 +49,7 @@ namespace Frames {
       const float s = sin(m_angle);
       const float c = cos(m_angle);
 
-      detail::Renderer::Vertex *v = renderer->Request(4);
+      detail::Renderer::Vertex *v = renderer->Request(1);
 
       v[0].p.x = cx - dx * c + dy * s; v[0].p.y = cy - dx * s - dy * c;
       v[1].p.x = cx + dx * c + dy * s; v[1].p.y = cy + dx * s - dy * c;
@@ -72,7 +70,7 @@ namespace Frames {
       v[2].c = tint;
       v[3].c = tint;
 
-      renderer->Return(GL_QUADS);
+      renderer->Return();
     }
   }
 

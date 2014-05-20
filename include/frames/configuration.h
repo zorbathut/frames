@@ -6,7 +6,6 @@
 #include <string>
 
 #include "frames/color.h"
-#include "frames/os_gl.h"
 #include "frames/ptr.h"
 
 namespace Frames {

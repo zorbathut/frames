@@ -6,8 +6,6 @@
 #include "frames/event_definition.h"
 #include "frames/renderer.h"
 
-#include "frames/os_gl.h"
-
 namespace Frames {
   FRAMES_VERB_DEFINE(Raw::Event::Render, ());
 

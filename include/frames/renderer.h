@@ -36,8 +36,8 @@ namespace Frames {
       void Begin(int width, int height);
       void End();
 
-      Vertex *Request(int vertices);
-      void Return(int mode, int count = -1);  // also renders, count lets you optionally specify the number of vertices
+      Vertex *Request(int quads);
+      void Return(int quads = -1);  // also renders, count lets you optionally specify the number of quads
 
       void TextureSet();
       void TextureSet(TextureChunk *tex);
@@ -60,16 +60,19 @@ namespace Frames {
     private:
       Environment *m_env; // just for debug functionality
 
+      void CreateBuffers(int len);
+
       int m_width;
       int m_height;
 
-      GLuint m_buffer;
-      GLuint m_buffer_pos;
+      GLuint m_vertices;  // handle of vertex buffer
+      int m_verticesQuadcount; // size of vertex buffer, in quads
+      int m_verticesQuadpos;  // current write cursor to the vertex buffer, in quads
     
-      GLuint m_last_pos;
-      GLuint m_last_vertices;
+      int m_verticesLastQuadpos; // last write cursor to the vertex buffer, in quads
+      int m_verticesLastQuadsize;  // size of last Request, in quads
 
-      GLuint m_elements;
+      GLuint m_indices; // handle of index buffer
 
       void Internal_SetTexture(GLuint tex);
       GLuint m_currentTexture;

@@ -8,8 +8,6 @@
 #include <string>
 #include <vector>
 
-#include "os_gl.h"
-
 #include <boost/bimap.hpp>
 
 #include "frames/color.h"

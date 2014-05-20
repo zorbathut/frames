@@ -363,7 +363,7 @@ namespace Frames {
       // todo: maybe precache this stuff so it becomes a memcpy?
       renderer->TextureSet(m_parent->TextureGet().Get());
 
-      Renderer::Vertex *vertexes = renderer->Request(m_parent->GetQuads() * 4);
+      Renderer::Vertex *vertexes = renderer->Request(m_parent->GetQuads());
 
       int cquad = 0;
       for (int i = 0; i < (int)m_coordinates.size() - 1; ++i) {
@@ -381,7 +381,7 @@ namespace Frames {
         // todo, crop to bounds
       }
 
-      renderer->Return(GL_QUADS, cquad * 4);
+      renderer->Return(cquad);
     }
 
     Vector TextLayout::GetCoordinateFromCharacter(int character) const {

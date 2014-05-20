@@ -7,8 +7,6 @@
 #include "frames/renderer.h"
 #include "frames/texture_manager.h"
 
-#include "frames/os_gl.h"
-
 namespace Frames {
   FRAMES_DEFINE_RTTI(Text, Frame);
 
@@ -248,7 +246,7 @@ namespace Frames {
         int el = m_layout->GetLineFromCharacter(e);
 
         renderer->TextureSet();
-        detail::Renderer::Vertex *verts = renderer->Request((el - sl + 1) * 4);
+        detail::Renderer::Vertex *verts = renderer->Request(el - sl + 1);
         int idx = 0;
         for (int i = sl; i <= el; ++i) {
           int ts = std::max(s, i ? (m_layout->GetEOLFromLine(i - 1) + 1) : 0);
@@ -273,7 +271,7 @@ namespace Frames {
             idx += 4;
           }
         }
-        renderer->Return(GL_QUADS, idx);
+        renderer->Return(idx);
       }
 
       // render the actual text
@@ -283,7 +281,7 @@ namespace Frames {
       if (m_interactive >= INTERACTIVE_CURSOR && EnvironmentGet()->FocusGet() == this) { // display only if in focus
         // TODO: cull properly when too small
         renderer->TextureSet();
-        detail::Renderer::Vertex *vert = renderer->Request(4);
+        detail::Renderer::Vertex *vert = renderer->Request(1);
         
         Vector origin = m_layout->GetCoordinateFromCharacter(m_cursor) - m_scroll;
         origin.x += LeftGet();
@@ -291,7 +289,7 @@ namespace Frames {
         
         detail::Renderer::WriteCroppedTexRect(vert, Rect(origin, origin + Vector(1, m_layout->ParentGet()->ParentGet()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1, renderer->AlphaGet()), bounds);
 
-        renderer->Return(GL_QUADS);
+        renderer->Return();
       }
     }
   }
