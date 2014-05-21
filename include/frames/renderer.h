@@ -7,22 +7,20 @@
 #include <vector>
 
 #include "frames/color.h"
+#include "frames/noncopyable.h"
 #include "frames/rect.h"
 
 namespace Frames {
   class Environment;
   struct Rect;
+  template <typename T> class Ptr;
 
   namespace detail {
-    // fake opengl typedefs, used so we don't pull the entire header in
-    typedef unsigned int GLuint;
-    typedef unsigned short GLushort;
-    typedef float GLfloat;
-
     class TextureBacking;
+    typedef Ptr<TextureBacking> TextureBackingPtr;
     class TextureChunk;
 
-    class Renderer {
+    class Renderer : Noncopyable {
     public:
       struct Vertex {
         Vector p;
@@ -33,22 +31,23 @@ namespace Frames {
       Renderer(Environment *env);
       ~Renderer();
 
-      void Begin(int width, int height);
-      void End();
+      Environment *EnvironmentGet() const { return m_env;  }
 
-      Vertex *Request(int quads);
-      void Return(int quads = -1);  // also renders, count lets you optionally specify the number of quads
+      // should almost certainly be overloaded; must then have these called
+      virtual void Begin(int width, int height);
+      virtual void End();
 
-      void TextureSet();
-      void TextureSet(TextureChunk *tex);
-      void TextureSet(TextureBacking *tex);
+      virtual Vertex *Request(int quads) = 0;
+      virtual void Return(int quads = -1) = 0;  // also renders, count lets you optionally specify the number of quads
+
+      virtual void TextureSet(const TextureBackingPtr &tex) = 0;
 
       void ScissorPush(Rect rect);
       void ScissorPop();
 
-      void StatePush();
-      void StateClean();
-      void StatePop();
+      virtual void StatePush() = 0;
+      virtual void StateClean() = 0;
+      virtual void StatePop() = 0;
 
       void AlphaPush(float alpha);
       float AlphaGet() const;
@@ -57,27 +56,17 @@ namespace Frames {
       static bool WriteCroppedRect(Vertex *vertex, const Rect &screen, const Color &color, const Rect &bounds); // no fancy lerping
       static bool WriteCroppedTexRect(Vertex *vertex, const Rect &screen, const Rect &tex, const Color &color, const Rect &bounds);  // fancy lerping
 
+    protected:
+      int WidthGet() { return m_width; }
+      int HeightGet() { return m_height; }
+
     private:
       Environment *m_env; // just for debug functionality
-
-      void CreateBuffers(int len);
 
       int m_width;
       int m_height;
 
-      GLuint m_vertices;  // handle of vertex buffer
-      int m_verticesQuadcount; // size of vertex buffer, in quads
-      int m_verticesQuadpos;  // current write cursor to the vertex buffer, in quads
-    
-      int m_verticesLastQuadpos; // last write cursor to the vertex buffer, in quads
-      int m_verticesLastQuadsize;  // size of last Request, in quads
-
-      GLuint m_indices; // handle of index buffer
-
-      void Internal_SetTexture(GLuint tex);
-      GLuint m_currentTexture;
-
-      void SetScissor(const Rect &rect);
+      virtual void ScissorSet(const Rect &rect) = 0;
       std::stack<Rect> m_scissor;
 
       std::vector<float> m_alpha; // we'll only really allocate it once

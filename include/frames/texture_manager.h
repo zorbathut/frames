@@ -25,7 +25,7 @@ namespace Frames {
       friend class Refcountable<TextureBacking>;
     public:
 
-      int GetGLID() const { return m_id; }
+      int GlidGet() const { return m_id; }
 
       void Allocate(int width, int height, int gltype);
 
@@ -59,7 +59,7 @@ namespace Frames {
 
       const Rect &BoundsGet() { return m_bounds; }
 
-      GLuint GetGLID() const { return m_backing->GetGLID(); }
+      const TextureBackingPtr &BackingGet() { return m_backing; }
 
     private:
       TextureChunk();

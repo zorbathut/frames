@@ -361,7 +361,7 @@ namespace Frames {
       offset.y = (float)(int)std::floor(offset.y + 0.5f);
 
       // todo: maybe precache this stuff so it becomes a memcpy?
-      renderer->TextureSet(m_parent->TextureGet().Get());
+      renderer->TextureSet(m_parent->TextureGet());
 
       Renderer::Vertex *vertexes = renderer->Request(m_parent->GetQuads());
 

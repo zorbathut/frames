@@ -236,7 +236,7 @@ namespace Frames {
 
       // render selection
       if (m_interactive >= INTERACTIVE_SELECT && m_cursor != m_select) {
-        renderer->TextureSet();
+        renderer->TextureSet(detail::TextureBackingPtr());
 
         int s = m_cursor;
         int e = m_select;
@@ -245,7 +245,7 @@ namespace Frames {
         int sl = m_layout->GetLineFromCharacter(s);
         int el = m_layout->GetLineFromCharacter(e);
 
-        renderer->TextureSet();
+        renderer->TextureSet(detail::TextureBackingPtr());
         detail::Renderer::Vertex *verts = renderer->Request(el - sl + 1);
         int idx = 0;
         for (int i = sl; i <= el; ++i) {
@@ -280,7 +280,7 @@ namespace Frames {
       // render cursor, if there is one
       if (m_interactive >= INTERACTIVE_CURSOR && EnvironmentGet()->FocusGet() == this) { // display only if in focus
         // TODO: cull properly when too small
-        renderer->TextureSet();
+        renderer->TextureSet(detail::TextureBackingPtr());
         detail::Renderer::Vertex *vert = renderer->Request(1);
         
         Vector origin = m_layout->GetCoordinateFromCharacter(m_cursor) - m_scroll;

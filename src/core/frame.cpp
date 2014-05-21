@@ -4,6 +4,7 @@
 #include "frames/cast.h"
 #include "frames/environment.h"
 #include "frames/renderer.h"
+#include "frames/texture_manager.h"
 
 #include <cmath>
 
@@ -28,10 +29,10 @@ namespace Frames {
     if (m_bg.a > 0) {
       Color bgc = m_bg * Color(1, 1, 1, renderer->AlphaGet());
 
-      renderer->TextureSet();
+      renderer->TextureSet(detail::TextureBackingPtr());
 
       // clamp to int to avoid rounding errors
-	  float u = std::floor(TopGet() + 0.5f);
+      float u = std::floor(TopGet() + 0.5f);
       float d = std::floor(BottomGet() + 0.5f);
       float l = std::floor(LeftGet() + 0.5f);
       float r = std::floor(RightGet() + 0.5f);

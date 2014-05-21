@@ -8,139 +8,38 @@
 
 #include "boost/static_assert.hpp"
 
-#include "frames/os_gl.h"
-
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-BOOST_STATIC_ASSERT(sizeof(Frames::detail::GLfloat) == sizeof(GLfloat));
-BOOST_STATIC_ASSERT(sizeof(Frames::detail::GLushort) == sizeof(GLushort));
-BOOST_STATIC_ASSERT(sizeof(Frames::detail::GLuint) == sizeof(GLuint));
-BOOST_STATIC_ASSERT(sizeof(Frames::Color) == sizeof(GLfloat) * 4);
-
 namespace Frames {
   namespace detail {
     Renderer::Renderer(Environment *env) :
-        m_env(env),
-        m_width(0),
-        m_height(0),
-        m_vertices(0),
-        m_verticesQuadcount(0),
-        m_verticesQuadpos(0),
-        m_verticesLastQuadsize(0),
-        m_verticesLastQuadpos(0),
-        m_currentTexture(0)
-    {  // set to bufferElements so we create a real buffer when we need it
-      glGenBuffers(1, &m_vertices);
-      glGenBuffers(1, &m_indices);
-
-      CreateBuffers(1 << 16); // maximum size that will fit in a ushort
-
+        m_env(env)
+    {
       // prime our alpha stack
       m_alpha.push_back(1);
-    };
-
-    Renderer::~Renderer() {
-      glDeleteBuffers(1, &m_vertices);
-      glDeleteBuffers(1, &m_indices);
     }
+
+    Renderer::~Renderer() { }
 
     void Renderer::Begin(int width, int height) {
       m_width = width;
       m_height = height;
-
-      StatePush();
-
-      glEnable(GL_BLEND);
-      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-      glMatrixMode(GL_TEXTURE);
-      glLoadIdentity();
-
-      glMatrixMode(GL_PROJECTION);
-      glLoadIdentity();
-      glTranslatef(-1.f, 1.f, 0.f);
-      glScalef(2.f / width, -2.f / height, 1.f);
-      glMatrixMode(GL_MODELVIEW);
-      glLoadIdentity();
-
-      glBindBuffer(GL_ARRAY_BUFFER, m_vertices);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indices);
-
-      glVertexPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, p));
-      glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, t));
-      glColorPointer(4, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, c));
-
-      glEnableClientState(GL_VERTEX_ARRAY);
-      glEnableClientState(GL_COLOR_ARRAY);
-      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-      glEnable(GL_TEXTURE_2D);
-      glBindTexture(GL_TEXTURE_2D, 0);
-      m_currentTexture = 0;
     }
 
     void Renderer::End() {
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-      StatePop();
-    }
-
-    Renderer::Vertex *Renderer::Request(int quads) {
-      if (quads > m_verticesQuadcount) {
-        m_env->LogError("Exceeded valid quad count in a single draw call; splitting NYI");
-      }
-
-      if (m_verticesQuadpos + quads > m_verticesQuadcount) {
-        // we'll have to clear it out
-        glBufferData(GL_ARRAY_BUFFER, m_verticesQuadcount * 4 * sizeof(Vertex), 0, GL_STREAM_DRAW);
-        m_verticesQuadpos = 0;
-      }
-
-      // now we have acceptable data
-      Vertex *rv = (Vertex*)glMapBufferRange(GL_ARRAY_BUFFER, m_verticesQuadpos * 4 * sizeof(Vertex), quads * 4 * sizeof(Vertex), GL_MAP_UNSYNCHRONIZED_BIT | GL_MAP_WRITE_BIT);
-
-      m_verticesLastQuadpos = m_verticesQuadpos;
-      m_verticesLastQuadsize = quads;
-      m_verticesQuadpos += quads;
-
-      return rv;
-    }
-
-    void Renderer::Return(int quads /*= -1*/) {
-      glUnmapBuffer(GL_ARRAY_BUFFER);
-
-      if (quads == -1) quads = m_verticesLastQuadsize;
-
-      glDrawElements(GL_TRIANGLES, quads * 6, GL_UNSIGNED_SHORT, (void*)(m_verticesLastQuadpos * 6 * sizeof(GLushort)));
-    }
-
-    void Renderer::TextureSet() {
-      Internal_SetTexture(0);
-    }
-
-    void Renderer::TextureSet(detail::TextureBacking *tex) {
-      Internal_SetTexture(tex ? tex->GetGLID() : 0);
-    }
-
-    void Renderer::TextureSet(detail::TextureChunk *tex) {
-      Internal_SetTexture(tex ? tex->GetGLID() : 0);
-    }
-
-    void Renderer::Internal_SetTexture(GLuint tex) {
-      if (m_currentTexture != tex) {
-        m_currentTexture = tex;
-        glBindTexture(GL_TEXTURE_2D, tex);
+      if (!m_scissor.empty()) {
+        EnvironmentGet()->LogError("Mismatched scissor push/pop at end of frame.");
+        while (!m_scissor.empty()) {
+          m_scissor.pop();
+        }
       }
     }
 
     void Renderer::ScissorPush(Rect rect) {
-      if (m_scissor.empty()) {
-        glEnable(GL_SCISSOR_TEST);
-      } else {
+      if (!m_scissor.empty()) {
         // Create the intersection of scissors
         rect.s.x = max(rect.s.x, m_scissor.top().s.x);
         rect.s.y = max(rect.s.y, m_scissor.top().s.y);
@@ -154,52 +53,24 @@ namespace Frames {
 
       m_scissor.push(rect);
 
-      SetScissor(rect);
+      ScissorSet(rect);
     }
 
     void Renderer::ScissorPop() {
+      if (m_scissor.empty()) {
+        EnvironmentGet()->LogError("Excessive scissor popping");
+        return;
+      }
+
       m_scissor.pop();
 
       if (m_scissor.empty()) {
-        glDisable(GL_SCISSOR_TEST);
+        ScissorSet(Rect(0, 0, (float)m_width, (float)m_height));
       } else {
-        SetScissor(m_scissor.top());
+        ScissorSet(m_scissor.top());
       }
     }
 
-    void Renderer::StatePush() {
-      // THIS IS DEFINITELY NOT HORRIFYINGLY SLOW
-      glPushAttrib(~0);
-      glPushClientAttrib(~0);
-
-      glMatrixMode(GL_TEXTURE);
-      glPushMatrix();
-
-      glMatrixMode(GL_PROJECTION);
-      glPushMatrix();
-    
-      glMatrixMode(GL_MODELVIEW);
-      glPushMatrix();
-    }
-    void Renderer::StateClean() {
-      glBindTexture(GL_TEXTURE_2D, 0);
-
-      // we intentionally leave the translation matrices
-    }
-    void Renderer::StatePop() {
-      glPopClientAttrib();
-      glPopAttrib();
-
-      glMatrixMode(GL_TEXTURE);
-      glPopMatrix();
-
-      glMatrixMode(GL_PROJECTION);
-      glPopMatrix();
-    
-      glMatrixMode(GL_MODELVIEW);
-      glPopMatrix();
-    }
-  
     void Renderer::AlphaPush(float alpha) {
       m_alpha.push_back(alpha * AlphaGet());
     }
@@ -287,29 +158,6 @@ namespace Frames {
       vertex[3].c = color;
     
       return true;
-    }
-
-    void Renderer::SetScissor(const Rect &rect) {
-      glScissor((int)floor(rect.s.x + 0.5f), (int)floor(m_height - rect.e.y + 0.5f), (int)floor(rect.e.x - rect.s.x + 0.5f), (int)floor(rect.e.y - rect.s.y + 0.5f));
-    }
-
-    void Renderer::CreateBuffers(int len) {
-      int quadLen = len / 4;
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indices);
-      vector<GLushort> elements(quadLen * 6);
-      int writepos = 0;
-      for (int i = 0; i < quadLen; ++i) {
-        elements[writepos++] = i * 4 + 0;
-        elements[writepos++] = i * 4 + 1;
-        elements[writepos++] = i * 4 + 3;
-        elements[writepos++] = i * 4 + 1;
-        elements[writepos++] = i * 4 + 2;
-        elements[writepos++] = i * 4 + 3;
-      }
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER, elements.size() * sizeof(GLushort), &elements[0], GL_STATIC_DRAW);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      m_verticesQuadcount = quadLen;
-      m_verticesQuadpos = m_verticesQuadcount; // will force an array rebuild
     }
   }
 }

@@ -4,6 +4,7 @@
 #include "frames/detail_format.h"
 #include "frames/frame.h"
 #include "frames/renderer.h"
+#include "frames/renderer_opengl.h"
 #include "frames/text_manager.h"
 #include "frames/texture_manager.h"
 
@@ -302,7 +303,7 @@ namespace Frames {
 
     m_root = new Layout(this, "Root");
 
-    m_renderer = new detail::Renderer(this);
+    m_renderer = new detail::RendererOpengl(this);
     m_text_manager = new detail::TextManager(this);
     m_texture_manager = new detail::TextureManager(this);
   }

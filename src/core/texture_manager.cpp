@@ -167,7 +167,7 @@ namespace Frames {
         chunk->m_bounds.e.x = chunk->m_bounds.s.x + (float)chunk->m_texture_width / backing->m_surface_width;
         chunk->m_bounds.e.y = chunk->m_bounds.s.y + (float)chunk->m_texture_height / backing->m_surface_height;
 
-        glBindTexture(GL_TEXTURE_2D, backing->GetGLID());
+        glBindTexture(GL_TEXTURE_2D, backing->GlidGet());
         glPixelStorei(GL_PACK_ALIGNMENT, 1);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 

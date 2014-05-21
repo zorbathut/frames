@@ -38,7 +38,7 @@ namespace Frames {
     if (m_texture) {
       Color tint = m_tint * Color(1, 1, 1, renderer->AlphaGet());
 
-      renderer->TextureSet(m_texture.Get());
+      renderer->TextureSet(m_texture->BackingGet());
 
       const float cx = PointGet(X, 0.5);
       const float cy = PointGet(Y, 0.5);
