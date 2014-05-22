@@ -2,6 +2,8 @@
 === INTEGRATION
 
 * Split OGL into its own lib
+  * Move TextureBacking into Renderer
+  * TextureManager hooks
   * Test OGL
 
 * Add DX11
