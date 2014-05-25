@@ -6,6 +6,7 @@
 #include "frames/renderer.h"
 #include "frames/renderer_opengl.h"
 #include "frames/text_manager.h"
+#include "frames/texture.h"
 #include "frames/texture_manager.h"
 
 namespace Frames {
@@ -391,6 +392,60 @@ namespace Frames {
       if (itr->second == layout) {
         itr->second = 0;  // We explicitly do *not* erase items from this set ever! This lets us iterate over the set while removing elements from it.
       }
+    }
+  }
+
+
+  detail::TextureChunkPtr Environment::TextureChunkFromId(const std::string &id) {
+    if (m_texture.left.count(id)) {
+      return detail::TextureChunkPtr(m_texture.left.find(id)->second);
+    }
+
+    LogDebug(detail::Format("Attempting to load texture %s", id));
+
+    TexturePtr conf = ConfigurationGet().TextureFromIdGet()->Create(this, id);
+
+    detail::TextureChunkPtr rv = TextureChunkFromConfig(conf);
+
+    if (!rv) {
+      LogError(detail::Format("Failed to load texture %s", id));
+      return rv; // something went wrong
+    }
+
+    m_texture.insert(boost::bimap<std::string, detail::TextureChunk *>::value_type(id, rv.Get()));
+
+    return rv;
+  }
+
+  detail::TextureChunkPtr Environment::TextureChunkFromConfig(const TexturePtr &tex, detail::TextureBackingPtr backing /*= 0*/) {
+    if (!tex) {
+      return detail::TextureChunkPtr();
+    }
+
+    if (tex->TypeGet() == Texture::RAW) {
+      // time to GL-ize it
+      // for now we're just putting it into its own texture
+
+      if (!backing) {
+        backing = GetRenderer()->BackingCreate(tex->WidthGet(), tex->HeightGet(), tex->FormatGet());
+      }
+
+      std::pair<int, int> origin = backing->AllocateSubtexture(tex->WidthGet(), tex->HeightGet());
+      backing->Write(origin.first, origin.second, tex);
+
+      detail::TextureChunkPtr chunk = detail::TextureChunk::Create();
+      chunk->Attach(backing, origin.first, origin.second, origin.first + tex->WidthGet(), origin.second + tex->HeightGet());
+
+      return chunk;
+    } else {
+      LogError("Unknown texture type");
+      return detail::TextureChunkPtr();
+    }
+  }
+
+  void Environment::Internal_Shutdown_Chunk(detail::TextureChunk *chunk) {
+    if (m_texture.right.count(chunk)) {
+      m_texture.right.erase(chunk);
     }
   }
 }

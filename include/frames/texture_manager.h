@@ -22,6 +22,10 @@ namespace Frames {
 
   namespace detail {
     class Renderer;
+    class TextureBacking;
+    typedef Ptr<TextureBacking> TextureBackingPtr;
+    class TextureChunk;
+    typedef Ptr<TextureChunk> TextureChunkPtr;
 
     class TextureBacking : public Refcountable<TextureBacking> {
       friend class Refcountable<TextureBacking>;
@@ -32,11 +36,13 @@ namespace Frames {
       void Allocate(int width, int height, int gltype);
 
       std::pair<int, int> AllocateSubtexture(int width, int height);
+      void Write(int sx, int sy, const TexturePtr &tex);
 
     private:
       TextureBacking(Environment *env);
       ~TextureBacking();
 
+      friend class Environment; // temporary
       friend class TextureManager;
       friend class TextureChunk;
 
@@ -51,17 +57,20 @@ namespace Frames {
       int m_alloc_cur_y;
       int m_alloc_next_y;
     };
-    typedef Ptr<TextureBacking> TextureBackingPtr;
 
     class TextureChunk : public Refcountable<TextureChunk> {
       friend class Refcountable<TextureChunk>;
     public:
+      static TextureChunkPtr Create();
+
       int WidthGet() const { return m_texture_width; }
       int HeightGet() const { return m_texture_height; }
 
       const Rect &BoundsGet() { return m_bounds; }
 
       const TextureBackingPtr &BackingGet() { return m_backing; }
+
+      void Attach(const TextureBackingPtr &backing, int sx, int sy, int ex, int ey);
 
     private:
       TextureChunk();
@@ -76,16 +85,11 @@ namespace Frames {
 
       Rect m_bounds;
     };
-    typedef Ptr<TextureChunk> TextureChunkPtr;
 
     class TextureManager : Noncopyable {
     public:
       TextureManager(Environment *env);
       ~TextureManager();
-
-      // Texture creators
-      TextureChunkPtr TextureFromId(const std::string &id);
-      TextureChunkPtr TextureFromConfig(const TexturePtr &conf, TextureBackingPtr backing = TextureBackingPtr());
 
       TextureBackingPtr BackingCreate(int width, int height, int modeGL); // we'll have to change this to generalized mode at some point
 
@@ -95,14 +99,12 @@ namespace Frames {
       friend class TextureChunk;
       friend class Renderer;
 
-      boost::bimap<std::string, TextureChunk *> m_texture; // not refcounted, the refcounting needs to deallocate
-
       std::set<TextureBacking *> m_backing; // again, not refcounted
 
       Environment *m_env;
 
+      void Internal_Init_Backing(TextureBacking *backing);
       void Internal_Shutdown_Backing(TextureBacking *backing);
-      void Internal_Shutdown_Chunk(TextureChunk *chunk);
     };
   }
 }

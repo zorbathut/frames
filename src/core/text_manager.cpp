@@ -34,7 +34,7 @@ namespace Frames {
         m_env->LogError("Can't load Freetype face");
       }
     
-      m_texture = m_env->GetRenderer()->BackingCreate(1024, 1024, GL_ALPHA);
+      m_texture = m_env->GetRenderer()->BackingCreate(1024, 1024, Texture::FORMAT_A_8);
     }
 
     FontInfo::~FontInfo() {
@@ -216,7 +216,7 @@ namespace Frames {
       FT_BitmapGlyph bmp = (FT_BitmapGlyph)glyph;
 
       if (bmp && bmp->bitmap.buffer) {
-        m_texture = parent->EnvironmentGet()->GetRenderer()->TextureFromConfig(
+        m_texture = parent->EnvironmentGet()->TextureChunkFromConfig(
               Texture::CreateRawUnmanaged(parent->EnvironmentGet(), bmp->bitmap.width, bmp->bitmap.rows, Texture::FORMAT_A_8, bmp->bitmap.buffer, bmp->bitmap.width),
               parent->TextureGet()
         );

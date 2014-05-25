@@ -1,12 +1,15 @@
 
 === INTEGRATION
 
-* Wire Renderer->TextureManager conversion
-* Refactor API
-* Virtual-ize functions that need to be virtual
-* Move TextureBacking into Renderer
+* Rename TextureChunkFrom*
+* Rename InternalShutdownChunk
+* Rename Internal_*_Backing
 * Move TextureChunk into Environment
+
 * Kill TextureManager
+* Move TextureBacking into Renderer
+
+* BackingCreate stays in Renderer, as does Internal_Shutdown_Backing (renamed, though)
 
 * Wire Environment->TextManager conversion
 * Kill TextManager
@@ -20,6 +23,10 @@
 
 * Split Loaders into their own libs
   * Test
+
+=== TWEAK
+
+* test is not deleting ogl contexts properly - this might be an SDL fault
 
 === DOCS
 
@@ -46,6 +53,8 @@
 * That may be extremely difficult
   * Thoughts:
   * Obliterate is needed - last event fired before shutdown
+
+* Need font corpus cleanup before the big release!
 
 === BUILDING
 

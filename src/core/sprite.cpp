@@ -19,7 +19,7 @@ namespace Frames {
 
   void Sprite::TextureSet(const std::string &id) {
     // work work work
-    m_texture = EnvironmentGet()->GetRenderer()->TextureFromId(id);
+    m_texture = EnvironmentGet()->TextureChunkFromId(id);
     
     if (m_texture) {
       m_texture_id = id;

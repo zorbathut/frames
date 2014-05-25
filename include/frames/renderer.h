@@ -60,10 +60,7 @@ namespace Frames {
       static bool WriteCroppedTexRect(Vertex *vertex, const Rect &screen, const Rect &tex, const Color &color, const Rect &bounds);  // fancy lerping
 
       // Texture manipulation - refactoring in progress!
-      TextureChunkPtr TextureFromId(const std::string &id);
-      TextureChunkPtr TextureFromConfig(const TexturePtr &conf, TextureBackingPtr backing = TextureBackingPtr());
-
-      TextureBackingPtr BackingCreate(int width, int height, int modeGL); // we'll have to change this to generalized mode at some point
+      TextureBackingPtr BackingCreate(int width, int height, int mode);
 
     protected:
       int WidthGet() { return m_width; }
@@ -82,9 +79,8 @@ namespace Frames {
 
       // Texture manipulation - refactoring in progress!
       friend class TextureBacking;
-      friend class TextureChunk;
+      void Internal_Init_Backing(TextureBacking *backing);
       void Internal_Shutdown_Backing(TextureBacking *backing);
-      void Internal_Shutdown_Chunk(TextureChunk *chunk);
     };
   }
 }

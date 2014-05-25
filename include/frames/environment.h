@@ -14,6 +14,8 @@
 #include <set>
 #include <map>
 
+#include <boost/bimap.hpp>
+
 namespace Frames {
   class Environment;
   typedef Ptr<Environment> EnvironmentPtr;
@@ -27,7 +29,9 @@ namespace Frames {
     class Renderer;
     class TextManager;
     class TextureBacking;
+    typedef Ptr<TextureBacking> TextureBackingPtr;
     class TextureChunk;
+    typedef Ptr<TextureChunk> TextureChunkPtr;
     class TextureManager;
     class Renderer;
   }
@@ -246,6 +250,13 @@ namespace Frames {
     std::map<int, Layout *> m_buttonDown;
     Vector m_mouse;
     Input::Meta m_lastMeta;
+
+    // Texture manipulation
+    detail::TextureChunkPtr TextureChunkFromId(const std::string &id);
+    detail::TextureChunkPtr TextureChunkFromConfig(const TexturePtr &conf, detail::TextureBackingPtr backing = detail::TextureBackingPtr());
+
+    boost::bimap<std::string, detail::TextureChunk *> m_texture; // not refcounted, the refcounting needs to deallocate
+    void Internal_Shutdown_Chunk(detail::TextureChunk *chunk);
   };
 }
 
