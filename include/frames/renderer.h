@@ -39,7 +39,7 @@ namespace Frames {
 
       virtual void Write(int sx, int sy, const TexturePtr &tex) = 0;
 
-      std::pair<int, int> AllocateSubtexture(int width, int height);
+      std::pair<int, int> SubtextureAllocate(int width, int height);
 
     protected:
       TextureBacking(Environment *env, int width, int height);

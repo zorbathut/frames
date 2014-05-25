@@ -190,13 +190,10 @@ namespace Frames {
     }
 
     void RendererOpengl::TextureSet(const detail::TextureBackingPtr &tex) {
-      Internal_SetTexture(tex.Get() ? static_cast<TextureBackingOpengl*>(tex.Get())->GlidGet() : 0);
-    }
-
-    void RendererOpengl::Internal_SetTexture(GLuint tex) {
-      if (m_currentTexture != tex) {
-        m_currentTexture = tex;
-        glBindTexture(GL_TEXTURE_2D, tex);
+      int glid = tex.Get() ? static_cast<TextureBackingOpengl*>(tex.Get())->GlidGet() : 0;
+      if (m_currentTexture != glid) {
+        m_currentTexture = glid;
+        glBindTexture(GL_TEXTURE_2D, glid);
       }
     }
 

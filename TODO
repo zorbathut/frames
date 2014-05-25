@@ -1,7 +1,6 @@
 
 === INTEGRATION
 
-* Rescan API for TextureChunk/TextureBacking
 * Finish off OGL references
 
 * Ensure OGL isn't referred anywhere anymore

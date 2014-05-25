@@ -424,7 +424,7 @@ namespace Frames {
         backing = GetRenderer()->TextureCreate(tex->WidthGet(), tex->HeightGet(), tex->FormatGet());
       }
 
-      std::pair<int, int> origin = backing->AllocateSubtexture(tex->WidthGet(), tex->HeightGet());
+      std::pair<int, int> origin = backing->SubtextureAllocate(tex->WidthGet(), tex->HeightGet());
       backing->Write(origin.first, origin.second, tex);
 
       detail::TextureChunkPtr chunk = detail::TextureChunk::Create();

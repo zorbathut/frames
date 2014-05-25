@@ -31,7 +31,7 @@ namespace Frames {
     TextureBacking::~TextureBacking() {
     }
 
-    std::pair<int, int> TextureBacking::AllocateSubtexture(int width, int height) {
+    std::pair<int, int> TextureBacking::SubtextureAllocate(int width, int height) {
       // very very bad allocation, but simple for prototyping
       if (m_alloc_next_x + width > m_surface_width) {
         m_alloc_next_x = 0;

@@ -58,7 +58,6 @@ namespace Frames {
 
       GLuint m_indices; // handle of index buffer
 
-      void Internal_SetTexture(GLuint tex);
       GLuint m_currentTexture;
 
       virtual void ScissorSet(const Rect &rect);
