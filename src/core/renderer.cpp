@@ -9,8 +9,6 @@
 
 #include "boost/static_assert.hpp"
 
-#include "frames/os_gl.h"
-
 #include <vector>
 #include <algorithm>
 

@@ -1,9 +1,7 @@
 
 === INTEGRATION
 
-* Finish off OGL references
-
-* Ensure OGL isn't referred anywhere anymore
+* Renderer creation hook for Configuration
 
 * Split OGL into its own lib
   * TextureManager hooks

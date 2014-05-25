@@ -3,8 +3,10 @@
 
 #include <gtest/gtest.h>
 
+#define GLEW_STATIC
+#include <GL/GLew.h>
+
 #include <SDL.h>
-#include <frames/os_gl.h>
 #include <frames/detail_format.h>
 #include <frames/environment.h>
 #include <frames/event.h>

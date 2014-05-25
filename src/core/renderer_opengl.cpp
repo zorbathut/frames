@@ -8,7 +8,9 @@
 
 #include "boost/static_assert.hpp"
 
-#include "frames/os_gl.h"
+// Define needed for glew to link properly
+#define GLEW_STATIC
+#include <GL/GLew.h>
 
 #include <vector>
 #include <algorithm>
