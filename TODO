@@ -1,11 +1,7 @@
 
 === INTEGRATION
 
-* Tweak Environment constructor to use initializers
-
 * Split OGL into its own lib
-  * TextureManager hooks
-  * glewInit
   * Test OGL
 
 * Add DX11

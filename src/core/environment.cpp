@@ -257,14 +257,14 @@ namespace Frames {
     return m_counter++;
   }
 
-  Environment::Environment(const Configuration::Local &config) {
-    // init pointers to zero
-    m_over = 0;
-    m_focus = 0;
-
-    m_renderer = 0;
-    m_text_manager = 0;
-
+  Environment::Environment(const Configuration::Local &config) :
+    m_renderer(0),
+    m_text_manager(0),
+    m_root(0),
+    m_over(0),
+    m_focus(0),
+    m_counter(0)
+  {
     m_config = config;
 
     // Reset config values to defaults, if uninitialized
@@ -300,8 +300,6 @@ namespace Frames {
       LogError("Renderer not provided; please call RendererSet() on your Configuration object before passing it into the environment!");
       return; // This will crash horribly. Maybe someday it shouldn't. Maybe.
     }
-
-    m_counter = 0;
 
     m_root = new Layout(this, "Root");
 
