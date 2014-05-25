@@ -10,6 +10,7 @@
 #include "frames/noncopyable.h"
 #include "frames/ptr.h"
 #include "frames/rect.h"
+#include "frames/texture.h"
 
 namespace Frames {
   class Environment;
@@ -22,8 +23,6 @@ namespace Frames {
   class Renderer;
 
   namespace detail {
-    typedef unsigned int GLuint;
-
     class TextureBacking;
     typedef Ptr<TextureBacking> TextureBackingPtr;
     class TextureChunk;
@@ -33,26 +32,21 @@ namespace Frames {
       friend class Refcountable<TextureBacking>;
     public:
 
-      int GlidGet() const { return m_id; }
-
       int WidthGet() const { return m_surface_width; }
       int HeightGet() const { return m_surface_height; }
 
       Environment *EnvironmentGet() const { return m_env; }
 
-      void Allocate(int width, int height, int gltype);
+      virtual void Write(int sx, int sy, const TexturePtr &tex) = 0;
 
       std::pair<int, int> AllocateSubtexture(int width, int height);
-      void Write(int sx, int sy, const TexturePtr &tex);
 
     protected:
-      TextureBacking(Environment *env);
+      TextureBacking(Environment *env, int width, int height);
       virtual ~TextureBacking();
 
     private:
       Environment *m_env;
-
-      GLuint m_id;
 
       int m_surface_width;
       int m_surface_height;
@@ -82,7 +76,7 @@ namespace Frames {
       virtual Vertex *Request(int quads) = 0;
       virtual void Return(int quads = -1) = 0;  // also renders, count lets you optionally specify the number of quads
 
-      virtual TextureBackingPtr TextureCreate() = 0;
+      virtual TextureBackingPtr TextureCreate(int width, int height, Texture::Format mode) = 0;
       virtual void TextureSet(const TextureBackingPtr &tex) = 0;
 
       void ScissorPush(Rect rect);
@@ -98,9 +92,6 @@ namespace Frames {
     
       static bool WriteCroppedRect(Vertex *vertex, const Rect &screen, const Color &color, const Rect &bounds); // no fancy lerping
       static bool WriteCroppedTexRect(Vertex *vertex, const Rect &screen, const Rect &tex, const Color &color, const Rect &bounds);  // fancy lerping
-
-      // Texture manipulation
-      TextureBackingPtr BackingCreate(int width, int height, int mode);
 
     protected:
       int WidthGet() { return m_width; }

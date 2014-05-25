@@ -2,6 +2,7 @@
 #include "frames/renderer_opengl.h"
 
 #include "frames/detail.h"
+#include "frames/detail_format.h"
 #include "frames/environment.h"
 #include "frames/rect.h"
 
@@ -21,6 +22,73 @@ BOOST_STATIC_ASSERT(sizeof(Frames::Color) == sizeof(GLfloat) * 4);
 
 namespace Frames {
   namespace detail {
+    TextureBackingOpengl::TextureBackingOpengl(Environment *env, int width, int height, Texture::Format format) : TextureBacking(env, width, height), m_id(0) {
+      glGenTextures(1, &m_id);
+      if (!m_id) {
+        // whoops
+        EnvironmentGet()->LogError(detail::Format("Failure to allocate room for texture"));
+        return;
+      }
+
+      int input_tex_mode;
+      if (format == Texture::FORMAT_RGBA_8) {
+        input_tex_mode = GL_RGBA;
+      } else if (format == Texture::FORMAT_RGB_8) {
+        input_tex_mode = GL_RGBA; // we don't use GL_RGB because it's less efficient
+      } else if (format == Texture::FORMAT_L_8) {
+        input_tex_mode = GL_LUMINANCE;
+      } else if (format == Texture::FORMAT_A_8) {
+        input_tex_mode = GL_ALPHA;
+      } else {
+        EnvironmentGet()->LogError(detail::Format("Unrecognized raw type %d in texture", format));
+        return;
+      }
+
+      // setup standard texture parameters
+      glEnable(GL_TEXTURE_2D);
+      glBindTexture(GL_TEXTURE_2D, m_id);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE_EXT);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE_EXT);
+
+      glBindTexture(GL_TEXTURE_2D, m_id);
+      glTexImage2D(GL_TEXTURE_2D, 0, input_tex_mode, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0); // I'm assuming the last three values are irrelevant
+    }
+
+    TextureBackingOpengl::~TextureBackingOpengl() {
+      glDeleteTextures(1, &m_id);
+    }
+
+    void TextureBackingOpengl::Write(int sx, int sy, const TexturePtr &tex) {
+      int input_tex_mode;
+      if (tex->FormatGet() == Texture::FORMAT_RGBA_8) {
+        input_tex_mode = GL_RGBA;
+      } else if (tex->FormatGet() == Texture::FORMAT_RGB_8) {
+        input_tex_mode = GL_RGB;
+      } else if (tex->FormatGet() == Texture::FORMAT_L_8) {
+        input_tex_mode = GL_LUMINANCE;
+      } else if (tex->FormatGet() == Texture::FORMAT_A_8) {
+        input_tex_mode = GL_ALPHA;
+      } else {
+        EnvironmentGet()->LogError(detail::Format("Unrecognized raw type %d in texture", tex->FormatGet()));
+        return;
+      }
+
+      glEnable(GL_TEXTURE_2D);
+      glBindTexture(GL_TEXTURE_2D, m_id);
+      glPixelStorei(GL_PACK_ALIGNMENT, 1);
+      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+      if (tex->RawStrideGet() == Texture::RawBPPGet(tex->FormatGet()) * tex->WidthGet()) {
+        glTexSubImage2D(GL_TEXTURE_2D, 0, sx, sy, tex->WidthGet(), tex->HeightGet(), input_tex_mode, GL_UNSIGNED_BYTE, tex->RawDataGet());
+      } else {
+        for (int y = 0; y < tex->HeightGet(); ++y) {
+          glTexSubImage2D(GL_TEXTURE_2D, 0, sx, sy + y, tex->WidthGet(), 1, input_tex_mode, GL_UNSIGNED_BYTE, tex->RawDataGet() + y * tex->RawStrideGet());
+        }
+      }
+    }
+
     RendererOpengl::RendererOpengl(Environment *env) :
         Renderer(env),
         m_vertices(0),
@@ -117,12 +185,12 @@ namespace Frames {
       glDrawElements(GL_TRIANGLES, quads * 6, GL_UNSIGNED_SHORT, (void*)(m_verticesLastQuadpos * 6 * sizeof(GLushort)));
     }
 
-    TextureBackingPtr RendererOpengl::TextureCreate() {
-      return TextureBackingPtr(new TextureBackingOpengl(EnvironmentGet()));
+    TextureBackingPtr RendererOpengl::TextureCreate(int width, int height, Texture::Format mode) {
+      return TextureBackingPtr(new TextureBackingOpengl(EnvironmentGet(), width, height, mode));
     }
 
     void RendererOpengl::TextureSet(const detail::TextureBackingPtr &tex) {
-      Internal_SetTexture(tex.Get() ? tex->GlidGet() : 0);
+      Internal_SetTexture(tex.Get() ? static_cast<TextureBackingOpengl*>(tex.Get())->GlidGet() : 0);
     }
 
     void RendererOpengl::Internal_SetTexture(GLuint tex) {

@@ -1,12 +1,8 @@
 
 === INTEGRATION
 
-* Refactor Renderer to no longer need OGL
-
-* BackingCreate stays in Renderer, as does Internal_Shutdown_Backing (renamed, though)
-
-* Wire Environment->TextManager conversion
-* Kill TextManager
+* Rescan API for TextureChunk/TextureBacking
+* Finish off OGL references
 
 * Ensure OGL isn't referred anywhere anymore
 
@@ -59,6 +55,9 @@
 * Official release?
 
 === TWEAK
+
+* Wire Environment->TextManager conversion
+* Kill TextManager
 
 * SRGB? that's a crazy idea, buuuut
 

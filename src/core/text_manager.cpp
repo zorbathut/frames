@@ -34,7 +34,7 @@ namespace Frames {
         m_env->LogError("Can't load Freetype face");
       }
     
-      m_texture = m_env->GetRenderer()->BackingCreate(1024, 1024, Texture::FORMAT_A_8);
+      m_texture = m_env->GetRenderer()->TextureCreate(1024, 1024, Texture::FORMAT_A_8);
     }
 
     FontInfo::~FontInfo() {

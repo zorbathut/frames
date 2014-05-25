@@ -17,7 +17,15 @@ namespace Frames {
 
     class TextureBackingOpengl : public TextureBacking {
     public:
-      TextureBackingOpengl(Environment *env) : TextureBacking(env) {};
+      TextureBackingOpengl(Environment *env, int width, int height, Texture::Format format);
+      ~TextureBackingOpengl();
+
+      int GlidGet() const { return m_id; }
+
+      virtual void Write(int sx, int sy, const TexturePtr &tex);
+
+    private:
+      GLuint m_id;
     };
 
     class RendererOpengl : public Renderer {
@@ -31,7 +39,7 @@ namespace Frames {
       virtual Vertex *Request(int quads);
       virtual void Return(int quads = -1);  // also renders, count lets you optionally specify the number of quads
 
-      virtual TextureBackingPtr TextureCreate();
+      virtual TextureBackingPtr TextureCreate(int width, int height, Texture::Format mode);
       virtual void TextureSet(const TextureBackingPtr &tex);
 
       virtual void StatePush();

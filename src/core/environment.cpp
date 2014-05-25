@@ -421,7 +421,7 @@ namespace Frames {
       // for now we're just putting it into its own texture
 
       if (!backing) {
-        backing = GetRenderer()->BackingCreate(tex->WidthGet(), tex->HeightGet(), tex->FormatGet());
+        backing = GetRenderer()->TextureCreate(tex->WidthGet(), tex->HeightGet(), tex->FormatGet());
       }
 
       std::pair<int, int> origin = backing->AllocateSubtexture(tex->WidthGet(), tex->HeightGet());
