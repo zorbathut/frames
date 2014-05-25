@@ -8,7 +8,6 @@
 #include "frames/text_manager.h"
 #include "frames/texture.h"
 #include "frames/texture_chunk.h"
-#include "frames/texture_manager.h"
 
 namespace Frames {
   /*static*/ EnvironmentPtr Environment::Create() {
@@ -296,9 +295,6 @@ namespace Frames {
     if (!m_config.TextureFromStreamGet()) {
       m_config.TextureFromStreamSet(Configuration::TextureFromStreamPtr(new Configuration::TextureFromStream()));
     }
-    
-    // easier to handle it on our own, and we won't be creating environments often enough for this to be a performance hit
-    glewInit();
 
     m_counter = 0;
 

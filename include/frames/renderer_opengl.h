@@ -15,8 +15,10 @@ namespace Frames {
     typedef unsigned short GLushort;
     typedef float GLfloat;
 
-    class TextureBacking;
-    class TextureChunk;
+    class TextureBackingOpengl : public TextureBacking {
+    public:
+      TextureBackingOpengl(Environment *env) : TextureBacking(env) {};
+    };
 
     class RendererOpengl : public Renderer {
     public:
@@ -29,6 +31,7 @@ namespace Frames {
       virtual Vertex *Request(int quads);
       virtual void Return(int quads = -1);  // also renders, count lets you optionally specify the number of quads
 
+      virtual TextureBackingPtr TextureCreate();
       virtual void TextureSet(const TextureBackingPtr &tex);
 
       virtual void StatePush();

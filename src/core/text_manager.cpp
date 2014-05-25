@@ -8,7 +8,6 @@
 #include "frames/stream.h"
 #include "frames/texture.h"
 #include "frames/texture_chunk.h"
-#include "frames/texture_manager.h"
 
 namespace Frames {
   namespace detail {

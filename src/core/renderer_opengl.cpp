@@ -4,7 +4,6 @@
 #include "frames/detail.h"
 #include "frames/environment.h"
 #include "frames/rect.h"
-#include "frames/texture_manager.h"
 
 #include "boost/static_assert.hpp"
 
@@ -30,7 +29,10 @@ namespace Frames {
         m_verticesLastQuadsize(0),
         m_verticesLastQuadpos(0),
         m_currentTexture(0)
-    {  // set to bufferElements so we create a real buffer when we need it
+    {
+      // easier to handle it on our own, and we won't be creating environments often enough for this to be a performance hit
+      glewInit();
+
       glGenBuffers(1, &m_vertices);
       glGenBuffers(1, &m_indices);
 
@@ -113,6 +115,10 @@ namespace Frames {
       if (quads == -1) quads = m_verticesLastQuadsize;
 
       glDrawElements(GL_TRIANGLES, quads * 6, GL_UNSIGNED_SHORT, (void*)(m_verticesLastQuadpos * 6 * sizeof(GLushort)));
+    }
+
+    TextureBackingPtr RendererOpengl::TextureCreate() {
+      return TextureBackingPtr(new TextureBackingOpengl(EnvironmentGet()));
     }
 
     void RendererOpengl::TextureSet(const detail::TextureBackingPtr &tex) {

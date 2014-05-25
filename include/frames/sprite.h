@@ -5,7 +5,6 @@
 
 #include "frames/frame.h"
 #include "frames/texture_chunk.h"
-#include "frames/texture_manager.h"
 
 namespace Frames {
   /// Used to render a texture.

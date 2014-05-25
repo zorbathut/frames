@@ -5,7 +5,6 @@
 #include "frames/environment.h"
 #include "frames/rect.h"
 #include "frames/renderer.h"
-#include "frames/texture_manager.h"
 
 namespace Frames {
   FRAMES_DEFINE_RTTI(Text, Frame);

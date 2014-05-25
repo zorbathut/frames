@@ -2,7 +2,7 @@
 #include "frames/texture_chunk.h"
 
 #include "frames/environment.h"
-#include "frames/texture_manager.h"
+#include "frames/renderer.h"
 
 namespace Frames {
   namespace detail {

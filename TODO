@@ -1,7 +1,7 @@
 
 === INTEGRATION
 
-* Move TextureBacking into Renderer
+* Refactor Renderer to no longer need OGL
 
 * BackingCreate stays in Renderer, as does Internal_Shutdown_Backing (renamed, though)
 
@@ -12,6 +12,7 @@
 
 * Split OGL into its own lib
   * TextureManager hooks
+  * glewInit
   * Test OGL
 
 * Add DX11

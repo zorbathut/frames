@@ -4,7 +4,6 @@
 #include "frames/cast.h"
 #include "frames/environment.h"
 #include "frames/renderer.h"
-#include "frames/texture_manager.h"
 
 #include <cmath>
 
