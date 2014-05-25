@@ -1,9 +1,6 @@
 
 === INTEGRATION
 
-* Rename TextureChunkFrom*
-* Rename InternalShutdownChunk
-* Rename Internal_*_Backing
 * Move TextureChunk into Environment
 
 * Kill TextureManager

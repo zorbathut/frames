@@ -103,8 +103,8 @@ namespace Frames {
 
       Environment *m_env;
 
-      void Internal_Init_Backing(TextureBacking *backing);
-      void Internal_Shutdown_Backing(TextureBacking *backing);
+      void BackingInit(TextureBacking *backing);
+      void BackingShutdown(TextureBacking *backing);
     };
   }
 }

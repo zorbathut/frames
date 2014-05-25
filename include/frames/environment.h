@@ -256,7 +256,7 @@ namespace Frames {
     detail::TextureChunkPtr TextureChunkFromConfig(const TexturePtr &conf, detail::TextureBackingPtr backing = detail::TextureBackingPtr());
 
     boost::bimap<std::string, detail::TextureChunk *> m_texture; // not refcounted, the refcounting needs to deallocate
-    void Internal_Shutdown_Chunk(detail::TextureChunk *chunk);
+    void TextureChunkShutdown(detail::TextureChunk *chunk);
   };
 }
 

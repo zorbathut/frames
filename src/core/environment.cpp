@@ -443,7 +443,7 @@ namespace Frames {
     }
   }
 
-  void Environment::Internal_Shutdown_Chunk(detail::TextureChunk *chunk) {
+  void Environment::TextureChunkShutdown(detail::TextureChunk *chunk) {
     if (m_texture.right.count(chunk)) {
       m_texture.right.erase(chunk);
     }

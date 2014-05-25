@@ -18,6 +18,9 @@ namespace Frames {
         m_alloc_cur_y(0),
         m_alloc_next_y(0)
     {
+      // register ourselves in the texture manager so it can manipulate us as needed
+      m_env->GetRenderer()->BackingInit(this);
+
       glGenTextures(1, &m_id);
       if (!m_id) {
         // whoops
@@ -31,13 +34,10 @@ namespace Frames {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE_EXT);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE_EXT);
-
-      // register ourselves in the texture manager so it can manipulate us as needed
-      m_env->GetRenderer()->Internal_Init_Backing(this);
     }
 
     TextureBacking::~TextureBacking() {
-      m_env->GetRenderer()->Internal_Shutdown_Backing(this);
+      m_env->GetRenderer()->BackingShutdown(this);
 
       glDeleteTextures(1, &m_id);
     }
@@ -104,7 +104,7 @@ namespace Frames {
     }
 
     TextureChunk::~TextureChunk() {
-      m_backing->m_env->Internal_Shutdown_Chunk(this);
+      m_backing->m_env->TextureChunkShutdown(this);
     }
 
     /*static*/ TextureChunkPtr TextureChunk::Create() {
@@ -160,11 +160,11 @@ namespace Frames {
       return backing;
     }
 
-    void TextureManager::Internal_Init_Backing(TextureBacking *backing) {
+    void TextureManager::BackingInit(TextureBacking *backing) {
       m_backing.insert(backing);
     }
 
-    void TextureManager::Internal_Shutdown_Backing(TextureBacking *backing) {
+    void TextureManager::BackingShutdown(TextureBacking *backing) {
       m_backing.erase(backing);
     }
   }

@@ -164,12 +164,12 @@ namespace Frames {
       return m_env->GetTextureManager()->BackingCreate(width, height, mode);
     }
 
-    void Renderer::Internal_Init_Backing(TextureBacking *backing) {
-      return m_env->GetTextureManager()->Internal_Init_Backing(backing);
+    void Renderer::BackingInit(TextureBacking *backing) {
+      return m_env->GetTextureManager()->BackingInit(backing);
     }
 
-    void Renderer::Internal_Shutdown_Backing(TextureBacking *backing) {
-      return m_env->GetTextureManager()->Internal_Shutdown_Backing(backing);
+    void Renderer::BackingShutdown(TextureBacking *backing) {
+      return m_env->GetTextureManager()->BackingShutdown(backing);
     }
   }
 }

@@ -79,8 +79,8 @@ namespace Frames {
 
       // Texture manipulation - refactoring in progress!
       friend class TextureBacking;
-      void Internal_Init_Backing(TextureBacking *backing);
-      void Internal_Shutdown_Backing(TextureBacking *backing);
+      void BackingInit(TextureBacking *backing);
+      void BackingShutdown(TextureBacking *backing);
     };
   }
 }
