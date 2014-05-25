@@ -16,11 +16,12 @@ namespace Frames {
   class Environment;
   struct Rect;
   class Texture;
-  template <typename T> class Ptr;
-
   typedef Ptr<Texture> TexturePtr;
 
-  class Renderer;
+  namespace Configuration {
+    class Renderer;
+    typedef Ptr<Renderer> RendererPtr;
+  }
 
   namespace detail {
     class TextureBacking;

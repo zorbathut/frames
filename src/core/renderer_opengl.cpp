@@ -1,6 +1,7 @@
 
 #include "frames/renderer_opengl.h"
 
+#include "frames/configuration.h"
 #include "frames/detail.h"
 #include "frames/detail_format.h"
 #include "frames/environment.h"
@@ -23,6 +24,19 @@ BOOST_STATIC_ASSERT(sizeof(Frames::detail::GLuint) == sizeof(GLuint));
 BOOST_STATIC_ASSERT(sizeof(Frames::Color) == sizeof(GLfloat) * 4);
 
 namespace Frames {
+  namespace Configuration {
+    class CfgRendererOpengl : public Renderer {
+    public:
+      virtual detail::Renderer *Create(Environment *env) const {
+        return new detail::RendererOpengl(env);
+      }
+    };
+
+    Configuration::RendererPtr Configuration::RendererOpengl() {
+      return Configuration::RendererPtr(new CfgRendererOpengl());
+    }
+  }
+
   namespace detail {
     TextureBackingOpengl::TextureBackingOpengl(Environment *env, int width, int height, Texture::Format format) : TextureBacking(env, width, height), m_id(0) {
       glGenTextures(1, &m_id);

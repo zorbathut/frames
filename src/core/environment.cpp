@@ -296,11 +296,16 @@ namespace Frames {
       m_config.TextureFromStreamSet(Configuration::TextureFromStreamPtr(new Configuration::TextureFromStream()));
     }
 
+    if (!m_config.RendererGet()) {
+      LogError("Renderer not provided; please call RendererSet() on your Configuration object before passing it into the environment!");
+      return; // This will crash horribly. Maybe someday it shouldn't. Maybe.
+    }
+
     m_counter = 0;
 
     m_root = new Layout(this, "Root");
 
-    m_renderer = new detail::RendererOpengl(this);
+    m_renderer = m_config.RendererGet()->Create(this);
     m_text_manager = new detail::TextManager(this);
   }
 

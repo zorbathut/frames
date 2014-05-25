@@ -15,12 +15,16 @@ namespace Frames {
   class Texture;
   typedef Ptr<Texture> TexturePtr;
 
+  namespace detail {
+    class Renderer;
+  }
+
   namespace Configuration {
     /// Debug logging functionality.
     /** Default behavior outputs to the Debug Log on Windows. */
     class Logger : public Refcountable<Logger> {
     public:
-      virtual ~Logger() {}
+      virtual ~Logger() { }
 
       /// Called when errors are logged.
       /** Errors include anything that is thoroughly incorrect, including invalid parameters and conflicting input.
@@ -39,7 +43,7 @@ namespace Frames {
     /** Default behavior uses the standard Windows global clipboard. */
     class Clipboard : public Refcountable<Clipboard> {
     public:
-      virtual ~Clipboard() {}
+      virtual ~Clipboard() { }
 
       /// Called to set the clipboard contents to a given string.
       virtual void Set(const std::string &dat);
@@ -58,13 +62,13 @@ namespace Frames {
     Default behavior is a no-op.*/
     class Performance : public Refcountable<Performance> {
     public:
-      virtual ~Performance() {}
+      virtual ~Performance() { }
 
       // Start a profiling block.
       virtual void *Push(const char *name, Color color) { return 0; }
 
       // End a profiling block.
-      virtual void Pop(void *) {}
+      virtual void Pop(void *) { }
     };
     /// Refcounted Performance typedef.
     typedef Ptr<Performance> PerformancePtr;
@@ -75,7 +79,7 @@ namespace Frames {
     Default behavior is to use the configuration StreamFromId and the configuration TextureFromStream in order to produce the result. */
     class TextureFromId : public Refcountable<TextureFromId> {
     public:
-      virtual ~TextureFromId() {}
+      virtual ~TextureFromId() { }
 
       /// Returns a new Texture associated with an environment and resource ID.
       virtual TexturePtr Create(Environment *env, const std::string &id);
@@ -89,7 +93,7 @@ namespace Frames {
     Default behavior is to use the configuration PathFromId to create a path, then to create a StreamFile given that path. */
     class StreamFromId : public Refcountable<StreamFromId> {
     public:
-      virtual ~StreamFromId() {}
+      virtual ~StreamFromId() { }
 
       /// Returns a new Stream associated with an environment and resource ID.
       virtual StreamPtr Create(Environment *env, const std::string &id);
@@ -103,7 +107,7 @@ namespace Frames {
     Default behavior is to return to given path verbatim. */
     class PathFromId : public Refcountable<PathFromId> {
     public:
-      virtual ~PathFromId() {}
+      virtual ~PathFromId() { }
 
       /// Returns a path associated with an environment and resource ID.
       virtual std::string Process(Environment *env, const std::string &id);
@@ -117,13 +121,27 @@ namespace Frames {
     Default behavior is to consult each TextureLoader in turn and use the first one that accepts the given Stream. */
     class TextureFromStream : public Refcountable<TextureFromStream> {
     public:
-      virtual ~TextureFromStream() {}
+      virtual ~TextureFromStream() { }
 
       /// Returns a new Texture associated with an environment and created from the given Stream.
       virtual TexturePtr Create(Environment *env, const StreamPtr &stream);
     };
     /// Refcounted TextureFromStream typedef.
     typedef Ptr<TextureFromStream> TextureFromStreamPtr;
+
+    /// Creates a Renderer.
+    /** Create is called once during the initialization of each Frames environment.
+    
+    Renderer has no default implementation. It must be set manually. */
+    class Renderer : public Refcountable<Renderer> {
+    public:
+      virtual ~Renderer() { }
+
+      /// Returns a new Renderer instance associated to the given Environment.
+      virtual detail::Renderer *Create(Environment *env) const = 0;
+    };
+    /// Refcounted Renderer typedef.
+    typedef Ptr<Renderer> RendererPtr;
 
     /// All configuration data that needs to be provided for a functioning Environment.
     /** Every Environment contains a Configuration. If a Configuration isn't provided when the Environment is constructed, a default Configuration will be built.
@@ -173,6 +191,11 @@ namespace Frames {
       /// Gets the Configuration's default font ID.
       const std::string &FontDefaultIdGet() const { return m_fontDefaultId; }
 
+      /// Sets the Configuration's Renderer module.
+      void RendererSet(const RendererPtr &renderer) { m_renderer = renderer; }
+      /// Gets the Configuration's TextureFromStream module.
+      const RendererPtr &RendererGet() const { return m_renderer; }
+
     private:
       LoggerPtr m_logger;
       ClipboardPtr m_clipboard;
@@ -182,6 +205,9 @@ namespace Frames {
       StreamFromIdPtr m_streamFromId;
       PathFromIdPtr m_pathFromId;
       TextureFromStreamPtr m_textureFromStream;
+      
+      RendererPtr m_renderer;
+
       std::string m_fontDefaultId;
     };
 

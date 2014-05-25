@@ -8,7 +8,14 @@
 
 #include "frames/renderer.h"
 
+#include "frames/configuration.h"
+
 namespace Frames {
+  namespace Configuration {
+    /// Creates a Configuration::Renderer for OpenGL.
+    RendererPtr RendererOpengl();
+  }
+  
   namespace detail {
     // fake opengl typedefs, used so we don't pull the entire header in
     typedef unsigned int GLuint;

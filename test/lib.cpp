@@ -10,9 +10,10 @@
 #include <frames/detail_format.h>
 #include <frames/environment.h>
 #include <frames/event.h>
-#include <frames/stream.h>
 #include <frames/layout.h>
 #include <frames/loader.h>
+#include <frames/renderer_opengl.h>
+#include <frames/stream.h>
 #include <frames/texture.h>
 
 #include <png.h>
@@ -169,6 +170,7 @@ TestEnvironment::TestEnvironment(bool startSDL, int width, int height) : m_env(0
   config.FontDefaultIdSet("LindenHill.otf");
   config.LoggerSet(m_logger);
   config.PathFromIdSet(Frames::Ptr<TestPathMunger>(new TestPathMunger()));
+  config.RendererSet(Frames::Configuration::RendererOpengl());
   m_env = Frames::Environment::Create(config);
 
   if (startSDL) {
