@@ -1,8 +1,17 @@
 
 === INTEGRATION
 
+* Wire Renderer->TextureManager conversion
+* Refactor API
+* Kill TextureManager
+
+* Move TextureBacking into Renderer
+* Move TextureChunk into Environment
+
+* Wire Environment->TextManager conversion
+* Kill TextManager
+
 * Split OGL into its own lib
-  * Move TextureBacking into Renderer
   * TextureManager hooks
   * Test OGL
 
