@@ -31,8 +31,6 @@ namespace Frames {
       TextureChunk();
       ~TextureChunk();
 
-      friend class TextureManager;
-
       TextureBackingPtr m_backing;
 
       int m_texture_width;

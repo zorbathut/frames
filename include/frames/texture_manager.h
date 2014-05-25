@@ -45,8 +45,8 @@ namespace Frames {
       TextureBacking(Environment *env);
       ~TextureBacking();
 
-      friend class Environment; // temporary
-      friend class TextureManager;
+      friend class Renderer; // temporary
+      //friend class Environment; // temporary
 
       Environment *m_env;
 
@@ -58,26 +58,6 @@ namespace Frames {
       int m_alloc_next_x;
       int m_alloc_cur_y;
       int m_alloc_next_y;
-    };
-
-    class TextureManager : Noncopyable {
-    public:
-      TextureManager(Environment *env);
-      ~TextureManager();
-
-      TextureBackingPtr BackingCreate(int width, int height, int modeGL); // we'll have to change this to generalized mode at some point
-
-    private:
-      // Allows for accessor function calls
-      friend class TextureBacking;
-      friend class Renderer;
-
-      std::set<TextureBacking *> m_backing; // again, not refcounted
-
-      Environment *m_env;
-
-      void BackingInit(TextureBacking *backing);
-      void BackingShutdown(TextureBacking *backing);
     };
   }
 }

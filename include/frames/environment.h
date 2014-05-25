@@ -32,7 +32,6 @@ namespace Frames {
     typedef Ptr<TextureBacking> TextureBackingPtr;
     class TextureChunk;
     typedef Ptr<TextureChunk> TextureChunkPtr;
-    class TextureManager;
     class Renderer;
   }
 
@@ -235,11 +234,9 @@ namespace Frames {
     // Managers
     detail::Renderer *GetRenderer() { return m_renderer; }
     detail::TextManager *GetTextManager() { return m_text_manager; }
-    detail::TextureManager *GetTextureManager() { return m_texture_manager; }
 
     detail::Renderer *m_renderer;
     detail::TextManager *m_text_manager;
-    detail::TextureManager *m_texture_manager;
 
     // Root
     Layout *m_root;

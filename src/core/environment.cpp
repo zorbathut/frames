@@ -265,7 +265,6 @@ namespace Frames {
 
     m_renderer = 0;
     m_text_manager = 0;
-    m_texture_manager = 0;
 
     m_config = config;
 
@@ -307,7 +306,6 @@ namespace Frames {
 
     m_renderer = new detail::RendererOpengl(this);
     m_text_manager = new detail::TextManager(this);
-    m_texture_manager = new detail::TextureManager(this);
   }
 
   Environment::~Environment() {
@@ -323,7 +321,6 @@ namespace Frames {
 
     delete m_text_manager;
     delete m_renderer;
-    delete m_texture_manager;
   }
 
   void Environment::MarkInvalidated(Layout *layout) {

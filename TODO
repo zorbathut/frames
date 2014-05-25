@@ -21,10 +21,6 @@
 * Split Loaders into their own libs
   * Test
 
-=== TWEAK
-
-* test is not deleting ogl contexts properly - this might be an SDL fault
-
 === DOCS
 
 * Deep docs

@@ -18,9 +18,6 @@ namespace Frames {
         m_alloc_cur_y(0),
         m_alloc_next_y(0)
     {
-      // register ourselves in the texture manager so it can manipulate us as needed
-      m_env->GetRenderer()->BackingInit(this);
-
       glGenTextures(1, &m_id);
       if (!m_id) {
         // whoops
@@ -37,8 +34,6 @@ namespace Frames {
     }
 
     TextureBacking::~TextureBacking() {
-      m_env->GetRenderer()->BackingShutdown(this);
-
       glDeleteTextures(1, &m_id);
     }
 
@@ -94,53 +89,6 @@ namespace Frames {
           glTexSubImage2D(GL_TEXTURE_2D, 0, sx, sy + y, tex->WidthGet(), 1, input_tex_mode, GL_UNSIGNED_BYTE, tex->RawDataGet() + y * tex->RawStrideGet());
         }
       }
-    }
-
-    TextureManager::TextureManager(Environment *env) : m_env(env) {
-    }
-
-    TextureManager::~TextureManager() {
-      // Backings *should* have cleaned themselves up already
-      if (!m_backing.empty()) {
-        m_env->LogError("Texture backing failed at cleanup; attempting to recover");
-
-        for (std::set<TextureBacking *>::iterator itr = m_backing.begin(); itr != m_backing.end();) {
-          std::set<TextureBacking *>::iterator t = itr;
-          ++itr;
-
-          delete *t; // will delete itself from this member
-        }
-      }
-    }
-
-    TextureBackingPtr TextureManager::BackingCreate(int width, int height, int mode) {
-      int modeGL;
-      if (mode == Texture::FORMAT_RGBA_8) {
-        modeGL = GL_RGBA;
-      } else if (mode == Texture::FORMAT_RGB_8) {
-        modeGL = GL_RGBA;
-      } else if (mode == Texture::FORMAT_L_8) {
-        modeGL = GL_LUMINANCE;
-      } else if (mode == Texture::FORMAT_A_8) {
-        modeGL = GL_ALPHA;
-      } else {
-        m_env->LogError(detail::Format("Unrecognized raw type %d in texture", mode));
-        return detail::TextureBackingPtr();
-      }
-
-      TextureBackingPtr backing(new TextureBacking(m_env));
-
-      backing->Allocate(width, height, modeGL);
-
-      return backing;
-    }
-
-    void TextureManager::BackingInit(TextureBacking *backing) {
-      m_backing.insert(backing);
-    }
-
-    void TextureManager::BackingShutdown(TextureBacking *backing) {
-      m_backing.erase(backing);
     }
   }
 }

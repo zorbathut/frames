@@ -2,8 +2,10 @@
 #include "frames/renderer.h"
 
 #include "frames/detail.h"
+#include "frames/detail_format.h"
 #include "frames/environment.h"
 #include "frames/rect.h"
+#include "frames/texture.h"
 #include "frames/texture_manager.h"
 
 #include "boost/static_assert.hpp"
@@ -161,15 +163,25 @@ namespace Frames {
     }
 
     TextureBackingPtr Renderer::BackingCreate(int width, int height, int mode) {
-      return m_env->GetTextureManager()->BackingCreate(width, height, mode);
-    }
+      int modeGL;
+      if (mode == Texture::FORMAT_RGBA_8) {
+        modeGL = GL_RGBA;
+      } else if (mode == Texture::FORMAT_RGB_8) {
+        modeGL = GL_RGBA;
+      } else if (mode == Texture::FORMAT_L_8) {
+        modeGL = GL_LUMINANCE;
+      } else if (mode == Texture::FORMAT_A_8) {
+        modeGL = GL_ALPHA;
+      } else {
+        m_env->LogError(detail::Format("Unrecognized raw type %d in texture", mode));
+        return detail::TextureBackingPtr();
+      }
 
-    void Renderer::BackingInit(TextureBacking *backing) {
-      return m_env->GetTextureManager()->BackingInit(backing);
-    }
+      TextureBackingPtr backing(new TextureBacking(m_env));
 
-    void Renderer::BackingShutdown(TextureBacking *backing) {
-      return m_env->GetTextureManager()->BackingShutdown(backing);
+      backing->Allocate(width, height, modeGL);
+
+      return backing;
     }
   }
 }

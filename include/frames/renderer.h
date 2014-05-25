@@ -59,7 +59,7 @@ namespace Frames {
       static bool WriteCroppedRect(Vertex *vertex, const Rect &screen, const Color &color, const Rect &bounds); // no fancy lerping
       static bool WriteCroppedTexRect(Vertex *vertex, const Rect &screen, const Rect &tex, const Color &color, const Rect &bounds);  // fancy lerping
 
-      // Texture manipulation - refactoring in progress!
+      // Texture manipulation
       TextureBackingPtr BackingCreate(int width, int height, int mode);
 
     protected:
@@ -76,11 +76,6 @@ namespace Frames {
       std::stack<Rect> m_scissor;
 
       std::vector<float> m_alpha; // we'll only really allocate it once
-
-      // Texture manipulation - refactoring in progress!
-      friend class TextureBacking;
-      void BackingInit(TextureBacking *backing);
-      void BackingShutdown(TextureBacking *backing);
     };
   }
 }
