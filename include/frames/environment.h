@@ -182,6 +182,9 @@ namespace Frames {
       Environment *m_env;
       void *m_handle;
     };
+
+    /// Returns the environment's active Renderer. This should probably not be used by endusers; this will be fixed later.
+    detail::Renderer *RendererGet() const { return m_renderer;  }
   private:
     friend class Layout;
     friend class Frame;

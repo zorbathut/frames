@@ -16,10 +16,11 @@ using namespace std;
 
 namespace Frames {
   namespace detail {
-    TextureBacking::TextureBacking(Environment *env, int width, int height) :
+    TextureBacking::TextureBacking(Environment *env, int width, int height, Texture::Format format) :
       m_env(env),
       m_surface_width(width),
       m_surface_height(height),
+      m_surface_format(format),
       m_alloc_next_x(0),
       m_alloc_cur_y(0),
       m_alloc_next_y(0)

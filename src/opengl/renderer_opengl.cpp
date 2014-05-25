@@ -38,7 +38,7 @@ namespace Frames {
   }
 
   namespace detail {
-    TextureBackingOpengl::TextureBackingOpengl(Environment *env, int width, int height, Texture::Format format) : TextureBacking(env, width, height), m_id(0) {
+    TextureBackingOpengl::TextureBackingOpengl(Environment *env, int width, int height, Texture::Format format) : TextureBacking(env, width, height, format), m_id(0) {
       glGenTextures(1, &m_id);
       if (!m_id) {
         // whoops
@@ -77,6 +77,11 @@ namespace Frames {
     }
 
     void TextureBackingOpengl::Write(int sx, int sy, const TexturePtr &tex) {
+      if (tex->TypeGet() != Texture::RAW) {
+        EnvironmentGet()->LogError(detail::Format("Unrecognized type %d in texture", tex->TypeGet()));
+        return;
+      }
+
       int input_tex_mode;
       if (tex->FormatGet() == Texture::FORMAT_RGBA_8) {
         input_tex_mode = GL_RGBA;
@@ -87,7 +92,7 @@ namespace Frames {
       } else if (tex->FormatGet() == Texture::FORMAT_A_8) {
         input_tex_mode = GL_ALPHA;
       } else {
-        EnvironmentGet()->LogError(detail::Format("Unrecognized raw type %d in texture", tex->FormatGet()));
+        EnvironmentGet()->LogError(detail::Format("Unrecognized format %d in texture", tex->FormatGet()));
         return;
       }
 

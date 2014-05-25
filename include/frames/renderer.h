@@ -35,6 +35,7 @@ namespace Frames {
 
       int WidthGet() const { return m_surface_width; }
       int HeightGet() const { return m_surface_height; }
+      Texture::Format FormatGet() const { return m_surface_format;  }
 
       Environment *EnvironmentGet() const { return m_env; }
 
@@ -43,7 +44,7 @@ namespace Frames {
       std::pair<int, int> SubtextureAllocate(int width, int height);
 
     protected:
-      TextureBacking(Environment *env, int width, int height);
+      TextureBacking(Environment *env, int width, int height, Texture::Format format);
       virtual ~TextureBacking();
 
     private:
@@ -51,6 +52,7 @@ namespace Frames {
 
       int m_surface_width;
       int m_surface_height;
+      Texture::Format m_surface_format;
 
       int m_alloc_next_x;
       int m_alloc_cur_y;

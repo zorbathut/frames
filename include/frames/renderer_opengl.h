@@ -68,7 +68,6 @@ namespace Frames {
       GLuint m_currentTexture;
 
       virtual void ScissorSet(const Rect &rect);
-      std::stack<Rect> m_scissor;
     };
   }
 }
