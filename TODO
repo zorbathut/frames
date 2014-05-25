@@ -1,9 +1,6 @@
 
 === INTEGRATION
 
-* Split OGL into its own lib
-  * Test OGL
-
 * Add DX11
   * Test DX11
 

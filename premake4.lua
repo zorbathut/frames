@@ -88,7 +88,7 @@ solution "Frames"
   local function linkWithFrames()
     configuration {}
     
-    links {"frames", "SDL2", "winmm", "version", "imm32"}
+    links {"frames", "frames_opengl", "SDL2", "winmm", "version", "imm32"}
   
     -- These should really be part of frames, but premake doesn't deal with them properly in that case
     links {"glew32s", "opengl32", "jpeg"}
@@ -105,6 +105,20 @@ solution "Frames"
     language "C++"
     location(path)
     files "src/core/*.cpp"
+    files "include/frames/*.h"
+    
+    configuration "x32"
+      targetdir("lib/" .. slug .. "/x32")
+        
+    configuration "x64"
+      targetdir("lib/" .. slug .. "/x64")
+  
+  -- OGL core
+  project "frames_opengl"
+    kind "StaticLib"
+    language "C++"
+    location(path)
+    files "src/opengl/*.cpp"
     files "include/frames/*.h"
     
     configuration "x32"
