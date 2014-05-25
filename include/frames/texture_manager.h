@@ -21,6 +21,8 @@ namespace Frames {
   typedef Ptr<Texture> TexturePtr;
 
   namespace detail {
+    class Renderer;
+
     class TextureBacking : public Refcountable<TextureBacking> {
       friend class Refcountable<TextureBacking>;
     public:
@@ -91,6 +93,7 @@ namespace Frames {
       // Allows for accessor function calls
       friend class TextureBacking;
       friend class TextureChunk;
+      friend class Renderer;
 
       boost::bimap<std::string, TextureChunk *> m_texture; // not refcounted, the refcounting needs to deallocate
 

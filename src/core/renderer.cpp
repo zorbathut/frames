@@ -159,6 +159,27 @@ namespace Frames {
     
       return true;
     }
+
+    TextureChunkPtr Renderer::TextureFromId(const std::string &id) {
+      return m_env->GetTextureManager()->TextureFromId(id);
+
+    }
+
+    TextureChunkPtr Renderer::TextureFromConfig(const TexturePtr &conf, TextureBackingPtr backing /*= TextureBackingPtr()*/) {
+      return m_env->GetTextureManager()->TextureFromConfig(conf, backing);
+    }
+
+    TextureBackingPtr Renderer::BackingCreate(int width, int height, int modeGL) {
+      return m_env->GetTextureManager()->BackingCreate(width, height, modeGL);
+    }
+
+    void Renderer::Internal_Shutdown_Backing(TextureBacking *backing) {
+      return m_env->GetTextureManager()->Internal_Shutdown_Backing(backing);
+    }
+
+    void Renderer::Internal_Shutdown_Chunk(TextureChunk *chunk) {
+      return m_env->GetTextureManager()->Internal_Shutdown_Chunk(chunk);
+    }
   }
 }
 

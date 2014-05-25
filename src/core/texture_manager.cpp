@@ -4,6 +4,7 @@
 #include "frames/configuration.h"
 #include "frames/detail_format.h"
 #include "frames/environment.h"
+#include "frames/renderer.h"
 #include "frames/texture.h"
 
 namespace Frames {
@@ -25,7 +26,7 @@ namespace Frames {
     }
 
     TextureBacking::~TextureBacking() {
-      m_env->GetTextureManager()->Internal_Shutdown_Backing(this);
+      m_env->GetRenderer()->Internal_Shutdown_Backing(this);
 
       glDeleteTextures(1, &m_id);
     }
@@ -63,7 +64,7 @@ namespace Frames {
     }
 
     TextureChunk::~TextureChunk() {
-      m_backing->m_env->GetTextureManager()->Internal_Shutdown_Chunk(this);
+      m_backing->m_env->GetRenderer()->Internal_Shutdown_Chunk(this);
     }
 
     TextureManager::TextureManager(Environment *env) : m_env(env) {

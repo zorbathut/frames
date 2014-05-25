@@ -10,6 +10,8 @@
 #include "frames/noncopyable.h"
 #include "frames/rect.h"
 
+#include "frames/texture_manager.h"
+
 namespace Frames {
   class Environment;
   struct Rect;
@@ -19,6 +21,7 @@ namespace Frames {
     class TextureBacking;
     typedef Ptr<TextureBacking> TextureBackingPtr;
     class TextureChunk;
+    typedef Ptr<TextureChunk> TextureChunkPtr;
 
     class Renderer : Noncopyable {
     public:
@@ -56,6 +59,12 @@ namespace Frames {
       static bool WriteCroppedRect(Vertex *vertex, const Rect &screen, const Color &color, const Rect &bounds); // no fancy lerping
       static bool WriteCroppedTexRect(Vertex *vertex, const Rect &screen, const Rect &tex, const Color &color, const Rect &bounds);  // fancy lerping
 
+      // Texture manipulation - refactoring in progress!
+      TextureChunkPtr TextureFromId(const std::string &id);
+      TextureChunkPtr TextureFromConfig(const TexturePtr &conf, TextureBackingPtr backing = TextureBackingPtr());
+
+      TextureBackingPtr BackingCreate(int width, int height, int modeGL); // we'll have to change this to generalized mode at some point
+
     protected:
       int WidthGet() { return m_width; }
       int HeightGet() { return m_height; }
@@ -70,6 +79,12 @@ namespace Frames {
       std::stack<Rect> m_scissor;
 
       std::vector<float> m_alpha; // we'll only really allocate it once
+
+      // Texture manipulation - refactoring in progress!
+      friend class TextureBacking;
+      friend class TextureChunk;
+      void Internal_Shutdown_Backing(TextureBacking *backing);
+      void Internal_Shutdown_Chunk(TextureChunk *chunk);
     };
   }
 }

@@ -3,10 +3,10 @@
 
 * Wire Renderer->TextureManager conversion
 * Refactor API
-* Kill TextureManager
-
+* Virtual-ize functions that need to be virtual
 * Move TextureBacking into Renderer
 * Move TextureChunk into Environment
+* Kill TextureManager
 
 * Wire Environment->TextManager conversion
 * Kill TextManager

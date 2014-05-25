@@ -29,6 +29,7 @@ namespace Frames {
     class TextureBacking;
     class TextureChunk;
     class TextureManager;
+    class Renderer;
   }
 
   /// Coordinator class for almost all Frames state. Every Frames-using program will contain at least one Environment.
@@ -190,6 +191,9 @@ namespace Frames {
     friend class detail::TextureBacking;
     friend class detail::TextureChunk;
 
+    // REMOVE LATER - REFACTORING TEMPORARY
+    friend class detail::Renderer;
+
     // Refcount destructor access
     friend class Refcountable<Environment>;
 
@@ -225,6 +229,7 @@ namespace Frames {
     Configuration::Local m_config;
 
     // Managers
+    detail::Renderer *GetRenderer() { return m_renderer; }
     detail::TextManager *GetTextManager() { return m_text_manager; }
     detail::TextureManager *GetTextureManager() { return m_texture_manager; }
 
@@ -235,11 +240,12 @@ namespace Frames {
     // Root
     Layout *m_root;
     
+    // Input states
     Layout *m_over;
     Layout *m_focus;
     std::map<int, Layout *> m_buttonDown;
     Vector m_mouse;
-    Input::Meta m_lastMeta; // stores the shift/ctrl/alt states
+    Input::Meta m_lastMeta;
   };
 }
 
