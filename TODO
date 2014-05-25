@@ -1,7 +1,6 @@
 
 === INTEGRATION
 
-* Kill TextureManager
 * Move TextureBacking into Renderer
 
 * BackingCreate stays in Renderer, as does Internal_Shutdown_Backing (renamed, though)
