@@ -96,31 +96,6 @@ namespace Frames {
       }
     }
 
-    TextureChunk::TextureChunk() :
-        m_texture_width(0),
-        m_texture_height(0),
-        m_bounds(0, 0, 0, 0)
-    {
-    }
-
-    TextureChunk::~TextureChunk() {
-      m_backing->m_env->TextureChunkShutdown(this);
-    }
-
-    /*static*/ TextureChunkPtr TextureChunk::Create() {
-      return TextureChunkPtr(new TextureChunk());
-    }
-
-    void TextureChunk::Attach(const TextureBackingPtr &backing, int sx, int sy, int ex, int ey) {
-      m_backing = backing;
-      m_texture_width = ex - sx;
-      m_texture_height = ey - sy;
-      m_bounds.s.x = (float)sx / backing->m_surface_width;
-      m_bounds.s.y = (float)sy / backing->m_surface_width;
-      m_bounds.e.x = m_bounds.s.x + (float)m_texture_width / backing->m_surface_width;
-      m_bounds.e.y = m_bounds.s.y + (float)m_texture_height / backing->m_surface_height;
-    }
-
     TextureManager::TextureManager(Environment *env) : m_env(env) {
     }
 

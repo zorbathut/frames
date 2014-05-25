@@ -7,6 +7,7 @@
 #include "frames/renderer_opengl.h"
 #include "frames/text_manager.h"
 #include "frames/texture.h"
+#include "frames/texture_chunk.h"
 #include "frames/texture_manager.h"
 
 namespace Frames {

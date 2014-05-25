@@ -24,14 +24,17 @@ namespace Frames {
     class Renderer;
     class TextureBacking;
     typedef Ptr<TextureBacking> TextureBackingPtr;
-    class TextureChunk;
-    typedef Ptr<TextureChunk> TextureChunkPtr;
 
     class TextureBacking : public Refcountable<TextureBacking> {
       friend class Refcountable<TextureBacking>;
     public:
 
       int GlidGet() const { return m_id; }
+
+      int WidthGet() const { return m_surface_width; }
+      int HeightGet() const { return m_surface_height; }
+
+      Environment *EnvironmentGet() const { return m_env; }
 
       void Allocate(int width, int height, int gltype);
 
@@ -44,7 +47,6 @@ namespace Frames {
 
       friend class Environment; // temporary
       friend class TextureManager;
-      friend class TextureChunk;
 
       Environment *m_env;
 
@@ -58,34 +60,6 @@ namespace Frames {
       int m_alloc_next_y;
     };
 
-    class TextureChunk : public Refcountable<TextureChunk> {
-      friend class Refcountable<TextureChunk>;
-    public:
-      static TextureChunkPtr Create();
-
-      int WidthGet() const { return m_texture_width; }
-      int HeightGet() const { return m_texture_height; }
-
-      const Rect &BoundsGet() { return m_bounds; }
-
-      const TextureBackingPtr &BackingGet() { return m_backing; }
-
-      void Attach(const TextureBackingPtr &backing, int sx, int sy, int ex, int ey);
-
-    private:
-      TextureChunk();
-      ~TextureChunk();
-
-      friend class TextureManager;
-
-      TextureBackingPtr m_backing;
-
-      int m_texture_width;
-      int m_texture_height;
-
-      Rect m_bounds;
-    };
-
     class TextureManager : Noncopyable {
     public:
       TextureManager(Environment *env);
@@ -96,7 +70,6 @@ namespace Frames {
     private:
       // Allows for accessor function calls
       friend class TextureBacking;
-      friend class TextureChunk;
       friend class Renderer;
 
       std::set<TextureBacking *> m_backing; // again, not refcounted

@@ -1,8 +1,6 @@
 
 === INTEGRATION
 
-* Move TextureChunk into Environment
-
 * Kill TextureManager
 * Move TextureBacking into Renderer
 
@@ -10,6 +8,8 @@
 
 * Wire Environment->TextManager conversion
 * Kill TextManager
+
+* Ensure OGL isn't referred anywhere anymore
 
 * Split OGL into its own lib
   * TextureManager hooks
