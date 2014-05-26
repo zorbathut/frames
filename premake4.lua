@@ -94,7 +94,7 @@ solution "Frames"
     links {"glew32s", "opengl32", "jpeg"}
     
     configuration "vs*"
-      links {"libpng14", "lua51", "freetype2312MT", "zlib"}
+      links {"frames_dx11", "libpng14", "lua51", "freetype2312MT", "zlib", "d3dcompiler"}
       
     configuration {}
   end
@@ -119,6 +119,20 @@ solution "Frames"
     language "C++"
     location(path)
     files "src/opengl/*.cpp"
+    files "include/frames/*.h"
+    
+    configuration "x32"
+      targetdir("lib/" .. slug .. "/x32")
+        
+    configuration "x64"
+      targetdir("lib/" .. slug .. "/x64")
+  
+  -- DX11 core
+  project "frames_dx11"
+    kind "StaticLib"
+    language "C++"
+    location(path)
+    files "src/dx11/*.cpp"
     files "include/frames/*.h"
     
     configuration "x32"
