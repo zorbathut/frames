@@ -74,7 +74,7 @@ void TestCompareStrings(const std::string &family, const std::string &data) {
   EXPECT_TRUE(data == testsrc);
 }
 
-TestSDLEnvironment::TestSDLEnvironment(int width, int height) : TestEnvironmentProto(width, height), m_win(0), m_glContext(0) {
+TestWindowSDL::TestWindowSDL(int width, int height) : TestWindow(width, height), m_win(0), m_glContext(0) {
   EXPECT_EQ(0, SDL_Init(SDL_INIT_VIDEO));
 
   SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
@@ -90,7 +90,7 @@ TestSDLEnvironment::TestSDLEnvironment(int width, int height) : TestEnvironmentP
   EXPECT_TRUE(m_glContext != 0);
 }
 
-TestSDLEnvironment::~TestSDLEnvironment() {
+TestWindowSDL::~TestWindowSDL() {
   EXPECT_EQ(GL_NO_ERROR, glGetError()); // verify no GL issues
 
   if (m_glContext) {
@@ -104,15 +104,23 @@ TestSDLEnvironment::~TestSDLEnvironment() {
   SDL_Quit();
 }
 
-void TestSDLEnvironment::Swap() {
+void TestWindowSDL::Swap() {
   SDL_GL_SwapWindow(m_win);
 }
 
-void TestSDLEnvironment::HandleEvents() {
+void TestWindowSDL::HandleEvents() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
     // We actually just ignore all events
   }
+}
+
+Frames::Configuration::RendererPtr TestWindowSDL::RendererGet() {
+  return Frames::Configuration::RendererOpengl();
+}
+
+Frames::Configuration::RendererPtr TestWindowNullOGL::RendererGet() {
+  return Frames::Configuration::RendererOpengl();
 }
 
 TestLogger::TestLogger() : m_allowErrors(false) { }
@@ -148,9 +156,11 @@ public:
   }
 };
 
-TestEnvironment::TestEnvironment(bool startSDL, int width, int height) : m_env(0), m_tenv(0) {
-  if (startSDL) {
-    m_tenv = new TestSDLEnvironment(width, height);
+TestEnvironment::TestEnvironment(bool startUI, int width, int height) : m_env(0), m_tenv(0) {
+  if (startUI) {
+    m_tenv = new TestWindowSDL(width, height);
+  } else {
+    m_tenv = new TestWindowNullOGL(width, height);
   }
 
   m_logger = Frames::Ptr<TestLogger>(new TestLogger());
@@ -163,12 +173,10 @@ TestEnvironment::TestEnvironment(bool startSDL, int width, int height) : m_env(0
   config.FontDefaultIdSet("LindenHill.otf");
   config.LoggerSet(m_logger);
   config.PathFromIdSet(Frames::Ptr<TestPathMunger>(new TestPathMunger()));
-  config.RendererSet(Frames::Configuration::RendererOpengl());
+  config.RendererSet(m_tenv->RendererGet());
   m_env = Frames::Environment::Create(config);
 
-  if (startSDL) {
-    m_env->ResizeRoot(WidthGet(), HeightGet()); // set this up so we can check coordinates, otherwise we'll currently assume there are no coordinates
-  }
+  m_env->ResizeRoot(WidthGet(), HeightGet()); // set this up so we can check coordinates, otherwise we'll currently assume there are no coordinates
 }
 
 TestEnvironment::~TestEnvironment() {

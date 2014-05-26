@@ -15,10 +15,10 @@ namespace Frames {
   template <typename Parameters> class Verb;
 }
 
-class TestEnvironmentProto : Frames::detail::Noncopyable {
+class TestWindow : Frames::detail::Noncopyable {
 public:
-  TestEnvironmentProto(int width, int height) : m_width(width), m_height(height) {}
-  virtual ~TestEnvironmentProto() {}
+  TestWindow(int width, int height) : m_width(width), m_height(height) {}
+  virtual ~TestWindow() {}
 
   int WidthGet() const { return m_width; }
   int HeightGet() const { return m_height; }
@@ -26,23 +26,37 @@ public:
   virtual void Swap() = 0;
   virtual void HandleEvents() = 0;
 
+  virtual Frames::Configuration::RendererPtr RendererGet() = 0;
+
 private:
   int m_width;
   int m_height;
 };
 
-// Sets up a working test environment
-class TestSDLEnvironment : public TestEnvironmentProto {
+class TestWindowSDL : public TestWindow {
 public:
-  TestSDLEnvironment(int width, int height);
-  ~TestSDLEnvironment();
+  TestWindowSDL(int width, int height);
+  ~TestWindowSDL();
 
   virtual void Swap();
   virtual void HandleEvents();
 
+  Frames::Configuration::RendererPtr RendererGet();
+
 private:
   SDL_Window *m_win;
   SDL_GLContext m_glContext;
+};
+
+class TestWindowNullOGL : public TestWindow {
+public:
+  TestWindowNullOGL(int width, int height) : TestWindow(width, height) { }
+  ~TestWindowNullOGL() { }
+
+  virtual void Swap() { }
+  virtual void HandleEvents() { }
+
+  Frames::Configuration::RendererPtr RendererGet();
 };
 
 class TestLogger : public Frames::Configuration::Logger {
@@ -79,7 +93,7 @@ public:
 
 private:
   // mostly taken care of with constructor/destructor
-  TestEnvironmentProto *m_tenv;
+  TestWindow *m_tenv;
 
   Frames::EnvironmentPtr m_env;
 
