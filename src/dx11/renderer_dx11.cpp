@@ -117,7 +117,7 @@ namespace Frames {
         }
 
         data = dataStorage.data();
-        stride = dataStorage.size() / tex->HeightGet(); // yes, this is a wasted div; it's not really going to be an issue, though.
+        stride = (int)dataStorage.size() / tex->HeightGet(); // yes, this is a wasted div; it's not really going to be an issue, though.
       }
 
       D3D11_BOX box;
