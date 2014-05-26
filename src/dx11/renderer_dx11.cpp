@@ -107,7 +107,7 @@ namespace Frames {
         int pixels = tex->WidthGet() * tex->HeightGet();
         dataStorage.resize(pixels * Texture::RawBPPGet(Texture::FORMAT_RGBA_8));
         const unsigned char *read = data;
-        unsigned char *write = dataStorage.data();
+        unsigned char *write = &dataStorage[0];
         
         for (int i = 0; i < pixels; ++i) {
           *write++ = *read++;
@@ -116,7 +116,7 @@ namespace Frames {
           *write++ = 255;
         }
 
-        data = dataStorage.data();
+        data = &dataStorage[0];
         stride = (int)dataStorage.size() / tex->HeightGet(); // yes, this is a wasted div; it's not really going to be an issue, though.
       }
 
@@ -316,7 +316,7 @@ namespace Frames {
 
         D3D11_SUBRESOURCE_DATA indexBufferData;
         memset(&indexBufferData, 0, sizeof(indexBufferData));
-        indexBufferData.pSysMem = elements.data();
+        indexBufferData.pSysMem = &elements[0];
 
         if (DeviceGet()->CreateBuffer(&indexBufferDesc, &indexBufferData, &m_indices) != S_OK) {
           EnvironmentGet()->LogError("Failure to allocate index buffer");
