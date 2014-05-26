@@ -72,8 +72,17 @@ solution "Frames"
   configuration "vs*"
     defines "_CRT_SECURE_NO_WARNINGS" -- Annoying warning on MSVC that wants use of MSVC-specific functions
   
-  configuration { "vs2010", "x64" }
-    libdirs "C:\\Program Files\\Microsoft SDKs\\Windows\\v6.0a\\Lib\\x64"  -- why on earth is this not included by default
+  configuration { "vs2008 or vs2010" }
+    includedirs {
+      "C:/Program Files (x86)/Windows Kits/8.1/Include/um",
+      "C:/Program Files (x86)/Windows Kits/8.1/Include/shared"
+    }
+      
+  configuration { "vs2008 or vs2010", "x32" }
+    libdirs "C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86"
+    
+  configuration { "vs2008 or vs2010", "x64" }
+    libdirs "C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64"
   
   -- Build config
   configuration "*"
