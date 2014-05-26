@@ -15,24 +15,34 @@ namespace Frames {
   template <typename Parameters> class Verb;
 }
 
+class TestEnvironmentProto : Frames::detail::Noncopyable {
+public:
+  TestEnvironmentProto(int width, int height) : m_width(width), m_height(height) {}
+  virtual ~TestEnvironmentProto() {}
+
+  int WidthGet() const { return m_width; }
+  int HeightGet() const { return m_height; }
+
+  virtual void Swap() = 0;
+  virtual void HandleEvents() = 0;
+
+private:
+  int m_width;
+  int m_height;
+};
+
 // Sets up a working test environment
-class TestSDLEnvironment : Frames::detail::Noncopyable {
+class TestSDLEnvironment : public TestEnvironmentProto {
 public:
   TestSDLEnvironment(int width, int height);
   ~TestSDLEnvironment();
 
-  int WidthGet() const;
-  int HeightGet() const;
-
-  void Swap();
-  void HandleEvents();
+  virtual void Swap();
+  virtual void HandleEvents();
 
 private:
   SDL_Window *m_win;
   SDL_GLContext m_glContext;
-
-  int m_width;
-  int m_height;
 };
 
 class TestLogger : public Frames::Configuration::Logger {
@@ -53,22 +63,24 @@ private:
 
 class TestEnvironment : Frames::detail::Noncopyable {
 public:
-  TestEnvironment(bool startSDL = true, int width = 1280, int height = 720);
+  TestEnvironment(bool startUI = true, int width = 1280, int height = 720);
   ~TestEnvironment();
 
   Frames::Environment *operator*() { return m_env.Get(); }
   Frames::Environment *operator->() { return m_env.Get(); }
 
-  int WidthGet() const { return m_sdl->WidthGet(); }
-  int HeightGet() const { return m_sdl->HeightGet(); }
+  int WidthGet() const;
+  int HeightGet() const;
 
-  void Swap() { return m_sdl->Swap(); }
-  void HandleEvents() { return m_sdl->HandleEvents(); }
+  void Swap();
+  void HandleEvents();
 
   void AllowErrors();
 
 private:
-  TestSDLEnvironment *m_sdl; // mostly taken care of with constructor/destructor
+  // mostly taken care of with constructor/destructor
+  TestEnvironmentProto *m_tenv;
+
   Frames::EnvironmentPtr m_env;
 
   Frames::Ptr<TestLogger> m_logger; // owned by m_env

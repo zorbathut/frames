@@ -12,6 +12,7 @@
 #include <frames/event.h>
 #include <frames/layout.h>
 #include <frames/loader.h>
+#include <frames/renderer_dx11.h>
 #include <frames/renderer_opengl.h>
 #include <frames/stream.h>
 #include <frames/texture.h>
@@ -73,7 +74,7 @@ void TestCompareStrings(const std::string &family, const std::string &data) {
   EXPECT_TRUE(data == testsrc);
 }
 
-TestSDLEnvironment::TestSDLEnvironment(int width, int height) : m_win(0), m_glContext(0) {
+TestSDLEnvironment::TestSDLEnvironment(int width, int height) : TestEnvironmentProto(width, height), m_win(0), m_glContext(0) {
   EXPECT_EQ(0, SDL_Init(SDL_INIT_VIDEO));
 
   SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
@@ -85,15 +86,14 @@ TestSDLEnvironment::TestSDLEnvironment(int width, int height) : m_win(0), m_glCo
   m_win = SDL_CreateWindow("Frames test harness", 100, 100, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
   EXPECT_TRUE(m_win != NULL);
 
-  m_width = width;
-  m_height = height;
-
   m_glContext = SDL_GL_CreateContext(m_win);
   EXPECT_TRUE(m_glContext != 0);
 }
 
 TestSDLEnvironment::~TestSDLEnvironment() {
-  if (!m_glContext) {
+  EXPECT_EQ(GL_NO_ERROR, glGetError()); // verify no GL issues
+
+  if (m_glContext) {
     SDL_GL_DeleteContext(m_glContext);
   }
 
@@ -102,13 +102,6 @@ TestSDLEnvironment::~TestSDLEnvironment() {
   }
 
   SDL_Quit();
-}
-
-int TestSDLEnvironment::WidthGet() const {
-  return m_width;
-}
-int TestSDLEnvironment::HeightGet() const {
-  return m_height;
 }
 
 void TestSDLEnvironment::Swap() {
@@ -155,9 +148,9 @@ public:
   }
 };
 
-TestEnvironment::TestEnvironment(bool startSDL, int width, int height) : m_env(0), m_sdl(0) {
+TestEnvironment::TestEnvironment(bool startSDL, int width, int height) : m_env(0), m_tenv(0) {
   if (startSDL) {
-    m_sdl = new TestSDLEnvironment(width, height);
+    m_tenv = new TestSDLEnvironment(width, height);
   }
 
   m_logger = Frames::Ptr<TestLogger>(new TestLogger());
@@ -179,12 +172,27 @@ TestEnvironment::TestEnvironment(bool startSDL, int width, int height) : m_env(0
 }
 
 TestEnvironment::~TestEnvironment() {
-  EXPECT_EQ(GL_NO_ERROR, glGetError()); // verify no GL issues
   m_env.Reset();
-  delete m_sdl;
+  delete m_tenv;
 
   // Reset the configuration system so the logger goes out of scope
   Frames::Configuration::Set(Frames::Configuration::Global());
+}
+
+int TestEnvironment::WidthGet() const {
+  return m_tenv->WidthGet();
+}
+
+int TestEnvironment::HeightGet() const {
+  return m_tenv->HeightGet();
+}
+
+void TestEnvironment::Swap() {
+  return m_tenv->Swap();
+}
+
+void TestEnvironment::HandleEvents() {
+  return m_tenv->HandleEvents();
 }
 
 void TestEnvironment::AllowErrors() {
