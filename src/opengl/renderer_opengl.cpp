@@ -167,7 +167,6 @@ namespace Frames {
       m_currentTexture = 0;
 
       glEnable(GL_SCISSOR_TEST);
-      ScissorSet(Rect(0, 0, (float)WidthGet(), (float)HeightGet()));
     }
 
     void RendererOpengl::End() {

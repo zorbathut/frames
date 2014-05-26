@@ -4,6 +4,8 @@
 * Add DX11
   * Test DX11
 
+* Add DX11/OGL flags to the renderer module
+
 * Split Loaders into their own libs
   * Test
 

@@ -60,6 +60,8 @@ namespace Frames {
     void Renderer::Begin(int width, int height) {
       m_width = width;
       m_height = height;
+
+      ScissorSet(Rect(0, 0, (float)WidthGet(), (float)HeightGet()));
     }
 
     void Renderer::End() {
