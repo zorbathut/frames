@@ -28,35 +28,11 @@ public:
 
   virtual Frames::Configuration::RendererPtr RendererGet() = 0;
 
+  virtual void ClearRenderTarget() = 0;
+
 private:
   int m_width;
   int m_height;
-};
-
-class TestWindowSDL : public TestWindow {
-public:
-  TestWindowSDL(int width, int height);
-  ~TestWindowSDL();
-
-  virtual void Swap();
-  virtual void HandleEvents();
-
-  Frames::Configuration::RendererPtr RendererGet();
-
-private:
-  SDL_Window *m_win;
-  SDL_GLContext m_glContext;
-};
-
-class TestWindowNullOGL : public TestWindow {
-public:
-  TestWindowNullOGL(int width, int height) : TestWindow(width, height) { }
-  ~TestWindowNullOGL() { }
-
-  virtual void Swap() { }
-  virtual void HandleEvents() { }
-
-  Frames::Configuration::RendererPtr RendererGet();
 };
 
 class TestLogger : public Frames::Configuration::Logger {
@@ -90,6 +66,7 @@ public:
   void HandleEvents();
 
   void AllowErrors();
+  void ClearRenderTarget() { m_tenv->ClearRenderTarget(); }
 
 private:
   // mostly taken care of with constructor/destructor
