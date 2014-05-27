@@ -64,6 +64,14 @@ std::vector<unsigned char> TestWindowSDL::Screenshot() {
   glReadPixels(0, 0, WidthGet(), HeightGet(), GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
   EXPECT_EQ(GL_NO_ERROR, glGetError());
 
+  // Annoyingly, OpenGL reads coordinates in math quadrant order, not scanline order like the rest of the civilized computer world
+  // So . . . go ahead and invert the entire array
+  for (int y = 0; y < HeightGet() / 2; ++y) {
+    for (int x = 0; x < WidthGet() * 4; ++x) {
+      std::swap(pixels[y * WidthGet() * 4 + x], pixels[(HeightGet() - 1 - y) * WidthGet() * 4 + x]);
+    }
+  }
+
   return pixels;
 }
 

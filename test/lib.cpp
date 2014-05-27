@@ -91,6 +91,7 @@ void TestLogger::LogError(const std::string &log) {
   m_loggedErrors += log;
   m_loggedErrors += "\n";
 }
+
 void TestLogger::LogDebug(const std::string &log) {
   printf("[DBG] %s\n", log.c_str());
 }
@@ -238,14 +239,6 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
 
   // Grab a screenshot
   std::vector<unsigned char> pixels = env.Screenshot();
-
-  // Annoyingly, OpenGL reads coordinates in math quadrant order, not scanline order like the rest of the civilized computer world
-  // So . . . go ahead and invert the entire array
-  for (int y = 0; y < env.HeightGet() / 2; ++y) {
-    for (int x = 0; x < env.WidthGet() * 4; ++x) {
-      std::swap(pixels[y * env.WidthGet() * 4 + x], pixels[(env.HeightGet() - 1 - y) * env.WidthGet() * 4 + x]);
-    }
-  }
 
   // Grab our source file (or try to)
   std::vector<unsigned char> reference;
