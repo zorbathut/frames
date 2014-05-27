@@ -15,6 +15,7 @@ public:
   virtual Frames::Configuration::RendererPtr RendererGet();
 
   virtual void ClearRenderTarget();
+  virtual std::vector<unsigned char> Screenshot();
 
 private:
   SDL_Window *m_win;
@@ -32,6 +33,7 @@ public:
   virtual Frames::Configuration::RendererPtr RendererGet();
 
   virtual void ClearRenderTarget() { }
+  virtual std::vector<unsigned char> Screenshot() { return std::vector<unsigned char>(); }
 };
 
 #endif

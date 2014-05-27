@@ -56,6 +56,17 @@ void TestWindowSDL::ClearRenderTarget() {
   glClear(GL_COLOR_BUFFER_BIT);
 }
 
+std::vector<unsigned char> TestWindowSDL::Screenshot() {
+  std::vector<unsigned char> pixels;
+  pixels.resize(4 * WidthGet() * HeightGet());
+
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glReadPixels(0, 0, WidthGet(), HeightGet(), GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
+  EXPECT_EQ(GL_NO_ERROR, glGetError());
+
+  return pixels;
+}
+
 Frames::Configuration::RendererPtr TestWindowNullOGL::RendererGet() {
   return Frames::Configuration::RendererOpengl();
 }

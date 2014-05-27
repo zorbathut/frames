@@ -29,6 +29,7 @@ public:
   virtual Frames::Configuration::RendererPtr RendererGet() = 0;
 
   virtual void ClearRenderTarget() = 0;
+  virtual std::vector<unsigned char> Screenshot() = 0;
 
 private:
   int m_width;
@@ -67,6 +68,7 @@ public:
 
   void AllowErrors();
   void ClearRenderTarget() { m_tenv->ClearRenderTarget(); }
+  std::vector<unsigned char> Screenshot() { return m_tenv->Screenshot(); }
 
 private:
   // mostly taken care of with constructor/destructor
@@ -127,6 +129,5 @@ private:
 };
 
 void TestSnapshot(TestEnvironment &env, std::string fname = "");  // non-const-reference so we can just modify it
-void HaltAndRender(TestEnvironment &env); // Intended for debugging with an attached graphics debugger
 
 #endif

@@ -5,9 +5,6 @@
 
 #include <gtest/gtest.h>
 
-#define GLEW_STATIC
-#include <GL/GLew.h>
-
 #include <SDL.h>
 #include <frames/detail_format.h>
 #include <frames/environment.h>
@@ -240,11 +237,7 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
   // We now have our test filename
 
   // Grab a screenshot
-  std::vector<unsigned char> pixels; pixels.resize(4 * env.WidthGet() * env.HeightGet());
-
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  glReadPixels(0, 0, env.WidthGet(), env.HeightGet(), GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
-  EXPECT_EQ(GL_NO_ERROR, glGetError());
+  std::vector<unsigned char> pixels = env.Screenshot();
 
   // Annoyingly, OpenGL reads coordinates in math quadrant order, not scanline order like the rest of the civilized computer world
   // So . . . go ahead and invert the entire array
@@ -327,18 +320,5 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
     if (different) {
       GTEST_LOG_(WARNING) << "Mismatched pixels within bounds: " << different;
     }
-  }
-  
-}
-
-void HaltAndRender(TestEnvironment &env) {
-  while (true) {
-    // Do the render
-    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
-    env->ResizeRoot(env.WidthGet(), env.HeightGet());
-    env->Render();
-    env.Swap();
-    env.HandleEvents();
   }
 }
