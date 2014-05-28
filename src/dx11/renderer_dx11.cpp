@@ -382,7 +382,7 @@ namespace Frames {
         D3D11_BUFFER_DESC indexBufferDesc;
         memset(&indexBufferDesc, 0, sizeof(indexBufferDesc));
         indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-        indexBufferDesc.ByteWidth = sizeof(unsigned short)* 6;
+        indexBufferDesc.ByteWidth = sizeof(unsigned short) * quadLen * 6;
         indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
         indexBufferDesc.CPUAccessFlags = 0;
         indexBufferDesc.MiscFlags = 0;
