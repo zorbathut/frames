@@ -211,7 +211,7 @@ TEST(Layout, Layer) {
 
 }
 
-TEST(Layout, Error) {
+TEST(Layout, DISABLED_Error) {
   TestEnvironment env;
   TestEnvironment env2(false);
 

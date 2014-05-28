@@ -58,7 +58,9 @@ namespace Frames {
 
       ID3D11DeviceContext *m_context;
 
-      D3D11_RASTERIZER_DESC m_rasterizerState;
+      ID3D11RasterizerState *m_rasterizerState;
+      ID3D11BlendState *m_blendState;
+      ID3D11DepthStencilState *m_depthState;
 
       ID3D11VertexShader *m_vs;
       ID3D11PixelShader *m_ps;

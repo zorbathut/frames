@@ -129,5 +129,6 @@ private:
 };
 
 void TestSnapshot(TestEnvironment &env, std::string fname = "");  // non-const-reference so we can just modify it
+void HaltAndRender(TestEnvironment &env);
 
 #endif

@@ -71,6 +71,7 @@ solution "Frames"
   -- Compiler-specific tweaks
   configuration "vs*"
     defines "_CRT_SECURE_NO_WARNINGS" -- Annoying warning on MSVC that wants use of MSVC-specific functions
+    buildoptions "/wd4800"  -- "forcing value to bool 'true' or 'false' (performance warning)"
   
   configuration { "vs2008 or vs2010" }
     includedirs {
@@ -103,7 +104,7 @@ solution "Frames"
     links {"glew32s", "opengl32", "jpeg"}
     
     configuration "vs*"
-      links {"frames_dx11", "libpng14", "lua51", "freetype2312MT", "zlib", "d3dcompiler"}
+      links {"frames_dx11", "d3d11", "libpng14", "lua51", "freetype2312MT", "zlib", "d3dcompiler"}
       
     configuration {}
   end

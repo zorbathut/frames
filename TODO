@@ -4,6 +4,14 @@
 * Add DX11
   * Test DX11
 
+* DX11 reference renderer as well
+* DX11 debug runtime as well!
+
+* Re-enable Layout.Error
+
+* D3D11_USAGE_DYNAMIC fix
+* Lots of debug d3d fixery
+
 * Add DX11/OGL flags to the renderer module
 
 * Split Loaders into their own libs

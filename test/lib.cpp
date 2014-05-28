@@ -2,6 +2,7 @@
 #include "lib.h"
 
 #include "lib_opengl.h"
+#include "lib_dx11.h"
 
 #include <gtest/gtest.h>
 
@@ -110,6 +111,7 @@ public:
 TestEnvironment::TestEnvironment(bool startUI, int width, int height) : m_env(0), m_tenv(0) {
   if (startUI) {
     m_tenv = new TestWindowSDL(width, height);
+    //m_tenv = new TestWindowDX11(width, height);
   } else {
     m_tenv = new TestWindowNullOGL(width, height);
   }
@@ -313,5 +315,16 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
     if (different) {
       GTEST_LOG_(WARNING) << "Mismatched pixels within bounds: " << different;
     }
+  }
+}
+
+void HaltAndRender(TestEnvironment &env) {
+  while (true) {
+    // Do the render
+    env.ClearRenderTarget();
+    env->ResizeRoot(env.WidthGet(), env.HeightGet());
+    env->Render();
+    env.Swap();
+    env.HandleEvents();
   }
 }

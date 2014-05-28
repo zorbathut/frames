@@ -38,13 +38,16 @@ namespace Frames {
     //The input-layout description
     static const D3D11_INPUT_ELEMENT_DESC sLayout[] =
     {
-      { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, offsetof(Renderer::Vertex, p), D3D11_INPUT_PER_VERTEX_DATA, 0 },
-      { "TEXCOORD0", 0, DXGI_FORMAT_R32G32_FLOAT, 0, offsetof(Renderer::Vertex, t), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+      { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, offsetof(Renderer::Vertex, p), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+      { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, offsetof(Renderer::Vertex, t), D3D11_INPUT_PER_VERTEX_DATA, 0 },
       { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, offsetof(Renderer::Vertex, c), D3D11_INPUT_PER_VERTEX_DATA, 0 }
     };
 
-    static const char sVertexShader[] = "float4 VS(float4 inPos : POSITION) : SV_POSITION { return inPos; }"; // I seem to be wearing a buffalo
-    static const char sPixelShader[] = "float4 PS() : SV_TARGET { return float4(0.0f, 0.0f, 1.0f, 1.0f); }";
+    static const char sShader[] =
+      "struct VIn { float2 position : POSITION; float2 tex : TEXCOORD0; float4 color : COLOR; };\n"
+      "struct VOut { float4 position : SV_POSITION; float2 tex : TEXCOORD0; float4 color : COLOR; };\n"
+      "VOut VS(VIn input) { VOut output; float2 cp = input.position; cp.x /= 1280; cp.y /= -720; cp *= 2; cp = cp + float2(-1.f, 1.f); output.position = float4(cp, 0.f, 1.f); output.tex = input.tex; output.color = input.color; return output; }\n"
+      "float4 PS(VOut input) : SV_TARGET { return input.color; }\n";
 
     TextureBackingDX11::TextureBackingDX11(Environment *env, int width, int height, Texture::Format format) : TextureBacking(env, width, height, format), m_tex(0) {
       D3D11_TEXTURE2D_DESC desc;
@@ -67,7 +70,7 @@ namespace Frames {
       }
       desc.SampleDesc.Count = 1;
       desc.SampleDesc.Quality = 0;
-      desc.Usage = D3D11_USAGE_DEFAULT; // someday we should make this immutable when possible
+      desc.Usage = D3D11_USAGE_DYNAMIC; // make this immutable when possible
       desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
       desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
       desc.MiscFlags = 0;
@@ -133,6 +136,9 @@ namespace Frames {
     RendererDX11::RendererDX11(Environment *env, ID3D11DeviceContext *context) :
       Renderer(env),
       m_context(context),
+      m_rasterizerState(0),
+      m_blendState(0),
+      m_depthState(0),
       m_vs(0),
       m_ps(0),
       m_vertices(0),
@@ -145,17 +151,19 @@ namespace Frames {
     {
       CreateBuffers(1 << 16); // maximum size that will fit in a ushort
 
-      // Clear state structures
-      memset(&m_rasterizerState, 0, sizeof(m_rasterizerState));
-
       // Create shaders
       ID3DBlob *vs = 0;
       ID3DBlob *ps = 0;
-      if (D3DCompile(sVertexShader, strlen(sVertexShader), 0, 0, 0, 0, "vs_2_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_WARNINGS_ARE_ERRORS, 0, &vs, 0) != S_OK) {
+      ID3DBlob *errors = 0;
+      if (D3DCompile(sShader, strlen(sShader), 0, 0, 0, "VS", "vs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_WARNINGS_ARE_ERRORS, 0, &vs, &errors) != S_OK) {
         EnvironmentGet()->LogError("Failure to compile vertex shader");
+        EnvironmentGet()->LogError("Err: " + std::string((const char *)errors->GetBufferPointer(), (const char *)errors->GetBufferPointer() + errors->GetBufferSize()));
+        errors->Release();
       }
-      if (D3DCompile(sPixelShader, strlen(sPixelShader), 0, 0, 0, 0, "ps_2_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_WARNINGS_ARE_ERRORS, 0, &ps, 0) != S_OK) {
+      if (D3DCompile(sShader, strlen(sShader), 0, 0, 0, "PS", "ps_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_WARNINGS_ARE_ERRORS, 0, &ps, &errors) != S_OK) {
         EnvironmentGet()->LogError("Failure to compile pixel shader");
+        EnvironmentGet()->LogError("Err: " + std::string((const char *)errors->GetBufferPointer(), (const char *)errors->GetBufferPointer() + errors->GetBufferSize()));
+        errors->Release();
       }
 
       if (DeviceGet()->CreateVertexShader(vs->GetBufferPointer(), vs->GetBufferSize(), NULL, &m_vs) != S_OK) {
@@ -171,14 +179,73 @@ namespace Frames {
 
       vs->Release();
       ps->Release();
+
+      // Create states
+      {
+        D3D11_RASTERIZER_DESC rs;
+        memset(&rs, 0, sizeof(rs));
+        rs.FillMode = D3D11_FILL_SOLID;
+        rs.CullMode = D3D11_CULL_NONE;
+        rs.ScissorEnable = true;
+        rs.MultisampleEnable = true;
+        rs.AntialiasedLineEnable = true;
+        DeviceGet()->CreateRasterizerState(&rs, &m_rasterizerState);
+      }
+
+      {
+        D3D11_BLEND_DESC bs;
+        memset(&bs, 0, sizeof(bs));
+        bs.RenderTarget[0].BlendEnable = true;
+        bs.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+        bs.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+        bs.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+        bs.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+        bs.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+        bs.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+        bs.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+        DeviceGet()->CreateBlendState(&bs, &m_blendState);
+      }
+
+      {
+        D3D11_DEPTH_STENCIL_DESC ds;
+        memset(&ds, 0, sizeof(ds));
+        ds.DepthEnable = false;
+        DeviceGet()->CreateDepthStencilState(&ds, &m_depthState);
+      }
     };
 
     RendererDX11::~RendererDX11() {
-      m_vs->Release();
-      m_ps->Release();
-      m_verticesLayout->Release();
-      m_vertices->Release();
-      m_indices->Release();
+      if (m_rasterizerState) {
+        m_rasterizerState->Release();
+      }
+
+      if (m_blendState) {
+        m_blendState->Release();
+      }
+
+      if (m_depthState) {
+        m_depthState->Release();
+      }
+
+      if (m_vs) {
+        m_vs->Release();
+      }
+
+      if (m_ps) {
+        m_ps->Release();
+      }
+
+      if (m_verticesLayout) {
+        m_verticesLayout->Release();
+      }
+
+      if (m_vertices) {
+        m_vertices->Release();
+      }
+
+      if (m_indices) {
+        m_indices->Release();
+      }
     }
 
     void RendererDX11::Begin(int width, int height) {
@@ -189,8 +256,12 @@ namespace Frames {
       ContextGet()->IASetVertexBuffers(0, 1, &m_vertices, &stride, &offset);
       ContextGet()->IASetIndexBuffer(m_indices, DXGI_FORMAT_R16_UINT, 0);
       ContextGet()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+      ContextGet()->IASetInputLayout(m_verticesLayout);
       ContextGet()->VSSetShader(m_vs, 0, 0);
       ContextGet()->PSSetShader(m_ps, 0, 0);
+      ContextGet()->RSSetState(m_rasterizerState);
+      ContextGet()->OMSetBlendState(m_blendState, 0, ~0);
+      ContextGet()->OMSetDepthStencilState(m_depthState, 0);
       
       D3D11_VIEWPORT viewport;
       memset(&viewport, 0, sizeof(viewport));
@@ -198,6 +269,8 @@ namespace Frames {
       viewport.TopLeftY = 0;
       viewport.Width = (float)width;
       viewport.Height = (float)height;
+      viewport.MinDepth = 0.0f;
+      viewport.MaxDepth = 1.0f;
       ContextGet()->RSSetViewports(1, &viewport);
     }
 
@@ -235,7 +308,7 @@ namespace Frames {
 
       if (quads == -1) quads = m_verticesLastQuadsize;
 
-      m_context->DrawIndexed(quads * 6, 0, m_verticesLastQuadpos * 6);
+      m_context->DrawIndexed(quads * 6, 0, m_verticesLastQuadpos * 4);
     }
 
     TextureBackingPtr RendererDX11::TextureCreate(int width, int height, Texture::Format mode) {
