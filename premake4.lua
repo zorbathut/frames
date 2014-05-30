@@ -168,6 +168,12 @@ solution "Frames"
         
     configuration "x64"
       targetdir("bin/" .. slug .. "/x64/test")
+    
+    configuration {"vs*", "x32", "Debug"}
+      prebuildcommands([[copy "c:\Program Files (x86)\Windows Kits\8.1\Redist\D3D\x86\D3DCompiler_47.dll" $(OutDir)]])
+      
+    configuration {"vs*", "x64", "Debug"}
+      prebuildcommands([[copy "c:\Program Files (x86)\Windows Kits\8.1\Redist\D3D\x64\D3DCompiler_47.dll" $(OutDir)]])
       
     configuration "vs2012"
       defines "_VARIADIC_MAX=10" -- MSVC11 has sketchy support for tr1::tuple; this is required for google test to work

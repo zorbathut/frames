@@ -4,6 +4,9 @@
 * Add DX11
   * Test DX11
 
+* Figure out how to link in the precompiled shader
+  * Remove d3dcompiler linkage
+
 * DX11 reference renderer as well
 * DX11 debug runtime as well!
 
