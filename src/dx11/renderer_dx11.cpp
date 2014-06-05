@@ -443,7 +443,7 @@ namespace Frames {
         m_currentTexture = ntex;
         
         if (m_currentTexture) {
-          if (backing->FormatGet() == Texture::Format::FORMAT_A_8) {
+          if (backing->FormatGet() == Texture::FORMAT_A_8) {
             ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_shader_ci_item_buffer_sample_alpha);
           } else {
             ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_shader_ci_item_buffer_sample_full);
