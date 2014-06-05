@@ -45,14 +45,14 @@ namespace Frames {
 
     static const char sShader[] =
       "cbuffer Size : register(b0) { float width : packoffset(c0.x); float height : packoffset(c0.y); };\n"  // size of screen; changes rarely
-      "cbuffer Item : register(b1) { int sample : packoffset(c0); };\n"  // effectively a boolean. indicates whether to sample or not; changes frequently
+      "cbuffer Item : register(b1) { int sampleMode : packoffset(c0); };\n"  // 0 means don't sample. 1 means do sample and multiply. 2 means do sample and multiply; pretend .rgb is 1.f.
       "Texture2D <float4> sprite : register(t0);\n"  // sprite texture to reference if it is being referenced
       "SamplerState spriteSample : register(s0);\n" // sampler to use for sprite texture
       "\n"
       "struct VIn { float2 position : POSITION; float2 tex : TEXCOORD0; float4 color : COLOR; };\n"
       "struct VOut { float4 position : SV_POSITION; float2 tex : TEXCOORD0; float4 color : COLOR; };\n"
       "VOut VS(VIn input) { VOut output; float2 cp = input.position; cp.x /= width; cp.y /= -height; cp *= 2; cp = cp + float2(-1.f, 1.f); output.position = float4(cp, 0.f, 1.f); output.tex = input.tex; output.color = input.color; return output; }\n"
-      "float4 PS(VOut input) : SV_TARGET { if (sample) return sprite.Sample(spriteSample, input.tex); else return input.color; }\n";
+      "float4 PS(VOut input) : SV_TARGET { if (sampleMode == 1) input.color *= sprite.Sample(spriteSample, input.tex); if (sampleMode == 2) input.color.a *= sprite.Sample(spriteSample, input.tex).a; return input.color; }\n";
 
     TextureBackingDX11::TextureBackingDX11(Environment *env, int width, int height, Texture::Format format) : TextureBacking(env, width, height, format),
       m_tex(0),
@@ -162,8 +162,9 @@ namespace Frames {
       m_shader_tex(0),  // hardcoded for now
       m_shader_sample(0),  // hardcoded for now
       m_shader_ci_size_buffer(0),
-      m_shader_ci_item_buffer_sample(0),
       m_shader_ci_item_buffer_sample_off(0),
+      m_shader_ci_item_buffer_sample_full(0),
+      m_shader_ci_item_buffer_sample_alpha(0),
       m_sampler(0),
       m_vertices(0),
       m_verticesLayout(0),
@@ -238,7 +239,12 @@ namespace Frames {
         }
 
         flag[0] = 1;
-        if (DeviceGet()->CreateBuffer(&desc, &data, &m_shader_ci_item_buffer_sample) != S_OK) {
+        if (DeviceGet()->CreateBuffer(&desc, &data, &m_shader_ci_item_buffer_sample_full) != S_OK) {
+          EnvironmentGet()->LogError("Failure to create enabled sample flag");
+        }
+
+        flag[0] = 2;
+        if (DeviceGet()->CreateBuffer(&desc, &data, &m_shader_ci_item_buffer_sample_alpha) != S_OK) {
           EnvironmentGet()->LogError("Failure to create enabled sample flag");
         }
       }
@@ -316,12 +322,16 @@ namespace Frames {
         m_shader_ci_size_buffer->Release();
       }
 
-      if (m_shader_ci_item_buffer_sample) {
-        m_shader_ci_item_buffer_sample->Release();
-      }
-
       if (m_shader_ci_item_buffer_sample_off) {
         m_shader_ci_item_buffer_sample_off->Release();
+      }
+
+      if (m_shader_ci_item_buffer_sample_full) {
+        m_shader_ci_item_buffer_sample_full->Release();
+      }
+
+      if (m_shader_ci_item_buffer_sample_alpha) {
+        m_shader_ci_item_buffer_sample_alpha->Release();
       }
 
       if (m_sampler) {
@@ -427,12 +437,17 @@ namespace Frames {
     }
 
     void RendererDX11::TextureSet(const detail::TextureBackingPtr &tex) {
-      ID3D11ShaderResourceView *ntex = tex.Get() ? static_cast<TextureBackingDX11*>(tex.Get())->ShaderResourceViewGet() : 0;
+      TextureBackingDX11 *backing = tex.Get() ? static_cast<TextureBackingDX11*>(tex.Get()) : 0;
+      ID3D11ShaderResourceView *ntex = backing ? backing->ShaderResourceViewGet() : 0;
       if (m_currentTexture != ntex) {
         m_currentTexture = ntex;
         
         if (m_currentTexture) {
-          ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_shader_ci_item_buffer_sample);
+          if (backing->FormatGet() == Texture::Format::FORMAT_A_8) {
+            ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_shader_ci_item_buffer_sample_alpha);
+          } else {
+            ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_shader_ci_item_buffer_sample_full);
+          }
           ContextGet()->PSSetShaderResources(m_shader_tex, 1, &m_currentTexture);
         } else {
           ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_shader_ci_item_buffer_sample_off);
