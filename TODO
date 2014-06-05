@@ -10,6 +10,8 @@
 * Figure out how to link in the precompiled shader
   * Remove d3dcompiler linkage
 
+* Deal with color variations
+
 * Re-enable Layout.Error
 
 * D3D11_USAGE_DYNAMIC fix
