@@ -161,9 +161,9 @@ namespace Frames {
       m_shader_ci_item(1),  // hardcoded for now
       m_shader_tex(0),  // hardcoded for now
       m_shader_sample(0),  // hardcoded for now
-      m_ps_ci_size_buffer(0),
-      m_ps_ci_item_buffer_sample(0),
-      m_ps_ci_item_buffer_sample_off(0),
+      m_shader_ci_size_buffer(0),
+      m_shader_ci_item_buffer_sample(0),
+      m_shader_ci_item_buffer_sample_off(0),
       m_sampler(0),
       m_vertices(0),
       m_verticesLayout(0),
@@ -214,7 +214,7 @@ namespace Frames {
         desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-        if (DeviceGet()->CreateBuffer(&desc, 0, &m_ps_ci_size_buffer) != S_OK) {
+        if (DeviceGet()->CreateBuffer(&desc, 0, &m_shader_ci_size_buffer) != S_OK) {
           EnvironmentGet()->LogError("Failure to create size buffer");
         }
       }
@@ -233,12 +233,12 @@ namespace Frames {
         memset(&data, 0, sizeof(data));
         data.pSysMem = flag;
         
-        if (DeviceGet()->CreateBuffer(&desc, &data, &m_ps_ci_item_buffer_sample_off) != S_OK) {
+        if (DeviceGet()->CreateBuffer(&desc, &data, &m_shader_ci_item_buffer_sample_off) != S_OK) {
           EnvironmentGet()->LogError("Failure to create disabled sample flag");
         }
 
         flag[0] = 1;
-        if (DeviceGet()->CreateBuffer(&desc, &data, &m_ps_ci_item_buffer_sample) != S_OK) {
+        if (DeviceGet()->CreateBuffer(&desc, &data, &m_shader_ci_item_buffer_sample) != S_OK) {
           EnvironmentGet()->LogError("Failure to create enabled sample flag");
         }
       }
@@ -312,16 +312,16 @@ namespace Frames {
         m_ps->Release();
       }
 
-      if (m_ps_ci_size_buffer) {
-        m_ps_ci_size_buffer->Release();
+      if (m_shader_ci_size_buffer) {
+        m_shader_ci_size_buffer->Release();
       }
 
-      if (m_ps_ci_item_buffer_sample) {
-        m_ps_ci_item_buffer_sample->Release();
+      if (m_shader_ci_item_buffer_sample) {
+        m_shader_ci_item_buffer_sample->Release();
       }
 
-      if (m_ps_ci_item_buffer_sample_off) {
-        m_ps_ci_item_buffer_sample_off->Release();
+      if (m_shader_ci_item_buffer_sample_off) {
+        m_shader_ci_item_buffer_sample_off->Release();
       }
 
       if (m_sampler) {
@@ -349,13 +349,13 @@ namespace Frames {
       {
         D3D11_MAPPED_SUBRESOURCE map;
         // TODO: don't update if width/height didn't change
-        if (ContextGet()->Map(m_ps_ci_size_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map) != S_OK) {
+        if (ContextGet()->Map(m_shader_ci_size_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map) != S_OK) {
           EnvironmentGet()->LogError("Failure to update size buffer");
         } else {
           float *dat = (float*)map.pData;
           dat[0] = (float)width;
           dat[1] = (float)height;
-          ContextGet()->Unmap(m_ps_ci_size_buffer, 0);
+          ContextGet()->Unmap(m_shader_ci_size_buffer, 0);
         }
       }
 
@@ -366,10 +366,10 @@ namespace Frames {
       ContextGet()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
       ContextGet()->IASetInputLayout(m_verticesLayout);
       ContextGet()->VSSetShader(m_vs, 0, 0);
-      ContextGet()->VSSetConstantBuffers(m_shader_ci_size, 1, &m_ps_ci_size_buffer);
+      ContextGet()->VSSetConstantBuffers(m_shader_ci_size, 1, &m_shader_ci_size_buffer);
       ContextGet()->PSSetShader(m_ps, 0, 0);
       ContextGet()->PSSetSamplers(m_shader_sample, 1, &m_sampler);
-      ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_ps_ci_item_buffer_sample_off);
+      ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_shader_ci_item_buffer_sample_off);
       ContextGet()->RSSetState(m_rasterizerState);
       ContextGet()->OMSetBlendState(m_blendState, 0, ~0);
       ContextGet()->OMSetDepthStencilState(m_depthState, 0);
@@ -432,10 +432,10 @@ namespace Frames {
         m_currentTexture = ntex;
         
         if (m_currentTexture) {
-          ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_ps_ci_item_buffer_sample);
+          ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_shader_ci_item_buffer_sample);
           ContextGet()->PSSetShaderResources(m_shader_tex, 1, &m_currentTexture);
         } else {
-          ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_ps_ci_item_buffer_sample_off);
+          ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_shader_ci_item_buffer_sample_off);
         }
       }
     }

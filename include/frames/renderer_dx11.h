@@ -73,11 +73,11 @@ namespace Frames {
       int m_shader_tex;
       int m_shader_sample;
 
-      ID3D11Buffer *m_ps_ci_size_buffer;
+      ID3D11Buffer *m_shader_ci_size_buffer;
 
       // may as well keep 'em both around
-      ID3D11Buffer *m_ps_ci_item_buffer_sample;
-      ID3D11Buffer *m_ps_ci_item_buffer_sample_off;
+      ID3D11Buffer *m_shader_ci_item_buffer_sample;
+      ID3D11Buffer *m_shader_ci_item_buffer_sample_off;
 
       ID3D11SamplerState *m_sampler;
 
