@@ -49,7 +49,9 @@ namespace Frames {
     }
 
     Renderer::Renderer(Environment *env) :
-        m_env(env)
+        m_env(env),
+        m_width(1920),
+        m_height(1080)
     {
       // prime our alpha stack
       m_alpha.push_back(1);
