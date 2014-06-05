@@ -2,9 +2,10 @@
 === INTEGRATION
 
 * Add DX11
-  * Test DX11
-  * DX11 reference renderer as well
-  * DX11 debug runtime as well!
+  * opengl
+  * dx11
+  * dx11_dbg
+  * dx11_ref
 
 * Figure out how to link in the precompiled shader
   * Remove d3dcompiler linkage
