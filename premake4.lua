@@ -169,16 +169,16 @@ solution "Frames"
     configuration "x64"
       targetdir("bin/" .. slug .. "/x64/test")
     
-    configuration {"vs*", "x32", "Debug", "not vs2012"}
+    configuration {"vs*", "x32", "not vs2012"}
       prebuildcommands([[copy "c:\Program Files (x86)\Windows Kits\8.1\Redist\D3D\x86\D3DCompiler_47.dll" $(OutDir)]])
       
-    configuration {"vs*", "x64", "Debug", "not vs2012"}
+    configuration {"vs*", "x64", "not vs2012"}
       prebuildcommands([[copy "c:\Program Files (x86)\Windows Kits\8.1\Redist\D3D\x64\D3DCompiler_47.dll" $(OutDir)]])
     
-    configuration {"vs2012", "x32", "Debug"}
+    configuration {"vs2012", "x32"}
       prebuildcommands([[copy "c:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\D3DCompiler_46.dll" $(OutDir)]])
       
-    configuration {"vs2012", "x64", "Debug"}
+    configuration {"vs2012", "x64"}
       prebuildcommands([[copy "c:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Packages\Debugger\X64\D3DCompiler_46.dll" $(OutDir)]])
       
     configuration "vs2012"
