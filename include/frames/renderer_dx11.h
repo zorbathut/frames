@@ -27,9 +27,11 @@ namespace Frames {
       virtual void Write(int sx, int sy, const TexturePtr &tex);
 
       ID3D11Texture2D *TexGet() const { return m_tex;  }
+      ID3D11ShaderResourceView *ShaderResourceViewGet() const { return m_srview; }
 
     private:
       ID3D11Texture2D *m_tex;
+      ID3D11ShaderResourceView *m_srview;
     };
 
     class RendererDX11 : public Renderer {
@@ -65,6 +67,20 @@ namespace Frames {
       ID3D11VertexShader *m_vs;
       ID3D11PixelShader *m_ps;
 
+      // shader indices
+      int m_shader_ci_size;
+      int m_shader_ci_item;
+      int m_shader_tex;
+      int m_shader_sample;
+
+      ID3D11Buffer *m_ps_ci_size_buffer;
+
+      // may as well keep 'em both around
+      ID3D11Buffer *m_ps_ci_item_buffer_sample;
+      ID3D11Buffer *m_ps_ci_item_buffer_sample_off;
+
+      ID3D11SamplerState *m_sampler;
+
       ID3D11InputLayout *m_verticesLayout;
       ID3D11Buffer *m_vertices;
       int m_verticesQuadcount;
@@ -75,7 +91,7 @@ namespace Frames {
 
       ID3D11Buffer *m_indices;
 
-      ID3D11Texture2D *m_currentTexture;
+      ID3D11ShaderResourceView *m_currentTexture;
 
       virtual void ScissorSet(const Rect &rect);
     };

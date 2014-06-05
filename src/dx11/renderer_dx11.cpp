@@ -40,16 +40,24 @@ namespace Frames {
     {
       { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, offsetof(Renderer::Vertex, p), D3D11_INPUT_PER_VERTEX_DATA, 0 },
       { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, offsetof(Renderer::Vertex, t), D3D11_INPUT_PER_VERTEX_DATA, 0 },
-      { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, offsetof(Renderer::Vertex, c), D3D11_INPUT_PER_VERTEX_DATA, 0 }
+      { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, offsetof(Renderer::Vertex, c), D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
     static const char sShader[] =
+      "cbuffer Size : register(b0) { float width : packoffset(c0.x); float height : packoffset(c0.y); };\n"  // size of screen; changes rarely
+      "cbuffer Item : register(b1) { int sample : packoffset(c0); };\n"  // effectively a boolean. indicates whether to sample or not; changes frequently
+      "Texture2D <float4> sprite : register(t0);\n"  // sprite texture to reference if it is being referenced
+      "SamplerState spriteSample : register(s0);\n" // sampler to use for sprite texture
+      "\n"
       "struct VIn { float2 position : POSITION; float2 tex : TEXCOORD0; float4 color : COLOR; };\n"
       "struct VOut { float4 position : SV_POSITION; float2 tex : TEXCOORD0; float4 color : COLOR; };\n"
-      "VOut VS(VIn input) { VOut output; float2 cp = input.position; cp.x /= 1280; cp.y /= -720; cp *= 2; cp = cp + float2(-1.f, 1.f); output.position = float4(cp, 0.f, 1.f); output.tex = input.tex; output.color = input.color; return output; }\n"
-      "float4 PS(VOut input) : SV_TARGET { return input.color; }\n";
+      "VOut VS(VIn input) { VOut output; float2 cp = input.position; cp.x /= width; cp.y /= -height; cp *= 2; cp = cp + float2(-1.f, 1.f); output.position = float4(cp, 0.f, 1.f); output.tex = input.tex; output.color = input.color; return output; }\n"
+      "float4 PS(VOut input) : SV_TARGET { if (sample) return sprite.Sample(spriteSample, input.tex); else return input.color; }\n";
 
-    TextureBackingDX11::TextureBackingDX11(Environment *env, int width, int height, Texture::Format format) : TextureBacking(env, width, height, format), m_tex(0) {
+    TextureBackingDX11::TextureBackingDX11(Environment *env, int width, int height, Texture::Format format) : TextureBacking(env, width, height, format),
+      m_tex(0),
+      m_srview(0)
+    {
       D3D11_TEXTURE2D_DESC desc;
       memset(&desc, 0, sizeof(desc));
       desc.Width = width;
@@ -70,19 +78,27 @@ namespace Frames {
       }
       desc.SampleDesc.Count = 1;
       desc.SampleDesc.Quality = 0;
-      desc.Usage = D3D11_USAGE_DYNAMIC; // make this immutable when possible
+      desc.Usage = D3D11_USAGE_DEFAULT; // TODO: make this immutable when possible
       desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-      desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+      desc.CPUAccessFlags = 0;
       desc.MiscFlags = 0;
 
-      if (static_cast<RendererDX11*>(env->RendererGet())->DeviceGet()->CreateTexture2D(&desc, 0, &m_tex) != S_OK) {
+      RendererDX11 *renderer = static_cast<RendererDX11*>(env->RendererGet());
+
+      if (renderer->DeviceGet()->CreateTexture2D(&desc, 0, &m_tex) != S_OK) {
         env->LogError("DX11: Failure to create texture");
+        return;
+      }
+
+      if (renderer->DeviceGet()->CreateShaderResourceView(m_tex, 0, &m_srview) != S_OK) {
+        env->LogError("DX11: Failure to create shader resource view");
         return;
       }
     }
 
     TextureBackingDX11::~TextureBackingDX11() {
       m_tex->Release();
+      m_srview->Release();
     }
 
     void TextureBackingDX11::Write(int sx, int sy, const TexturePtr &tex) {
@@ -141,6 +157,14 @@ namespace Frames {
       m_depthState(0),
       m_vs(0),
       m_ps(0),
+      m_shader_ci_size(0),  // hardcoded for now
+      m_shader_ci_item(1),  // hardcoded for now
+      m_shader_tex(0),  // hardcoded for now
+      m_shader_sample(0),  // hardcoded for now
+      m_ps_ci_size_buffer(0),
+      m_ps_ci_item_buffer_sample(0),
+      m_ps_ci_item_buffer_sample_off(0),
+      m_sampler(0),
       m_vertices(0),
       m_verticesLayout(0),
       m_verticesQuadcount(0),
@@ -180,7 +204,60 @@ namespace Frames {
       vs->Release();
       ps->Release();
 
+      // Create size buffer
+      {
+        // TODO: make this immutable when possible
+        D3D11_BUFFER_DESC desc;
+        memset(&desc, 0, sizeof(desc));
+        desc.ByteWidth = 16;
+        desc.Usage = D3D11_USAGE_DYNAMIC;
+        desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+        if (DeviceGet()->CreateBuffer(&desc, 0, &m_ps_ci_size_buffer) != S_OK) {
+          EnvironmentGet()->LogError("Failure to create size buffer");
+        }
+      }
+
+      // Create item buffers
+      {
+        D3D11_BUFFER_DESC desc;
+        memset(&desc, 0, sizeof(desc));
+        desc.ByteWidth = 16;
+        desc.Usage = D3D11_USAGE_IMMUTABLE;
+        desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+        int flag[4] = { 0, };
+
+        D3D11_SUBRESOURCE_DATA data;
+        memset(&data, 0, sizeof(data));
+        data.pSysMem = flag;
+        
+        if (DeviceGet()->CreateBuffer(&desc, &data, &m_ps_ci_item_buffer_sample_off) != S_OK) {
+          EnvironmentGet()->LogError("Failure to create disabled sample flag");
+        }
+
+        flag[0] = 1;
+        if (DeviceGet()->CreateBuffer(&desc, &data, &m_ps_ci_item_buffer_sample) != S_OK) {
+          EnvironmentGet()->LogError("Failure to create enabled sample flag");
+        }
+      }
+
       // Create states
+      {
+        D3D11_SAMPLER_DESC ss;
+        memset(&ss, 0, sizeof(ss));
+        ss.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+        ss.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+        ss.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+        ss.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+        ss.MipLODBias = 0.f;
+        ss.MaxAnisotropy = 1;
+        ss.MinLOD = 0.f;
+        ss.MaxLOD = D3D11_FLOAT32_MAX;
+        DeviceGet()->CreateSamplerState(&ss, &m_sampler);
+      }
+
       {
         D3D11_RASTERIZER_DESC rs;
         memset(&rs, 0, sizeof(rs));
@@ -235,6 +312,22 @@ namespace Frames {
         m_ps->Release();
       }
 
+      if (m_ps_ci_size_buffer) {
+        m_ps_ci_size_buffer->Release();
+      }
+
+      if (m_ps_ci_item_buffer_sample) {
+        m_ps_ci_item_buffer_sample->Release();
+      }
+
+      if (m_ps_ci_item_buffer_sample_off) {
+        m_ps_ci_item_buffer_sample_off->Release();
+      }
+
+      if (m_sampler) {
+        m_sampler->Release();
+      }
+
       if (m_verticesLayout) {
         m_verticesLayout->Release();
       }
@@ -251,6 +344,21 @@ namespace Frames {
     void RendererDX11::Begin(int width, int height) {
       Renderer::Begin(width, height);
 
+      m_currentTexture = 0;
+
+      {
+        D3D11_MAPPED_SUBRESOURCE map;
+        // TODO: don't update if width/height didn't change
+        if (ContextGet()->Map(m_ps_ci_size_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map) != S_OK) {
+          EnvironmentGet()->LogError("Failure to update size buffer");
+        } else {
+          float *dat = (float*)map.pData;
+          dat[0] = (float)width;
+          dat[1] = (float)height;
+          ContextGet()->Unmap(m_ps_ci_size_buffer, 0);
+        }
+      }
+
       UINT stride = sizeof(Vertex);
       UINT offset = 0;
       ContextGet()->IASetVertexBuffers(0, 1, &m_vertices, &stride, &offset);
@@ -258,7 +366,10 @@ namespace Frames {
       ContextGet()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
       ContextGet()->IASetInputLayout(m_verticesLayout);
       ContextGet()->VSSetShader(m_vs, 0, 0);
+      ContextGet()->VSSetConstantBuffers(m_shader_ci_size, 1, &m_ps_ci_size_buffer);
       ContextGet()->PSSetShader(m_ps, 0, 0);
+      ContextGet()->PSSetSamplers(m_shader_sample, 1, &m_sampler);
+      ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_ps_ci_item_buffer_sample_off);
       ContextGet()->RSSetState(m_rasterizerState);
       ContextGet()->OMSetBlendState(m_blendState, 0, ~0);
       ContextGet()->OMSetDepthStencilState(m_depthState, 0);
@@ -316,10 +427,16 @@ namespace Frames {
     }
 
     void RendererDX11::TextureSet(const detail::TextureBackingPtr &tex) {
-      ID3D11Texture2D *ntex = tex.Get() ? static_cast<TextureBackingDX11*>(tex.Get())->TexGet() : 0;
+      ID3D11ShaderResourceView *ntex = tex.Get() ? static_cast<TextureBackingDX11*>(tex.Get())->ShaderResourceViewGet() : 0;
       if (m_currentTexture != ntex) {
         m_currentTexture = ntex;
-        // do what
+        
+        if (m_currentTexture) {
+          ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_ps_ci_item_buffer_sample);
+          ContextGet()->PSSetShaderResources(m_shader_tex, 1, &m_currentTexture);
+        } else {
+          ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_ps_ci_item_buffer_sample_off);
+        }
       }
     }
 
