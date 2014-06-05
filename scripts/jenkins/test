@@ -8,12 +8,12 @@ unzip debugruntime.zip || exit 1
 rm *.zip
 set +e
 if [ "$configuration" == "release" ]; then
-  (cd test && ../bin/$target/$platform/test/test.exe)
+  (cd test && ../bin/$target/$platform/test/test.exe $renderer)
 else
-  (cd test && ../bin/$target/$platform/test/testd.exe)
+  (cd test && ../bin/$target/$platform/test/testd.exe $renderer)
 fi
 RES=$?
 set -e
 pwd
-zip -r result-$target-$platform-$configuration.zip test/ref/* || exit 1
+zip -r result-$target-$platform-$configuration-$renderer.zip test/ref/* || exit 1
 exit $RES
