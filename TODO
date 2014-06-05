@@ -1,11 +1,9 @@
 
 === INTEGRATION
 
-* Add DX11
-  * opengl
-  * dx11
-  * dx11_dbg
-  * dx11_ref
+* Begin fixing tests
+
+* Try running test without window
 
 * Figure out how to link in the precompiled shader
   * Remove d3dcompiler linkage
