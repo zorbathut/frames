@@ -10,7 +10,13 @@
 
 class TestWindowDX11 : public TestWindow {
 public:
-  TestWindowDX11(int width, int height);
+  enum Mode {
+    MODE_HAL,
+    MODE_DEBUG,
+    MODE_REFERENCE,
+  };
+
+  TestWindowDX11(int width, int height, Mode mode);
   ~TestWindowDX11();
 
   virtual void Swap();

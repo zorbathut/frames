@@ -110,8 +110,17 @@ public:
 
 TestEnvironment::TestEnvironment(bool startUI, int width, int height) : m_env(0), m_tenv(0) {
   if (startUI) {
-    m_tenv = new TestWindowSDL(width, height);
-    //m_tenv = new TestWindowDX11(width, height);
+    if (RendererIdGet().empty() || RendererIdGet() == "opengl") {
+      m_tenv = new TestWindowSDL(width, height);
+    } else if (RendererIdGet() == "dx11") {
+      m_tenv = new TestWindowDX11(width, height, TestWindowDX11::MODE_HAL);
+    } else if (RendererIdGet() == "dx11_dbg") {
+      m_tenv = new TestWindowDX11(width, height, TestWindowDX11::MODE_DEBUG);
+    } else if (RendererIdGet() == "dx11_ref") {
+      m_tenv = new TestWindowDX11(width, height, TestWindowDX11::MODE_REFERENCE);
+    } else {
+      m_env->LogError("Invalid gtest renderer flag " + RendererIdGet());
+    }
   } else {
     m_tenv = new TestWindowNullOGL(width, height);
   }
@@ -327,4 +336,12 @@ void HaltAndRender(TestEnvironment &env) {
     env.Swap();
     env.HandleEvents();
   }
+}
+
+static std::string s_renderer;
+void RendererIdSet(const std::string &renderer) {
+  s_renderer = renderer;
+}
+std::string &RendererIdGet() {
+  return s_renderer;
 }

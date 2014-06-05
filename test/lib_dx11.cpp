@@ -14,7 +14,7 @@ static LRESULT CALLBACK HandleMessage(HWND window_handle, UINT message, WPARAM w
   return DefWindowProcW(window_handle, message, wParam, lParam);
 }
 
-TestWindowDX11::TestWindowDX11(int width, int height) : TestWindow(width, height),
+TestWindowDX11::TestWindowDX11(int width, int height, TestWindowDX11::Mode mode) : TestWindow(width, height),
   m_window(0),
   m_swap(0),
   m_device(0),
@@ -80,9 +80,9 @@ TestWindowDX11::TestWindowDX11(int width, int height) : TestWindow(width, height
   D3D_FEATURE_LEVEL FeatureLevelsRequested = D3D_FEATURE_LEVEL_11_0;
   D3D_FEATURE_LEVEL FeatureLevelsSupported;
   EXPECT_EQ(S_OK, D3D11CreateDeviceAndSwapChain(NULL,
-    D3D_DRIVER_TYPE_HARDWARE, //D3D_DRIVER_TYPE_REFERENCE,
+    mode == MODE_REFERENCE ? D3D_DRIVER_TYPE_REFERENCE : D3D_DRIVER_TYPE_HARDWARE,
     NULL,
-    0, //D3D11_CREATE_DEVICE_DEBUG,
+    mode == MODE_DEBUG ? D3D11_CREATE_DEVICE_DEBUG : 0,
     &FeatureLevelsRequested,
     1,
     D3D11_SDK_VERSION,
