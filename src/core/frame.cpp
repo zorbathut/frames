@@ -38,17 +38,19 @@ namespace Frames {
 
       detail::Renderer::Vertex *v = renderer->Request(1);
 
-      v[0].p.x = l; v[0].p.y = u;
-      v[1].p.x = r; v[1].p.y = u;
-      v[2].p.x = r; v[2].p.y = d;
-      v[3].p.x = l; v[3].p.y = d;
+      if (v) {
+        v[0].p.x = l; v[0].p.y = u;
+        v[1].p.x = r; v[1].p.y = u;
+        v[2].p.x = r; v[2].p.y = d;
+        v[3].p.x = l; v[3].p.y = d;
 
-      v[0].c = bgc;
-      v[1].c = bgc;
-      v[2].c = bgc;
-      v[3].c = bgc;
+        v[0].c = bgc;
+        v[1].c = bgc;
+        v[2].c = bgc;
+        v[3].c = bgc;
 
-      renderer->Return();
+        renderer->Return();
+      }
     }
   }
 

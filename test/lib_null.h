@@ -1,13 +1,13 @@
 
-#ifndef FRAMES_TEST_LIB_OPENGL
-#define FRAMES_TEST_LIB_OPENGL
+#ifndef FRAMES_TEST_LIB_NULL
+#define FRAMES_TEST_LIB_NULL
 
 #include "lib.h"
 
-class TestWindowSDL : public TestWindow {
+class TestWindowNull : public TestWindow {
 public:
-  TestWindowSDL(int width, int height);
-  ~TestWindowSDL();
+  TestWindowNull(int width, int height);
+  ~TestWindowNull();
 
   virtual void Swap();
   virtual void HandleEvents();
@@ -16,10 +16,6 @@ public:
 
   virtual void ClearRenderTarget();
   virtual std::vector<unsigned char> Screenshot();
-
-private:
-  SDL_Window *m_win;
-  SDL_GLContext m_glContext;
 };
 
 #endif

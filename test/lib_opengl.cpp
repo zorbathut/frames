@@ -74,7 +74,3 @@ std::vector<unsigned char> TestWindowSDL::Screenshot() {
 
   return pixels;
 }
-
-Frames::Configuration::RendererPtr TestWindowNullOGL::RendererGet() {
-  return Frames::Configuration::RendererOpengl();
-}

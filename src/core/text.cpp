@@ -246,31 +246,33 @@ namespace Frames {
 
         renderer->TextureSet(detail::TextureBackingPtr());
         detail::Renderer::Vertex *verts = renderer->Request(el - sl + 1);
-        int idx = 0;
-        for (int i = sl; i <= el; ++i) {
-          int ts = std::max(s, i ? (m_layout->GetEOLFromLine(i - 1) + 1) : 0);
-          int te = std::min(m_layout->GetEOLFromLine(i), e);
+        if (verts) {
+          int idx = 0;
+          for (int i = sl; i <= el; ++i) {
+            int ts = std::max(s, i ? (m_layout->GetEOLFromLine(i - 1) + 1) : 0);
+            int te = std::min(m_layout->GetEOLFromLine(i), e);
 
-          Rect rect;
-          rect.s = m_layout->GetCoordinateFromCharacter(ts);
-          rect.e = m_layout->GetCoordinateFromCharacter(te);
+            Rect rect;
+            rect.s = m_layout->GetCoordinateFromCharacter(ts);
+            rect.e = m_layout->GetCoordinateFromCharacter(te);
 
-          rect.s -= m_scroll;
-          rect.e -= m_scroll;
+            rect.s -= m_scroll;
+            rect.e -= m_scroll;
 
-          rect.s.x += LeftGet();
-          rect.e.x += LeftGet();
+            rect.s.x += LeftGet();
+            rect.e.x += LeftGet();
 
-          rect.s.y += TopGet();
-          rect.e.y += TopGet();
+            rect.s.y += TopGet();
+            rect.e.y += TopGet();
 
-          rect.e.y += m_layout->ParentGet()->ParentGet()->GetLineHeight(m_size);
+            rect.e.y += m_layout->ParentGet()->ParentGet()->GetLineHeight(m_size);
 
-          if (detail::Renderer::WriteCroppedRect(verts + idx, rect, m_color_selection * Color(1, 1, 1, renderer->AlphaGet()), bounds)) {
-            idx += 4;
+            if (detail::Renderer::WriteCroppedRect(verts + idx, rect, m_color_selection * Color(1, 1, 1, renderer->AlphaGet()), bounds)) {
+              idx += 4;
+            }
           }
+          renderer->Return(idx);
         }
-        renderer->Return(idx);
       }
 
       // render the actual text
@@ -282,13 +284,15 @@ namespace Frames {
         renderer->TextureSet(detail::TextureBackingPtr());
         detail::Renderer::Vertex *vert = renderer->Request(1);
         
-        Vector origin = m_layout->GetCoordinateFromCharacter(m_cursor) - m_scroll;
-        origin.x += LeftGet();
-        origin.y += TopGet();
-        
-        detail::Renderer::WriteCroppedTexRect(vert, Rect(origin, origin + Vector(1, m_layout->ParentGet()->ParentGet()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1, renderer->AlphaGet()), bounds);
+        if (vert) {
+          Vector origin = m_layout->GetCoordinateFromCharacter(m_cursor) - m_scroll;
+          origin.x += LeftGet();
+          origin.y += TopGet();
 
-        renderer->Return();
+          detail::Renderer::WriteCroppedTexRect(vert, Rect(origin, origin + Vector(1, m_layout->ParentGet()->ParentGet()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1, renderer->AlphaGet()), bounds);
+
+          renderer->Return();
+        }
       }
     }
   }

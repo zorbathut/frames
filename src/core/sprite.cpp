@@ -50,26 +50,28 @@ namespace Frames {
 
       detail::Renderer::Vertex *v = renderer->Request(1);
 
-      v[0].p.x = cx - dx * c + dy * s; v[0].p.y = cy - dx * s - dy * c;
-      v[1].p.x = cx + dx * c + dy * s; v[1].p.y = cy + dx * s - dy * c;
-      v[2].p.x = cx + dx * c - dy * s; v[2].p.y = cy + dx * s + dy * c;
-      v[3].p.x = cx - dx * c - dy * s; v[3].p.y = cy - dx * s + dy * c;
+      if (v) {
+        v[0].p.x = cx - dx * c + dy * s; v[0].p.y = cy - dx * s - dy * c;
+        v[1].p.x = cx + dx * c + dy * s; v[1].p.y = cy + dx * s - dy * c;
+        v[2].p.x = cx + dx * c - dy * s; v[2].p.y = cy + dx * s + dy * c;
+        v[3].p.x = cx - dx * c - dy * s; v[3].p.y = cy - dx * s + dy * c;
 
-      v[0].t = m_texture->BoundsGet().s;
-      v[2].t = m_texture->BoundsGet().e;
+        v[0].t = m_texture->BoundsGet().s;
+        v[2].t = m_texture->BoundsGet().e;
 
-      v[1].t.x = v[2].t.x;
-      v[1].t.y = v[0].t.y;
-      
-      v[3].t.x = v[0].t.x;
-      v[3].t.y = v[2].t.y;
+        v[1].t.x = v[2].t.x;
+        v[1].t.y = v[0].t.y;
 
-      v[0].c = tint;
-      v[1].c = tint;
-      v[2].c = tint;
-      v[3].c = tint;
+        v[3].t.x = v[0].t.x;
+        v[3].t.y = v[2].t.y;
 
-      renderer->Return();
+        v[0].c = tint;
+        v[1].c = tint;
+        v[2].c = tint;
+        v[3].c = tint;
+
+        renderer->Return();
+      }
     }
   }
 

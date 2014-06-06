@@ -365,23 +365,25 @@ namespace Frames {
 
       Renderer::Vertex *vertexes = renderer->Request(m_parent->GetQuads());
 
-      int cquad = 0;
-      for (int i = 0; i < (int)m_coordinates.size() - 1; ++i) {
-        Renderer::Vertex *vertex = vertexes + cquad * 4;
-        const CharacterInfoPtr &character = m_parent->GetCharacter(i);
+      if (vertexes) {
+        int cquad = 0;
+        for (int i = 0; i < (int)m_coordinates.size() - 1; ++i) {
+          Renderer::Vertex *vertex = vertexes + cquad * 4;
+          const CharacterInfoPtr &character = m_parent->GetCharacter(i);
 
-        if (character->TextureGet()) {
-          Vector origin = Vector(bounds.s.x + m_coordinates[i].x - offset.x, bounds.s.y + m_coordinates[i].y - offset.y);
-        
-          if (Renderer::WriteCroppedTexRect(vertex, Rect(origin, origin + Vector((float)character->TextureGet()->WidthGet(), (float)character->TextureGet()->HeightGet())), character->TextureGet()->BoundsGet(), color, bounds)) {
-            cquad++;
+          if (character->TextureGet()) {
+            Vector origin = Vector(bounds.s.x + m_coordinates[i].x - offset.x, bounds.s.y + m_coordinates[i].y - offset.y);
+
+            if (Renderer::WriteCroppedTexRect(vertex, Rect(origin, origin + Vector((float)character->TextureGet()->WidthGet(), (float)character->TextureGet()->HeightGet())), character->TextureGet()->BoundsGet(), color, bounds)) {
+              cquad++;
+            }
           }
+
+          // todo, crop to bounds
         }
 
-        // todo, crop to bounds
+        renderer->Return(cquad);
       }
-
-      renderer->Return(cquad);
     }
 
     Vector TextLayout::GetCoordinateFromCharacter(int character) const {

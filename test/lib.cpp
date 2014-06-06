@@ -3,6 +3,7 @@
 
 #include "lib_opengl.h"
 #include "lib_dx11.h"
+#include "lib_null.h"
 
 #include <gtest/gtest.h>
 
@@ -12,8 +13,6 @@
 #include <frames/event.h>
 #include <frames/layout.h>
 #include <frames/loader.h>
-#include <frames/renderer_dx11.h>
-#include <frames/renderer_opengl.h>
 #include <frames/stream.h>
 #include <frames/texture.h>
 
@@ -118,11 +117,14 @@ TestEnvironment::TestEnvironment(bool startUI, int width, int height) : m_env(0)
       m_tenv = new TestWindowDX11(width, height, TestWindowDX11::MODE_DEBUG);
     } else if (RendererIdGet() == "dx11_ref") {
       m_tenv = new TestWindowDX11(width, height, TestWindowDX11::MODE_REFERENCE);
+    } else if (RendererIdGet() == "null") {
+      m_tenv = new TestWindowNull(width, height);
     } else {
-      m_env->LogError("Invalid gtest renderer flag " + RendererIdGet());
+      printf("Invalid gtest renderer flag %s", RendererIdGet().c_str());
+      ADD_FAILURE();
     }
   } else {
-    m_tenv = new TestWindowNullOGL(width, height);
+    m_tenv = new TestWindowNull(width, height);
   }
 
   m_logger = Frames::Ptr<TestLogger>(new TestLogger());
@@ -250,6 +252,10 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
 
   // Grab a screenshot
   std::vector<unsigned char> pixels = env.Screenshot();
+
+  if (pixels.empty() && RendererIdGet() == "null") {
+    return; // jolly good, then
+  }
 
   // Grab our source file (or try to)
   std::vector<unsigned char> reference;
