@@ -3,6 +3,8 @@
 
 * Begin fixing tests
 
+* Hunt for leaks in both ogl and dx
+
 * Figure out how to link in the precompiled shader
   * Remove d3dcompiler linkage
 
