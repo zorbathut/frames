@@ -295,7 +295,7 @@ namespace Frames {
         ds.DepthEnable = false;
         DeviceGet()->CreateDepthStencilState(&ds, &m_depthState);
       }
-    };
+    }
 
     RendererDX11::~RendererDX11() {
       if (m_rasterizerState) {
