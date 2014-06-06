@@ -101,7 +101,8 @@ TestWindowDX11::TestWindowDX11(int width, int height, TestWindowDX11::Mode mode)
       return;
     }
 
-    printf("E_OUTOFMEMORY, trying again in one second . . .");
+    printf("E_OUTOFMEMORY, trying again in one second . . .\n");
+    fflush(stdout);
 
     Sleep(1000);
   }
