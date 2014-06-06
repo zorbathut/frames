@@ -61,8 +61,6 @@ TestWindowDX11::TestWindowDX11(int width, int height, TestWindowDX11::Mode mode)
     NULL);
   EXPECT_TRUE(m_window);
 
-  ShowWindow(m_window, true);
-
   DXGI_SWAP_CHAIN_DESC sd;
   ZeroMemory(&sd, sizeof(sd));
   sd.BufferCount = 1;

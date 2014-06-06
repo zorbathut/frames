@@ -15,7 +15,7 @@ TestWindowSDL::TestWindowSDL(int width, int height) : TestWindow(width, height),
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-  m_win = SDL_CreateWindow("Frames test harness", 100, 100, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+  m_win = SDL_CreateWindow("Frames test harness", 100, 100, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN);
   EXPECT_TRUE(m_win != NULL);
 
   m_glContext = SDL_GL_CreateContext(m_win);
