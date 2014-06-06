@@ -77,18 +77,34 @@ TestWindowDX11::TestWindowDX11(int width, int height, TestWindowDX11::Mode mode)
 
   D3D_FEATURE_LEVEL FeatureLevelsRequested = D3D_FEATURE_LEVEL_11_0;
   D3D_FEATURE_LEVEL FeatureLevelsSupported;
-  EXPECT_EQ(S_OK, D3D11CreateDeviceAndSwapChain(NULL,
-    mode == MODE_REFERENCE ? D3D_DRIVER_TYPE_REFERENCE : D3D_DRIVER_TYPE_HARDWARE,
-    NULL,
-    mode == MODE_DEBUG ? D3D11_CREATE_DEVICE_DEBUG : 0,
-    &FeatureLevelsRequested,
-    1,
-    D3D11_SDK_VERSION,
-    &sd,
-    &m_swap,
-    &m_device,
-    &FeatureLevelsSupported,
-    &m_context));
+
+  // Our test framework sometimes starts too many directx instances; deal with E_OUTOFMEMORY errors by retrying after a second, at which point we'll hopefully have cleaned up a bit
+  while (true) {
+    int rv = D3D11CreateDeviceAndSwapChain(NULL,
+      mode == MODE_REFERENCE ? D3D_DRIVER_TYPE_REFERENCE : D3D_DRIVER_TYPE_HARDWARE,
+      NULL,
+      mode == MODE_DEBUG ? D3D11_CREATE_DEVICE_DEBUG : 0,
+      &FeatureLevelsRequested,
+      1,
+      D3D11_SDK_VERSION,
+      &sd,
+      &m_swap,
+      &m_device,
+      &FeatureLevelsSupported,
+      &m_context);
+
+    if (rv == S_OK) break; // Yay!
+
+    EXPECT_EQ(E_OUTOFMEMORY, rv);
+    
+    if (rv != E_OUTOFMEMORY) {
+      return;
+    }
+
+    printf("E_OUTOFMEMORY, trying again in one second . . .");
+
+    Sleep(1000);
+  }
 
   EXPECT_EQ(S_OK, m_swap->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_backBuffer));
   m_device->CreateRenderTargetView(m_backBuffer, NULL, &m_renderTarget);

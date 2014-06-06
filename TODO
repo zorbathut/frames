@@ -3,7 +3,7 @@
 
 * Begin fixing tests
 
-* Try running test without window
+* Null test
 
 * Figure out how to link in the precompiled shader
   * Remove d3dcompiler linkage
