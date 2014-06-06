@@ -109,13 +109,13 @@ public:
 
 TestEnvironment::TestEnvironment(bool startUI, int width, int height) : m_env(0), m_tenv(0) {
   if (startUI) {
-    if (RendererIdGet().empty() || RendererIdGet() == "opengl") {
+    if (RendererIdGet().empty() || RendererIdGet() == "ogl2_1") {
       m_tenv = new TestWindowSDL(width, height);
-    } else if (RendererIdGet() == "dx11") {
+    } else if (RendererIdGet() == "dx11_fl11") {
       m_tenv = new TestWindowDX11(width, height, TestWindowDX11::MODE_HAL);
-    } else if (RendererIdGet() == "dx11_dbg") {
+    } else if (RendererIdGet() == "dx11_fl11_dbg") {
       m_tenv = new TestWindowDX11(width, height, TestWindowDX11::MODE_DEBUG);
-    } else if (RendererIdGet() == "dx11_ref") {
+    } else if (RendererIdGet() == "dx11_fl11_ref") {
       m_tenv = new TestWindowDX11(width, height, TestWindowDX11::MODE_REFERENCE);
     } else if (RendererIdGet() == "null") {
       m_tenv = new TestWindowNull(width, height);
