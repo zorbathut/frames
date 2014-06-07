@@ -68,7 +68,7 @@ namespace Frames {
       };
 
       Renderer(Environment *env);
-      ~Renderer();
+      virtual ~Renderer();
 
       Environment *EnvironmentGet() const { return m_env;  }
 
