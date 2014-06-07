@@ -17,8 +17,8 @@ namespace Frames {
 
 class TestWindow : Frames::detail::Noncopyable {
 public:
-  TestWindow(int width, int height) : m_width(width), m_height(height) {}
-  virtual ~TestWindow() {}
+  TestWindow(int width, int height) : m_width(width), m_height(height) { }
+  virtual ~TestWindow() { }
 
   int WidthGet() const { return m_width; }
   int HeightGet() const { return m_height; }
@@ -30,6 +30,10 @@ public:
 
   virtual void ClearRenderTarget() = 0;
   virtual std::vector<unsigned char> Screenshot() = 0;
+
+protected:
+  // different platforms do different weird inconsistent things with backbuffer alpha, so we just go ahead and fix it here
+  void ClampScreenshotAlpha(std::vector<unsigned char> *pixels);
 
 private:
   int m_width;

@@ -21,6 +21,12 @@
 #include <cstdio>
 #include <fstream>
 
+void TestWindow::ClampScreenshotAlpha(std::vector<unsigned char> *pixels) {
+  for (int i = 3; i < (int)pixels->size(); i += 4) {
+    (*pixels)[i] = 255;
+  }
+}
+
 struct TestNames {
   std::string testName;
   std::string resultName;

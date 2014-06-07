@@ -72,5 +72,7 @@ std::vector<unsigned char> TestWindowSDL::Screenshot() {
     }
   }
 
+  ClampScreenshotAlpha(&pixels);
+
   return pixels;
 }

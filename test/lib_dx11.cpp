@@ -195,5 +195,7 @@ std::vector<unsigned char> TestWindowDX11::Screenshot() {
 
   m_context->Unmap(m_captureBuffer, 0);
 
+  ClampScreenshotAlpha(&pixels);
+
   return pixels;
 }
