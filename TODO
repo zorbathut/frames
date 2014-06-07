@@ -3,19 +3,7 @@
 
 * Begin fixing tests
 
-* Record memory leaks for d3d
-
-* Various D3D_FEATURE_LEVEL
-  * ogl2_1
-  * ogl3_2_compat
-  * ogl3_2_core
-  * ogles2
-  * ogles3
-  * dx11_fl9
-  * dx11_fl10
-  * dx11_fl11
-  * dx11_fl11_dbg
-  * dx11_fl11_ref
+* low-priority build slaves
 
 * Hunt for leaks in both ogl and dx
 
@@ -175,3 +163,15 @@
   * double buffering, triple buffering
   * all sorts of queueing needed for things
 * De-float everything
+
+* Test slugs
+  * ogl2_1
+  * ogl3_2_compat
+  * ogl3_2_core
+  * ogles2
+  * ogles3
+  * dx11_fl9
+  * dx11_fl10
+  * dx11_fl11
+  * dx11_fl11_dbg
+  * dx11_fl11_ref
