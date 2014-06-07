@@ -1,11 +1,12 @@
 
 === INTEGRATION
 
+* Hunt for leaks in both ogl and dx
+* Mutex tests if I have to
+
 * Begin fixing tests
 
 * low-priority build slaves
-
-* Hunt for leaks in both ogl and dx
 
 * Figure out how to link in the precompiled shader
   * Remove d3dcompiler linkage
