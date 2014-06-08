@@ -54,7 +54,7 @@ namespace Frames {
       "uniform int sampleMode;\n"  // 0 means don't sample. 1 means do sample and multiply. 2 means do sample and multiply; pretend .rgb is 1.f.
       "uniform sampler2D sprite;\n"  // sprite texture to reference if it is being referenced
       "\n"
-      "void main() { vec4 color = pColor; if (sampleMode == 1) color *= texture2D(sprite, pTex); if (sampleMode == 2) color.a *= texture2D(sprite, pTex).a; gl_FragColor = color; }\n";
+      "void main() { vec4 color = pColor; if (sampleMode == 1) color *= texture2D(sprite, pTex); if (sampleMode == 2) color.a *= texture2D(sprite, pTex).r; gl_FragColor = color; }\n";
 
     TextureBackingOpengl::TextureBackingOpengl(Environment *env, int width, int height, Texture::Format format) : TextureBacking(env, width, height, format), m_id(0) {
       glGenTextures(1, &m_id);
@@ -69,17 +69,14 @@ namespace Frames {
         input_tex_mode = GL_RGBA;
       } else if (format == Texture::FORMAT_RGB_8) {
         input_tex_mode = GL_RGBA; // we don't use GL_RGB because it's less efficient
-      } else if (format == Texture::FORMAT_L_8) {
-        input_tex_mode = GL_LUMINANCE;
-      } else if (format == Texture::FORMAT_A_8) {
-        input_tex_mode = GL_ALPHA;
+      } else if (format == Texture::FORMAT_R_8) {
+        input_tex_mode = GL_RED;
       } else {
         EnvironmentGet()->LogError(detail::Format("Unrecognized raw type %d in texture", format));
         return;
       }
 
       // setup standard texture parameters
-      glEnable(GL_TEXTURE_2D);
       glBindTexture(GL_TEXTURE_2D, m_id);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -87,7 +84,7 @@ namespace Frames {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
       glBindTexture(GL_TEXTURE_2D, m_id);
-      glTexImage2D(GL_TEXTURE_2D, 0, input_tex_mode, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0); // I'm assuming the last three values are irrelevant
+      glTexImage2D(GL_TEXTURE_2D, 0, input_tex_mode, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, 0); // I'm assuming the last three values are irrelevant
     }
 
     TextureBackingOpengl::~TextureBackingOpengl() {
@@ -105,16 +102,13 @@ namespace Frames {
         input_tex_mode = GL_RGBA;
       } else if (tex->FormatGet() == Texture::FORMAT_RGB_8) {
         input_tex_mode = GL_RGB;
-      } else if (tex->FormatGet() == Texture::FORMAT_L_8) {
-        input_tex_mode = GL_LUMINANCE;
-      } else if (tex->FormatGet() == Texture::FORMAT_A_8) {
-        input_tex_mode = GL_ALPHA;
+      } else if (tex->FormatGet() == Texture::FORMAT_R_8) {
+        input_tex_mode = GL_RED;
       } else {
         EnvironmentGet()->LogError(detail::Format("Unrecognized format %d in texture", tex->FormatGet()));
         return;
       }
 
-      glEnable(GL_TEXTURE_2D);
       glBindTexture(GL_TEXTURE_2D, m_id);
       glPixelStorei(GL_PACK_ALIGNMENT, 1);
       glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -139,6 +133,7 @@ namespace Frames {
         m_attrib_position(0),
         m_attrib_tex(0),
         m_attrib_color(0),
+        m_vao(0),
         m_vertices(0),
         m_verticesQuadcount(0),
         m_verticesQuadpos(0),
@@ -147,6 +142,7 @@ namespace Frames {
         m_currentTexture(0)
     {
       // easier to handle it on our own, and we won't be creating environments often enough for this to be a performance hit
+      glewExperimental = true;  // necessary to work on core profile
       glewInit();
 
       m_vertexShader = CompileShader(GL_VERTEX_SHADER, sVertexShader, "vertex");
@@ -182,6 +178,20 @@ namespace Frames {
       glGenBuffers(1, &m_indices);
 
       CreateBuffers(1 << 16); // maximum size that will fit in a ushort
+
+      glGenVertexArrays(1, &m_vao);
+      glBindVertexArray(m_vao);
+
+      glBindBuffer(GL_ARRAY_BUFFER, m_vertices);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indices);
+
+      glVertexAttribPointer(m_attrib_position, 2, GL_FLOAT, true, sizeof(Vertex), (void*)offsetof(Vertex, p));
+      glVertexAttribPointer(m_attrib_tex, 2, GL_FLOAT, true, sizeof(Vertex), (void*)offsetof(Vertex, t));
+      glVertexAttribPointer(m_attrib_color, 4, GL_FLOAT, true, sizeof(Vertex), (void*)offsetof(Vertex, c));
+
+      glEnableVertexAttribArray(m_attrib_position);
+      glEnableVertexAttribArray(m_attrib_tex);
+      glEnableVertexAttribArray(m_attrib_color);
     };
 
     RendererOpengl::~RendererOpengl() {
@@ -190,42 +200,27 @@ namespace Frames {
 
       glDeleteProgram(m_program);
 
+      glDeleteVertexArrays(1, &m_vao);
+
       glDeleteBuffers(1, &m_vertices);
       glDeleteBuffers(1, &m_indices);
     }
 
     void RendererOpengl::Begin(int width, int height) {
       Renderer::Begin(width, height);
-      
-      // nuke the site from orbit
-
-      glDisableClientState(GL_COLOR_ARRAY);
-      glDisableClientState(GL_EDGE_FLAG_ARRAY);
-      glDisableClientState(GL_FOG_COORD_ARRAY);
-      glDisableClientState(GL_INDEX_ARRAY);
-      glDisableClientState(GL_NORMAL_ARRAY);
-      glDisableClientState(GL_SECONDARY_COLOR_ARRAY);
-      glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-      glDisableClientState(GL_VERTEX_ARRAY);
 
       // set up things we actually care about
-
-      glUseProgram(m_program);
 
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glBlendEquation(GL_FUNC_ADD);
 
+      glUseProgram(m_program);
+      glBindVertexArray(m_vao);
+
+      // I feel like these shouldn't be necessary, but apparently they are?
       glBindBuffer(GL_ARRAY_BUFFER, m_vertices);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indices);
-
-      glVertexAttribPointer(m_attrib_position, 2, GL_FLOAT, true, sizeof(Vertex), (void*)offsetof(Vertex, p));
-      glVertexAttribPointer(m_attrib_tex, 2, GL_FLOAT, true, sizeof(Vertex), (void*)offsetof(Vertex, t));
-      glVertexAttribPointer(m_attrib_color, 4, GL_FLOAT, true, sizeof(Vertex), (void*)offsetof(Vertex, c));
-      
-      glEnableVertexAttribArray(m_attrib_position);
-      glEnableVertexAttribArray(m_attrib_tex);
-      glEnableVertexAttribArray(m_attrib_color);
 
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, 0);
@@ -239,14 +234,11 @@ namespace Frames {
     }
 
     void RendererOpengl::End() {
-      glDisableVertexAttribArray(m_attrib_position);
-      glDisableVertexAttribArray(m_attrib_tex);
-      glDisableVertexAttribArray(m_attrib_color);
+      glBindVertexArray(0);
+      glUseProgram(0);
 
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-      glUseProgram(0);
     }
 
     Renderer::Vertex *RendererOpengl::Request(int quads) {
@@ -290,7 +282,7 @@ namespace Frames {
         glBindTexture(GL_TEXTURE_2D, glid);
 
         if (m_currentTexture) {
-          if (backing->FormatGet() == Texture::FORMAT_A_8) {
+          if (backing->FormatGet() == Texture::FORMAT_R_8) {
             glUniform1i(m_uniform_sampleMode, 2);
           } else {
             glUniform1i(m_uniform_sampleMode, 1);

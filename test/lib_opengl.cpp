@@ -6,8 +6,12 @@
 #define GLEW_STATIC
 #include <GL/GLew.h>
 
-TestWindowSDL::TestWindowSDL(int width, int height) : TestWindow(width, height), m_win(0), m_glContext(0) {
+TestWindowSDL::TestWindowSDL(int width, int height, int major, int minor, int profile) : TestWindow(width, height), m_win(0), m_glContext(0) {
   EXPECT_EQ(0, SDL_Init(SDL_INIT_VIDEO));
+
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, major);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minor);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, profile);
 
   SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
   SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);

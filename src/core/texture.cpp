@@ -10,7 +10,7 @@ namespace Frames {
       return 4;
     } else if (format == FORMAT_RGB_8) {
       return 3;
-    } else if (format == FORMAT_L_8 || format == FORMAT_A_8) {
+    } else if (format == FORMAT_R_8) {
       return 1;
     } else {
       Configuration::Get().LoggerGet()->LogError("Attempted to retrieve texture BPP from invalid Format");

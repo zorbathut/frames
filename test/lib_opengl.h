@@ -6,7 +6,7 @@
 
 class TestWindowSDL : public TestWindow {
 public:
-  TestWindowSDL(int width, int height);
+  TestWindowSDL(int width, int height, int major, int minor, int profile);
   ~TestWindowSDL();
 
   virtual void Swap();

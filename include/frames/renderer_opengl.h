@@ -64,6 +64,8 @@ namespace Frames {
       GLuint m_attrib_tex;
       GLuint m_attrib_color;
 
+      GLuint m_vao;
+
       GLuint m_vertices;  // handle of vertex buffer
       int m_verticesQuadcount; // size of vertex buffer, in quads
       int m_verticesQuadpos;  // current write cursor to the vertex buffer, in quads

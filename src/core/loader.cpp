@@ -211,7 +211,7 @@ namespace Frames {
   	jpeg_read_header(&info, true);
     jpeg_start_decompress(&info);
 
-    rv = Texture::CreateRawManaged(env, info.image_width, info.image_height, (info.num_components == 3 ? Texture::FORMAT_RGB_8 : Texture::FORMAT_L_8));
+    rv = Texture::CreateRawManaged(env, info.image_width, info.image_height, (info.num_components == 3 ? Texture::FORMAT_RGB_8 : Texture::FORMAT_R_8));
 
     for (int y = 0; y < (int)info.image_height; ++y) {
       unsigned char *row = rv->RawDataGet() + y * rv->RawStrideGet();

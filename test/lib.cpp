@@ -32,13 +32,13 @@ struct TestNames {
   std::string resultName;
 };
 
+static std::string s_testNameLast = "";
+static std::map<std::string, int> s_familyIds;
+
 TestNames GetTestNames(const std::string &family, const std::string &extension) {
   TestNames rv;
 
   std::string baseName = Frames::detail::Format("ref/%s_%s", ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name(), ::testing::UnitTest::GetInstance()->current_test_info()->name());
-
-  static std::string s_testNameLast = "";
-  static std::map<std::string, int> s_familyIds;
 
   if (baseName != s_testNameLast) {
     s_testNameLast = baseName;
@@ -57,6 +57,11 @@ TestNames GetTestNames(const std::string &family, const std::string &extension) 
   }
 
   return rv;
+}
+
+void ResetTestNames() {
+  s_testNameLast = "";
+  s_familyIds.clear();
 }
 
 void TestCompareStrings(const std::string &family, const std::string &data) {
@@ -124,8 +129,10 @@ public:
 
 TestEnvironment::TestEnvironment(bool startUI, int width, int height) : m_env(0), m_tenv(0) {
   if (startUI) {
-    if (RendererIdGet().empty() || RendererIdGet() == "ogl2_1") {
-      m_tenv = new TestWindowSDL(width, height);
+    if (RendererIdGet() == "ogl3_2_core") {
+      m_tenv = new TestWindowSDL(width, height, 3, 2, SDL_GL_CONTEXT_PROFILE_CORE);
+    } else if (RendererIdGet() == "ogl3_2_compat") {
+      m_tenv = new TestWindowSDL(width, height, 3, 2, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
     } else if (RendererIdGet() == "dx11_fl11") {
       m_tenv = new TestWindowDX11(width, height, TestWindowDX11::MODE_HAL);
     } else if (RendererIdGet() == "dx11_fl11_dbg") {
@@ -382,6 +389,7 @@ void HaltAndRender(TestEnvironment &env) {
 static std::string s_renderer;
 void RendererIdSet(const std::string &renderer) {
   s_renderer = renderer;
+  ResetTestNames();
 }
 std::string &RendererIdGet() {
   return s_renderer;
