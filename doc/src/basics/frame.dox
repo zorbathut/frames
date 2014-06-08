@@ -6,17 +6,17 @@ By default, a Frame is invisible and cannot be interacted with. For the purposes
 
 Here's some example Frames:
 
-\image html framebasics_example.png
+\image html framebasics_example_ref0.png
 
 In the above image, we show exclusively non-overlapping Frames for the sake of demonstration, but Frames can also overlap.
 
 All Frames have exactly one parent, and any Frame may have any number of children. A Frame's children are always rendered on top of that Frame. Each Frame has a "layer" number; a frame's children are rendered in order of increasing layer, such that the topmost frame in a set is the one with the largest Layer.
 
-\image html framebasics_layering.png
+\image html framebasics_layering_ref0.png
 
 Layer numbers can be small, large, fractional, or negative. By default, all frames are created with a layer of zero.
 
-\image html framebasics_hierarchy.png
+\image html framebasics_hierarchy_ref0.png
 
 Layer numbers are meaningful only within the scope of a single Frame's children. In the above image, the orange frame set to layer 100 is located below the purple frame with layer 10. This is because Orange is the child of Red, while Purple is the child of Blue, and Blue's layer is higher than that of Red. Because Blue and Red are siblings and Blue's layer is higher, Blue and all of its children will be drawn before Red and any of its children, regardless of any comparisons between the layers of Blue's children and Red's children.
 

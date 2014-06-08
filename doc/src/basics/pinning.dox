@@ -6,7 +6,7 @@ We'll be demonstrating these tools by making a basic MMORPG-style health/energy/
 
 First, three stat bars, laid out using pinning.
 
-\image html pinningbasics_intro.png
+\image html pinningbasics_intro_ref0.png
 
 Pinning forces a location on a frame to be placed relative to a location on another frame. In the above example the health bar is placed relative to the screen bounds, the energy bar is placed relative to the health bar, and the stamina bar is placed relative to the energy bar. These relative distances are listed as an "offset", which, like frame size, is measured in screen pixels.
 
@@ -14,7 +14,7 @@ Our example is using large gaps to squeeze explanatory text in between frame ele
 
 Imagine we change the size of the Energy bar, possibly to add more information or to emphasize its importance.
 
-\image html pinningbasics_resize.png
+\image html pinningbasics_resize_ref0.png
 
 Because the Stamina bar is pinned to the bottom of the Energy bar, the Stamina bar automatically moves to keep its Pin constraint valid. It's important to recognize that a Pin is a permanent connection; it remains until one of the frames is destroyed or until the Pin itself is explicitly moved or changed.
 
@@ -24,7 +24,7 @@ All pins include an offset. If the offset is (0,0), then the pin locks the two p
 
 Pin constraints are always unidirectional. Their behavior depends on which frame has the pin set on it and which frame is being targeted.
 
-\image html pinningbasics_unidirectional.png
+\image html pinningbasics_unidirectional_ref0.png
 
 The frame with the pin placed on it will move or resize to conform to the targeted frame, not vice-versa. In the above example, the bottom corners of a pair of frames have been connected. If Red's corner is pinned to Green's corner, then Red expands to meet Green; conversely, if Green's corner is pinned to Red's corner, then Green expands to meet Red.
 
@@ -32,31 +32,31 @@ This also demonstrates how pinning can be used to change a frame's size. In the 
 
 Pins are generally attached to named points known as Anchors. We'll list and demonstrate some of them here.
 
-\image html pinningbasics_anchor_corner.png
+\image html pinningbasics_anchor_corner_ref0.png
 
 &nbsp;
 
-\image html pinningbasics_usage_corner.png
+\image html pinningbasics_usage_corner_ref0.png
 
 The four most common named points are TOPLEFT, TOPRIGHT, BOTTOMLEFT, and BOTTOMRIGHT, representing the corners of a frame. In this example, the bars are constrained to each other through corner pins, and the new numeric indicators are also constrained to their parent bars via pins.
 
 Keep in mind that pins do not have to travel "up" the parent hierarchy. The health, energy, and stamina bars are siblings, and are still linked via pins.
 
-\image html pinningbasics_anchor_center.png
+\image html pinningbasics_anchor_center_ref0.png
 
 &nbsp;
 
-\image html pinningbasics_usage_center.png
+\image html pinningbasics_usage_center_ref0.png
 
 Also of frequent use is CENTER. In this image, we've moved the numeric indicators to the middle of the bars to make them more visible. As the text becomes shorter or longer, the text frame will automatically move to keep its CENTER point constrained to the CENTER point of the healthbar.
 
 Remember that any point can be pinned to any other point. Our UI designers have added a small indicator widget to the top-right corner of the filled section of the healthbar by pinning the indicator's CENTER to the filled healthbar's TOPRIGHT.
 
-\image html pinningbasics_anchor_edge.png
+\image html pinningbasics_anchor_edge_ref0.png
 
 &nbsp;
 
-\image html pinningbasics_usage_edge.png
+\image html pinningbasics_usage_edge_ref0.png
 
 There are also four edge center points, CENTERLEFT, CENTERRIGHT, TOPCENTER, and BOTTOMCENTER. We've used these to align the descriptive labels to be vertically centered. This is why, when we made the energy bar taller in the second image on this page, the Energy text remained vertically centered relative to it.
 

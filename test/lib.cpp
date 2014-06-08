@@ -47,12 +47,13 @@ TestNames GetTestNames(const std::string &family, const std::string &extension) 
 
   std::string testFilePrefix = Frames::detail::Format("%s_%s_%d", baseName, family, s_familyIds[family]++);
 
-  rv.testName = testFilePrefix + extension;
+  rv.testName = testFilePrefix + "_ref%d" + extension;
   rv.resultName = testFilePrefix + "_result" + extension;
 
   // write to the "input" file if that file doesn't exist
-  if (!std::ifstream(rv.testName.c_str())) {
-    rv.resultName = rv.testName;
+  std::string master = Frames::detail::Format(rv.testName.c_str(), 0);
+  if (!std::ifstream(master.c_str())) {
+    rv.resultName = master;
   }
 
   return rv;
@@ -61,10 +62,13 @@ TestNames GetTestNames(const std::string &family, const std::string &extension) 
 void TestCompareStrings(const std::string &family, const std::string &data) {
   TestNames testNames = GetTestNames(family, ".txt");
 
+  // Multiple valid refs, NYI
+  std::string tname = Frames::detail::Format(testNames.testName.c_str(), 0);
+
   // Grab our source file (or try to)
   std::string testsrc;
   {
-    std::ifstream in(testNames.testName.c_str(), std::ios::binary); // Binary so we don't have to worry about \r\n's showing up in our event results
+    std::ifstream in(tname.c_str(), std::ios::binary); // Binary so we don't have to worry about \r\n's showing up in our event results
     if (in) {
       testsrc = std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
     }
@@ -249,10 +253,11 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
   if (fname.empty()) {
     testNames = GetTestNames("screen", ".png");
   } else {
-    testNames.testName = fname + ".png";
+    testNames.testName = fname + "_ref%d.png";
+    std::string master = Frames::detail::Format(testNames.testName.c_str(), 0);
     // write to the "input" file if that file doesn't exist
-    if (!std::ifstream(testNames.testName.c_str())) {
-      testNames.resultName = testNames.testName;
+    if (!std::ifstream(master.c_str())) {
+      testNames.resultName = master;
     } else {
       testNames.resultName = fname + "_result" + ".png";
     }
@@ -265,22 +270,6 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
 
   if (pixels.empty() && RendererIdGet() == "null") {
     return; // jolly good, then
-  }
-
-  // Grab our source file (or try to)
-  std::vector<unsigned char> reference;
-  {
-    Frames::StreamPtr stream = Frames::StreamFile::Create(testNames.testName);
-    if (stream)
-    {
-      Frames::TexturePtr tex = Frames::Loader::PNG::Load(*env, stream);
-      EXPECT_EQ(Frames::Texture::RAW, tex->TypeGet());
-      EXPECT_EQ(Frames::Texture::FORMAT_RGBA_8, tex->FormatGet());
-      EXPECT_EQ(4, Frames::Texture::RawBPPGet(Frames::Texture::FORMAT_RGBA_8));
-      EXPECT_EQ(tex->WidthGet() * 4, tex->RawStrideGet());
-      reference.resize(tex->WidthGet() * tex->HeightGet() * 4);
-      memcpy(&reference[0], tex->RawDataGet(), tex->WidthGet() * tex->HeightGet() * 4);
-    }
   }
 
   {
@@ -319,32 +308,64 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
     }
   }
 
-  if (reference.size() != pixels.size()) {
-    GTEST_LOG_(WARNING) << testNames.testName << " issues detected";
-  }
-  EXPECT_EQ(reference.size(), pixels.size());
+  // Grab our source file (or try to)
+  int epsilon = std::numeric_limits<int>::max();
+  int critical = std::numeric_limits<int>::max();
+  std::string match;
+  {
+    int refid = 0;
+    while (true) {
+      std::string fname = Frames::detail::Format(testNames.testName.c_str(), refid);
+      std::vector<unsigned char> reference;
+      Frames::StreamPtr stream = Frames::StreamFile::Create(fname);
+      if (stream) {
+        Frames::TexturePtr tex = Frames::Loader::PNG::Load(*env, stream);
+        EXPECT_EQ(Frames::Texture::RAW, tex->TypeGet());
+        EXPECT_EQ(Frames::Texture::FORMAT_RGBA_8, tex->FormatGet());
+        EXPECT_EQ(4, Frames::Texture::RawBPPGet(Frames::Texture::FORMAT_RGBA_8));
+        EXPECT_EQ(tex->WidthGet() * 4, tex->RawStrideGet());
+        reference.resize(tex->WidthGet() * tex->HeightGet() * 4);
+        memcpy(&reference[0], tex->RawDataGet(), tex->WidthGet() * tex->HeightGet() * 4);
+      }
 
-  if (reference.size() == pixels.size()) {
-    int different = 0;
-    int outsidebounds = 0;
-    for (int i = 0; i < (int)pixels.size(); ++i) {
-      int diff = abs((int)pixels[i] - (int)reference[i]);
-      if (diff > 0) {
-        different++;
+      if (reference.empty()) {
+        break;
       }
-      if (diff > 2) {
-        outsidebounds++;
+
+      EXPECT_EQ(pixels.size(), reference.size()) << " - wrong size on " << fname;
+
+      if (reference.size() == pixels.size()) {
+        int tepsilon = 0;
+        int tcritical = 0;
+
+        int different = 0;
+        int outsidebounds = 0;
+        for (int i = 0; i < (int)pixels.size(); ++i) {
+          int diff = abs((int)pixels[i] - (int)reference[i]);
+          if (diff > 2) {
+            tcritical++;
+          } else if (diff) {
+            tepsilon++;
+          }
+        }
+
+        if (tcritical < critical || tcritical == critical && tepsilon < epsilon) {
+          epsilon = tepsilon;
+          critical = tcritical;
+          match = fname;
+        }
       }
-    }
-    
-    if (outsidebounds || different) {
-      GTEST_LOG_(WARNING) << testNames.testName << " issues detected";
-    }
-    EXPECT_EQ(0, outsidebounds);
-    if (different) {
-      GTEST_LOG_(WARNING) << "Mismatched pixels within bounds: " << different;
+
+      ++refid;
     }
   }
+
+  EXPECT_FALSE(match.empty());
+
+  if (epsilon) {
+    GTEST_LOG_(WARNING) << epsilon << " epsilon pixels compared to " << fname;
+  }
+  EXPECT_EQ(0, critical) << "Critical pixels detected, compared to " << fname;
 }
 
 void HaltAndRender(TestEnvironment &env) {

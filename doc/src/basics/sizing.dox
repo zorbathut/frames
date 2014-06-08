@@ -2,23 +2,23 @@
 
 All frames have both a width and a height. Each frame has a default size which it reverts to if the size isn't explicitly set or constrained via pins (which we'll talk about later). In most cases, this is a default size intended to be easily visible.
 
-\image html sizingbasics_default.png
+\image html sizingbasics_default_ref0.png
 
 Frames can be resized via SetWidth() and SetHeight(), using measurements in screen pixels. Each axis can be resized independently. As with everything in Frames, the position and size of a frame does not change the position and size of any children frames unless explicitly connected.
 
-\image html sizingbasics_simple.png
+\image html sizingbasics_simple_ref0.png
 
 Some frames change their default size based on the frame's contents. Sprite tries to resize itself to perfectly fit its texture. Text tries to resize itself horizontally to avoid line wrapping or truncation; it then tries to resize itself vertically to fit all given text.
 
-\image html sizingbasics_self.png
+\image html sizingbasics_self_ref0.png
 
 Each frame type may respond to resizing as is appropriate to that type. Frame itself has no sizing-sensitive content and will only resize the Background flat-color layer. Sprite will rescale its contents, possibly distorting them in the process. Text will resize the viewport available for text. It will wordwrap if the flag is set and truncate otherwise, although interactive Text fields are capable of scrolling to follow a cursor.
 
-\image html sizingbasics_sprite.png
+\image html sizingbasics_sprite_ref0.png
 
 &nbsp;
 
-\image html sizingbasics_text.png
+\image html sizingbasics_text_ref0.png
 
 While frames can be explicitly resized through the SetWidth() and SetHeight() functions, they can also be implicitly resized via pinning.
 
