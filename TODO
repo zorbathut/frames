@@ -1,16 +1,7 @@
 
 === INTEGRATION
 
-* batch testing with no parameters
-
 * Autodetect dx leak
-
-* Figure out how to link in the precompiled shader
-  * Remove d3dcompiler linkage
-
-* D3D11_USAGE_DYNAMIC fix
-
-* Add DX11/OGL flags to the renderer module
 
 * Split Loaders into their own libs
   * Test
@@ -53,6 +44,11 @@
 * Official release?
 
 === TWEAK
+
+* opengl 3.2 core
+* D3D11_USAGE_DYNAMIC fix
+* Figure out how to link in the precompiled shader
+  * Remove d3dcompiler linkage
 
 * Wire Environment->TextManager conversion
 * Kill TextManager
