@@ -73,7 +73,11 @@ void TestCompareStrings(const std::string &family, const std::string &data) {
   // Write result to disk
   {
     std::ofstream out(testNames.resultName.c_str(), std::ios::binary);
-    out << data;
+    if (out) {
+      out << data;
+    } else {
+      ADD_FAILURE() << "Cannot write result " << testNames.resultName;
+    }
   }
 
   EXPECT_TRUE(data == testsrc);
@@ -126,8 +130,7 @@ TestEnvironment::TestEnvironment(bool startUI, int width, int height) : m_env(0)
     } else if (RendererIdGet() == "null") {
       m_tenv = new TestWindowNull(width, height);
     } else {
-      printf("Invalid gtest renderer flag %s", RendererIdGet().c_str());
-      ADD_FAILURE();
+      ADD_FAILURE() << Frames::detail::Format("Invalid gtest renderer flag %s", RendererIdGet().c_str());
     }
   } else {
     m_tenv = new TestWindowNull(width, height);
@@ -284,31 +287,35 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
     // Don't need this anywhere in Frames so we'll just hack it in here
     FILE *fp = fopen(testNames.resultName.c_str(), "wb");
 
-    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-    png_infop info_ptr = png_create_info_struct(png_ptr);
+    if (fp) {
+      png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+      png_infop info_ptr = png_create_info_struct(png_ptr);
 
-    png_init_io(png_ptr, fp);
-    png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
-    png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
+      png_init_io(png_ptr, fp);
+      png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
+      png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
 
-    png_set_IHDR(png_ptr, info_ptr, env.WidthGet(), env.HeightGet(),
-      8, PNG_COLOR_TYPE_RGB_ALPHA, PNG_INTERLACE_NONE,
-      PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+      png_set_IHDR(png_ptr, info_ptr, env.WidthGet(), env.HeightGet(),
+        8, PNG_COLOR_TYPE_RGB_ALPHA, PNG_INTERLACE_NONE,
+        PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
-    png_write_info(png_ptr, info_ptr);
+      png_write_info(png_ptr, info_ptr);
 
-    std::vector<unsigned char *> rows;
-    for (int i = 0; i < env.HeightGet(); ++i) {
-      rows.push_back(&pixels[0] + i * env.WidthGet() * 4);
+      std::vector<unsigned char *> rows;
+      for (int i = 0; i < env.HeightGet(); ++i) {
+        rows.push_back(&pixels[0] + i * env.WidthGet() * 4);
+      }
+
+      png_write_image(png_ptr, &rows[0]);
+
+      png_write_end(png_ptr, NULL);
+
+      png_destroy_write_struct(&png_ptr, &info_ptr);
+
+      fclose(fp);
+    } else {
+      ADD_FAILURE() << "Cannot write result " << testNames.resultName;
     }
-
-    png_write_image(png_ptr, &rows[0]);
-
-    png_write_end(png_ptr, NULL);
-
-    png_destroy_write_struct(&png_ptr, &info_ptr);
-
-    fclose(fp);
   }
 
   if (reference.size() != pixels.size()) {
