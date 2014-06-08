@@ -85,10 +85,6 @@ namespace Frames {
       void ScissorPush(Rect rect);
       void ScissorPop();
 
-      virtual void StatePush() = 0;
-      virtual void StateClean() = 0;
-      virtual void StatePop() = 0;
-
       void AlphaPush(float alpha);
       float AlphaGet() const;
       void AlphaPop();

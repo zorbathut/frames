@@ -136,10 +136,9 @@ namespace Frames {
     void RendererOpengl::Begin(int width, int height) {
       Renderer::Begin(width, height);
 
-      StatePush();
-
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glBlendEquation(GL_FUNC_ADD);
 
       glMatrixMode(GL_TEXTURE);
       glLoadIdentity();
@@ -172,8 +171,6 @@ namespace Frames {
     void RendererOpengl::End() {
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-      StatePop();
     }
 
     Renderer::Vertex *RendererOpengl::Request(int quads) {
@@ -217,39 +214,6 @@ namespace Frames {
       }
     }
 
-    void RendererOpengl::StatePush() {
-      // THIS IS DEFINITELY NOT HORRIFYINGLY SLOW
-      glPushAttrib(~0);
-      glPushClientAttrib(~0);
-
-      glMatrixMode(GL_TEXTURE);
-      glPushMatrix();
-
-      glMatrixMode(GL_PROJECTION);
-      glPushMatrix();
-    
-      glMatrixMode(GL_MODELVIEW);
-      glPushMatrix();
-    }
-    void RendererOpengl::StateClean() {
-      glBindTexture(GL_TEXTURE_2D, 0);
-
-      // we intentionally leave the translation matrices
-    }
-    void RendererOpengl::StatePop() {
-      glPopClientAttrib();
-      glPopAttrib();
-
-      glMatrixMode(GL_TEXTURE);
-      glPopMatrix();
-
-      glMatrixMode(GL_PROJECTION);
-      glPopMatrix();
-    
-      glMatrixMode(GL_MODELVIEW);
-      glPopMatrix();
-    }
-  
     void RendererOpengl::ScissorSet(const Rect &rect) {
       glScissor((int)floor(rect.s.x + 0.5f), (int)floor(HeightGet() - rect.e.y + 0.5f), (int)floor(rect.e.x - rect.s.x + 0.5f), (int)floor(rect.e.y - rect.s.y + 0.5f));
     }

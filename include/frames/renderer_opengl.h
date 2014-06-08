@@ -49,10 +49,6 @@ namespace Frames {
       virtual TextureBackingPtr TextureCreate(int width, int height, Texture::Format mode);
       virtual void TextureSet(const TextureBackingPtr &tex);
 
-      virtual void StatePush();
-      virtual void StateClean();
-      virtual void StatePop();
-
     private:
       void CreateBuffers(int len);
 

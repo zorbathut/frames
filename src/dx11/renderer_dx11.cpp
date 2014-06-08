@@ -468,18 +468,6 @@ namespace Frames {
       }
     }
 
-    void RendererDX11::StatePush() {
-      // not even bothering atm
-    }
-
-    void RendererDX11::StateClean() {
-      // not even bothering atm
-    }
-
-    void RendererDX11::StatePop() {
-      // not even bothering atm
-    }
-
     void RendererDX11::ScissorSet(const Rect &rect) {
       D3D11_RECT d3drect;
       d3drect.left = (int)floor(rect.s.x + 0.5f);

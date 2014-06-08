@@ -59,10 +59,6 @@ namespace Frames {
 
     void RendererNull::TextureSet(const detail::TextureBackingPtr &tex) { }
 
-    void RendererNull::StatePush() { }
-    void RendererNull::StateClean() { }
-    void RendererNull::StatePop() { }
-
     void RendererNull::ScissorSet(const Rect &rect) { }
   }
 }
