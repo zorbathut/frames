@@ -134,19 +134,19 @@ private:
 
 class SnapshotConfig {
 public:
-  SnapshotConfig() : m_delta(0.f), m_nearest(false) { }
+  SnapshotConfig() : m_delta(0), m_nearest(false) { }
 
   SnapshotConfig &File(const std::string &fname) { m_fname = fname; return *this; }
-  SnapshotConfig &AcceptableDelta(float delta) { m_delta = delta; return *this; }
+  SnapshotConfig &Delta(int delta) { m_delta = delta; return *this; }
   SnapshotConfig &Nearest(bool nearest) { m_nearest = nearest; return *this; }
 
   const std::string &FileGet() const { return m_fname; }
-  float DeltaGet() const { return m_delta; }
+  int DeltaGet() const { return m_delta; }
   bool NearestGet() const { return m_nearest; }
 
 private:
   std::string m_fname;
-  float m_delta;
+  int m_delta;
   bool m_nearest;
 };
 

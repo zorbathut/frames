@@ -345,13 +345,26 @@ void TestSnapshot(TestEnvironment &env, const SnapshotConfig &csf) {
         int tepsilon = 0;
         int tcritical = 0;
 
-        int different = 0;
-        int outsidebounds = 0;
         for (int i = 0; i < (int)pixels.size(); ++i) {
           int diff = abs((int)pixels[i] - (int)reference[i]);
-          if (diff > 2) {
+          bool shifted = false;
+          if (diff && csf.NearestGet()) {
+            const int dx[] = {0, 0, 1, -1};
+            const int dy[] = {1, -1, 0, 0};
+            for (int ofs = 0; ofs < 4; ++ofs) {
+              int target = i + (dx[ofs] + dy[ofs] * env.WidthGet()) * 4;
+              if (target >= 0 && target < (int)reference.size()) {
+                int tdiff = abs((int)pixels[i] - (int)reference[target]);
+                if (tdiff < diff) {
+                  diff = tdiff;
+                  shifted = true;
+                }
+              }
+            }
+          }
+          if (diff > csf.DeltaGet()) {
             tcritical++;
-          } else if (diff) {
+          } else if (diff || shifted) {
             tepsilon++;
           }
         }
