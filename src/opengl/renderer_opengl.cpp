@@ -9,18 +9,12 @@
 
 #include "boost/static_assert.hpp"
 
-// Define needed for glew to link properly
-#define GLEW_STATIC
-#include <GL/GLew.h>
-
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-BOOST_STATIC_ASSERT(sizeof(Frames::detail::GLfloat) == sizeof(GLfloat));
-BOOST_STATIC_ASSERT(sizeof(Frames::detail::GLushort) == sizeof(GLushort));
-BOOST_STATIC_ASSERT(sizeof(Frames::detail::GLuint) == sizeof(GLuint));
+BOOST_STATIC_ASSERT(sizeof(Frames::Vector) == sizeof(GLfloat) * 2);
 BOOST_STATIC_ASSERT(sizeof(Frames::Color) == sizeof(GLfloat) * 4);
 
 namespace Frames {
@@ -38,6 +32,30 @@ namespace Frames {
   }
 
   namespace detail {
+    static const GLchar sVertexShader[] =
+      "#version 110\n"
+      "\n"
+      "uniform vec2 size;\n"  // size of screen; changes rarely
+      "attribute vec2 position;\n"
+      "attribute vec2 tex;\n"
+      "attribute vec4 color;\n"
+      "\n"
+      "varying vec2 pTex;\n"
+      "varying vec4 pColor;\n"
+      "\n"
+      "void main() { vec2 cp = position; cp.x /= size.x; cp.y /= -size.y; cp *= 2.; cp += vec2(-1., 1.); gl_Position = vec4(cp, 0., 1.); pTex = tex; pColor = color; }\n";
+
+    static const GLchar sFragmentShader[] =
+      "#version 110\n"
+      "\n"
+      "varying vec2 pTex;\n"
+      "varying vec4 pColor;\n"
+      "\n"
+      "uniform int sampleMode;\n"  // 0 means don't sample. 1 means do sample and multiply. 2 means do sample and multiply; pretend .rgb is 1.f.
+      "uniform sampler2D sprite;\n"  // sprite texture to reference if it is being referenced
+      "\n"
+      "void main() { vec4 color = pColor; if (sampleMode == 1) color *= texture2D(sprite, pTex); if (sampleMode == 2) color.a *= texture2D(sprite, pTex).a; gl_FragColor = color; }\n";
+
     TextureBackingOpengl::TextureBackingOpengl(Environment *env, int width, int height, Texture::Format format) : TextureBacking(env, width, height, format), m_id(0) {
       glGenTextures(1, &m_id);
       if (!m_id) {
@@ -112,6 +130,15 @@ namespace Frames {
 
     RendererOpengl::RendererOpengl(Environment *env) :
         Renderer(env),
+        m_vertexShader(0),
+        m_fragmentShader(0),
+        m_program(0),
+        m_uniform_size(0),
+        m_uniform_sampleMode(0),
+        m_uniform_sprite(0),
+        m_attrib_position(0),
+        m_attrib_tex(0),
+        m_attrib_color(0),
         m_vertices(0),
         m_verticesQuadcount(0),
         m_verticesQuadpos(0),
@@ -122,6 +149,35 @@ namespace Frames {
       // easier to handle it on our own, and we won't be creating environments often enough for this to be a performance hit
       glewInit();
 
+      m_vertexShader = CompileShader(GL_VERTEX_SHADER, sVertexShader, "vertex");
+      m_fragmentShader = CompileShader(GL_FRAGMENT_SHADER, sFragmentShader, "fragment");
+      
+      {
+        m_program = glCreateProgram();
+        glAttachShader(m_program, m_vertexShader);
+        glAttachShader(m_program, m_fragmentShader);
+        glLinkProgram(m_program);
+
+        GLint result;
+        glGetProgramiv(m_program, GL_LINK_STATUS, &result);
+        if (!result) {
+          GLint len = 0;
+          glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &len);
+          std::vector<GLchar> log;
+          log.resize(len);
+          glGetProgramInfoLog(m_program, len, 0, &log[0]);
+          EnvironmentGet()->LogError(detail::Format("Failure to link program: %s", &log[0]));
+        }
+      }
+
+      m_uniform_size = glGetUniformLocation(m_program, "size");
+      m_uniform_sampleMode = glGetUniformLocation(m_program, "sampleMode");
+      m_uniform_sprite = glGetUniformLocation(m_program, "sprite");
+
+      m_attrib_position = glGetAttribLocation(m_program, "position");
+      m_attrib_tex = glGetAttribLocation(m_program, "tex");
+      m_attrib_color = glGetAttribLocation(m_program, "color");
+      
       glGenBuffers(1, &m_vertices);
       glGenBuffers(1, &m_indices);
 
@@ -129,48 +185,68 @@ namespace Frames {
     };
 
     RendererOpengl::~RendererOpengl() {
+      glDeleteShader(m_vertexShader);
+      glDeleteShader(m_fragmentShader);
+
+      glDeleteProgram(m_program);
+
       glDeleteBuffers(1, &m_vertices);
       glDeleteBuffers(1, &m_indices);
     }
 
     void RendererOpengl::Begin(int width, int height) {
       Renderer::Begin(width, height);
+      
+      // nuke the site from orbit
+
+      glDisableClientState(GL_COLOR_ARRAY);
+      glDisableClientState(GL_EDGE_FLAG_ARRAY);
+      glDisableClientState(GL_FOG_COORD_ARRAY);
+      glDisableClientState(GL_INDEX_ARRAY);
+      glDisableClientState(GL_NORMAL_ARRAY);
+      glDisableClientState(GL_SECONDARY_COLOR_ARRAY);
+      glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+      glDisableClientState(GL_VERTEX_ARRAY);
+
+      // set up things we actually care about
+
+      glUseProgram(m_program);
 
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glBlendEquation(GL_FUNC_ADD);
 
-      glMatrixMode(GL_TEXTURE);
-      glLoadIdentity();
-
-      glMatrixMode(GL_PROJECTION);
-      glLoadIdentity();
-      glTranslatef(-1.f, 1.f, 0.f);
-      glScalef(2.f / width, -2.f / height, 1.f);
-      glMatrixMode(GL_MODELVIEW);
-      glLoadIdentity();
-
       glBindBuffer(GL_ARRAY_BUFFER, m_vertices);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indices);
 
-      glVertexPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, p));
-      glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, t));
-      glColorPointer(4, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, c));
+      glVertexAttribPointer(m_attrib_position, 2, GL_FLOAT, true, sizeof(Vertex), (void*)offsetof(Vertex, p));
+      glVertexAttribPointer(m_attrib_tex, 2, GL_FLOAT, true, sizeof(Vertex), (void*)offsetof(Vertex, t));
+      glVertexAttribPointer(m_attrib_color, 4, GL_FLOAT, true, sizeof(Vertex), (void*)offsetof(Vertex, c));
+      
+      glEnableVertexAttribArray(m_attrib_position);
+      glEnableVertexAttribArray(m_attrib_tex);
+      glEnableVertexAttribArray(m_attrib_color);
 
-      glEnableClientState(GL_VERTEX_ARRAY);
-      glEnableClientState(GL_COLOR_ARRAY);
-      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-      glEnable(GL_TEXTURE_2D);
+      glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, 0);
       m_currentTexture = 0;
 
       glEnable(GL_SCISSOR_TEST);
+
+      glUniform1i(m_uniform_sprite, 0);
+      glUniform2f(m_uniform_size, (float)width, (float)height);
+      glUniform1i(m_uniform_sampleMode, 0);
     }
 
     void RendererOpengl::End() {
+      glDisableVertexAttribArray(m_attrib_position);
+      glDisableVertexAttribArray(m_attrib_tex);
+      glDisableVertexAttribArray(m_attrib_color);
+
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+      glUseProgram(0);
     }
 
     Renderer::Vertex *RendererOpengl::Request(int quads) {
@@ -207,10 +283,21 @@ namespace Frames {
     }
 
     void RendererOpengl::TextureSet(const detail::TextureBackingPtr &tex) {
-      int glid = tex.Get() ? static_cast<TextureBackingOpengl*>(tex.Get())->GlidGet() : 0;
+      TextureBackingOpengl *backing = tex.Get() ? static_cast<TextureBackingOpengl*>(tex.Get()) : 0;
+      int glid = backing ? backing->GlidGet() : 0;
       if (m_currentTexture != glid) {
         m_currentTexture = glid;
         glBindTexture(GL_TEXTURE_2D, glid);
+
+        if (m_currentTexture) {
+          if (backing->FormatGet() == Texture::FORMAT_A_8) {
+            glUniform1i(m_uniform_sampleMode, 2);
+          } else {
+            glUniform1i(m_uniform_sampleMode, 1);
+          }
+        } else {
+          glUniform1i(m_uniform_sampleMode, 0);
+        }
       }
     }
 
@@ -235,6 +322,23 @@ namespace Frames {
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
       m_verticesQuadcount = quadLen;
       m_verticesQuadpos = m_verticesQuadcount; // will force an array rebuild
+    }
+
+    GLuint RendererOpengl::CompileShader(int shaderType, const GLchar *data, const char *readabletype) {
+      GLuint rv = glCreateShader(shaderType);
+      glShaderSource(rv, 1, &data, 0);
+      glCompileShader(rv);
+      GLint result;
+      glGetShaderiv(rv, GL_COMPILE_STATUS, &result);
+      if (!result) {
+        GLint len = 0;
+        glGetShaderiv(rv, GL_INFO_LOG_LENGTH, &len);
+        std::vector<GLchar> log;
+        log.resize(len);
+        glGetShaderInfoLog(rv, len, 0, &log[0]);
+        EnvironmentGet()->LogError(detail::Format("Failure to compile %s shader: %s", readabletype, &log[0]));
+      }
+      return rv;
     }
   }
 }

@@ -10,6 +10,10 @@
 
 #include "frames/configuration.h"
 
+// Define needed for glew to link properly
+#define GLEW_STATIC
+#include <GL/GLew.h>
+
 namespace Frames {
   namespace Configuration {
     /// Creates a Configuration::Renderer for OpenGL.
@@ -17,11 +21,6 @@ namespace Frames {
   }
   
   namespace detail {
-    // fake opengl typedefs, used so we don't pull the entire header in
-    typedef unsigned int GLuint;
-    typedef unsigned short GLushort;
-    typedef float GLfloat;
-
     class TextureBackingOpengl : public TextureBacking {
     public:
       TextureBackingOpengl(Environment *env, int width, int height, Texture::Format format);
@@ -52,6 +51,19 @@ namespace Frames {
     private:
       void CreateBuffers(int len);
 
+      GLuint m_vertexShader;
+      GLuint m_fragmentShader;
+
+      GLuint m_program;
+
+      GLuint m_uniform_size;
+      GLuint m_uniform_sampleMode;
+      GLuint m_uniform_sprite;
+
+      GLuint m_attrib_position;
+      GLuint m_attrib_tex;
+      GLuint m_attrib_color;
+
       GLuint m_vertices;  // handle of vertex buffer
       int m_verticesQuadcount; // size of vertex buffer, in quads
       int m_verticesQuadpos;  // current write cursor to the vertex buffer, in quads
@@ -64,6 +76,8 @@ namespace Frames {
       GLuint m_currentTexture;
 
       virtual void ScissorSet(const Rect &rect);
+
+      GLuint CompileShader(int shaderType, const GLchar *data, const char *readabletype);
     };
   }
 }
