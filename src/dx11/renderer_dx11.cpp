@@ -151,6 +151,7 @@ namespace Frames {
 
     RendererDX11::RendererDX11(Environment *env, ID3D11DeviceContext *context) :
       Renderer(env),
+      m_device(0),
       m_context(context),
       m_rasterizerState(0),
       m_blendState(0),
@@ -172,8 +173,12 @@ namespace Frames {
       m_verticesQuadpos(0),
       m_verticesLastQuadsize(0),
       m_verticesLastQuadpos(0),
+      m_indices(0),
       m_currentTexture(0)
     {
+      m_context->AddRef();  // we're storing this value, so let's add a reference to it
+      m_context->GetDevice(&m_device);
+
       CreateBuffers(1 << 16); // maximum size that will fit in a ushort
 
       // Create shaders
@@ -349,6 +354,14 @@ namespace Frames {
       if (m_indices) {
         m_indices->Release();
       }
+
+      if (m_context) {
+        m_context->Release();
+      }
+
+      if (m_device) {
+        m_device->Release();
+      }
     }
 
     void RendererDX11::Begin(int width, int height) {
@@ -465,12 +478,6 @@ namespace Frames {
 
     void RendererDX11::StatePop() {
       // not even bothering atm
-    }
-
-    ID3D11Device *RendererDX11::DeviceGet() const {
-      ID3D11Device *dev = 0;
-      ContextGet()->GetDevice(&dev);
-      return dev;
     }
 
     void RendererDX11::ScissorSet(const Rect &rect) {

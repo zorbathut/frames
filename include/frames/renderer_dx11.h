@@ -53,11 +53,12 @@ namespace Frames {
       virtual void StatePop();
 
       ID3D11DeviceContext *ContextGet() const { return m_context; }
-      ID3D11Device *DeviceGet() const;
+      ID3D11Device *DeviceGet() const { return m_device;  }
 
     private:
       void CreateBuffers(int len);
 
+      ID3D11Device *m_device;
       ID3D11DeviceContext *m_context;
 
       ID3D11RasterizerState *m_rasterizerState;

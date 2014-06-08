@@ -2,6 +2,7 @@
 === INTEGRATION
 
 * Hunt for leaks in both ogl and dx
+* Autodetect dx leak
 * Mutex tests if I have to
 
 * Begin fixing tests
