@@ -137,11 +137,11 @@ TEST(Pinningbasics, Example) {
   AddDebugDisplay(env->RootGet(), energy, Frames::TOPLEFT);
   AddDebugDisplay(env->RootGet(), health, Frames::TOPLEFT);
 
-  TestSnapshot(env, "ref/doc/pinningbasics_intro");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_intro"));
 
   energy->HeightSet(60);
 
-  TestSnapshot(env, "ref/doc/pinningbasics_resize");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_resize"));
 
   // add health bar, numeric text
   const float healthCur = 4628;
@@ -173,7 +173,7 @@ TEST(Pinningbasics, Example) {
   AddDebugDisplay(env->RootGet(), energytext, Frames::BOTTOMRIGHT, Frames::BOTTOMLEFT, 7, 7, true);
   AddDebugDisplay(env->RootGet(), staminatext, Frames::BOTTOMRIGHT, Frames::BOTTOMLEFT, 7, 7, true);
 
-  TestSnapshot(env, "ref/doc/pinningbasics_usage_corner");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_usage_corner"));
 
   env->RootGet()->ChildGetByName("Arrows")->Obliterate();
 
@@ -216,7 +216,7 @@ TEST(Pinningbasics, Example) {
 
   AddDebugDisplay(env->RootGet(), indicator, Frames::CENTER, Frames::BOTTOMLEFT, 7, 7, true);
 
-  TestSnapshot(env, "ref/doc/pinningbasics_usage_center");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_usage_center"));
 
   env->RootGet()->ChildGetByName("Arrows")->Obliterate();
 
@@ -234,7 +234,7 @@ TEST(Pinningbasics, Example) {
 
   AddDebugDisplay(env->RootGet(), status, Frames::CENTERTOP, Frames::TOPLEFT, 7, 0, true);
 
-  TestSnapshot(env, "ref/doc/pinningbasics_usage_edge");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_usage_edge"));
 }
 
 TEST(Pinningbasics, Unidirectional) {
@@ -268,7 +268,7 @@ TEST(Pinningbasics, Unidirectional) {
     }
   }
 
-  TestSnapshot(env, "ref/doc/pinningbasics_unidirectional");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_unidirectional"));
 }
 
 void ShowPosition(Frames::Layout *root, Frames::Frame *target, Frames::Anchor anchor, Frames::Anchor tanchor) {
@@ -312,13 +312,13 @@ TEST(Pinningbasics, Position) {
   ShowPosition(env->RootGet(), frame, Frames::BOTTOMLEFT, Frames::BOTTOMLEFT);
   ShowPosition(env->RootGet(), frame, Frames::BOTTOMRIGHT, Frames::BOTTOMRIGHT);
 
-  TestSnapshot(env, "ref/doc/pinningbasics_anchor_corner");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_anchor_corner"));
 
   env->RootGet()->ChildGetByName("Overlay")->Obliterate();
 
   ShowPosition(env->RootGet(), frame, Frames::CENTER, Frames::BOTTOMCENTER);
   
-  TestSnapshot(env, "ref/doc/pinningbasics_anchor_center");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_anchor_center"));
 
   env->RootGet()->ChildGetByName("Overlay")->Obliterate();
 
@@ -327,5 +327,5 @@ TEST(Pinningbasics, Position) {
   ShowPosition(env->RootGet(), frame, Frames::CENTERLEFT, Frames::CENTERLEFT);
   ShowPosition(env->RootGet(), frame, Frames::CENTERRIGHT, Frames::CENTERRIGHT);
 
-  TestSnapshot(env, "ref/doc/pinningbasics_anchor_edge");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_anchor_edge"));
 }

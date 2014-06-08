@@ -250,23 +250,23 @@ void VerbLog::RecordResult(Frames::Handle *handle, const std::string &params) {
   m_records += Frames::detail::Format("Event %s%s on %s%s\n", handle->VerbGet()->NameGet(), param, handle->TargetGet()->DebugNameGet(), current);
 }
 
-void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
+void TestSnapshot(TestEnvironment &env, const SnapshotConfig &csf) {
   // Do the render
   env.ClearRenderTarget();
   env->ResizeRoot(env.WidthGet(), env.HeightGet());
   env->Render();
 
   TestNames testNames;
-  if (fname.empty()) {
+  if (csf.FileGet().empty()) {
     testNames = GetTestNames("screen", ".png");
   } else {
-    testNames.testName = fname + "_ref%d.png";
+    testNames.testName = csf.FileGet() + "_ref%d.png";
     std::string master = Frames::detail::Format(testNames.testName.c_str(), 0);
     // write to the "input" file if that file doesn't exist
     if (!std::ifstream(master.c_str())) {
       testNames.resultName = master;
     } else {
-      testNames.resultName = fname + "_result" + ".png";
+      testNames.resultName = csf.FileGet() + "_result" + ".png";
     }
   }
   
@@ -370,9 +370,9 @@ void TestSnapshot(TestEnvironment &env, std::string fname /*= ""*/) {
   EXPECT_FALSE(match.empty());
 
   if (epsilon) {
-    GTEST_LOG_(WARNING) << epsilon << " epsilon pixels compared to " << fname;
+    GTEST_LOG_(WARNING) << epsilon << " epsilon pixels compared to " << match;
   }
-  EXPECT_EQ(0, critical) << "Critical pixels detected, compared to " << fname;
+  EXPECT_EQ(0, critical) << "Critical pixels detected, compared to " << match;
 }
 
 void HaltAndRender(TestEnvironment &env) {

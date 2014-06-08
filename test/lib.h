@@ -132,7 +132,25 @@ private:
   std::vector<DetacherBase *> m_detachers;
 };
 
-void TestSnapshot(TestEnvironment &env, std::string fname = "");  // non-const-reference so we can just modify it
+class SnapshotConfig {
+public:
+  SnapshotConfig() : m_delta(0.f), m_nearest(false) { }
+
+  SnapshotConfig &File(const std::string &fname) { m_fname = fname; return *this; }
+  SnapshotConfig &AcceptableDelta(float delta) { m_delta = delta; return *this; }
+  SnapshotConfig &Nearest(bool nearest) { m_nearest = nearest; return *this; }
+
+  const std::string &FileGet() const { return m_fname; }
+  float DeltaGet() const { return m_delta; }
+  bool NearestGet() const { return m_nearest; }
+
+private:
+  std::string m_fname;
+  float m_delta;
+  bool m_nearest;
+};
+
+void TestSnapshot(TestEnvironment &env, const SnapshotConfig &csf = SnapshotConfig());
 void HaltAndRender(TestEnvironment &env);
 
 void RendererIdSet(const std::string &renderer);

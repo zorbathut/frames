@@ -39,7 +39,7 @@ TEST(Sizingbasics, Default) {
   f->PinSet(Frames::CENTER, env->RootGet(), Frames::CENTER, -140, 70);
   g->PinSet(Frames::CENTER, env->RootGet(), Frames::CENTER, 0, 0);
 
-  TestSnapshot(env, "ref/doc/sizingbasics_default");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/sizingbasics_default"));
 }
 
 void Annotate(Frames::Frame *frame, const std::string &tex1, const std::string &tex2 = "") {
@@ -107,7 +107,7 @@ TEST(Sizingbasics, Simple) {
   f->HeightSet(80);
   Annotate(f, "WidthSet(10)", "HeightSet(80)");
   
-  TestSnapshot(env, "ref/doc/sizingbasics_simple");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/sizingbasics_simple"));
 }
 
 TEST(Sizingbasics, Resize) {
@@ -154,7 +154,7 @@ TEST(Sizingbasics, Resize) {
   text2->PinSet(Frames::CENTER, env->RootGet(), 0.75, 0.5);
   text3->PinSet(Frames::CENTER, env->RootGet(), 0.75, 0.75);
 
-  TestSnapshot(env, "ref/doc/sizingbasics_self");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/sizingbasics_self"));
 }
 
 TEST(Sizingbasics, SpriteResize) {
@@ -187,7 +187,7 @@ TEST(Sizingbasics, SpriteResize) {
   Annotate(sprite2, "Aspect ratio preserved");
   Annotate(sprite3, "Aspect ratio ignored");
 
-  TestSnapshot(env, "ref/doc/sizingbasics_sprite");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/sizingbasics_sprite"));
 }
 
 TEST(Sizingbasics, TextResize) {
@@ -261,5 +261,5 @@ TEST(Sizingbasics, TextResize) {
   text6->HeightSet(22);
   Annotate(text6, "Wordwrap enabled", "Width/height reduced");
 
-  TestSnapshot(env, "ref/doc/sizingbasics_text");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/sizingbasics_text"));
 }

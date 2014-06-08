@@ -59,7 +59,7 @@ TEST(Framebasics, Example) {
     frame->BackgroundSet(tdc::purple);
   }
 
-  TestSnapshot(env, "ref/doc/framebasics_example");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/framebasics_example"));
 };
 
 void LayerMake(Frames::Layout *root, float x, float y, float layer, Frames::Color color, float text_y) {
@@ -107,7 +107,7 @@ TEST(Framebasics, Layering) {
   LayerMake(env->RootGet(), 420, 220, 1024, tdc::cyan, 1);
   LayerMake(env->RootGet(), 480, 200, 2600, tdc::purple, 1);
 
-  TestSnapshot(env, "ref/doc/framebasics_layering");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/framebasics_layering"));
 };
 
 Frames::Frame *HierarchMake(Frames::Layout *root, Frames::Layout *parent, float x, float y, float layer, Frames::Color color, const std::string &intex) {
@@ -136,5 +136,5 @@ TEST(Framebasics, Hierarchy) {
   HierarchMake(env->RootGet(), rl, 130, 100, 100, tdc::orange, "ORANGE - Child of RED");
   HierarchMake(env->RootGet(), rr, 300, 140, 0, tdc::purple, "PURPLE - Child of BLUE");
 
-  TestSnapshot(env, "ref/doc/framebasics_hierarchy");
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/framebasics_hierarchy"));
 };
