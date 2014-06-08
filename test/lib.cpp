@@ -93,9 +93,10 @@ TestLogger::~TestLogger() {
 }
 
 void TestLogger::LogError(const std::string &log) {
-  printf("[ERR] %s\n", log.c_str());
   if (!m_allowErrors) {
-    GTEST_FAIL();
+    GTEST_FAIL() << log;
+  } else {
+    printf("[ERR-EXPCT] %s\n", log.c_str());
   }
 
   m_loggedErrors += log;
