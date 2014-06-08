@@ -1,19 +1,14 @@
 
 === INTEGRATION
 
-* batch testing types
+* batch testing with no parameters
 
 * Autodetect dx leak
-
-* Begin fixing tests
 
 * Figure out how to link in the precompiled shader
   * Remove d3dcompiler linkage
 
-* Deal with color variations
-
 * D3D11_USAGE_DYNAMIC fix
-* Lots of debug d3d fixery
 
 * Add DX11/OGL flags to the renderer module
 
