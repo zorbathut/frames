@@ -61,6 +61,11 @@ solution "Frames"
     }
   end
   
+  if platform == "win" then
+    defines "NOMINMAX"  -- disable min/max macros from windows headers
+    defines "WIN32_LEAN_AND_MEAN"  -- make windows.h not quite as titanically huge
+  end
+  
   -- Platform-specific tweaks
   configuration "x32"
     libincludes("32")
