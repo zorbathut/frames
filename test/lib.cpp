@@ -355,22 +355,34 @@ void TestSnapshot(TestEnvironment &env, const SnapshotConfig &csf) {
         tdiffdata.resize(pixels.size());
 
         for (int i = 0; i < (int)pixels.size(); ++i) {
-          int diff = abs((int)pixels[i] - (int)reference[i]);
+          const int tpixel = (int)pixels[i];
+          int diff = abs(tpixel - (int)reference[i]);
           bool shifted = false;
+
           if (diff && csf.NearestGet()) {
+            // This is a bit wacky - we define a range as the minimum and maximum values of this pixel and all adjacent pixels, then compare the actual pixel to the range
+            // This is so we avoid a situation where a pixel ends up being at a midpoint in a sharp gradient, but because it's not close to any of the pixels involved in that gradient, it's flagged as invalid
+            int low = reference[i];
+            int high = reference[i];
             const int dx[] = {0, 0, 1, -1};
             const int dy[] = {1, -1, 0, 0};
             for (int ofs = 0; ofs < 4; ++ofs) {
               int target = i + (dx[ofs] + dy[ofs] * env.WidthGet()) * 4;
               if (target >= 0 && target < (int)reference.size()) {
-                int tdiff = abs((int)pixels[i] - (int)reference[target]);
-                if (tdiff < diff) {
-                  diff = tdiff;
-                  shifted = true;
-                }
+                low = std::min(low, (int)reference[target]);
+                high = std::max(high, (int)reference[target]);
               }
             }
+            int tdiff = std::min(abs(tpixel - low), abs(tpixel - high));
+            if (pixels[i] >= low && pixels[i] <= high) {
+              tdiff = 0;
+            }
+            if (tdiff < diff) {
+              diff = tdiff;
+              shifted = true;
+            }
           }
+          
           tdiffdata[i] = (unsigned char)std::min(diff * 4, 255);
           if (diff > csf.DeltaGet()) {
             tcritical++;
