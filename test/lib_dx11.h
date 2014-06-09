@@ -6,6 +6,7 @@
 
 #include <d3d11.h>
 #include <dxgi.h>
+#include <dxgidebug.h>
 #include <windows.h>
 
 class TestWindowDX11 : public TestWindow {
@@ -35,6 +36,10 @@ private:
   ID3D11Texture2D *m_backBuffer;
   ID3D11Texture2D *m_captureBuffer;
   ID3D11RenderTargetView *m_renderTarget;
+
+  // DXGI debugging
+  IDXGIDebug *m_dxgiDebug;
+  IDXGIInfoQueue *m_dxgiInfo;
 };
 
 #endif

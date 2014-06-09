@@ -1,8 +1,4 @@
 
-=== INTEGRATION
-
-* Autodetect dx leak
-
 === DOCS
 
 * Deep docs
@@ -21,6 +17,8 @@
 * Release?
 
 === UE4
+
+* FL10 support
 
 * Integrate with rendering subsystem
 * Integrate with loading subsystem

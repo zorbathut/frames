@@ -1,10 +1,14 @@
 
+#include <initguid.h> // must be before a lot of things, probably including d3d11.h
+
 #include "lib_dx11.h"
 
 #include <frames/renderer_dx11.h>
 
 #include <d3d11.h>
+#include <d3d11sdklayers.h>
 #include <dxgi.h>
+#include <dxgidebug.h>
 #include <windows.h>
 
 const wchar_t *const windowClassName = L"FramesLibTester";
@@ -21,7 +25,9 @@ TestWindowDX11::TestWindowDX11(int width, int height, TestWindowDX11::Mode mode)
   m_context(0),
   m_backBuffer(0),
   m_captureBuffer(0),
-  m_renderTarget(0)
+  m_renderTarget(0),
+  m_dxgiDebug(0),
+  m_dxgiInfo(0)
 {
   WNDCLASSW window_class;
   window_class.style = CS_OWNDC;  // CS_OWNDC can cause issues if other applications are trying to write to this window, but in a standard game model, that shouldn't ever happen
@@ -109,6 +115,19 @@ TestWindowDX11::TestWindowDX11(int width, int height, TestWindowDX11::Mode mode)
     Sleep(1000);
   }
 
+  // Rig up debug logging first
+  {
+    typedef HRESULT(__stdcall *fPtr)(const IID&, void**);
+    HMODULE hDll = GetModuleHandleW(L"dxgidebug.dll");
+    fPtr DXGIGetDebugInterface = (fPtr)GetProcAddress(hDll, "DXGIGetDebugInterface");
+
+    DXGIGetDebugInterface(__uuidof(IDXGIDebug), (void**)&m_dxgiDebug);
+    DXGIGetDebugInterface(__uuidof(IDXGIInfoQueue), (void**)&m_dxgiInfo);
+
+    // TO ADDRESS SPACE CRASH, AND BEYOND
+    m_dxgiInfo->SetMessageCountLimit(DXGI_DEBUG_D3D11, -1);
+  }
+
   EXPECT_EQ(S_OK, m_swap->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_backBuffer));
   m_device->CreateRenderTargetView(m_backBuffer, NULL, &m_renderTarget);
   m_context->OMSetRenderTargets(1, &m_renderTarget, 0);
@@ -154,6 +173,34 @@ TestWindowDX11::~TestWindowDX11() {
   HandleEvents();
 
   UnregisterClassW(windowClassName, GetModuleHandle(0));
+
+  // Test for memory leaks
+  {
+    m_dxgiDebug->ReportLiveObjects(DXGI_DEBUG_D3D11, DXGI_DEBUG_RLO_DETAIL);
+
+    std::string dump;
+
+    for (int i = 0; i < m_dxgiInfo->GetNumStoredMessagesAllowedByRetrievalFilters(DXGI_DEBUG_D3D11); ++i) {
+      SIZE_T len;
+      m_dxgiInfo->GetMessage(DXGI_DEBUG_D3D11, i, 0, &len);
+      DXGI_INFO_QUEUE_MESSAGE *msg = (DXGI_INFO_QUEUE_MESSAGE *)malloc(len);
+      m_dxgiInfo->GetMessage(DXGI_DEBUG_D3D11, i, msg, &len);
+      dump += std::string(msg->pDescription) + "\n";
+      free(msg);
+    }
+
+    if (!dump.empty()) {
+      ADD_FAILURE() << dump;
+    }
+  }
+
+  if (m_dxgiDebug) {
+    m_dxgiDebug->Release();
+  }
+
+  if (m_dxgiInfo) {
+    m_dxgiInfo->Release();
+  }
 }
 
 void TestWindowDX11::Swap() {

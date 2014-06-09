@@ -109,7 +109,7 @@ solution "Frames"
     links {"glew32s", "opengl32", "jpeg"}
     
     configuration "vs*"
-      links {"frames_dx11", "d3d11", "libpng14", "lua51", "freetype2312MT", "zlib", "d3dcompiler"}
+      links {"frames_dx11", "d3d11", "dxgi", "libpng14", "lua51", "freetype2312MT", "zlib", "d3dcompiler"}
       
     configuration {}
   end
