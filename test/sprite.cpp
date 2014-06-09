@@ -53,7 +53,7 @@ TEST(Sprite, Rotation) {
   }
 
   // this one has always been flaky; the sampling differences on all the perfect-mip-zero rotated sprites is a frequent issue
-  TestSnapshot(env, SnapshotConfig().Delta(2).Nearest(true));
+  TestSnapshot(env, SnapshotConfig().Delta(3).Nearest(true));
 }
 
 TEST(Sprite, Sampling) {
