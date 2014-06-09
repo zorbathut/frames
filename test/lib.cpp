@@ -304,6 +304,7 @@ void TestSnapshot(TestEnvironment &env, const SnapshotConfig &csf) {
     } else {
       testNames.resultName = csf.FileGet() + "_result" + ".png";
     }
+    testNames.diffName = csf.FileGet() + "_diff" + ".png";
   }
   
   // We now have our test filename
