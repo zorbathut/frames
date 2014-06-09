@@ -21,7 +21,7 @@
 #include <cstdio>
 #include <fstream>
 
-void TestWindow::ClampScreenshotAlpha(std::vector<unsigned char> *pixels) {
+void ClampScreenshotAlpha(std::vector<unsigned char> *pixels) {
   for (int i = 3; i < (int)pixels->size(); i += 4) {
     (*pixels)[i] = 255;
   }
@@ -30,6 +30,7 @@ void TestWindow::ClampScreenshotAlpha(std::vector<unsigned char> *pixels) {
 struct TestNames {
   std::string testName;
   std::string resultName;
+  std::string diffName;
 };
 
 static std::string s_testNameLast = "";
@@ -49,6 +50,7 @@ TestNames GetTestNames(const std::string &family, const std::string &extension) 
 
   rv.testName = testFilePrefix + "_ref%d" + extension;
   rv.resultName = testFilePrefix + "_result" + extension;
+  rv.diffName = testFilePrefix + "_diff" + extension;
 
   // write to the "input" file if that file doesn't exist
   std::string master = Frames::detail::Format(rv.testName.c_str(), 0);
@@ -250,6 +252,40 @@ void VerbLog::RecordResult(Frames::Handle *handle, const std::string &params) {
   m_records += Frames::detail::Format("Event %s%s on %s%s\n", handle->VerbGet()->NameGet(), param, handle->TargetGet()->DebugNameGet(), current);
 }
 
+void WritePng(const std::string &filename, const std::vector<unsigned char> &data, int width, int height) {
+  FILE *fp = fopen(filename.c_str(), "wb");
+
+  if (fp) {
+    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    png_infop info_ptr = png_create_info_struct(png_ptr);
+
+    png_init_io(png_ptr, fp);
+    png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
+    png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
+
+    png_set_IHDR(png_ptr, info_ptr, width, height,
+      8, PNG_COLOR_TYPE_RGB_ALPHA, PNG_INTERLACE_NONE,
+      PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+
+    png_write_info(png_ptr, info_ptr);
+
+    std::vector<const unsigned char *> rows;
+    for (int i = 0; i < height; ++i) {
+      rows.push_back(&data[0] + i * width * 4);
+    }
+
+    png_write_image(png_ptr, (png_bytepp)&rows[0]); // come on, why couldn't png_bytepp have been const
+
+    png_write_end(png_ptr, NULL);
+
+    png_destroy_write_struct(&png_ptr, &info_ptr);
+
+    fclose(fp);
+  } else {
+    ADD_FAILURE() << "Cannot write result " << filename;
+  }
+}
+
 void TestSnapshot(TestEnvironment &env, const SnapshotConfig &csf) {
   // Do the render
   env.ClearRenderTarget();
@@ -279,45 +315,14 @@ void TestSnapshot(TestEnvironment &env, const SnapshotConfig &csf) {
     return; // jolly good, then
   }
 
-  {
-    // Write result to disk
-    // Don't need this anywhere in Frames so we'll just hack it in here
-    FILE *fp = fopen(testNames.resultName.c_str(), "wb");
-
-    if (fp) {
-      png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-      png_infop info_ptr = png_create_info_struct(png_ptr);
-
-      png_init_io(png_ptr, fp);
-      png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
-      png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
-
-      png_set_IHDR(png_ptr, info_ptr, env.WidthGet(), env.HeightGet(),
-        8, PNG_COLOR_TYPE_RGB_ALPHA, PNG_INTERLACE_NONE,
-        PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-
-      png_write_info(png_ptr, info_ptr);
-
-      std::vector<unsigned char *> rows;
-      for (int i = 0; i < env.HeightGet(); ++i) {
-        rows.push_back(&pixels[0] + i * env.WidthGet() * 4);
-      }
-
-      png_write_image(png_ptr, &rows[0]);
-
-      png_write_end(png_ptr, NULL);
-
-      png_destroy_write_struct(&png_ptr, &info_ptr);
-
-      fclose(fp);
-    } else {
-      ADD_FAILURE() << "Cannot write result " << testNames.resultName;
-    }
-  }
+  // Write result to disk
+  WritePng(testNames.resultName, pixels, env.WidthGet(), env.HeightGet());
 
   // Grab our source file (or try to)
   int epsilon = std::numeric_limits<int>::max();
   int critical = std::numeric_limits<int>::max();
+  std::multiset<int> diffs;
+  std::vector<unsigned char> diffdata;
   std::string match;
   {
     int refid = 0;
@@ -344,6 +349,9 @@ void TestSnapshot(TestEnvironment &env, const SnapshotConfig &csf) {
       if (reference.size() == pixels.size()) {
         int tepsilon = 0;
         int tcritical = 0;
+        std::multiset<int> tdiffs;
+        std::vector<unsigned char> tdiffdata;
+        tdiffdata.resize(pixels.size());
 
         for (int i = 0; i < (int)pixels.size(); ++i) {
           int diff = abs((int)pixels[i] - (int)reference[i]);
@@ -362,8 +370,13 @@ void TestSnapshot(TestEnvironment &env, const SnapshotConfig &csf) {
               }
             }
           }
+          tdiffdata[i] = (unsigned char)std::min(diff * 16, 255);
           if (diff > csf.DeltaGet()) {
             tcritical++;
+            tdiffs.insert(diff);
+            if (tdiffs.size() > 10) {
+              tdiffs.erase(tdiffs.begin());
+            }
           } else if (diff || shifted) {
             tepsilon++;
           }
@@ -372,6 +385,8 @@ void TestSnapshot(TestEnvironment &env, const SnapshotConfig &csf) {
         if (tcritical < critical || tcritical == critical && tepsilon < epsilon) {
           epsilon = tepsilon;
           critical = tcritical;
+          diffs = tdiffs;
+          diffdata = tdiffdata;
           match = fname;
         }
       }
@@ -382,10 +397,25 @@ void TestSnapshot(TestEnvironment &env, const SnapshotConfig &csf) {
 
   EXPECT_FALSE(match.empty());
 
+  if (epsilon || critical) {
+    ClampScreenshotAlpha(&diffdata);
+    WritePng(testNames.diffName, diffdata, env.WidthGet(), env.HeightGet());
+  }
+
   if (epsilon) {
     GTEST_LOG_(WARNING) << epsilon << " epsilon pixels compared to " << match;
   }
   EXPECT_EQ(0, critical) << "Critical pixels detected, compared to " << match;
+  if (!diffs.empty()) {
+    std::string tdiffs = "Pixel diffs: ";
+    for (std::multiset<int>::const_iterator itr = diffs.begin(); itr != diffs.end(); ++itr) {
+      if (itr != diffs.begin()) {
+        tdiffs += ", ";
+      }
+      tdiffs += Frames::detail::Format("%d", *itr);
+    }
+    printf("%s", tdiffs.c_str());
+  }
 }
 
 void HaltAndRender(TestEnvironment &env) {

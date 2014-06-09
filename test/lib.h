@@ -31,10 +31,6 @@ public:
   virtual void ClearRenderTarget() = 0;
   virtual std::vector<unsigned char> Screenshot() = 0;
 
-protected:
-  // different platforms do different weird inconsistent things with backbuffer alpha, so we just go ahead and fix it here
-  void ClampScreenshotAlpha(std::vector<unsigned char> *pixels);
-
 private:
   int m_width;
   int m_height;
@@ -155,5 +151,8 @@ void HaltAndRender(TestEnvironment &env);
 
 void RendererIdSet(const std::string &renderer);
 std::string &RendererIdGet();
+
+// different platforms do different weird inconsistent things with backbuffer alpha, so we just go ahead and fix it here
+void ClampScreenshotAlpha(std::vector<unsigned char> *pixels);
 
 #endif
