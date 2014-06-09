@@ -9,7 +9,7 @@
 
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
-  SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED);  // This isn't platform-agnostic, but it's good enough for now
+  SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED | ES_AWAYMODE_REQUIRED);  // This isn't platform-agnostic, but it's good enough for now. Also we're just shotgunning all the "yes stay awake seriously" flags.
   if (argc > 1) {
     RendererIdSet(argv[1]);
     return RUN_ALL_TESTS();
