@@ -130,7 +130,7 @@ private:
 
 class SnapshotConfig {
 public:
-  SnapshotConfig() : m_delta(1), m_nearest(false) { } // defaulting delta to 1 until I figure out how to deal with that odd off-by-one glitch in, like, all color rendering
+  SnapshotConfig() : m_delta(2), m_nearest(false) { } // defaulting delta to 2 until I figure out how to deal with that odd off-by-one glitch in, like, all color rendering. Seems to hit textures too?
 
   SnapshotConfig &File(const std::string &fname) { m_fname = fname; return *this; }
   SnapshotConfig &Delta(int delta) { m_delta = delta; return *this; }
