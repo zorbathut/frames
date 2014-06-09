@@ -137,11 +137,11 @@ TEST(Pinningbasics, Example) {
   AddDebugDisplay(env->RootGet(), energy, Frames::TOPLEFT);
   AddDebugDisplay(env->RootGet(), health, Frames::TOPLEFT);
 
-  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_intro"));
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_intro").Delta(2)); // arrow rotation
 
   energy->HeightSet(60);
 
-  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_resize"));
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_resize").Delta(2));  // arrow rotation
 
   // add health bar, numeric text
   const float healthCur = 4628;
