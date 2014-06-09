@@ -370,7 +370,7 @@ void TestSnapshot(TestEnvironment &env, const SnapshotConfig &csf) {
               }
             }
           }
-          tdiffdata[i] = (unsigned char)std::min(diff * 16, 255);
+          tdiffdata[i] = (unsigned char)std::min(diff * 4, 255);
           if (diff > csf.DeltaGet()) {
             tcritical++;
             tdiffs.insert(diff);
