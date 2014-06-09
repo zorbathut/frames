@@ -427,7 +427,7 @@ void TestSnapshot(TestEnvironment &env, const SnapshotConfig &csf) {
       }
       tdiffs += Frames::detail::Format("%d", *itr);
     }
-    printf("%s", tdiffs.c_str());
+    printf("%s\n", tdiffs.c_str());
   }
 }
 
