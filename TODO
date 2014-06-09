@@ -47,6 +47,8 @@
 
 === TWEAK
 
+* dxgidebug on vger
+
 * Split Loaders into their own libs
   * Test
 
