@@ -173,7 +173,7 @@ TEST(Pinningbasics, Example) {
   AddDebugDisplay(env->RootGet(), energytext, Frames::BOTTOMRIGHT, Frames::BOTTOMLEFT, 7, 7, true);
   AddDebugDisplay(env->RootGet(), staminatext, Frames::BOTTOMRIGHT, Frames::BOTTOMLEFT, 7, 7, true);
 
-  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_usage_corner"));
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/pinningbasics_usage_corner").Delta(2));  // arrow rotation
 
   env->RootGet()->ChildGetByName("Arrows")->Obliterate();
 

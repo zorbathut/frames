@@ -154,7 +154,7 @@ TEST(Sizingbasics, Resize) {
   text2->PinSet(Frames::CENTER, env->RootGet(), 0.75, 0.5);
   text3->PinSet(Frames::CENTER, env->RootGet(), 0.75, 0.75);
 
-  TestSnapshot(env, SnapshotConfig().File("ref/doc/sizingbasics_self"));
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/sizingbasics_self").Delta(2)); // arrow rotation causes some inaccuracy
 }
 
 TEST(Sizingbasics, SpriteResize) {
@@ -187,7 +187,7 @@ TEST(Sizingbasics, SpriteResize) {
   Annotate(sprite2, "Aspect ratio preserved");
   Annotate(sprite3, "Aspect ratio ignored");
 
-  TestSnapshot(env, SnapshotConfig().File("ref/doc/sizingbasics_sprite"));
+  TestSnapshot(env, SnapshotConfig().File("ref/doc/sizingbasics_sprite").Delta(2)); // graphics card filtering differences
 }
 
 TEST(Sizingbasics, TextResize) {
