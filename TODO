@@ -1,12 +1,7 @@
 
 === INTEGRATION
 
-* Finish up test tuning
-
 * Autodetect dx leak
-
-* Split Loaders into their own libs
-  * Test
 
 === DOCS
 
@@ -26,6 +21,9 @@
 * Release?
 
 === UE4
+
+* Integrate with rendering subsystem
+* Integrate with loading subsystem
 
 * Need some way to build with the UE4 header tool
 * However, also needs hooks in the frames for that to work
@@ -48,6 +46,9 @@
 * Official release?
 
 === TWEAK
+
+* Split Loaders into their own libs
+  * Test
 
 * opengl 3.2 core
 * D3D11_USAGE_DYNAMIC fix
