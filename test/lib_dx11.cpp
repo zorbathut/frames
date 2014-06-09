@@ -119,13 +119,17 @@ TestWindowDX11::TestWindowDX11(int width, int height, D3D_FEATURE_LEVEL fl, Test
   {
     typedef HRESULT(__stdcall *fPtr)(const IID&, void**);
     HMODULE hDll = GetModuleHandleW(L"dxgidebug.dll");
-    fPtr DXGIGetDebugInterface = (fPtr)GetProcAddress(hDll, "DXGIGetDebugInterface");
+    fPtr DXGIGetDebugInterface = hDll ? (fPtr)GetProcAddress(hDll, "DXGIGetDebugInterface") : 0;
 
-    DXGIGetDebugInterface(__uuidof(IDXGIDebug), (void**)&m_dxgiDebug);
-    DXGIGetDebugInterface(__uuidof(IDXGIInfoQueue), (void**)&m_dxgiInfo);
+    if (DXGIGetDebugInterface) {
+      DXGIGetDebugInterface(__uuidof(IDXGIDebug), (void**)&m_dxgiDebug);
+      DXGIGetDebugInterface(__uuidof(IDXGIInfoQueue), (void**)&m_dxgiInfo);
 
-    // TO ADDRESS SPACE CRASH, AND BEYOND
-    m_dxgiInfo->SetMessageCountLimit(DXGI_DEBUG_D3D11, -1);
+      // TO ADDRESS SPACE CRASH, AND BEYOND
+      m_dxgiInfo->SetMessageCountLimit(DXGI_DEBUG_D3D11, -1);
+    } else {
+      ADD_FAILURE() << "DXGI interfaces unavailable, memory leaks and other DX bugs cannot be tracked";
+    }
   }
 
   EXPECT_EQ(S_OK, m_swap->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_backBuffer));
@@ -175,7 +179,7 @@ TestWindowDX11::~TestWindowDX11() {
   UnregisterClassW(windowClassName, GetModuleHandle(0));
 
   // Test for memory leaks
-  {
+  if (m_dxgiDebug) {
     m_dxgiDebug->ReportLiveObjects(DXGI_DEBUG_D3D11, DXGI_DEBUG_RLO_DETAIL);
 
     std::string dump;
