@@ -18,7 +18,7 @@ static LRESULT CALLBACK HandleMessage(HWND window_handle, UINT message, WPARAM w
   return DefWindowProcW(window_handle, message, wParam, lParam);
 }
 
-TestWindowDX11::TestWindowDX11(int width, int height, TestWindowDX11::Mode mode) : TestWindow(width, height),
+TestWindowDX11::TestWindowDX11(int width, int height, D3D_FEATURE_LEVEL fl, TestWindowDX11::Mode mode) : TestWindow(width, height),
   m_window(0),
   m_swap(0),
   m_device(0),
@@ -81,7 +81,7 @@ TestWindowDX11::TestWindowDX11(int width, int height, TestWindowDX11::Mode mode)
   sd.SampleDesc.Quality = 0;
   sd.Windowed = TRUE;
 
-  D3D_FEATURE_LEVEL FeatureLevelsRequested = D3D_FEATURE_LEVEL_11_0;
+  D3D_FEATURE_LEVEL FeatureLevelsRequested = fl;
   D3D_FEATURE_LEVEL FeatureLevelsSupported;
 
   // Our test framework sometimes starts too many directx instances; deal with E_OUTOFMEMORY errors by retrying after a second, at which point we'll hopefully have cleaned up a bit

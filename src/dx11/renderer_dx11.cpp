@@ -183,12 +183,12 @@ namespace Frames {
       ID3DBlob *vs = 0;
       ID3DBlob *ps = 0;
       ID3DBlob *errors = 0;
-      if (D3DCompile(sShader, strlen(sShader), 0, 0, 0, "VS", "vs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_WARNINGS_ARE_ERRORS, 0, &vs, &errors) != S_OK) {
+      if (D3DCompile(sShader, strlen(sShader), 0, 0, 0, "VS", "vs_4_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_WARNINGS_ARE_ERRORS, 0, &vs, &errors) != S_OK) {
         EnvironmentGet()->LogError("Failure to compile vertex shader");
         EnvironmentGet()->LogError("Err: " + std::string((const char *)errors->GetBufferPointer(), (const char *)errors->GetBufferPointer() + errors->GetBufferSize()));
         errors->Release();
       }
-      if (D3DCompile(sShader, strlen(sShader), 0, 0, 0, "PS", "ps_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_WARNINGS_ARE_ERRORS, 0, &ps, &errors) != S_OK) {
+      if (D3DCompile(sShader, strlen(sShader), 0, 0, 0, "PS", "ps_4_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_WARNINGS_ARE_ERRORS, 0, &ps, &errors) != S_OK) {
         EnvironmentGet()->LogError("Failure to compile pixel shader");
         EnvironmentGet()->LogError("Err: " + std::string((const char *)errors->GetBufferPointer(), (const char *)errors->GetBufferPointer() + errors->GetBufferSize()));
         errors->Release();

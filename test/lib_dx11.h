@@ -17,7 +17,7 @@ public:
     MODE_REFERENCE,
   };
 
-  TestWindowDX11(int width, int height, Mode mode);
+  TestWindowDX11(int width, int height, D3D_FEATURE_LEVEL fl, Mode mode);
   ~TestWindowDX11();
 
   virtual void Swap();

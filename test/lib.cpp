@@ -135,12 +135,18 @@ TestEnvironment::TestEnvironment(bool startUI, int width, int height) : m_env(0)
       m_tenv = new TestWindowSDL(width, height, 3, 2, SDL_GL_CONTEXT_PROFILE_CORE);
     } else if (RendererIdGet() == "ogl3_2_compat") {
       m_tenv = new TestWindowSDL(width, height, 3, 2, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+    } else if (RendererIdGet() == "dx11_fl10") {
+      m_tenv = new TestWindowDX11(width, height, D3D_FEATURE_LEVEL_10_0, TestWindowDX11::MODE_HAL);
+    } else if (RendererIdGet() == "dx11_fl10_dbg") {
+      m_tenv = new TestWindowDX11(width, height, D3D_FEATURE_LEVEL_10_0, TestWindowDX11::MODE_DEBUG);
+    } else if (RendererIdGet() == "dx11_fl10_ref") {
+      m_tenv = new TestWindowDX11(width, height, D3D_FEATURE_LEVEL_10_0, TestWindowDX11::MODE_REFERENCE);
     } else if (RendererIdGet() == "dx11_fl11") {
-      m_tenv = new TestWindowDX11(width, height, TestWindowDX11::MODE_HAL);
+      m_tenv = new TestWindowDX11(width, height, D3D_FEATURE_LEVEL_11_0, TestWindowDX11::MODE_HAL);
     } else if (RendererIdGet() == "dx11_fl11_dbg") {
-      m_tenv = new TestWindowDX11(width, height, TestWindowDX11::MODE_DEBUG);
+      m_tenv = new TestWindowDX11(width, height, D3D_FEATURE_LEVEL_11_0, TestWindowDX11::MODE_DEBUG);
     } else if (RendererIdGet() == "dx11_fl11_ref") {
-      m_tenv = new TestWindowDX11(width, height, TestWindowDX11::MODE_REFERENCE);
+      m_tenv = new TestWindowDX11(width, height, D3D_FEATURE_LEVEL_11_0, TestWindowDX11::MODE_REFERENCE);
     } else if (RendererIdGet() == "null") {
       m_tenv = new TestWindowNull(width, height);
     } else {
