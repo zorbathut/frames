@@ -1,6 +1,16 @@
 
 === DOCS
 
+* Explain (or remove) Scene
+* "purple frame with layer 10"
+* Explain Sprite
+* "would make use of textures" via Sprite
+* "The health, energy, and stamina bars are siblings, and are still linked via pins."
+* "Window.BOTTOMRIGHT is pinned to Contents.BOTTOMRIGHT Contents.BOTTOMRIGHT can be calculated given the size of Contents, which we've explicitly set, and Contents.TOPLEFT Contents.TOPLEFT is pinned to Window.TOPLEFT Window.TOPLEFT is pinned to some other anchor"
+* layout descibred in "\ref advnonhierarchical "Nonhierarchical Pins"".
+* Describe Root somewhere
+* show list of handlers, including dive/bubble
+
 * Deep docs
   * need to put a thorough description of the pin API somewhere
 
@@ -173,3 +183,9 @@
   * dx11_fl11
   * dx11_fl11_dbg
   * dx11_fl11_ref
+
+=== JENKINS TWEAK
+
+* Don't leak file handles when unexpected shutdowns happen
+* mspdbsrv.exe exclusion
+* keep system awake when building?
