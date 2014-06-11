@@ -2,7 +2,7 @@
 
 Pinning is the most commonly used and most powerful layout tool in Frames. Proper understanding of this tool is highly recommended.
 
-We'll be demonstrating these tools by making a basic MMORPG-style health/energy/stamina meter. An actual game UI would make use of textures, but this example uses solid colors to highlight the layout tools.
+We'll be demonstrating these tools by making a basic MMORPG-style health/energy/stamina meter. An actual game UI would make use of textures via \ref Frames::Sprite "Sprite", but this example uses solid colors to highlight the layout tools.
 
 First, three stat bars, laid out using pinning.
 
@@ -40,7 +40,7 @@ Pins are generally attached to named points known as Anchors. We'll list and dem
 
 The four most common named points are TOPLEFT, TOPRIGHT, BOTTOMLEFT, and BOTTOMRIGHT, representing the corners of a frame. In this example, the bars are constrained to each other through corner pins, and the new numeric indicators are also constrained to their parent bars via pins.
 
-Keep in mind that pins do not have to travel "up" the parent hierarchy. The health, energy, and stamina bars are siblings, and are still linked via pins.
+Keep in mind that pins do not have to travel "up" the parent hierarchy. The health, energy, and stamina bars are siblings, and are linked to each other via pins despite no parent/child relationships.
 
 \image html pinningbasics_anchor_center_ref0.png
 

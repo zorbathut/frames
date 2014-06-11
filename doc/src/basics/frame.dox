@@ -1,6 +1,6 @@
 /** \page basicsframe Frame
 
-Frame is the fundamental component of all UIs. A Frame is a rectangular axis-aligned area in a Scene.
+Frame is the fundamental component of all UIs. A Frame is a rectangular axis-aligned area.
 
 By default, a Frame is invisible and cannot be interacted with. For the purposes of this documentation, Frames are generally colored with Frame::BackgroundSet so that they are visible.
 
@@ -10,7 +10,9 @@ Here's some example Frames:
 
 In the above image, we show exclusively non-overlapping Frames for the sake of demonstration, but Frames can also overlap.
 
-All Frames have exactly one parent, and any Frame may have any number of children. A Frame's children are always rendered on top of that Frame. Each Frame has a "layer" number; a frame's children are rendered in order of increasing layer, such that the topmost frame in a set is the one with the largest Layer.
+A Frames Environment contains one pre-defined Frame known as Root, which matches the screen bounds exactly.
+
+With the exception of Root, all Frames have exactly one parent, and any Frame may have any number of children. A Frame's children are always rendered on top of that Frame. Each Frame has a "layer" number; a frame's children are rendered in order of increasing layer, such that the topmost frame in a set is the one with the largest Layer.
 
 \image html framebasics_layering_ref0.png
 
@@ -18,7 +20,7 @@ Layer numbers can be small, large, fractional, or negative. By default, all fram
 
 \image html framebasics_hierarchy_ref0.png
 
-Layer numbers are meaningful only within the scope of a single Frame's children. In the above image, the orange frame set to layer 100 is located below the purple frame with layer 10. This is because Orange is the child of Red, while Purple is the child of Blue, and Blue's layer is higher than that of Red. Because Blue and Red are siblings and Blue's layer is higher, Blue and all of its children will be drawn before Red and any of its children, regardless of any comparisons between the layers of Blue's children and Red's children.
+Layer numbers are meaningful only within the scope of a single Frame's children. In the above image, the purple frame with layer 0 is located above all the other frames, despite the other frames all having a higher layer number. Purple is located above Blue because Purple is Blue's child. Blue and all of its children are located above Red and all of its children because Blue and Red are siblings and Blue's layer number is higher. Therefore, Purple, as the child of Blue, is placed above Red and all of its children, regardless of any comparisons between the layers of Blue's children and Red's children.
 
 In programmer terms, the Frame hierarchy forms a tree, and rendering is depth-first.
 

@@ -2,13 +2,47 @@
 
 (This section is currently INCOMPLETE)
 
-While event handlers are technically associated with frame types for organization's sake, any event can have a handler attached to any frame, although inappropriate events will never be called.
+Events are used for push notifications. The Frames built-in events are organized by frame type, with the vast majority associated with Layout in a few major categories.
 
-Events are called in order of decreasing priority. Adding and removing events while in the middle of an event handler is fully supported, up to and including removing an event handler in-call. Additionally, events can be called recursively (though obviously you'll want to ensure the recursive calls terminate eventually.)
+Events that trigger when a frame is shifted in position:
 
-Some events, mostly input-related events, have Dive and Bubble handlers as well. This lets those events be intercepted and handled by earlier frames in the hierarchy.
+\ref Frames::Layout::Event::Move
 
-When a Dive+Bubble event is triggered, it starts with the Dive section. The event's Dive handler is triggered on a series of frames, starting with Root and traveling down the frame hierarchy to the destination frame. Once Dive has been called on the destination frame, the normal event handler is called on that frame. Finally, the Bubble handler is called in the reverse order, starting on the destination frame and traveling up to Root.
+\ref Frames::Layout::Event::Size
+
+Events that trigger based on mouse actions (not a comprehensive list):
+
+\ref Frames::Layout::Event::MouseLeftDown
+
+\ref Frames::Layout::Event::MouseRightClick
+
+\ref Frames::Layout::Event::MouseWheel
+
+Events that trigger based on key presses and releases (not a comprehensive list):
+
+\ref Frames::Layout::Event::KeyDown
+
+\ref Frames::Layout::Event::KeyRepeat
+
+\ref Frames::Layout::Event::KeyUp
+
+Finally, one event that triggers when text is typed:
+
+\ref Frames::Layout::Event::KeyText
+
+While the built-in event handlers are technically associated with frame types for organization's sake, any event can have a handler attached to any frame. This is useful when defining a custom event; the base frame types don't have to know about all possible events, and the user can create event types at will, then use them as first-class concepts within the Frames system.
+
+Events are called in order of decreasing priority. Adding and removing events while in the middle of an event handler is fully supported, up to and including removing an event handler that is currently being called. Additionally, events can be called recursively (though obviously you'll want to ensure the recursive calls terminate eventually.)
+
+Some events, mostly input-related events, have Dive and Bubble handlers as well. This lets those events be intercepted and handled by earlier frames in the hierarchy. These event types exist along with the standard events, for example:
+
+\ref Frames::Layout::Event::MouseMiddleUp
+
+\ref Frames::Layout::Event::MouseMiddleUp.Dive
+
+\ref Frames::Layout::Event::MouseMiddleUp.Bubble
+
+When a Dive+Bubble event is triggered, it starts by invoking the Dive sub-events. The event's Dive handler is triggered on a series of frames, starting with Root and traveling down the frame hierarchy to the destination frame. Once Dive has been called on the destination frame, the normal event handler is called on that frame. Finally, the Bubble handler is called in the reverse order, starting on the destination frame and traveling up to Root.
 
 New Events can be created, either statically allocated or dynamically allocated, just by creating a new Frames::Event::Verb object. However, if creating events dynamically, note that all handlers of an event type must be removed before the Verb is destroyed.
 
