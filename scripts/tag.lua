@@ -19,6 +19,7 @@ end
 local ver = ...
 
 print(ver)
+assert(ver)
 
 do
   local gitfil = io.popen("git tag", "r")
@@ -48,9 +49,20 @@ assert(major and minor and patch)
 
 print(major, minor, patch, suffix)
 
+-- set up our doc branch
+os.execute("git clone . tagtemp")
+os.execute("cd tagtemp && git checkout gh-pages")
+
+-- get documentation built
+os.execute("lua scripts/generateDocs.lua")
+
 local function branchto(branch)
-  os.execute("git checkout -B " .. branch .. " HEAD")
-  os.execute("git push -u origin " .. branch)
+  os.execute("git branch -f " .. branch)
+  os.execute("git config branch." .. branch .. ".remote origin")
+  os.execute("git config branch." .. branch .. ".merge refs/heads/" .. branch)
+  os.execute("rm -rf tagtemp/docs/" .. branch)
+  os.execute("mkdir -p tagtemp/docs/" .. branch)
+  os.execute("cp -r doc/html/* tagtemp/docs/" .. branch)
 end
 
 if not suffix then
@@ -69,7 +81,6 @@ if not suffix then
   branchto("v" .. major .. "." .. minor)
 end
 
-os.execute("git tag v" .. ver .. " -m \"Version " .. ver .. "\"")
-os.execute("git push --tags")
+os.execute([[cd tagtemp && git add . && git commit -a -m "Documentation update for version v]] .. ver .. [[" && git push && cd .. && rm -rf tagtemp]])
 
-os.execute("git checkout dev")
+os.execute("git tag v" .. ver .. " -m \"Version " .. ver .. "\"")
