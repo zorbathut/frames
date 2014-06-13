@@ -1,4 +1,27 @@
 
+=== UE4
+
+* Rig up new premake name
+* Get .lib building against ue4 libraries (as applicable)
+* Example project
+* Make it run
+
+* Integrate with rendering subsystem
+* Integrate with loading subsystem
+
+* Start integration layer
+
+* Need some way to build with the UE4 header tool
+* However, also needs hooks in the frames for that to work
+* This means . . . an internal UE4-hook class, then the UE4 code itself hooks that?
+* That seems ugly, but might be necessary
+* Maybe some way to provide the right set of verbs to provide external APIs?
+* That may be extremely difficult
+  * Thoughts:
+  * Obliterate is needed - last event fired before shutdown
+
+* Font corpus cleanup
+
 === DOCS
 
 * Deep docs
@@ -24,22 +47,6 @@
 * Coverage
 
 * Release?
-
-=== UE4
-
-* Integrate with rendering subsystem
-* Integrate with loading subsystem
-
-* Need some way to build with the UE4 header tool
-* However, also needs hooks in the frames for that to work
-* This means . . . an internal UE4-hook class, then the UE4 code itself hooks that?
-* That seems ugly, but might be necessary
-* Maybe some way to provide the right set of verbs to provide external APIs?
-* That may be extremely difficult
-  * Thoughts:
-  * Obliterate is needed - last event fired before shutdown
-
-* Need font corpus cleanup before the big release!
 
 === BUILDING
 
