@@ -1,4 +1,13 @@
 
+newoption {
+  trigger = "ue",
+  value = "version",
+  description = "Choose an Unreal Engine version to target",
+  allowed = {
+    { "4_2", "Unreal Engine 4.2" },
+  }
+}
+
 local slug
 local platform
 local platformFull
@@ -15,13 +24,19 @@ elseif _ACTION == "vs2012" then
   slug = "msvc11"
   platform = "win"
   platformFull = "win_msvc11_"
-elseif _ACTION == "vs2013" then -- NYI
+elseif _ACTION == "vs2013" and not _OPTIONS["ue"] then
   slug = "msvc12"
   platform = "win"
   platformFull = "win_msvc12_"
+elseif _ACTION == "vs2013" and _OPTIONS["ue"] == "4_2" then
+  slug = "ue4_2"
+  platform = "win"
+  platformFull = "win_msvc12_"
 else
-  print(("Not supported: target %s with OS %s"):format(_ACTION, _OS))
-  assert(false)
+  print(("Not supported: target %s with OS %s"):format(_ACTION or "", _OS or ""))
+  slug = ""
+  platform = ""
+  platformFull = ""
 end
 
 local path = "projects/" .. slug

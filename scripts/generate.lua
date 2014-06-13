@@ -19,5 +19,5 @@ end
 
 for k, v in pairs(projects) do
   --local path = v.path and ("PATH=\"%s\""):format(v.path) or ""
-  os.execute(("premake4 %s"):format(v.generator))
+  os.execute(("premake4 %s %s"):format(v.parameters or "", v.generator))
 end

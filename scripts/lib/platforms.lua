@@ -30,6 +30,11 @@ projects = {
     generator = "vs2013",
     build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 12.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform>]]),
   },
+  ue4_2 = {
+    generator = "vs2013",
+    parameters = "--ue=4_2",
+    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 12.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform>]]),
+  },
   -- disabled, possibly permanently
   --[[mingw = {
     generator = "gmake",
