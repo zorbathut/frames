@@ -35,6 +35,12 @@ cp c:/windows/syswow64/msvcp120d.dll bin/msvc12/x32/test
 cp "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Developer Runtime/x86/D3D11Ref.dll" bin/msvc12/x32/test
 cp "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Developer Runtime/x86/D3D11SDKLayers.dll" bin/msvc12/x32/test
 
+mkdir -p bin/ue4_2/x32/test
+cp c:/windows/syswow64/msvcr120d.dll bin/ue4_2/x32/test
+cp c:/windows/syswow64/msvcp120d.dll bin/ue4_2/x32/test
+cp "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Developer Runtime/x86/D3D11Ref.dll" bin/ue4_2/x32/test
+cp "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Developer Runtime/x86/D3D11SDKLayers.dll" bin/ue4_2/x32/test
+
 mkdir -p bin/msvc10/x64/test
 cp c:/windows/sysnative/msvcr100d.dll bin/msvc10/x64/test
 cp c:/windows/sysnative/msvcp100d.dll bin/msvc10/x64/test
@@ -52,6 +58,12 @@ cp c:/windows/sysnative/msvcr120d.dll bin/msvc12/x64/test
 cp c:/windows/sysnative/msvcp120d.dll bin/msvc12/x64/test
 cp "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Developer Runtime/x64/D3D11Ref.dll" bin/msvc12/x64/test
 cp "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Developer Runtime/x64/D3D11SDKLayers.dll" bin/msvc12/x64/test
+
+mkdir -p bin/ue4_2/x64/test
+cp c:/windows/sysnative/msvcr120d.dll bin/ue4_2/x64/test
+cp c:/windows/sysnative/msvcp120d.dll bin/ue4_2/x64/test
+cp "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Developer Runtime/x64/D3D11Ref.dll" bin/ue4_2/x64/test
+cp "C:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Developer Runtime/x64/D3D11SDKLayers.dll" bin/ue4_2/x64/test
 
 # seems to be needed for obscure permission reasons
 chmod +x -R bin
