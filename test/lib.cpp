@@ -17,6 +17,7 @@
 #include <frames/texture.h>
 
 #include <png.h>
+#include <zlib.h>
 
 #include <cstdio>
 #include <fstream>

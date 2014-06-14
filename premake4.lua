@@ -12,6 +12,8 @@ local slug
 local platform
 local platformFull
 
+local uepath
+
 if _ACTION == "vs2008" then
   slug = "msvc9"
   platform = "win"
@@ -32,6 +34,7 @@ elseif _ACTION == "vs2013" and _OPTIONS["ue"] == "4_2" then
   slug = "ue4_2"
   platform = "win"
   platformFull = "win_msvc12_"
+  uepath = "C:\\werk\\UnrealEngine4_2"  -- TODO - figure out a better way to express this
 else
   print(("Not supported: target %s with OS %s"):format(_ACTION or "", _OS or ""))
   slug = ""
@@ -51,29 +54,56 @@ solution "Frames"
   location(path)
   
   local function libincludes(suffix)
-    includedirs {
-      "include",
-      "deps/boost_1_55_0",
-      "deps/freetype-2.5.3/" .. platform .. suffix .. "/include",
-      "deps/glew-1.10.0/" .. platform .. suffix .. "/include",
-      "deps/jpeg-9/" .. platform .. suffix .. "/include",
-      "deps/libpng-1.4.3/" .. platform .. suffix .. "/include",
-      "deps/lua-5.1.5/" .. platform .. suffix .. "/include",
-      "deps/SDL2-2.0.1/" .. platform .. suffix .. "/include",
-      "deps/zlib-1.2.8/" .. platform .. suffix .. "/include",
-      "deps/gtest-1.7.0/" .. platformFull .. suffix .. "/include",
-    }
-    libdirs {
-      "deps/boost_1_55_0",
-      "deps/freetype-2.5.3/" .. platform .. suffix .. "/lib",
-      "deps/glew-1.10.0/" .. platform .. suffix .. "/lib",
-      "deps/jpeg-9/" .. platform .. suffix .. "/lib",
-      "deps/libpng-1.4.3/" .. platform .. suffix .. "/lib",
-      "deps/lua-5.1.5/" .. platform .. suffix .. "/lib",
-      "deps/SDL2-2.0.1/" .. platform .. suffix .. "/lib",
-      "deps/zlib-1.2.8/" .. platform .. suffix .. "/lib",
-      "deps/gtest-1.7.0/" .. platformFull .. suffix .. "/lib",
-    }
+    if not uepath then
+      includedirs {
+        "include",
+        "deps/boost_1_55_0",
+        "deps/freetype-2.5.3/" .. platform .. suffix .. "/include",
+        "deps/glew-1.10.0/" .. platform .. suffix .. "/include",
+        "deps/jpeg-9/" .. platform .. suffix .. "/include",
+        "deps/libpng-1.4.3/" .. platform .. suffix .. "/include",
+        "deps/lua-5.1.5/" .. platform .. suffix .. "/include",
+        "deps/SDL2-2.0.1/" .. platform .. suffix .. "/include",
+        "deps/zlib-1.2.8/" .. platform .. suffix .. "/include",
+        "deps/gtest-1.7.0/" .. platformFull .. suffix .. "/include",
+      }
+      libdirs {
+        "deps/boost_1_55_0",
+        "deps/freetype-2.5.3/" .. platform .. suffix .. "/lib",
+        "deps/glew-1.10.0/" .. platform .. suffix .. "/lib",
+        "deps/jpeg-9/" .. platform .. suffix .. "/lib",
+        "deps/libpng-1.4.3/" .. platform .. suffix .. "/lib",
+        "deps/lua-5.1.5/" .. platform .. suffix .. "/lib",
+        "deps/SDL2-2.0.1/" .. platform .. suffix .. "/lib",
+        "deps/zlib-1.2.8/" .. platform .. suffix .. "/lib",
+        "deps/gtest-1.7.0/" .. platformFull .. suffix .. "/lib",
+      }
+    else
+      local ue4libsuffix = "Win" .. suffix .. "/VS2013"
+      includedirs {
+        "include",
+        "deps/boost_1_55_0",
+        uepath .. "/Engine/Source/ThirdParty/FreeType2/FreeType2-2.4.12/include",
+        "deps/glew-1.10.0/" .. platform .. suffix .. "/include",
+        "deps/jpeg-9/" .. platform .. suffix .. "/include",
+        uepath .. "/Engine/Source/ThirdParty/libPNG/libPNG-1.5.2",
+        "deps/lua-5.1.5/" .. platform .. suffix .. "/include",
+        "deps/SDL2-2.0.1/" .. platform .. suffix .. "/include",
+        uepath .. "/Engine/Source/ThirdParty/zlib/zlib-1.2.5/Inc",
+        "deps/gtest-1.7.0/" .. platformFull .. suffix .. "/include",
+      }
+      libdirs {
+        "deps/boost_1_55_0",
+        uepath .. "/Engine/Source/ThirdParty/FreeType2/FreeType2-2.4.12/Lib/" .. ue4libsuffix,
+        "deps/glew-1.10.0/" .. platform .. suffix .. "/lib",
+        "deps/jpeg-9/" .. platform .. suffix .. "/lib",
+        uepath .. "/Engine/Source/ThirdParty/libPNG/libPNG-1.5.2/lib/" .. ue4libsuffix,
+        "deps/lua-5.1.5/" .. platform .. suffix .. "/lib",
+        "deps/SDL2-2.0.1/" .. platform .. suffix .. "/lib",
+        uepath .. "/Engine/Source/ThirdParty/zlib/zlib-1.2.5/Lib/Win" .. suffix,
+        "deps/gtest-1.7.0/" .. platformFull .. suffix .. "/lib",
+      }
+    end
   end
   
   if platform == "win" then
@@ -124,7 +154,21 @@ solution "Frames"
     links {"glew32s", "opengl32", "jpeg"}
     
     configuration "vs*"
-      links {"frames_dx11", "d3d11", "dxgi", "libpng14", "lua51", "freetype253MT", "zlib", "d3dcompiler"}
+      links {"frames_dx11", "d3d11", "dxgi", "lua51", "d3dcompiler"}
+      
+      if not uepath then
+        links {"freetype253MT", "libpng14", "zlib"}
+      else
+        links {"freetype2412MT"}
+      end
+    
+    if uepath then
+      configuration {"vs*", "x32"}
+        links {"libpng", "zlib"}
+      
+      configuration {"vs*", "x64"}
+        links {"libpng_64", "zlib_64"}
+    end
       
     configuration {}
   end
