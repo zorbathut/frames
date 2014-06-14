@@ -60,6 +60,9 @@
 
 * dxgidebug on vger
 
+* convert to https://code.google.com/p/jpeg-compressor/
+* convert to that gl alternative
+
 * Split Loaders into their own libs
   * Test
 
