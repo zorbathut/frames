@@ -271,7 +271,7 @@ solution "Frames"
       
     linkWithFrames() -- must be after gtest because of the braindamaged way gcc links with libraries
 
-  project "win32_ogl"
+  --[[project "win32_ogl"
     kind "WindowedApp"
     language "C++"
     location(path)
@@ -285,4 +285,4 @@ solution "Frames"
     configuration "x64"
       targetdir("bin/" .. slug .. "/x64/samples")
 
-    linkWithFrames()
+    linkWithFrames()]]
