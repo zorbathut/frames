@@ -54,7 +54,7 @@ solution "Frames"
     includedirs {
       "include",
       "deps/boost_1_55_0",
-      "deps/freetype-2.3.12/" .. platform .. suffix .. "/include",
+      "deps/freetype-2.5.3/" .. platform .. suffix .. "/include",
       "deps/glew-1.10.0/" .. platform .. suffix .. "/include",
       "deps/jpeg-9/" .. platform .. suffix .. "/include",
       "deps/libpng-1.4.3/" .. platform .. suffix .. "/include",
@@ -65,7 +65,7 @@ solution "Frames"
     }
     libdirs {
       "deps/boost_1_55_0",
-      "deps/freetype-2.3.12/" .. platform .. suffix .. "/lib",
+      "deps/freetype-2.5.3/" .. platform .. suffix .. "/lib",
       "deps/glew-1.10.0/" .. platform .. suffix .. "/lib",
       "deps/jpeg-9/" .. platform .. suffix .. "/lib",
       "deps/libpng-1.4.3/" .. platform .. suffix .. "/lib",
@@ -124,7 +124,7 @@ solution "Frames"
     links {"glew32s", "opengl32", "jpeg"}
     
     configuration "vs*"
-      links {"frames_dx11", "d3d11", "dxgi", "libpng14", "lua51", "freetype2312MT", "zlib", "d3dcompiler"}
+      links {"frames_dx11", "d3d11", "dxgi", "libpng14", "lua51", "freetype253MT", "zlib", "d3dcompiler"}
       
     configuration {}
   end
