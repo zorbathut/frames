@@ -1,8 +1,12 @@
 
 === UE4
 
-* Example project
+* Create example project
+* Understand .cs build files
+* Link in Frames
 * Make it run
+
+* See if I can integrate that into ue4_2 project
 
 * Integrate with rendering subsystem
 * Integrate with loading subsystem
