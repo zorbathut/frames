@@ -1,0 +1,8 @@
+#ue4 really really loves its temporary files
+
+/Intermediate
+/Saved/Cloud
+/Saved/Logs
+/Saved/AutoScreenshot.png
+/*.sln
+/*.suo
