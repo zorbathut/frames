@@ -11,5 +11,12 @@
 	"Category": "",
 	"CreatedBy": "",
 	"CreatedByURL": "",
+	"Modules": [
+		{
+			"Name": "test",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
 	"EpicSampleNameHash": "0"
 }

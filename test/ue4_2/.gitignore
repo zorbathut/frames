@@ -1,8 +1,13 @@
 #ue4 really really loves its temporary files
 
+/Binaries
 /Intermediate
+/Saved/Autosaves
+/Saved/Backup
 /Saved/Cloud
 /Saved/Logs
 /Saved/AutoScreenshot.png
 /*.sln
 /*.suo
+/*.sdf
+/*.opensdf
