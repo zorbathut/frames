@@ -2,7 +2,7 @@
 newoption {
   trigger = "ue",
   value = "version",
-  description = "Choose an Unreal Engine version to target",
+  description = "Choose an Unreal Engine version to target; requires vs2013 target",
   allowed = {
     { "4_2", "Unreal Engine 4.2" },
   }
@@ -34,7 +34,7 @@ elseif _ACTION == "vs2013" and _OPTIONS["ue"] == "4_2" then
   slug = "ue4_2"
   platform = "win"
   platformFull = "win_msvc12_"
-  uepath = "C:\\werk\\UnrealEngine4_2"  -- TODO - figure out a better way to express this
+  uepath = "C:/Program Files/Unreal Engine/4.2/"
 else
   print(("Not supported: target %s with OS %s"):format(_ACTION or "", _OS or ""))
   slug = ""
