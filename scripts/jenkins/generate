@@ -8,7 +8,7 @@ chmod +x util/premake/win/premake5.exe
 lua scripts/generate.lua
 lua scripts/generateDocs.lua
 rm -f *.zip version
-zip -r generate.zip `ls | grep -v doc | grep -v scripts | grep -v deps` `ls -d deps/*/* | grep -v src | grep -v util`
+zip -r generate.zip `ls | grep -v doc | grep -v scripts | grep -v deps | grep -v util` `ls -d deps/*/* | grep -v src`
 zip -r deps.zip `ls -d deps/*/* | grep src`
 zip -r testdata.zip test
 zip -r docs.zip doc/Frames* doc/html
