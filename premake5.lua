@@ -143,7 +143,7 @@ solution "Frames"
     targetsuffix "d"
 
   configuration "Release"
-    flags { "Optimize" }  
+    optimize "Full"
 
   local function linkWithFrames()
     configuration {}
