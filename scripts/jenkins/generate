@@ -9,7 +9,7 @@ zip -r generate.zip `ls | grep -v doc | grep -v scripts | grep -v deps` `ls -d d
 zip -r deps.zip `ls -d deps/*/* | grep src`
 zip -r testdata.zip test
 zip -r docs.zip doc/Frames* doc/html
-zip -r scripts.zip scripts
+zip -r scripts.zip scripts util
 git describe | sed 's/^v//' > version
 
 # runtime creation
