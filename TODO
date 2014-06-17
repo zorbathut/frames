@@ -12,14 +12,21 @@
 === UE4
 
 * Make it run
+  * Test dimensions to make sure they're being sensible
 
-* Figure out how to link in the precompiled shader
-  * Remove d3dcompiler linkage
-  
+* Start RHI renderer
+  * UE-target only
+    * Look into hud, postrender, etc
+      * FD3D11DynamicRHI
+      * RHIMethods
+
 * See if I can integrate that into ue4_2 project
 
 * Integrate with rendering subsystem
 * Integrate with loading subsystem
+
+* Test suite
+  * Base - may be difficult - thread sync?
 
 * Start integration layer
 
@@ -33,6 +40,9 @@
   * Obliterate is needed - last event fired before shutdown
 
 * Font corpus cleanup
+
+* Figure out how to link in the precompiled shader
+  * Remove d3dcompiler linkage
 
 === DOCS
 
