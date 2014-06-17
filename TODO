@@ -31,6 +31,10 @@
 
 * Final pass
 
+=== TWEAK
+
+* Verify that appropriate files are all being included
+
 === DEPLOY
 
 * Get licensing
