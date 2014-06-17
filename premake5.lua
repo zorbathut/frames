@@ -241,6 +241,15 @@ solution "Frames"
     includedirs "test"
     debugdir "test"
     
+    linkoptions {"/NODEFAULTLIB:LIBCMT"}
+    
+    if uepath then
+      linkoptions {"/ignore:4099"}  -- ue4 libraries don't include pdb's
+    end
+    
+    configuration {"vs*", "Debug"}
+      linkoptions {"/NODEFAULTLIB:MSVCRT"}
+    
     configuration "x32"
       targetdir("bin/" .. slug .. "/x32/test")
         
