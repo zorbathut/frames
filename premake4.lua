@@ -215,6 +215,29 @@ solution "Frames"
     configuration "x64"
       targetdir("lib/" .. slug .. "/x64")
   
+  if uepath then
+    -- DX11 core
+    project "frames_ue4_rhi"
+      kind "StaticLib"
+      language "C++"
+      location(path)
+      files "src/ue4_rhi/*.cpp"
+      files "include/frames/renderer_ue4_rhi.h"
+      
+      defines "PLATFORM_WINDOWS=1"
+      defines "UE_ROCKET=0"
+      includedirs(uepath .. "Engine/Source/Runtime/Core/Public")
+      includedirs(uepath .. "Engine/Source/Runtime/Core/Public/HAL")
+      includedirs(uepath .. "Engine/Source/Runtime/Core/Public/Misc")
+      includedirs(uepath .. "Engine/Source/Runtime/RHI/Public")
+      
+      configuration "x32"
+        targetdir("lib/" .. slug .. "/x32")
+          
+      configuration "x64"
+        targetdir("lib/" .. slug .. "/x64")
+  end
+  
   -- Null core
   project "frames_null"
     kind "StaticLib"
