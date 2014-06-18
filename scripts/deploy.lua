@@ -11,8 +11,10 @@ os.execute("rm -rf Den* scripts version TODO")
 
 os.execute(("mkdir frames-%s && mv * frames-%s"):format(version, version))
 
+-- I never used the "binary deploy" option, so I'm just pulling it
+--[[
 -- compress the whole shebang with binaries
-os.execute(("zip -r -9 -q frames-%s-bin.zip frames-%s"):format(version, version))
+os.execute(("zip -r -9 -q frames-%s-bin.zip frames-%s"):format(version, version))]]
 
 -- remove binary output - we'll make this a little more careful if we later have deployable executables
 os.execute(("rm -rf frames-%s/bin"):format(version))
