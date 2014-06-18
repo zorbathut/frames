@@ -20,6 +20,8 @@
       * FD3D11DynamicRHI
       * RHIMethods
 
+* jsonquery plugin
+
 * See if I can integrate that into ue4_2 project
 
 * Integrate with rendering subsystem
@@ -50,6 +52,12 @@
   * need to put a thorough description of the pin API somewhere
 
 * Final pass
+
+=== TWEAK
+
+* Verify that appropriate files are all being included
+* /Zl compiler option?
+* script to build deps
 
 === DEPLOY
 
