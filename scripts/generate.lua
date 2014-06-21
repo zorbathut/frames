@@ -17,7 +17,6 @@ else
   os.execute("rm -rf projects lib bin")
 end
 
-for k, v in pairs(projects) do
-  --local path = v.path and ("PATH=\"%s\""):format(v.path) or ""
+for k, v in pairs(src) do
   os.execute(("util/premake/win/premake5 %s %s"):format(v.parameters or "", v.generator))
 end
