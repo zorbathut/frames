@@ -9,7 +9,7 @@
  * 
  */
 UCLASS()
-class AFramesTest : public AActor
+class AFramesUE4 : public AActor
 {
 	GENERATED_UCLASS_BODY()
 

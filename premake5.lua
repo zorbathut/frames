@@ -1,4 +1,6 @@
 
+-- TODO: this is turning into kind of a giant blob of complexity. Someday this should be cleaned up, but it's not yet clear what lines it should be cleaned up along.
+
 newoption {
   trigger = "ue",
   value = "version",
@@ -7,6 +9,20 @@ newoption {
     { "4_2", "Unreal Engine 4.2" },
   }
 }
+
+-- utility functions
+function filereplace(filename, src, dst)
+  local f = io.open(filename, "rb")
+  local data = f:read("*all")
+  f:close()
+  
+  data = data:gsub(src, dst)
+  
+  f = io.open(filename, "wb")
+  f:write(data)
+  f:close()
+end
+-- end utility functions
 
 local slug
 local platform
@@ -35,6 +51,8 @@ elseif _ACTION == "vs2013" and _OPTIONS["ue"] == "4_2" then
   platform = "win"
   platformFull = "win_msvc12_"
   uepath = "C:/Program Files/Unreal Engine/4.2/"
+  os.execute([["/Program Files/Unreal Engine/Launcher/Engine/Binaries/Win64/UnrealVersionSelector.exe" /projectfiles %cd%/ue4/ue4.uproject]])
+  filereplace("ue4/Intermediate/ProjectFiles/ue4.vcxproj", "$%(SolutionDir%)$%(SolutionName%)", "$(ProjectDir)/../../$(ProjectName)")
 else
   print(("Not supported: target %s with OS %s"):format(_ACTION or "", _OS or ""))
   slug = ""
@@ -46,7 +64,11 @@ local path = "projects/" .. slug
 
 solution "Frames"
   configurations { "Debug", "Release" }
-  platforms { "x32", "x64" }
+  if not uepath then
+    platforms { "x32", "x64" }
+  else
+    platforms { "x64" } -- currently editor only, which means x64 only
+  end
   
   flags { "FatalWarnings" }
   
@@ -216,26 +238,17 @@ solution "Frames"
       targetdir("lib/" .. slug .. "/x64")
   
   if uepath then
-    -- DX11 core
-    project "frames_ue4_rhi"
+    external "ue4"
+      location "ue4/Intermediate/ProjectFiles"
       kind "StaticLib"
-      language "C++"
-      location(path)
-      files "src/ue4_rhi/*.cpp"
-      files "include/frames/renderer_ue4_rhi.h"
       
-      defines "PLATFORM_WINDOWS=1"
-      defines "UE_ROCKET=0"
-      includedirs(uepath .. "Engine/Source/Runtime/Core/Public")
-      includedirs(uepath .. "Engine/Source/Runtime/Core/Public/HAL")
-      includedirs(uepath .. "Engine/Source/Runtime/Core/Public/Misc")
-      includedirs(uepath .. "Engine/Source/Runtime/RHI/Public")
-      
-      configuration "x32"
-        targetdir("lib/" .. slug .. "/x32")
-          
-      configuration "x64"
-        targetdir("lib/" .. slug .. "/x64")
+      -- this will have to be fixed, but I don't yet grok the ue4 configuration options
+      configmap {
+        ["Debug"] = {"Development_Editor", "x64"},
+        ["Release"] = {"Development_Editor", "x64"},
+      }
+
+      links "frames"
   end
   
   -- Null core
