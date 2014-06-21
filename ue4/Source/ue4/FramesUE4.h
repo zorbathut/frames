@@ -3,7 +3,7 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "FramesTest.generated.h"
+#include "FramesUE4.generated.h"
 
 /**
  * 

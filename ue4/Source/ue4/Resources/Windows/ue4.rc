@@ -50,9 +50,9 @@ BEGIN
             VALUE "LegalCopyright", EPIC_COPYRIGHT_STRING
             VALUE "ProductName", EPIC_PRODUCT_NAME
 			VALUE "ProductVersion", ENGINE_VERSION_STRING
-			VALUE "FileDescription", "test"
-            VALUE "InternalName", "test"
-            VALUE "OriginalFilename", "test.exe"
+			VALUE "FileDescription", "ue4"
+            VALUE "InternalName", "ue4"
+            VALUE "OriginalFilename", "ue4.exe"
         END
     END
     BLOCK "VarFileInfo"
@@ -68,7 +68,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDICON_UE4Game          ICON                    "test.ico"
+IDICON_UE4Game          ICON                    "ue4.ico"
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////

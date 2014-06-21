@@ -3,11 +3,11 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class testTarget : TargetRules
+public class ue4EditorTarget : TargetRules
 {
-	public testTarget(TargetInfo Target)
+	public ue4EditorTarget(TargetInfo Target)
 	{
-		Type = TargetType.Game;
+		Type = TargetType.Editor;
 	}
 
 	//
@@ -20,6 +20,6 @@ public class testTarget : TargetRules
 		ref List<string> OutExtraModuleNames
 		)
 	{
-		OutExtraModuleNames.AddRange( new string[] { "test" } );
+		OutExtraModuleNames.AddRange( new string[] { "ue4" } );
 	}
 }

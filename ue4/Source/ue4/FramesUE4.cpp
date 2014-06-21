@@ -1,5 +1,5 @@
 
-#include "test.h"
+#include "ue4.h"
 
 #include "AllowWindowsPlatformTypes.h"
 #include <frames/environment.h>
@@ -7,9 +7,9 @@
 #include <frames/renderer_dx11.h>
 #include "HideWindowsPlatformTypes.h"
 
-#include "FramesTest.h"
+#include "FramesUE4.h"
 
-AFramesTest::AFramesTest(const class FPostConstructInitializeProperties& PCIP)
+AFramesUE4::AFramesUE4(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
   Frames::Configuration::Local conf;

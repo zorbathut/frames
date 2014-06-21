@@ -3,9 +3,9 @@ using UnrealBuildTool;
 
 using System.IO;
 
-public class test : ModuleRules
+public class ue4 : ModuleRules
 {
-	public test(TargetInfo Target)
+	public ue4(TargetInfo Target)
 	{
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
 
