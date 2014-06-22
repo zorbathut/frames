@@ -61,11 +61,11 @@ projectInfo.path = "projects/" .. projectInfo.slug
 
 solution "Frames"
   configurations { "Debug", "Release" }
-  platforms { "x32", "x64" }
   if not projectInfo.ue4_path then
     platforms { "x32", "x64" }
   else
     platforms { "x64" } -- currently editor only, which means x64 only
+    defines "_ITERATOR_DEBUG_LEVEL=0" -- ue4 doesn't like iterator debug levels, and that means neither do we
   end
   
   flags { "FatalWarnings" }
@@ -214,8 +214,8 @@ solution "Frames"
       
       -- this will have to be fixed, but I don't yet grok the ue4 configuration options
       configmap {
-        ["Debug"] = {"Development_Editor", "x64"},
-        ["Release"] = {"Development_Editor", "x64"},
+        ["Debug"] = {"DebugGame_Editor", "Windows"},
+        ["Release"] = {"Development_Editor", "Windows"},
       }
 
       links "frames"
