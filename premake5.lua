@@ -165,47 +165,13 @@ solution "Frames"
   configuration "Release"
     optimize "Full"
   
-  -- Frames
-  project "frames"
-    kind "StaticLib"
-    language "C++"
-    location(projectInfo.path)
-    files "src/core/*.cpp"
-    files "include/frames/*.h"
-    
-    configuration "x32"
-      targetdir("lib/" .. projectInfo.slug .. "/x32")
-        
-    configuration "x64"
-      targetdir("lib/" .. projectInfo.slug .. "/x64")
+  -- main project
+  dofile("src/premake/project_core.lua", projectInfo)
   
-  -- OGL core
-  project "frames_opengl"
-    kind "StaticLib"
-    language "C++"
-    location(projectInfo.path)
-    files "src/opengl/*.cpp"
-    files "include/frames/renderer_opengl.h"
-    
-    configuration "x32"
-      targetdir("lib/" .. projectInfo.slug .. "/x32")
-        
-    configuration "x64"
-      targetdir("lib/" .. projectInfo.slug .. "/x64")
-  
-  -- DX11 core
-  project "frames_dx11"
-    kind "StaticLib"
-    language "C++"
-    location(projectInfo.path)
-    files "src/dx11/*.cpp"
-    files "include/frames/renderer_dx11.h"
-    
-    configuration "x32"
-      targetdir("lib/" .. projectInfo.slug .. "/x32")
-        
-    configuration "x64"
-      targetdir("lib/" .. projectInfo.slug .. "/x64")
+  -- renderers
+  dofile("src/premake/project_opengl.lua", projectInfo)
+  dofile("src/premake/project_dx11.lua", projectInfo)
+  dofile("src/premake/project_null.lua", projectInfo)
   
   if projectInfo.ue4_path then
     external "ue4"
@@ -220,19 +186,5 @@ solution "Frames"
 
       links "frames"
   end
-  
-  -- Null core
-  project "frames_null"
-    kind "StaticLib"
-    language "C++"
-    location(projectInfo.path)
-    files "src/null/*.cpp"
-    files "include/frames/renderer_null.h"
-    
-    configuration "x32"
-      targetdir("lib/" .. projectInfo.slug .. "/x32")
-        
-    configuration "x64"
-      targetdir("lib/" .. projectInfo.slug .. "/x64")
-      
-    dofile("src/premake/project_test.lua", projectInfo)
+
+  dofile("src/premake/project_test.lua", projectInfo)

@@ -5,11 +5,10 @@ using System.IO;
 
 public class ue4 : ModuleRules
 {
-	public ue4(TargetInfo Target)
-	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
-
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+  public ue4(TargetInfo Target)
+  {
+    PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+    PrivateDependencyModuleNames.AddRange(new string[] {  });
 
     // FRAMES_SPECIFIC INIT UNDER HERE
     
@@ -36,5 +35,5 @@ public class ue4 : ModuleRules
 
     PublicIncludePaths.Add(Path.Combine(FramesBase, "include"));
     PublicIncludePaths.Add(Path.Combine(FramesBase, "deps", "boost_1_55_0"));
-	}
+  }
 }
