@@ -1,6 +1,15 @@
 
 === UE4 NOTES
 
+* OKAY MORE PONDERING BUILDING
+* The UE4 options don't seem to require different library builds
+* Details on how library builds work seem to be confined to the .cs
+* Debug/Release may still be the right solution - *but* we'll need to connect them to the appropriate ue4 elements, somehow.
+  * slightly unclear how that works; can we disable projects through premake?
+  * kind of None would work, except that all kinds are actually valid; it's a solution setting, not a project setting
+
+* project.getconfig must return nil
+
 * In order to make the header tool work, we need to make a plugin
 * In order to make a plugin, we need an actual project, but that can probably be a small project
 * It does, however, imply some things about directory layout
