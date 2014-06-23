@@ -83,6 +83,8 @@
 
 === TWEAK
 
+* Convert scripts/ into script/
+
 * Verify that appropriate files are all being included
 * /Zl compiler option?
 * script to build deps
