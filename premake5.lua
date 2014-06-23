@@ -1,6 +1,6 @@
 -- TODO: this is turning into kind of a giant blob of complexity. Someday this should be cleaned up, but it's not yet clear what lines it should be cleaned up along.
 
-dofile("src/premake/util.lua")
+dofile("scripts/premake/util.lua")
 
 newoption {
   trigger = "ue",
@@ -165,12 +165,12 @@ solution "Frames"
     optimize "Full"
   
   -- main project
-  dofile("src/premake/project_core.lua", projectInfo)
+  dofile("scripts/premake/project_core.lua", projectInfo)
   
   -- renderers
-  dofile("src/premake/project_opengl.lua", projectInfo)
-  dofile("src/premake/project_dx11.lua", projectInfo)
-  dofile("src/premake/project_null.lua", projectInfo)
+  dofile("scripts/premake/project_opengl.lua", projectInfo)
+  dofile("scripts/premake/project_dx11.lua", projectInfo)
+  dofile("scripts/premake/project_null.lua", projectInfo)
   
   if projectInfo.ue4_path then
     external "ue4"
@@ -186,4 +186,4 @@ solution "Frames"
       links "frames"
   end
 
-  dofile("src/premake/project_test.lua", projectInfo)
+  dofile("scripts/premake/project_test.lua", projectInfo)
