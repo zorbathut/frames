@@ -1,0 +1,5 @@
+Scratchpad for snippets I've found useful in development. Probably not helpful for anyone besides me; but might be!
+
+-- PREMAKE TEST
+
+(cd frames-premake && premake4 embed && premake4 vs2012 && cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 11.0/Common7/Tools/vsvars32.bat" "&&" msbuild premake5.sln /p:configuration=Release /p:platform=Win32) && cp frames-premake/bin/release/premake5.exe frames/util/premake/win/premake5.exe && (cd frames && rm -rf projects && lua scripts/generate.lua ue4_2)

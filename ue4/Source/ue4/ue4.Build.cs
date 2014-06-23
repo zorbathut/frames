@@ -12,7 +12,7 @@ public class ue4 : ModuleRules
 
     // FRAMES_SPECIFIC INIT UNDER HERE
     
-    string PlatformString = (Target.Platform == UnrealTargetPlatform.Win64) ? "x64" : "x86";
+    string PlatformString = (Target.Platform == UnrealTargetPlatform.Win64) ? "x64" : "x32";
     string PlatformStringFrames = (Target.Platform == UnrealTargetPlatform.Win64) ? "win64" : "win32";
     string DirectoryName = Path.GetDirectoryName( RulesCompiler.GetModuleFilename( this.GetType().Name ) );
     string FramesBase = Path.Combine( DirectoryName, "..", "..", ".." );
