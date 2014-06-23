@@ -8,8 +8,8 @@ project(name)
   files(src)
   files(include)
   
-  configuration "x32"
+  filter "architecture:x32"
     targetdir("lib/" .. projectInfo.slug .. "/x32")
       
-  configuration "x64"
+  filter "architecture:x64"
     targetdir("lib/" .. projectInfo.slug .. "/x64")

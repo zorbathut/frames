@@ -131,38 +131,37 @@ solution "Frames"
     defines "WIN32_LEAN_AND_MEAN"  -- make windows.h not quite as titanically huge
   end
   
-  -- projectInfo.platform-specific tweaks
-  configuration "x32"
+  flags { "Symbols" } -- always create debug symbols
+  
+  -- architecture-specific tweaks
+  filter "architecture:x32"
     libincludes("32")
   
-  configuration "x64"
+  filter "architecture:x64"
     libincludes("64")
   
   -- Compiler-specific tweaks
-  configuration "vs*"
+  filter "action:vs*"
     defines "_CRT_SECURE_NO_WARNINGS" -- Annoying warning on MSVC that wants use of MSVC-specific functions
     buildoptions "/wd4800"  -- "forcing value to bool 'true' or 'false' (performance warning)"
   
-  configuration { "vs2008 or vs2010" }
+  filter "action:vs2008 or action:vs2010"
     includedirs {
       "C:/Program Files (x86)/Windows Kits/8.1/Include/um",
       "C:/Program Files (x86)/Windows Kits/8.1/Include/shared"
     }
       
-  configuration { "vs2008 or vs2010", "x32" }
+  filter { "action:vs2008 or action:vs2010", "architecture:x32" }
     libdirs "C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86"
     
-  configuration { "vs2008 or vs2010", "x64" }
+  filter { "action:vs2008 or action:vs2010", "architecture:x64" }
     libdirs "C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64"
   
   -- Build config
-  configuration "*"
-    flags { "Symbols" } -- always create debug symbols
-  
-  configuration "Debug"
+  filter "configurations:Debug"
     targetsuffix "d"
 
-  configuration "Release"
+  filter "configurations:Release"
     optimize "Full"
   
   -- main project
