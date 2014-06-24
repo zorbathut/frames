@@ -171,11 +171,12 @@ solution "Frames"
     external "ue4"
       location "ue4/Intermediate/ProjectFiles"
       kind "StaticLib"
+      removeconfigurations { "Debug" }
       
       configmap {
-        [{"Debug", "x32"}] = {"Shipping_RocketGame", "x32"}, -- TODO - this isn't a valid configuration option, only Debug links debug libraries!
+        --[{"Debug", "x32"}] = {"Shipping_RocketGame", "x32"},
         [{"Release", "x32"}] = {"Shipping_RocketGame", "x32"},
-        [{"Debug", "x64"}] = {"Development_Editor", "x64"}, -- TODO - this isn't a valid configuration option, only Debug links debug libraries!
+        --[{"Debug", "x64"}] = {"Development_Editor", "x64"},
         [{"Release", "x64"}] = {"Development_Editor", "x64"},
       }
 
