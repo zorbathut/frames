@@ -1,42 +1,4 @@
 
-=== UE4 NOTES
-
-* OKAY MORE PONDERING BUILDING
-* The UE4 options don't seem to require different library builds
-* Details on how library builds work seem to be confined to the .cs
-* Debug/Release may still be the right solution - *but* we'll need to connect them to the appropriate ue4 elements, somehow.
-  * slightly unclear how that works; can we disable projects through premake?
-  * kind of None would work, except that all kinds are actually valid; it's a solution setting, not a project setting
-
-* project.getconfig must return nil
-
-* In order to make the header tool work, we need to make a plugin
-* In order to make a plugin, we need an actual project, but that can probably be a small project
-* It does, however, imply some things about directory layout
-* UE4 plugins cannot depend on each other, so . . .
-  * Single monolithic plugin that supports all modes
-  * Bypass stuff with .lib files
-    * we can do that with the core; not with the scripting support and RHI
-  * "Static plugin"
-* Okay, in order to make UE4 plugins, we have to:
-  * Make a .uproject
-  * Put all the source under that
-  * Create a solution
-    * we can splice the project out of that, probably
-  * So that means . . .
-  * src/ue4/Plugins/Frames/etc
-  * And then we just have to do a whole pile of build.lua magic to extract the right files, I suppose.
-* Maybe it shouldn't go in src at all?
-  * Let's put it in ue4 for now
-
-* Need to link static library to UE4 somehow
-  * PublicAdditionalLibraries.Add(Path.Combine(V8LibrariesPath, "icui18n.lib"));
-  * PublicIncludePaths.Add( Path.Combine( ThirdPartyPath, "BobsMagic", "Includes" ) );
-* Different semantics for:
-  * Test framework
-  * "Release" framework
-* Then, need to create an interface (plugin?) for the UObject integration (eventually)
-
 === UE4
 
 * Make it run
