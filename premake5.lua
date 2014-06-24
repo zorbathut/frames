@@ -168,19 +168,7 @@ solution "Frames"
   dofile("scripts/premake/project_null.lua", projectInfo)
   
   if projectInfo.ue4_path then
-    external "ue4"
-      location "ue4/Intermediate/ProjectFiles"
-      kind "StaticLib"
-      removeconfigurations { "Debug" }
-      
-      configmap {
-        --[{"Debug", "x32"}] = {"Shipping_RocketGame", "x32"},
-        [{"Release", "x32"}] = {"Shipping_RocketGame", "x32"},
-        --[{"Debug", "x64"}] = {"Development_Editor", "x64"},
-        [{"Release", "x64"}] = {"Development_Editor", "x64"},
-      }
-
-      links "frames"
+    dofile("scripts/premake/project_ue4.lua", projectInfo)
   end
 
   dofile("scripts/premake/project_test.lua", projectInfo)
