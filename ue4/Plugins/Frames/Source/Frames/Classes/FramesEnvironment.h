@@ -5,7 +5,7 @@
 #include "FramesEnvironment.generated.h"
 
 /**
- * 
+ * Frames main environment.
  */
 UCLASS()
 class UFramesEnvironment : public UObject

@@ -7,7 +7,11 @@ public class Frames : ModuleRules
 {
   public Frames(TargetInfo Target)
   {
-    PublicDependencyModuleNames.AddRange(new string[] {"Core", "CoreUObject", "Engine", "InputCore"});
+    PublicDependencyModuleNames.AddRange(new string[] {
+      "Core",
+      "CoreUObject",
+      "InputCore",
+    });
     
     string PlatformString = (Target.Platform == UnrealTargetPlatform.Win64) ? "x64" : "x32";
     string PlatformStringFrames = (Target.Platform == UnrealTargetPlatform.Win64) ? "win64" : "win32";
