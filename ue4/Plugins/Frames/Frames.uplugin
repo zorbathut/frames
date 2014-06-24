@@ -1,0 +1,11 @@
+{
+	"PluginFileVersion" : 1,
+
+	"Modules" :
+	[
+		{
+			"Name" : "Frames",
+			"Type" : "Developer",
+		},
+	]
+}
