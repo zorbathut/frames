@@ -1,6 +1,9 @@
 
 === UE4
 
+* Get it to build and make the object show up
+  * Duplicate UObjectPlugin, see if it can function
+
 * Make it run
   * Test dimensions to make sure they're being sensible
 
