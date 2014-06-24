@@ -13,7 +13,7 @@
 	"CreatedByURL": "",
 	"Modules": [
 		{
-			"Name": "test",
+			"Name": "ue4",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
