@@ -51,6 +51,8 @@
 #define FRAMES_FASTDELEGATE_H // FRAME MODIFICATION
 #if _MSC_VER > 1000
 #pragma once
+#pragma warning(push)
+#pragma warning(disable : 4191) // warns us about the horrible unsafe pointer conversions going on
 #endif // _MSC_VER > 1000
 
 #include <memory.h> // to allow <,> comparisons
@@ -2105,6 +2107,9 @@ Delegate8<Param1, Param2, Param3, Param4, Param5, Param6, Param7, Param8, FASTDL
 #undef FASTDLGT_RETTYPE
 
 } // namespace fastdelegate
-  
+
+#if _MSC_VER > 1000
+#pragma warning(pop)
+#endif // _MSC_VER > 1000
 #endif // !defined(FASTDELEGATE_H)
 
