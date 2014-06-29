@@ -1,4 +1,8 @@
 
+=== TWEAK
+
+* Reorder build projects such that the first one is the ideal target
+
 === UE4
 
 * Get it to build and make the object show up
