@@ -1,8 +1,9 @@
 
 === UE4
 
-* Make it run
-  * Test dimensions to make sure they're being sensible
+* Integrate with debug output
+* Integrate with rendering subsystem
+* Integrate with loading subsystem
 
 * Start RHI renderer
   * UE-target only
@@ -10,20 +11,11 @@
       * FD3D11DynamicRHI
       * RHIMethods
 
-* jsonquery plugin
-
-* See if I can integrate that into ue4_2 project
-
-* Integrate with rendering subsystem
-* Integrate with loading subsystem
-
 * Test suite
   * Base - may be difficult - thread sync?
 
 * Start integration layer
 
-* Need some way to build with the UE4 header tool
-* However, also needs hooks in the frames for that to work
 * This means . . . an internal UE4-hook class, then the UE4 code itself hooks that?
 * That seems ugly, but might be necessary
 * Maybe some way to provide the right set of verbs to provide external APIs?
