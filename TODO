@@ -1,7 +1,6 @@
 
 === UE4
 
-* Integrate with debug output
 * Integrate with rendering subsystem
 * Integrate with loading subsystem
 

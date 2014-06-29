@@ -11,22 +11,33 @@
 #include <frames/renderer_null.h>
 #include "HideWindowsPlatformTypes.h"
 
+DEFINE_LOG_CATEGORY(FramesLog);
+
+class FramesUE4Logger : Frames::Configuration::Logger
+{
+  virtual void LogError(const std::string &log)
+  {
+    UE_LOG(FramesLog, Error, TEXT("%s"), *FString(log.c_str()));  // This could probably be a *lot* more efficient
+    //GEngine->AddOnScreenDebugMessage((int32)-1, 2.0f, FLinearColor(0.f,1.f,1.f).ToFColor(true), "Test");  // It's possible something like this should be introduced for debug mode; worry about this!
+  }
+
+  virtual void LogDebug(const std::string &log)
+  {
+    UE_LOG(FramesLog, Log, TEXT("%s"), *FString(log.c_str()));
+  }
+};
+
 UFramesEnvironment::UFramesEnvironment(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
   Frames::Configuration::Local conf;
   conf.RendererSet(Frames::Configuration::RendererNull());
+  conf.LoggerSet(Frames::Configuration::LoggerPtr(new FramesUE4Logger()));
   m_env = Frames::Environment::Create(conf);
-
-  //env->ResizeRoot
-
-  //OutputDebugString(Frames::detail::format())
 }
 
 void UFramesEnvironment::Render(AHUD *hud)
 {
   m_env->ResizeRoot(hud->Canvas->SizeX, hud->Canvas->SizeY);
   m_env->Render();
-
-  OutputDebugStringA(Frames::detail::Format("%f/%f", m_env->RootGet()->WidthGet(), m_env->RootGet()->HeightGet()).c_str());
 }

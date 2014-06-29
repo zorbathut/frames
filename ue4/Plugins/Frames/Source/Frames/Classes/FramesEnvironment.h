@@ -9,6 +9,8 @@
 
 #include "FramesEnvironment.generated.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(FramesLog, Log, All);
+
 /**
  * Frames main environment.
  */
