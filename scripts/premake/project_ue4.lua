@@ -13,4 +13,4 @@ external "ue4"
     [{"Release", "x64"}] = {"Development_Editor", "x64"},
   }
 
-  links {"frames", "frames_null"}
+  links {"frames", "frames_null", "frames_dx11", "frames_opengl"}
