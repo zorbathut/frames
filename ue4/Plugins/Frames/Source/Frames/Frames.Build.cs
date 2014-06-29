@@ -8,9 +8,10 @@ public class Frames : ModuleRules
   public Frames(TargetInfo Target)
   {
     PublicDependencyModuleNames.AddRange(new string[] {
-      "Core",
-      "CoreUObject",
-      "InputCore",
+      "Core", // I sorta feel like I should just have this
+      "CoreUObject",  // for UObject
+      //"InputCore",  // almost certain to be re-added
+      "Engine", // for AHUD
     });
     
     string PlatformString = (Target.Platform == UnrealTargetPlatform.Win64) ? "x64" : "x32";
@@ -23,11 +24,15 @@ public class Frames : ModuleRules
     {
       PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "lib", "ue4_2", PlatformString, "framesd.lib"));
       PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "lib", "ue4_2", PlatformString, "frames_nulld.lib"));
+      PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "lib", "ue4_2", PlatformString, "frames_dx11d.lib"));
+      PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "lib", "ue4_2", PlatformString, "frames_opengld.lib"));
     }
     else
     {
       PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "lib", "ue4_2", PlatformString, "frames.lib"));
       PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "lib", "ue4_2", PlatformString, "frames_null.lib"));
+      PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "lib", "ue4_2", PlatformString, "frames_dx11.lib"));
+      PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "lib", "ue4_2", PlatformString, "frames_opengl.lib"));
     }
     
     PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "deps", "jpeg-9", PlatformStringFrames, "lib", "jpeg.lib"));

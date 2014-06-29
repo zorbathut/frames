@@ -15,6 +15,13 @@ UFramesEnvironment::UFramesEnvironment(const class FPostConstructInitializePrope
   Frames::Configuration::Local conf;
   conf.RendererSet(Frames::Configuration::RendererNull());
   Frames::EnvironmentPtr env = Frames::Environment::Create(conf);
+
+  //env->ResizeRoot
+
+  //OutputDebugString(Frames::detail::format())
 }
 
-
+void UFramesEnvironment::Render(AHUD *hud)
+{
+  OutputDebugStringA("YARG");
+}
