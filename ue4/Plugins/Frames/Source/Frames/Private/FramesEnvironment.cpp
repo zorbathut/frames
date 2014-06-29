@@ -4,8 +4,10 @@
 #include "FramesEnvironment.h"
 
 #include "AllowWindowsPlatformTypes.h"
-#include <frames/environment.h>
 #include <frames/configuration.h>
+#include <frames/detail_format.h>
+#include <frames/environment.h>
+#include <frames/layout.h>
 #include <frames/renderer_null.h>
 #include "HideWindowsPlatformTypes.h"
 
@@ -14,7 +16,7 @@ UFramesEnvironment::UFramesEnvironment(const class FPostConstructInitializePrope
 {
   Frames::Configuration::Local conf;
   conf.RendererSet(Frames::Configuration::RendererNull());
-  Frames::EnvironmentPtr env = Frames::Environment::Create(conf);
+  m_env = Frames::Environment::Create(conf);
 
   //env->ResizeRoot
 
@@ -23,5 +25,8 @@ UFramesEnvironment::UFramesEnvironment(const class FPostConstructInitializePrope
 
 void UFramesEnvironment::Render(AHUD *hud)
 {
-  OutputDebugStringA("YARG");
+  m_env->ResizeRoot(hud->Canvas->SizeX, hud->Canvas->SizeY);
+  m_env->Render();
+
+  OutputDebugStringA(Frames::detail::Format("%f/%f", m_env->RootGet()->WidthGet(), m_env->RootGet()->HeightGet()).c_str());
 }
