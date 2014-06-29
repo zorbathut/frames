@@ -17,6 +17,10 @@ else
   os.execute("rm -rf projects lib bin")
 end
 
+if src.ue4_2 then
+  os.execute("rm -rf ue4/Binaries ue4/Intermediate ue4/Plugins/Frames/Binaries ue4/Plugins/Frames/Intermediate ue4/*.sln")
+end
+
 for k, v in pairs(src) do
   os.execute(("util/premake/win/premake5 %s %s"):format(v.parameters or "", v.generator))
 end
