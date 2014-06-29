@@ -160,16 +160,18 @@ solution "Frames"
   filter "configurations:Release"
     optimize "Full"
   
-  -- main project
-  dofile("scripts/premake/project_core.lua", projectInfo)
-  
-  -- renderers
-  dofile("scripts/premake/project_opengl.lua", projectInfo)
-  dofile("scripts/premake/project_dx11.lua", projectInfo)
-  dofile("scripts/premake/project_null.lua", projectInfo)
-  
+  -- UE4 project; do this first if available so it's the default project  
   if projectInfo.ue4_path then
     dofile("scripts/premake/project_ue4.lua", projectInfo)
   end
 
+  -- Test project; alternate default project
   dofile("scripts/premake/project_test.lua", projectInfo)
+  
+  -- Main project
+  dofile("scripts/premake/project_core.lua", projectInfo)
+  
+  -- Renderers
+  dofile("scripts/premake/project_opengl.lua", projectInfo)
+  dofile("scripts/premake/project_dx11.lua", projectInfo)
+  dofile("scripts/premake/project_null.lua", projectInfo)
