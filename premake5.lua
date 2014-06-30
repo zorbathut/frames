@@ -51,6 +51,7 @@ elseif _ACTION == "vs2013" and _OPTIONS["ue"] == "4_2" then
   os.execute([["/Program Files/Unreal Engine/Launcher/Engine/Binaries/Win64/UnrealVersionSelector.exe" /projectfiles %cd%/ue4/ue4.uproject]])
   filereplace("ue4/Intermediate/ProjectFiles/ue4.vcxproj", "$%(SolutionDir%)$%(SolutionName%)", "$(ProjectDir)/../../$(ProjectName)")
   filereplace("ue4/Intermediate/ProjectFiles/ue4.vcxproj.user", "$%(SolutionDir%)$%(SolutionName%)", "$(ProjectDir)/../../$(ProjectName)")
+  filereplace("ue4/Intermediate/ProjectFiles/ue4.vcxproj.user", "</LocalDebuggerCommandArguments>", " -opengl</LocalDebuggerCommandArguments>") -- Run in opengl mode because that's the only renderer we support right now
 else
   print(("Not supported: target %s with OS %s"):format(_ACTION or "", _OS or ""))
   projectInfo.slug = ""
