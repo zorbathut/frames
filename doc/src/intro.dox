@@ -1,3 +1,41 @@
 /** \mainpage Introduction
 
-Not yet implemented. You might want to check out the \ref basicsintro "Basics" category. */
+Welcome to Frames! Frames is a 2d UI library intended for game development. The design goals of Frames are simplicitly, reproducibility, and ease of development.
+
+Frames is available under a dual-license scheme. It can be used under the GPL license or a commercial license. As of this writing, commercial licenses are free, but do require registration; please contact <a href="mailto:ben@mandible.net">ben@mandible.net</a> for details. All licenses include source access and unlimited upgrades.
+
+Assistance is available via email (<a href="mailto:ben@mandible.net">ben@mandible.net</a>) or IRC (<a href="https://webchat.freenode.net/?channels=frames">#frames on freenode</a>). Commercial support contracts are available on request.
+
+----
+
+<h2>Under construction</h2>
+
+Frames is under heavy development and this document is littered with possible additions. If your project requires a feature that is mentioned as being not-yet-available, please <a href="mailto:ben@mandible.net">contact us</a> and let us know.
+
+----
+
+<h2>Platform support</h2>
+
+<strong>Frames officially supports Windows XP through Windows 8.1.</strong> Linux and OSX support is not yet available, but should be easy to add. Android and iOS support would require an OpenGLES renderer.
+
+<strong>Frames can render via OpenGL (3.2 compatibility) or DirectX11 (feature level 10.0 or above).</strong> OpenGL 3.2 core and OpenGL 2.1 would be easy to add. DirectX9 and OpenGLES would be harder.
+
+<strong>Frames runs on x86 and x64 chips.</strong> It will likely run on anything 32-bit or above that supports IEEE754 floats.
+
+Frames does not currently run on any major commercial consoles. While we'd like to add support, we are currently unable to acquire the necessary development hardware. If your company needs this support and is able to help us acquire the hardware, please contact us.
+
+Improving crossplatform support is a priority. If you'd like to use Frames but it is not yet available on your platform, contact us with details.
+
+----
+
+<h2>Usage</h2>
+
+The latest source code and binary packages can be downloaded at <a href="http://www.framesui.com/">www.framesui.com</a>. Our binary packages contain full source code and supporting libraries, and we recommend starting from that even if you plan to modify the code yourself. Source development is done on <a href="https://github.com/zorbathut/frames">Github</a>.
+
+Visit \ref gettingstarted "Getting Started" to get Frames integrated into your game.
+
+Visit \ref gettingstarted "Basics" to learn the fundamentals of designing UIs in Frames.
+
+As always, please <a href="mailto:ben@mandible.net">contact us</a> with feedback, suggestions, or complaints; if you found the documentation confusing, we want to know so we can fix it!
+
+*/
