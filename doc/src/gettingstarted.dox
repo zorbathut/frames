@@ -1,3 +1,11 @@
 /** \page gettingstarted Getting Started
 
-Not yet implemented. You might want to check out the \ref basicsintro "Basics" category. */
+In order to use Frames you'll need Frames itself and the libraries that Frames depends on. In order to build Frames you'll also need project files and source code. All of these are packaged together in a single file and available from <a href="http://www.framesui.com/">www.framesui.com</a>. If you're able to use the provided Frames libraries, this will be the fastest approach; download this file, then continue with \ref cppinstall "C++ installation".
+
+If your project already includes different versions of the various Frames libraries, you should still start by downloading that file, but you'll have to \ref buildingsource "build from source package".
+
+Starting from bare-bones source code is more complicated and not recommended unless you need a development version. However, if this is your plan, download <a href="https://github.com/zorbathut/frames">the Git repository</a> and start at \ref buildingrepo "building from source repository".
+
+Keep in mind that Frames relies on several open-source packages, all of which are compatible with commercial software, but some of which may require credit in your documentation. Please check <a href="https://github.com/zorbathut/frames/blob/dev/licenses.txt">licenses.txt</a> in your downloaded package for more information.
+
+*/

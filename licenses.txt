@@ -1,18 +1,29 @@
-Frame includes and depends on Don Clugston's Fast Delegate library. Its license requires that I provide you with a link to the license text, which is located at http://www.codeproject.com/info/cpol10.aspx .
 
-This repository includes many other libraries, either for testing purposes or for ease of linking. If you plan to use those libraries we strongly recommend consulting with your legal department to make sure you've fulfilled all your legal requirements. However, we've gone to some trouble to ensure that the most onerous requirement is a mention in your documentation.
+Frames includes a variety of open-source libraries. A comprehensive list:
+  boost - used in the Frames core
+  Don Clugston's Fast Delegate library - used in the Frames core
+  freetype - used in the Frames core
+  libjpeg - used in the Frames core
+  libpng - used in the Frames core
+  tinyformat - used in the Frames core
+  zlib - used in the Frames core
+  
+  glew - used only for the OpenGL renderer
+  
+  google test - used only for the test suite
+  SDL2 - used only for the test suite
+  
+  lua - not currently used
 
-The long-term intent is that Frame should not have mandatory dependency on any open-source library. If there's a library we depend on that you need extracted for legal reasons, please contact us.
+All these libraries have open-source licenses which are compatible with commercial software. Some of them require references in your project's documentation to comply with the license. We strongly recommend consulting with your legal department to ensure you've fulfilled all your legal requirements.
 
-=============== LUA LICENSE
+Our long-term intent is that Frames should not a have mandatory dependency on any open-source library. If there's a library we depend on that you need extracted for legal or engineering reasons, please contact us.
 
-Copyright © 1994-2008 Lua.org, PUC-Rio.
+The license information below is intended for the distribution of Frames. It may function as a good starting point for your own licensing requirements, but we make no assurances.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+=============== DON CLUGSTON'S FAST DELEGATE LIBRARY LICENSE
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+Frames includes and depends on Don Clugston's Fast Delegate library. Its license requires that I provide you with a link to the license text, which is located at http://www.codeproject.com/info/cpol10.aspx .
 
 =============== GLEW LICENSE
 
