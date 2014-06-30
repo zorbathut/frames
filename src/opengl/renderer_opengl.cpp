@@ -12,6 +12,10 @@
 #include <vector>
 #include <algorithm>
 
+// Define needed for glew to link properly
+#define GLEW_STATIC
+#include <GL/GLew.h>
+
 using namespace std;
 
 BOOST_STATIC_ASSERT(sizeof(Frames::Vector) == sizeof(GLfloat) * 2);

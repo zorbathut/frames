@@ -10,9 +10,8 @@
 
 #include "frames/configuration.h"
 
-// Define needed for glew to link properly
-#define GLEW_STATIC
-#include <GL/GLew.h>
+typedef unsigned int GLuint;
+typedef char GLchar;
 
 namespace Frames {
   namespace Configuration {
