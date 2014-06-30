@@ -1,0 +1,78 @@
+/** \page cppsetup More Setup
+
+Frames has built-in logging system to report errors and debug information. It is strongly recommended that errors are put somewhere that developers will notice, up to and including big red text directly on the screen. After reporting, Frames will attempt to recover from any errors; if the report is never seen, this can make debugging extremely confusing.
+
+There are two locations that debug reports can come from. Each Environment has its own logging configuration, plus there's a global log for events that are not associated with an Environment. It's very easy to set these both up at the same time. Here's replacement code for your original Environment::Create() call, using fictional LOG() and PrintOnScreen() functions - reimplement MyLogger's functions as is appropriate for your project.
+
+@code{.cpp}
+class MyLogger : public Frames::Configuration::Logger {
+public:
+  void LogDebug(const std::string &log) {
+    LOG(Debug, log);
+  }
+  
+  void LogError(const std::string &log) {
+    LOG(Error, log);
+    PrintOnScreen(log);
+  }
+};
+
+Frames::Configuration::LoggerPtr logger(new MyLogger())
+
+Frames::Configuration::Global globalConfig;
+globalConfig.LoggerSet(logger);
+Frames::Configuration::Set(globalConfig);
+
+Frames::Configuration::Local localConfig;
+localConfig.LoggerSet(logger);
+localConfig.RendererSet(Frames::RendererOpengl());
+environment = Frames::Environment::Create(localConfig);
+@endcode
+
+All classes passed into Frames::Configuration::Global or Frames::Configuration::Local are refcounted and will be cleaned up when appropriate.
+
+You may want to hook Frames into your resource loading system. If you're just using loose files, you won't need to make any changes. If you're reading from a dedicated data directory or from some sort of archive file, you'll want to look into the \ref basicsresources "Resources" documentation. Note that Frames does not currently provide support for asynchronous loading - if this is necessary for your project, please contact us.
+
+Next, you should give Frames the name of a default font resource to use. Unless you've modified the resource configuration, this will refer to a file loaded out of your project's working directory.
+
+@code{.cpp}
+Frames::Configuration::Local localConfig;
+localConfig.FontDefaultIdSet("data/arial.ttf");
+localConfig.RendererSet(Frames::RendererOpengl());
+environment = Frames::Environment::Create(localConfig);
+@endcode
+
+Once you've done this, you should be able to test text rendering, as well as somewhat more advanced layout.
+
+@code{.cpp}
+#include <frames/text.h>
+@endcode
+
+@code{.cpp}
+Frames::Frame *backdrop = Frames::Frame::Create(environment->RootGet(), "Backdrop");
+Frames::Text *helloworld = Frames::Text::Create(backdrop, "Hello World");
+backdrop->BackgroundSet(Frames::Color(0.f, 0.f, 1.f));
+backdrop->PinSet(Frames::TOPLEFT, helloworld, Frames::TOPLEFT, -5, -5);
+backdrop->PinSet(Frames::BOTTOMRIGHT, helloworld, Frames::BOTTOMRIGHT, 5, 5);
+helloworld->FontSet("data/arial.ttf");
+helloworld->TextSet("Hello, World!");
+helloworld->PinSet(Frames::CENTER, environment->RootGet(), Frames::CENTER);
+@endcode
+
+\image html helloworld_setup_ref0.png
+
+Finally, you may want to start feeding input into Frames. If you're handling standard Win32 API functions, you can take advantage of a built-in convenient function of Frames. Place this inside your WndProc:
+
+@code{.cpp}
+Frames::Input::Sequence sequence;
+if (Frames::InputGatherWin32(&sequence, hwnd, message, wParam, lParam)) {
+  sequence.Process(environment.Get());  // Depending on where environment is, you may need to find a way to get its reference inside your WndProc.
+  return 0;
+}
+@endcode
+
+If you're using some wrapper library or processing input events separately, you'll have to handle this yourself. You can call Frames::Environment::Input_* functions one at a time, or use Frames::Input::Command and Frames::Input::Sequence objects to pass input sequences around conveniently. If you're using a common third-party library that is not yet supported, please let us know so we can add simple support in a later version!
+
+Once you've done these steps, Frames is fully set up and functional. From here, you should start reading through the \ref basicsintro "Basics".
+
+*/

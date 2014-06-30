@@ -3,12 +3,17 @@
 
 * Officially GPL
 
+* licenses.txt needs wordwrap of some sort? maybe just include it in the documentation
+* same with linking!
+
 * Deep docs
   * need to put a thorough description of the pin API somewhere
 
 * Final pass
 
 === TWEAK
+
+* Remove default Environment, create sort-of-default Configuration that includes a null renderer.
 
 * Convert scripts/ into script/
 

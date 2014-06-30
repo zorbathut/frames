@@ -1,0 +1,47 @@
+/** \page cppinstall C++ Installation
+
+Download the latest package from <a href="http://www.framesui.com/">www.framesui.com</a>. Decompress it somewhere in your project. We generally recommend placing it under a deps/ or extern/ subdirectory, but do whatever works within your project layout.
+
+----
+
+<h2>Rebuilding with your project libraries</h2>
+
+Frames relies on a variety of open-source libraries, some of which are commonly used in the game industry. If your project uses a different version of these libraries than the default installation of Frames does, you'll want to rebuild Frames to reference your library versions. Frames contains its libraries within the "deps" directory and has information on library uses and linking requirements in the LINKING file. If you have any library version mismatches, you'll want to first \ref buildingsource "build Frames from the source package".
+
+----
+
+<h2>Linking with the Frames libraries</h2>
+
+Frames makes extensive use of the C++ standard library, and as such, built libraries are not compatible across major Visual Studio releases. Pick the appropriate directory out of "lib" and add the following files to your linker.
+
+frames.lib is required.
+
+frames_dx11.lib lets you make use of the DirectX 11 renderer.
+
+frames_opengl.lib lets you make use of the OpenGL renderer.
+
+frames_null.lib provides a null renderer that does no actual rendering work. It can be useful for testing and debugging but should generally not be linked in production code.
+
+Consult the LINKING file for further dependencies; Frames will require several support libraries to be added. If you've rebuilt Frames to make use of your game's existing libraries, you will of course not have to link Frames's versions of those.
+
+----
+
+<h2>Cleanup</h2>
+
+The full package can be rather large; as of this writing it's roughly 1.5 gigabytes of space uncompressed. The vast majority of this is the library files for Frames itself, and if space is an issue, you can delete any directories in "lib" that you don't plan to use. Each set of libraries is roughly 150 megabytes, mostly consisting of debug markup.
+
+----
+
+<h2>Testing</h2>
+
+A one-line test to ensure that Frames code is actually linked:
+
+@code{.cpp}
+Frames::Environment::Create(Frames::Configuration::Local());
+@endcode
+
+This will create and immediately teardown an \ref Frames::Environment "Environment" with default values and a nonexistent renderer. Not something you'd want to do in production code, but it works as a nice verification that code is being linked.
+
+Once you've got your project linking, continue to \ref cpphelloworld "Hello World" to test it out.
+
+*/

@@ -1,0 +1,68 @@
+/** \page cpphelloworld C++ Hello, World
+
+Somewhere in your code, create a variable that will fall out of scope before your rendering context is torn down.
+
+@code{.cpp}
+#include <frames/environment.h>
+@endcode
+
+@code{.cpp}
+Frames::EnvironmentPtr environment;
+@endcode
+
+If you can't make it fall out of scope, you can also explicitly destroy it when you want it to shut down.
+
+@code{.cpp}
+environment.reset();
+@endcode
+
+After your rendering context is created, initialize the environment with an appropriate renderer.
+
+If you're using DirectX 11:
+
+@code{.cpp}
+#include <frames/configuration.h>
+#include <frames/renderer_dx11.h>
+@endcode
+
+@code{.cpp}
+Frames::Configuration::Local config;
+config.RendererSet(Frames::RendererDX11(aDirectX11DeviceContext));
+environment = Frames::Environment::Create(config);
+@endcode
+
+Alternatively, if you're using OpenGL:
+
+@code{.cpp}
+#include <frames/configuration.h>
+#include <frames/renderer_opengl.h>
+@endcode
+
+@code{.cpp}
+Frames::Configuration::Local config;
+config.RendererSet(Frames::RendererOpengl());
+environment = Frames::Environment::Create(config);
+@endcode
+
+Add a simple frame to verify that rendering works.
+
+@code{.cpp}
+Frames::Frame *square = Frames::Frame::Create(environment->RootGet(), "Square");
+square->BackgroundSet(Frames::Color(0.f, 0.f, 1.f));
+square->PinSet(Frames::CENTER, environment->RootGet(), Frames::CENTER);
+@endcode
+
+Finally, in your render loop, at the point where you want the Frames UI to be drawn, ensure that the appropriate render target is set, update the Environment's known screen size, and then call Render.
+
+@code{.cpp}
+environment->ResizeRoot(screenWidth, screenHeight);
+environment->Render();
+@endcode
+
+If all has gone according to plan, you'll see a blue square in the center of your screen.
+
+\image html helloworld_hello_ref0.png
+
+Continue on for \ref cppsetup "more setup".
+
+*/
