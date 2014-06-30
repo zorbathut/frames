@@ -1,4 +1,55 @@
 
+=== DOCS
+
+* Deep docs
+  * need to put a thorough description of the pin API somewhere
+
+* Final pass
+
+=== TWEAK
+
+* Convert scripts/ into script/
+
+* Verify that appropriate files are all being included
+* /Zl compiler option?
+* script to build deps
+
+=== DEPLOY
+
+* Setup instructions
+  * Remember to include paths for necessary libraries
+    * Boost
+  * And linkages
+    * freetype
+    * libpng
+    * libjpeg
+
+* Get licensing
+* Send to small trusted group
+* Post on some forum
+* UE4 release
+
+=== TESTING
+
+* Obliterate
+* Events
+
+* Frames
+  * Text is the big one here, especially everything involving editing
+
+* Coverage
+
+* Release?
+
+=== BUILDING
+
+* Simple examples
+  * SDL/GL
+
+* Figure out how to document Delegate
+
+* Official release?
+
 === UE4
 
 * Integrate with rendering subsystem
@@ -26,58 +77,6 @@
 
 * Figure out how to link in the precompiled shader
   * Remove d3dcompiler linkage
-
-=== DOCS
-
-* Deep docs
-  * need to put a thorough description of the pin API somewhere
-
-* Final pass
-
-=== TWEAK
-
-* Convert scripts/ into script/
-
-* Verify that appropriate files are all being included
-* /Zl compiler option?
-* script to build deps
-
-=== DEPLOY
-
-* Setup instructions
-  * Remember to include paths for necessary libraries
-    * Boost
-  * And linkages
-    * freetype
-    * libpng
-    * libjpeg
-  
-
-* Get licensing
-* Send to small trusted group
-* Post on some forum
-* UE4 release
-
-=== TESTING
-
-* Obliterate
-* Events
-
-* Frames
-  * Text is the big one here, especially everything involving editing
-
-* Coverage
-
-* Release?
-
-=== BUILDING
-
-* Simple examples
-  * SDL/GL
-
-* Figure out how to document Delegate
-
-* Official release?
 
 === TWEAK
 
