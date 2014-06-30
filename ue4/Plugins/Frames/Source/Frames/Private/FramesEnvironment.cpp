@@ -15,16 +15,36 @@ DEFINE_LOG_CATEGORY(FramesLog);
 
 class FramesUE4Logger : Frames::Configuration::Logger
 {
+public:
+  FramesUE4Logger() :
+    m_onScreenErrors(true),
+    m_assertErrors(false)
+  {
+  }
+
   virtual void LogError(const std::string &log)
   {
     UE_LOG(FramesLog, Error, TEXT("%s"), *FString(log.c_str()));  // This could probably be a *lot* more efficient
-    //GEngine->AddOnScreenDebugMessage((int32)-1, 2.0f, FLinearColor(0.f,1.f,1.f).ToFColor(true), "Test");  // It's possible something like this should be introduced for debug mode; worry about this!
+
+    if (m_onScreenErrors)
+    {
+      GEngine->AddOnScreenDebugMessage((int32)-1, 2.0f, FLinearColor(0.f,1.f,1.f).ToFColor(true), log.c_str());  // It's possible something like this should be introduced for debug mode; worry about this!
+    }
+    
+    if (m_assertErrors)
+    {
+      checkf(false && "Frames internal error", TEXT("%s"), *FString(log.c_str()));
+    }
   }
 
   virtual void LogDebug(const std::string &log)
   {
     UE_LOG(FramesLog, Log, TEXT("%s"), *FString(log.c_str()));
   }
+
+private:
+  bool m_onScreenErrors;
+  bool m_assertErrors;
 };
 
 UFramesEnvironment::UFramesEnvironment(const class FPostConstructInitializeProperties& PCIP)
