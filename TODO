@@ -1,11 +1,6 @@
 
 === DOCS
 
-* Officially GPL
-
-* licenses.txt needs wordwrap of some sort? maybe just include it in the documentation
-* same with linking!
-
 * Deep docs
   * need to put a thorough description of the pin API somewhere
 
