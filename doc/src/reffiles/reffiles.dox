@@ -1,0 +1,9 @@
+/** \page reffiles Reference Files
+
+This section contains copies of text files from the source repository.
+
+\ref linking "LINKING": Information on which libraries need to linked and their purpose within Frames.
+
+\ref linking "LICENSES": Licenses for Frames's open-source helper libraries.
+
+*/

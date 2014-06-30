@@ -34,6 +34,10 @@
     </tab>
     <tab type="classlist" visible="yes" title="" intro=""/>
     <tab type="classindex" visible="$ALPHABETICAL_INDEX" title=""/> 
+    <tab type="usergroup" url="@ref reffiles" title="Reference files">
+      <tab type="user" url="@ref linking" title="LINKING" />
+      <tab type="user" url="@ref licenses" title="LICENSES" />
+    </tab>
   </navindex>
 
   <!-- Layout definition for a class page -->
