@@ -32,7 +32,20 @@
 === TESTING
 
 * Obliterate
+  * Obliterate single frame
+  * Obliterate frame and children
+  * Obliterated frame pinned to things
+  * Things pinned to obliterated frame
 * Events
+  * Basics
+  * Ordering
+  * Creation during
+  * Destruction during
+  * Obliteration during
+  * Dive/bubble
+    * Basics
+    * Reparenting during
+    * Obliteration during
 
 * Frames
   * Text is the big one here, especially everything involving editing
