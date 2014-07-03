@@ -76,7 +76,7 @@ else
   projectInfo.platformFull = ""
 end
 
-projectInfo.path = "projects/" .. projectInfo.slug
+projectInfo.path = "project/" .. projectInfo.slug
 
 solution "Frames"
   platforms { "x32", "x64" }

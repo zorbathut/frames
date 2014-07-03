@@ -44,7 +44,7 @@ end
 local success = true
 
 for k, v in pairs(src) do
-  if os.execute(("cd projects/%s && %s"):format(k, v.build(platform, configuration))) ~= 0 then
+  if os.execute(("cd project/%s && %s"):format(k, v.build(platform, configuration))) ~= 0 then
     success = false
   end
 end

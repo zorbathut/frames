@@ -31,9 +31,9 @@ local src = projects
 if typ then
   src = {}
   src[typ] = projects[typ]
-  os.execute(string.format("rm -rf projects/%s lib/%s bin/%s", typ, typ, typ))
+  os.execute(string.format("rm -rf project/%s lib/%s bin/%s", typ, typ, typ))
 else
-  os.execute("rm -rf projects lib bin")
+  os.execute("rm -rf project lib bin")
 end
 
 if src.ue4_2 then
