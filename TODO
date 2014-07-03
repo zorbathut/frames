@@ -32,9 +32,6 @@
 === TESTING
 
 * Obliterate
-  * Obliterate single frame
-  * Obliterate frame and children
-  * Obliterated frame pinned to things
   * Things pinned to obliterated frame
 * Events
   * Basics
