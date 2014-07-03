@@ -24,14 +24,14 @@ set -o pipefail
 # sigh
 chmod +x util/premake/win/premake5.exe
 
-lua scripts/generate.lua
-lua scripts/generateDocs.lua
+lua script/generate.lua
+lua script/generateDocs.lua
 rm -f *.zip version
-zip -r generate.zip `ls | grep -v doc | grep -v scripts | grep -v deps | grep -v util` `ls -d deps/*/* | grep -v src`
+zip -r generate.zip `ls | grep -v doc | grep -v script | grep -v deps | grep -v util` `ls -d deps/*/* | grep -v src`
 zip -r deps.zip `ls -d deps/*/* | grep src`
 zip -r testdata.zip test
 zip -r docs.zip doc/Frames* doc/html
-zip -r scripts.zip scripts util
+zip -r scripts.zip script util
 git describe | sed 's/^v//' > version
 
 # runtime creation

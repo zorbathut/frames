@@ -24,7 +24,7 @@
 
 -- NOTE: A lot of this assumes linear development and no going back and adding bugfixes. When I start doing that, I'll need to revamp some of this.
 
-require "scripts/lib/util"
+require "script/lib/util"
 
 do
   local gitfil = io.popen("git status --porcelain", "r")
@@ -73,7 +73,7 @@ os.execute("git clone . tagtemp")
 os.execute("cd tagtemp && git checkout gh-pages")
 
 -- get documentation built
-os.execute("lua scripts/generateDocs.lua")
+os.execute("lua script/generateDocs.lua")
 
 local function branchto(branch)
   os.execute("git branch -f " .. branch)

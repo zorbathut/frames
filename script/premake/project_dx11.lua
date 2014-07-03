@@ -1,5 +1,3 @@
-#!env lua
-
 --[[Copyright 2014 Mandible Games
     
     This file is part of Frames.
@@ -19,27 +17,4 @@
     You should have received a copy of the GNU General Public License
     along with Frames.  If not, see <http://www.gnu.org/licenses/>. ]]
 
--- NOTE: This script currently makes a pile of unwarranted assumptions about the build environment.
--- This is not a good solution and will be fixed when it becomes more important.
-
-require "scripts/lib/platforms"
-require "scripts/lib/util"
-
-local typ = ...
-
-local src = projects
-if typ then
-  src = {}
-  src[typ] = projects[typ]
-  os.execute(string.format("rm -rf projects/%s lib/%s bin/%s", typ, typ, typ))
-else
-  os.execute("rm -rf projects lib bin")
-end
-
-if src.ue4_2 then
-  os.execute("rm -rf ue4/Binaries ue4/Intermediate ue4/Plugins/Frames/Binaries ue4/Plugins/Frames/Intermediate ue4/*.sln")
-end
-
-for k, v in pairs(src) do
-  os.execute(("util/premake/win/premake5 %s %s"):format(v.parameters or "", v.generator))
-end
+dofile("script/premake/project_general.lua", "frames_dx11", "src/dx11/*.cpp", "include/frames/renderer_dx11.h", ...)

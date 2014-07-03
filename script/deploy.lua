@@ -22,31 +22,21 @@
 -- NOTE: This script currently makes a pile of unwarranted assumptions about the build environment.
 -- This is not a good solution and will be fixed when it becomes more important.
 
-require "scripts/lib/platforms"
-require "scripts/lib/util"
+require "script/lib/util"
 
-local target, platform, configuration = ...
+local version = io.open("version", "rb"):read("*line")
 
-local src = projects
-if target then
-  src = {}
-  src[target] = projects[target]
-end
+os.execute("rm -rf Den* script version TODO")
 
-if not platform then
-  platform = "x32"
-end
+os.execute(("mkdir frames-%s && mv * frames-%s"):format(version, version))
 
-if not configuration then
-  configuration = "release"
-end
+-- I never used the "binary deploy" option, so I'm just pulling it
+--[[
+-- compress the whole shebang with binaries
+os.execute(("zip -r -9 -q frames-%s-bin.zip frames-%s"):format(version, version))]]
 
-local success = true
+-- remove binary output - we'll make this a little more careful if we later have deployable executables
+os.execute(("rm -rf frames-%s/bin"):format(version))
 
-for k, v in pairs(src) do
-  if os.execute(("cd projects/%s && %s"):format(k, v.build(platform, configuration))) ~= 0 then
-    success = false
-  end
-end
-
-os.exit(success and 0 or 1)
+-- create the final deployable
+os.execute(("zip -r -9 -q frames-%s.zip frames-%s"):format(version, version))

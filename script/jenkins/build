@@ -19,15 +19,16 @@
 
 set -e
 set -o nounset
-#set -o pipefail   # breaks "yes", I think
+set -o pipefail
 
-# already decompressed this one in jenkins
-rm scripts.zip
-
-for f in `/usr/bin/find | grep zip`
-do
-  yes | unzip $f
-done
+unzip generate.zip
 rm *.zip
-rm -rf configuration*
-lua scripts/deploy.lua
+lua script/build.lua $target $platform $configuration
+
+rm -f bin/$target/$platform/*/*.idb bin/$target/$platform/*/*.lib bin/$target/$platform/*/*.exp bin/$target/$platform/*/*.ilk lib/$target/$platform/*.ilk
+
+# test to fix some permission issues
+chmod -R u+rwX,go+rX,go-w .
+
+zip -r test-$target-$platform-$configuration.zip bin/$target/$platform/test
+zip -r lib-$target-$platform-$configuration.zip lib/$target/$platform

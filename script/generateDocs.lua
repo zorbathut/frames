@@ -22,21 +22,16 @@
 -- NOTE: This script currently makes a pile of unwarranted assumptions about the build environment.
 -- This is not a good solution and will be fixed when it becomes more important.
 
-require "scripts/lib/util"
+require "script/lib/util"
 
-local version = io.open("version", "rb"):read("*line")
+local target = ...
 
-os.execute("rm -rf Den* scripts version TODO")
+os.execute("rm -rf doc/Frames* doc/html")
 
-os.execute(("mkdir frames-%s && mv * frames-%s"):format(version, version))
+os.execute('"/cygdrive/c/Program Files/doxygen/bin/doxygen.exe" doc/Doxyfile')
 
--- I never used the "binary deploy" option, so I'm just pulling it
---[[
--- compress the whole shebang with binaries
-os.execute(("zip -r -9 -q frames-%s-bin.zip frames-%s"):format(version, version))]]
+os.execute('cd doc/html ; "/cygdrive/c/Program Files (x86)/HTML Help Workshop/hhc" index.hhp ; mv index.chm ../Frames.chm')
 
--- remove binary output - we'll make this a little more careful if we later have deployable executables
-os.execute(("rm -rf frames-%s/bin"):format(version))
-
--- create the final deployable
-os.execute(("zip -r -9 -q frames-%s.zip frames-%s"):format(version, version))
+os.execute("rm -rf doc/html")
+  
+os.execute('(cat doc/Doxyfile; echo GENERATE_HTMLHELP = NO) | "/cygdrive/c/Program Files/doxygen/bin/doxygen.exe" -')

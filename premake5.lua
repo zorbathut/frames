@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Frames.  If not, see <http://www.gnu.org/licenses/>. ]]
 
-dofile("scripts/premake/util.lua")
+dofile("script/premake/util.lua")
 
 newoption {
   trigger = "ue",
@@ -180,16 +180,16 @@ solution "Frames"
   
   -- UE4 project; do this first if available so it's the default project  
   if projectInfo.ue4_path then
-    dofile("scripts/premake/project_ue4.lua", projectInfo)
+    dofile("script/premake/project_ue4.lua", projectInfo)
   end
 
   -- Test project; alternate default project
-  dofile("scripts/premake/project_test.lua", projectInfo)
+  dofile("script/premake/project_test.lua", projectInfo)
   
   -- Main project
-  dofile("scripts/premake/project_core.lua", projectInfo)
+  dofile("script/premake/project_core.lua", projectInfo)
   
   -- Renderers
-  dofile("scripts/premake/project_opengl.lua", projectInfo)
-  dofile("scripts/premake/project_dx11.lua", projectInfo)
-  dofile("scripts/premake/project_null.lua", projectInfo)
+  dofile("script/premake/project_opengl.lua", projectInfo)
+  dofile("script/premake/project_dx11.lua", projectInfo)
+  dofile("script/premake/project_null.lua", projectInfo)

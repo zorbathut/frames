@@ -17,4 +17,4 @@
     You should have received a copy of the GNU General Public License
     along with Frames.  If not, see <http://www.gnu.org/licenses/>. ]]
 
-dofile("scripts/premake/project_general.lua", "frames_null", "src/null/*.cpp", "include/frames/renderer_null.h", ...)
+dofile("script/premake/project_general.lua", "frames_null", "src/null/*.cpp", "include/frames/renderer_null.h", ...)
