@@ -1,5 +1,9 @@
 /** \page cppsetup More Setup
 
+----
+
+<h2>Logging</h2>
+
 Frames has built-in logging system to report errors and debug information. It is strongly recommended that errors are put somewhere that developers will notice, up to and including big red text directly on the screen. After reporting, Frames will attempt to recover from any errors; if the report is never seen, this can make debugging extremely confusing.
 
 There are two locations that debug reports can come from. Each Environment has its own logging configuration, plus there's a global log for events that are not associated with an Environment. It's very easy to set these both up at the same time. Here's replacement code for your original Environment::Create() call, using fictional LOG() and PrintOnScreen() functions - reimplement MyLogger's functions as is appropriate for your project.
@@ -31,7 +35,15 @@ environment = Frames::Environment::Create(localConfig);
 
 All classes passed into Frames::Configuration::Global or Frames::Configuration::Local are refcounted and will be cleaned up when appropriate.
 
+----
+
+<h2>Resources</h2>
+
 You may want to hook Frames into your resource loading system. If you're just using loose files, you won't need to make any changes. If you're reading from a dedicated data directory or from some sort of archive file, you'll want to look into the \ref basicsresources "Resources" documentation. Note that Frames does not currently provide support for asynchronous loading - if this is necessary for your project, please contact us.
+
+----
+
+<h2>Defaults</h2>
 
 Next, you should give Frames the name of a default font resource to use. Unless you've modified the resource configuration, this will refer to a file loaded out of your project's working directory.
 
@@ -61,12 +73,17 @@ helloworld->PinSet(Frames::CENTER, environment->RootGet(), Frames::CENTER);
 
 \image html helloworld_setup_ref0.png
 
+----
+
+<h2>Input</h2>
+
 Finally, you may want to start feeding input into Frames. If you're handling standard Win32 API functions, you can take advantage of a built-in convenient function of Frames. Place this inside your WndProc:
 
 @code{.cpp}
 Frames::Input::Sequence sequence;
 if (Frames::InputGatherWin32(&sequence, hwnd, message, wParam, lParam)) {
-  sequence.Process(environment.Get());  // Depending on where environment is, you may need to find a way to get its reference inside your WndProc.
+  // Depending on where environment is, you may need to find a way to get its reference inside your WndProc.
+  sequence.Process(environment.Get());
   return 0;
 }
 @endcode

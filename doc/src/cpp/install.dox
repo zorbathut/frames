@@ -4,13 +4,15 @@ Download the latest package from <a href="http://www.framesui.com/">www.framesui
 
 ----
 
-<h2>Rebuilding with your project libraries</h2>
+<h2>Third-party libraries and include paths</h2>
 
-Frames relies on a variety of open-source libraries, some of which are commonly used in the game industry. If your project uses a different version of these libraries than the default installation of Frames does, you'll want to rebuild Frames to reference your library versions. Frames contains its libraries within the "deps" directory and has information on library uses and linking requirements in the \ref linking "LINKING" file. If you have any library version mismatches, you'll want to first \ref buildingsource "build Frames from the source package".
+Frames relies on a variety of open-source libraries, some of which are commonly used in the game industry. Frames contains its libraries within the "deps" directory and has information on include directories linking requirements in the \ref linking "LINKING" file. If your project uses a different version of these libraries than the default installation of Frames does, you'll want to \ref buildingsource "rebuild Frames to reference your library versions".
 
 ----
 
-<h2>Linking with the Frames libraries</h2>
+<h2>Including and linking the Frames libraries</h2>
+
+Add (YourFramesDirectory)/include to your include path. All Frames header includes are prefixed by "frames/".
 
 Frames makes extensive use of the C++ standard library, and as such, built libraries are not compatible across major Visual Studio releases. Pick the appropriate directory out of "lib" and add the following files to your linker.
 
@@ -28,7 +30,7 @@ Consult the \ref linking "LINKING" file for further dependencies; Frames will re
 
 <h2>Cleanup</h2>
 
-The full package can be rather large; as of this writing it's roughly 1.5 gigabytes of space uncompressed. The vast majority of this is the library files for Frames itself, and if space is an issue, you can delete any directories in "lib" that you don't plan to use. Each set of libraries is roughly 150 megabytes, mostly consisting of debug markup.
+The full package can be rather large; as of this writing it's roughly 1.5 gigabytes of space uncompressed. The vast majority consists of the library files for Frames itself, and if space is an issue, you can delete any directories in "lib" that you don't plan to use. Each set of libraries is roughly 150 megabytes, mostly consisting of debug markup.
 
 ----
 

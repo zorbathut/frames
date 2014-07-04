@@ -1,47 +1,47 @@
-The Frames core library is required for all Frames work. The precompiled binaries require the following libraries:
+The Frames core library is required for all Frames work. The precompiled binaries require the following include paths and linker settings:
 
 * Boost 1.55.0
-  No static library required on any platform.
+  Include path: deps\boost_1_55_0
   
 * Freetype 2.5.3
-  Win32: deps\freetype-2.5.3\win32\lib\freetype253MT.lib
-  Win64: deps\freetype-2.5.3\win64\lib\freetype253MT.lib
+  Win32 library: deps\freetype-2.5.3\win32\lib\freetype253MT.lib
+  Win64 library: deps\freetype-2.5.3\win64\lib\freetype253MT.lib
   
 * Libjpeg 9
-  Win32: deps\jpeg-9\win32\lib\jpeg.lib
-  Win64: deps\jpeg-9\win64\lib\jpeg.lib
+  Win32 library: deps\jpeg-9\win32\lib\jpeg.lib
+  Win64 library: deps\jpeg-9\win64\lib\jpeg.lib
 
 * Libpng 1.4.3
-  Win32: deps\libpng-1.4.3\win32\lib\libpng14.lib
-  Win64: deps\libpng-1.4.3\win64\lib\libpng14.lib
+  Win32 library: deps\libpng-1.4.3\win32\lib\libpng14.lib
+  Win64 library: deps\libpng-1.4.3\win64\lib\libpng14.lib
 
 * Zlib 1.2.8
-  Win32: deps\zlib-1.2.8\win32\lib\zlib.lib
-  Win64: deps\zlib-1.2.8\win64\lib\zlib.lib
+  Win32 library: deps\zlib-1.2.8\win32\lib\zlib.lib
+  Win64 library: deps\zlib-1.2.8\win64\lib\zlib.lib
 
 ----
 
 The optional OpenGL renderer requires the following additional libraries:
 
 * Windows Opengl library
-  Windows: opengl32.lib, provided with your compiler
+  Windows library: opengl32.lib, provided with your compiler
 
 * glew 1.10.0
-  Win32: deps\glew-1.10.0\win32\lib\glew32s.lib
-  Win64: deps\glew-1.10.0\win64\lib\glew32s.lib
+  Win32 library: deps\glew-1.10.0\win32\lib\glew32s.lib
+  Win64 library: deps\glew-1.10.0\win64\lib\glew32s.lib
 
 ----
 
 The optional D3D11 renderer requires the following additional libraries:
 
 * Direct3D 11
-  Windows: d3d11.lib, included with the Platform SDK
+  Windows library: d3d11.lib, included with the Platform SDK
   
 * DXGI library
-  Windows: dxgi.lib, included with the Platform SDK
+  Windows library: dxgi.lib, included with the Platform SDK
 
 * HLSL compiler
-  Windows: d3dcompiler.lib, included with the Platform SDK
+  Windows library: d3dcompiler.lib, included with the Platform SDK
   
 ----
 
