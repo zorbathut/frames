@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
     RendererIdSet("dx11_fl11");
     failure |= RUN_ALL_TESTS();
     if (failure) {
-      printf("Failed in OGL module\n");
+      printf("Failed in DX11 module\n");
       return failure;
     }
     return failure;
