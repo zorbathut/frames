@@ -139,7 +139,10 @@ namespace Frames {
     /// Destroys this frame and all its children.
     /** Also destroys all \ref layoutbasics "links" from these layouts. It is undefined behavior if any other layouts still reference these layouts; it will, however, not cause a crash.
     
-    It is undefined behavior to refer to this frame or any of its children after this function is called. */
+    Normally, it is undefined behavior to refer to this frame or any of its children after this function is called.
+    
+    An exception is if this frame or its children are involved in an event call; either an event called directly on that frame, or the frame involved in a dive/bubble hierarchy.
+    In that case, the effect of this call is deferred at least until the last in-flight event finishes with this frame or its children, and at most until the last in-flight event that referred to this frame finishes entirely. */
     inline void Obliterate() { return zinternalObliterate(); }
 
     /// Sets the background color.

@@ -20,6 +20,8 @@
 #include <gtest/gtest.h>
 
 #include <frames/sprite.h>
+#include <frames/event_definition.h>
+#include <frames/delegate.h>
 
 #include "lib.h"
 
@@ -141,4 +143,127 @@ TEST(Obliterate, Linked) {
   c->Obliterate();
 
   TestSnapshot(env);
+}
+
+// Verifies that obliterating things via events works properly
+TEST(Obliterate, Event) {
+  TestEnvironment env;
+
+  FRAMES_VERB_DEFINE(ObliterateTestHelper, ());
+
+  struct Container : Frames::detail::Noncopyable {
+    Container(TestEnvironment &env) {
+      l = PlaceFrame("l", &env, env->RootGet(), 0.25f, 0.5f);
+      c = PlaceFrame("c", &env, env->RootGet(), 0.5f, 0.5f);
+      r = PlaceFrame("r", &env, env->RootGet(), 0.75f, 0.5f);
+    }
+    ~Container() {
+      if (l) l->Obliterate();
+      if (c) c->Obliterate();
+      if (r) r->Obliterate();
+    }
+
+    Frames::Frame *l;
+    Frames::Frame *c;
+    Frames::Frame *r;
+
+    void ObliterateL(Frames::Handle *) {
+      l->Obliterate();
+      l = 0;
+    }
+    void ObliterateC(Frames::Handle *) {
+      c->Obliterate();
+      c = 0;
+    }
+    void ObliterateR(Frames::Handle *) {
+      r->Obliterate();
+      r = 0;
+    }
+  };
+
+  {
+    Container container(env);
+
+    // Base state test
+    TestSnapshot(env);
+  }
+
+  // Obliterate one frame from another
+  {
+    Container container(env);
+
+    container.l->EventAttach(ObliterateTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateC));
+
+    container.l->EventTrigger(ObliterateTestHelper);
+
+    TestSnapshot(env);
+  }
+  
+  // Obliterate two frames from one
+  {
+    Container container(env);
+
+    container.c->EventAttach(ObliterateTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateL));
+    container.c->EventAttach(ObliterateTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateR));
+
+    container.c->EventTrigger(ObliterateTestHelper);
+
+    TestSnapshot(env);
+  }
+  
+  // Crazytown begins now
+
+  // Obliterate a frame from itself
+  {
+    Container container(env);
+
+    container.c->EventAttach(ObliterateTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateC));
+
+    container.c->EventTrigger(ObliterateTestHelper);
+
+    TestSnapshot(env);
+  }
+
+  // Obliterate a frame and another frame from itself; should obliterate both frames because all events are guaranteed to trigger
+  {
+    Container container(env);
+
+    container.c->EventAttach(ObliterateTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateC));
+    container.c->EventAttach(ObliterateTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateL));
+
+    container.c->EventTrigger(ObliterateTestHelper);
+
+    TestSnapshot(env);
+  }
+
+  // Broken; tbi
+
+  /*
+  // A frame obliterating its own parent
+  {
+    Container container(env);
+
+    container.c->ParentSet(container.l);
+
+    container.c->EventAttach(ObliterateTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateL));
+
+    container.c->EventTrigger(ObliterateTestHelper);
+
+    TestSnapshot(env);
+  }
+
+  // A frame obliterating its own parent, then another frame
+  {
+    Container container(env);
+
+    container.c->ParentSet(container.l);
+
+    container.c->EventAttach(ObliterateTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateL));
+    container.c->EventAttach(ObliterateTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateR));
+
+    container.c->EventTrigger(ObliterateTestHelper);
+
+    TestSnapshot(env);
+  }
+  */
 }
