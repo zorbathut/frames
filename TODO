@@ -36,6 +36,7 @@
     * Basics
     * Reparenting during
     * Obliteration during
+  * Modify events, re-call the same event recursively!
 
 * Frames
   * Text is the big one here, especially everything involving editing
