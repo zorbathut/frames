@@ -1,6 +1,8 @@
 
 === DOCS
 
+* Re-read getting-started
+
 * Deep docs
   * need to put a thorough description of the pin API somewhere
 
@@ -15,14 +17,6 @@
 * script to build deps
 
 === DEPLOY
-
-* Setup instructions
-  * Remember to include paths for necessary libraries
-    * Boost
-  * And linkages
-    * freetype
-    * libpng
-    * libjpeg
 
 * Get licensing
 * Send to small trusted group
