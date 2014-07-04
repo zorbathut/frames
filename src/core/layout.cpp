@@ -343,8 +343,6 @@ namespace Frames {
       m_fullMouseMasking(false),
       m_inputMode(IM_NONE),
       m_name(name),
-      m_obliterate_lock(0),
-      m_obliterate_buffered(false),
       m_env(0)
   {
     if (!env) {
@@ -895,9 +893,9 @@ namespace Frames {
   }
 
   void Layout::zinternalObliterate() {
-    if (m_obliterate_lock) {
-      // can't do this quite yet, do it later
-      m_obliterate_buffered = true;
+    if (m_env->ObliterateLocked()) {
+      // The environment will do all the necessarily obliteration
+      m_env->ObliterateQueue(this);
       return;
     }
 
@@ -1037,6 +1035,7 @@ namespace Frames {
     m_parent = 0;
 
     // And now we're safe to delete ourselves
+    m_env->ObliterateDequeue(this);
     delete this;
   }
 
@@ -1118,14 +1117,11 @@ namespace Frames {
   //Layout::CallbackIterator::CallbackIterator() : m_state(STATE_COMPLETE), m_diveIndex(0), m_target(0), m_event(0) { };
 
   Layout::CallbackIterator::CallbackIterator(Layout *target, const VerbBase *event) : m_state(STATE_DIVE), m_diveIndex(0), m_target(target), m_event(event) { // set to STATE_DIVE so that NextIndex() does the right thing
-    target->Obliterate_Lock();
-    
     if (event->DiveGet()) {
       // Dive event! Accumulate everything we need
       Layout *ctar = target;
       while (ctar) {
         m_dives.push_back(ctar);
-        ctar->Obliterate_Lock();
         ctar = ctar->ParentGet();
       }
       m_diveIndex = (int)m_dives.size();
@@ -1143,10 +1139,6 @@ namespace Frames {
   Layout::CallbackIterator::~CallbackIterator() {
     if (m_state != STATE_COMPLETE) {
       IteratorUnlock(m_current);
-    }
-    
-    if (m_target) {
-      m_target->Obliterate_Unlock();
     }
   }
   
@@ -1248,20 +1240,6 @@ namespace Frames {
     }
   }
   
-  bool Layout::FrameOrderSorter::operator()(const Frame *lhs, const Frame *rhs) const {
-    if (lhs->zinternalImplementationGet() != rhs->zinternalImplementationGet())
-      return lhs->zinternalImplementationGet() < rhs->zinternalImplementationGet();
-    if (lhs->zinternalLayerGet() != rhs->zinternalLayerGet())
-      return lhs->zinternalLayerGet() < rhs->zinternalLayerGet();
-    // they're the same, but we want a consistent sort that won't result in Z-fighting
-    return lhs->m_constructionOrder < rhs->m_constructionOrder;
-  }
-
-  bool Layout::LayoutIdSorter::operator()(const Layout *lhs, const Layout *rhs) const {
-    // this is just for the sake of a consistent sort across executions
-    return lhs->m_constructionOrder < rhs->m_constructionOrder;
-  }
-  
   void Layout::EventDestroy(EventLookup::iterator eventTable, EventMultiset::iterator toBeRemoved) {
     if (toBeRemoved->LockFlagGet()) {
       toBeRemoved->DestroyFlagSet();
@@ -1272,18 +1250,6 @@ namespace Frames {
         // we know nobody's got it locked, so . . .
         m_events.erase(eventTable);
       }
-    }
-  }
-  
-  void Layout::Obliterate_Lock() {
-    ++m_obliterate_lock;
-  }
-
-  void Layout::Obliterate_Unlock() {
-    FRAMES_LAYOUT_CHECK(m_obliterate_lock, "Unlocking frame obliterate when already unlocked, internal error");
-    --m_obliterate_lock;
-    if (!m_obliterate_lock && m_obliterate_buffered) {
-      zinternalObliterate(); // kaboom!
     }
   }
 }

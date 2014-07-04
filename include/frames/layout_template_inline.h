@@ -20,6 +20,8 @@
 #ifndef FRAMES_LAYOUT_TEMPLATE_INLINE
 #define FRAMES_LAYOUT_TEMPLATE_INLINE
 
+#include "frames/environment.h"
+
 #ifndef FRAMES_LAYOUT
 #error Do not include layout_template_inline.h independently!
 #endif
@@ -49,6 +51,8 @@ namespace Frames {
     if (!m_events.count(&event)) {
       return;
     }
+
+    m_env->ObliterateLock();
     
     Handle eh(this, &event);
     
@@ -56,6 +60,8 @@ namespace Frames {
       itr.Setup(&eh);
       itr.Get().Call(&eh);
     }
+
+    m_env->ObliterateUnlock();
   }
   
   template <typename P1> void Layout::EventTrigger(const Verb<void (P1)> &event, typename detail::MakeConstRef<P1>::T p1) {
@@ -63,12 +69,16 @@ namespace Frames {
       return;
     }
     
+    m_env->ObliterateLock();
+
     Handle eh(this, &event);
         
     for (CallbackIterator itr = CallbackIterator(this, &event); !itr.Complete(); itr.Next()) {
       itr.Setup(&eh);
       itr.Get().Call<P1>(&eh, p1);
     }
+
+    m_env->ObliterateUnlock();
   }
 }
 

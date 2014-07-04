@@ -277,7 +277,8 @@ namespace Frames {
     m_root(0),
     m_over(0),
     m_focus(0),
-    m_counter(0)
+    m_counter(0),
+    m_obliterateLockCount(0)
   {
     m_config = config;
 
@@ -458,6 +459,42 @@ namespace Frames {
     if (m_texture.right.count(chunk)) {
       m_texture.right.erase(chunk);
     }
+  }
+
+  void Environment::ObliterateLock() {
+    ++m_obliterateLockCount;
+  }
+
+  void Environment::ObliterateUnlock() {
+    --m_obliterateLockCount;
+    if (m_obliterateLockCount < 0) {
+      LogError("Obliterate lock decremented below 0");
+      m_obliterateLockCount = 0;
+    }
+
+    if (m_obliterateLockCount == 0) {
+      // Detach all before destroying; this isn't strictly necessary for correctness, but it will prevent error spam
+      for (std::set<Layout *, detail::LayoutIdSorter>::const_iterator itr = m_obliterateQueues.begin(); itr != m_obliterateQueues.end(); ++itr) {
+        (*itr)->ObliterateDetach();
+      }
+
+      // Completely destroy the frames
+      while (!m_obliterateQueues.empty()) {
+        (*m_obliterateQueues.begin())->ObliterateExtract(); // will remove itself from the table, in theory
+      }
+    }
+  }
+
+  bool Environment::ObliterateLocked() const {
+    return m_obliterateLockCount;
+  }
+
+  void Environment::ObliterateQueue(Layout *layout) {
+    m_obliterateQueues.insert(layout);
+  }
+
+  void Environment::ObliterateDequeue(Layout *layout) {
+    m_obliterateQueues.erase(layout);
   }
 }
 

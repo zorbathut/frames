@@ -19,6 +19,8 @@
 
 #include "frames/detail.h"
 
+#include "frames/frame.h"
+
 #include "boost/static_assert.hpp"
 
 #include <vector>
@@ -58,6 +60,20 @@ namespace Frames {
       input = (input >> 8) | input;
       input = (input >> 16) | input;
       return input + 1;
+    }
+
+    bool FrameOrderSorter::operator()(const Frame *lhs, const Frame *rhs) const {
+      if (lhs->zinternalImplementationGet() != rhs->zinternalImplementationGet())
+        return lhs->zinternalImplementationGet() < rhs->zinternalImplementationGet();
+      if (lhs->zinternalLayerGet() != rhs->zinternalLayerGet())
+        return lhs->zinternalLayerGet() < rhs->zinternalLayerGet();
+      // they're the same, but we want a consistent sort that won't result in Z-fighting
+      return lhs->m_constructionOrder < rhs->m_constructionOrder;
+    }
+
+    bool LayoutIdSorter::operator()(const Layout *lhs, const Layout *rhs) const {
+      // this is just for the sake of a consistent sort across executions
+      return lhs->m_constructionOrder < rhs->m_constructionOrder;
     }
   }
 }

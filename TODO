@@ -24,7 +24,6 @@
 === TESTING
 
 * Obliterate
-  * Obliteration during event
   * Dive/bubble
     * Obliteration during event
 * Events
@@ -76,6 +75,8 @@
 * That may be extremely difficult
   * Thoughts:
   * Obliterate is needed - last event fired before shutdown
+    * fix up obliterate.cpp test case
+    * will have to happen after events are finished processing
 
 * Font corpus cleanup
 

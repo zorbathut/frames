@@ -157,9 +157,10 @@ namespace Frames {
     friend class Environment; // access WidthDefaultSet/HeightDefaultSet, construction
     friend class Frame; // constructor, private functions that modify state
     friend class Mask; // solely for MouseMasking
-    
-    struct FrameOrderSorter { bool operator()(const Frame *lhs, const Frame *rhs) const; };
-    struct LayoutIdSorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
+
+    // Sort classes that need internal access
+    friend struct detail::FrameOrderSorter;
+    friend struct detail::LayoutIdSorter;
     
     // Event system
     
@@ -348,7 +349,7 @@ namespace Frames {
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
 
     /// Type used to store a list of children, sorted from bottom to top. Conforms to std::set's interface; may not be a std::set.
-    typedef std::set<Frame *, FrameOrderSorter> ChildrenList;
+    typedef std::set<Frame *, detail::FrameOrderSorter> ChildrenList;
 
     /// Returns the children of this frame.
     /** Does not include implementation-flagged children. */
@@ -543,7 +544,7 @@ namespace Frames {
       float size_set;
       float size_default;
 
-      typedef std::multiset<Layout *, LayoutIdSorter> ChildrenList;
+      typedef std::multiset<Layout *, detail::LayoutIdSorter> ChildrenList;
       mutable ChildrenList children;
     };
     AxisData m_axes[2];
@@ -573,12 +574,6 @@ namespace Frames {
     // Event system
     EventLookup m_events;
     void EventDestroy(EventLookup::iterator eventTable, EventMultiset::iterator toBeRemoved);
-
-    // Obliterate buffering (sort of related to the event system) - todo make this take up less space
-    int m_obliterate_lock;
-    bool m_obliterate_buffered;
-    void Obliterate_Lock();
-    void Obliterate_Unlock(); // note that, after calling this function, the frame might eat itself
 
     // Global environment
     Environment *m_env;

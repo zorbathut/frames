@@ -236,9 +236,6 @@ TEST(Obliterate, Event) {
     TestSnapshot(env);
   }
 
-  // Broken; tbi
-
-  /*
   // A frame obliterating its own parent
   {
     Container container(env);
@@ -250,6 +247,8 @@ TEST(Obliterate, Event) {
     container.c->EventTrigger(ObliterateTestHelper);
 
     TestSnapshot(env);
+
+    container.c = 0; // no way for it to realistically know that this has been obliterated; to be fixed someday with the destroyed event
   }
 
   // A frame obliterating its own parent, then another frame
@@ -264,8 +263,9 @@ TEST(Obliterate, Event) {
     container.c->EventTrigger(ObliterateTestHelper);
 
     TestSnapshot(env);
-  }
-  */
 
+    container.c = 0; // no way for it to realistically know that this has been obliterated; to be fixed someday with the destroyed event
+  }
+  
   // add parent-change fakery
 }

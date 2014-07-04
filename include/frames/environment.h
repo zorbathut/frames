@@ -270,6 +270,18 @@ namespace Frames {
 
     boost::bimap<std::string, detail::TextureChunk *> m_texture; // not refcounted, the refcounting needs to deallocate
     void TextureChunkShutdown(detail::TextureChunk *chunk);
+
+    // Obliteration states
+    void ObliterateLock();
+    void ObliterateUnlock();  // may also go ahead and obliterate all relevant layouts
+
+    bool ObliterateLocked() const;
+
+    void ObliterateQueue(Layout *layout);
+    void ObliterateDequeue(Layout *layout);
+
+    int m_obliterateLockCount;
+    std::set<Layout *, detail::LayoutIdSorter> m_obliterateQueues;
   };
 }
 

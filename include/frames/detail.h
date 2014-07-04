@@ -31,6 +31,9 @@
 #include "frames/vector.h"
 
 namespace Frames {
+  class Layout;
+  class Frame;
+
   namespace detail {
     extern const Vector AnchorLookup[ANCHOR_COUNT];
 
@@ -94,6 +97,9 @@ namespace Frames {
     static const float Tau = Pi * 2;
 
     static const float SizeDefault = 40.f;
+
+    struct FrameOrderSorter { bool operator()(const Frame *lhs, const Frame *rhs) const; };
+    struct LayoutIdSorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
   };
 }
 

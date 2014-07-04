@@ -141,8 +141,9 @@ namespace Frames {
     
     Normally, it is undefined behavior to refer to this frame or any of its children after this function is called.
     
-    An exception is if this frame or its children are involved in an event call; either an event called directly on that frame, or the frame involved in a dive/bubble hierarchy.
-    In that case, the effect of this call is deferred at least until the last in-flight event finishes with this frame or its children, and at most until the last in-flight event that referred to this frame finishes entirely. */
+    An exception is if Obliterate() is called during any event handler in this environment.
+    In that case, the effect of this call is guaranted to be deferred at least until the last in-flight event finishes with this frame or any of its children.
+    The effect may be deferred until all in-flight events have completed entirely. */
     inline void Obliterate() { return zinternalObliterate(); }
 
     /// Sets the background color.
