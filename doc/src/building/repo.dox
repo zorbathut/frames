@@ -1,0 +1,11 @@
+/** \page buildingrepo Building from source repository
+
+To aid in ease of cross-platform development, Frames uses Premake 5.0 to generate project files for all platforms. This is an issue because Premake 5.0 does not yet exist; it's still in development and must be built from source.
+
+The official Frames Premake branch can be found at https://github.com/zorbathut/frames-premake - this will likely exist until there is an official release of Premake 5.0. The Frames repository includes prebuilt binaries in util/premake.
+
+At the moment, generating project files requires a Windows computer with cygwin installed, including the lua package. Once you have those installed, start a cygwin prompt, change to the Frames directory, and type "lua script/generate.lua". This will generate project files for every build target. Alternatively, you can specify a build target on the command line. A list of targets can be found in script/lib/platforms.lua.
+
+You can use the build script from here to build - "lua script/build.lua [target]" - although note that the build script assumes compilers are installed in the default locations. Alternatively, now that you have project files generated, continue to \ref buildingsource "Building from source package".
+
+*/

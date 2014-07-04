@@ -1,0 +1,7 @@
+/** \page buildingintro Building
+
+\ref buildingsource "Building from source package": The process of building a modified version of Frames from a released package, commonly to link with specific library versions or modify its source code.
+
+\ref buildingrepo "Building from repository": Bootstrapping a working version of Frames all the way from the Git repository, commonly to contribute to development or cherrypick individual commits.
+
+*/
