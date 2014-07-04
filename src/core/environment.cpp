@@ -28,10 +28,6 @@
 #include "frames/texture_chunk.h"
 
 namespace Frames {
-  /*static*/ EnvironmentPtr Environment::Create() {
-    return Create(Configuration::Local());
-  }
-
   /*static*/ EnvironmentPtr Environment::Create(const Configuration::Local &config) {
     return EnvironmentPtr(new Environment(config));
   }

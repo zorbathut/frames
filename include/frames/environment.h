@@ -63,12 +63,8 @@ namespace Frames {
   Environment will clean itself up entirely when it is destroyed, including destroying all child \ref Frame "Frames", cleaning up all stored resources and event handles, cleaning up any hooks in scripting languages, and so forth.*/
   class Environment : public Refcountable<Environment> {
   public:
-    /// Initialize an Environment with default values.
-    /** Equivalent to calling Create(const Configuration &config); with a default-constructed Configuration.*/
-    static EnvironmentPtr Create();
-
-    /// Initialize an Environment with custom values.
-    /** See Configuration for details.*/
+    /// Initialize an Environment.
+    /** See Configuration::Local for parameter details.*/
     static EnvironmentPtr Create(const Configuration::Local &config);
 
     // ==== Updates to the state of the environment

@@ -10,8 +10,6 @@
 
 === TWEAK
 
-* Remove default Environment, create sort-of-default Configuration that includes a null renderer.
-
 * Verify that appropriate files are all being included
 * /Zl compiler option?
 * script to build deps
