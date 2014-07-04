@@ -17,18 +17,8 @@
     You should have received a copy of the GNU General Public License
     along with Frames.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef FRAMES_EVENT_DEFINITION
-#define FRAMES_EVENT_DEFINITION
+// This file exists solely to verify that event_definition.h will compile on its own and be usable.
 
-#include "frames/event.h"
+#include <frames/event_definition.h>
 
-// not that this helps the defines, but whatever
-namespace Frames {
-  #define FRAMES_VERB_DEFINE(eventname, paramlist) \
-    ::Frames::Verb<void paramlist> eventname(#eventname);
-
-  #define FRAMES_VERB_DEFINE_BUBBLE(eventname, paramlist) \
-    ::Frames::VerbPackage<void paramlist> eventname(#eventname, #eventname "Dive", #eventname "Bubble");
-}
-
-#endif
+FRAMES_VERB_DEFINE(IncludeEventDefinitionTest, ());
