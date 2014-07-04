@@ -30,9 +30,8 @@
 * Events
   * Basics
   * Ordering
-  * Creation during
-  * Destruction during
-  
+  * Event creation during
+  * Event destruction during
   * Dive/bubble
     * Basics
     * Reparenting during

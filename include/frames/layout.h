@@ -386,6 +386,7 @@ namespace Frames {
     /// Attaches a handler to a verb on this layout.
     template <typename Parameters> void EventAttach(const Verb<Parameters> &event, typename Verb<Parameters>::TypeDelegate handler, float priority = 0.0);
     /// Detaches a handler from a verb on this layout.
+    /** If priority is detail::Undefined, picks a matching handler of any priority. Otherwise, picks a matching handler with that exact priority. */
     template <typename Parameters> void EventDetach(const Verb<Parameters> &event, typename Verb<Parameters>::TypeDelegate handler, float priority = detail::Undefined);
     
     /// Triggers all attached handlers for a given verb.
