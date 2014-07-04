@@ -1115,7 +1115,7 @@ namespace Frames {
     
   }
 
-  Layout::CallbackIterator::CallbackIterator() : m_state(STATE_COMPLETE), m_diveIndex(0), m_target(0), m_event(0) { };
+  //Layout::CallbackIterator::CallbackIterator() : m_state(STATE_COMPLETE), m_diveIndex(0), m_target(0), m_event(0) { };
 
   Layout::CallbackIterator::CallbackIterator(Layout *target, const VerbBase *event) : m_state(STATE_DIVE), m_diveIndex(0), m_target(target), m_event(event) { // set to STATE_DIVE so that NextIndex() does the right thing
     target->Obliterate_Lock();
@@ -1139,46 +1139,6 @@ namespace Frames {
       m_current->LockFlagIncrement();
     }
   };
-  
-  Layout::CallbackIterator::CallbackIterator(const CallbackIterator &itr) : m_state(STATE_COMPLETE), m_diveIndex(0), m_target(0), m_event(0) {
-    *this = itr;
-  }
-  
-  void Layout::CallbackIterator::operator=(const CallbackIterator &itr) {
-    if (this == &itr) return;
-    
-    if (m_state != STATE_COMPLETE) {
-      IteratorUnlock(m_current);
-    }
-    
-    if (m_target) {
-      m_target->Obliterate_Unlock();
-    }
-    
-    for (int i = 0; i < (int)m_dives.size(); ++i) {
-      m_dives[i]->Obliterate_Unlock();
-    }
-    
-    m_state = itr.m_state;
-    m_dives = itr.m_dives;
-    m_diveIndex = itr.m_diveIndex;
-    m_target = itr.m_target;
-    m_event = itr.m_event;
-    m_current = itr.m_current;
-    m_last = itr.m_last;
-    
-    for (int i = 0; i < (int)m_dives.size(); ++i) {
-      m_dives[i]->Obliterate_Lock();
-    }
-    
-    if (m_target) {
-      m_target->Obliterate_Lock();
-    }
-    
-    if (m_state != STATE_COMPLETE) {
-      m_current->LockFlagIncrement();
-    }
-  }
   
   Layout::CallbackIterator::~CallbackIterator() {
     if (m_state != STATE_COMPLETE) {

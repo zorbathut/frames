@@ -228,12 +228,9 @@ namespace Frames {
     typedef std::multiset<Callback, Callback::Sorter> EventMultiset;
     typedef std::map<const VerbBase *, std::multiset<Callback, Callback::Sorter> > EventLookup;
     
-    class CallbackIterator {
+    class CallbackIterator : detail::Noncopyable {
     public:
-      CallbackIterator();
       CallbackIterator(Layout *target, const VerbBase *event);
-      CallbackIterator(const CallbackIterator &itr);
-      void operator=(const CallbackIterator &itr);
       ~CallbackIterator();
       
       void Setup(Handle *handle) {
