@@ -159,6 +159,7 @@ namespace Frames {
     friend class Mask; // solely for MouseMasking
     
     struct FrameOrderSorter { bool operator()(const Frame *lhs, const Frame *rhs) const; };
+    struct LayoutIdSorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
     
     // Event system
     
@@ -544,7 +545,7 @@ namespace Frames {
       float size_set;
       float size_default;
 
-      typedef std::multiset<Layout *> ChildrenList;
+      typedef std::multiset<Layout *, LayoutIdSorter> ChildrenList;
       mutable ChildrenList children;
     };
     AxisData m_axes[2];

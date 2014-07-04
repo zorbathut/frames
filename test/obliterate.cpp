@@ -25,10 +25,10 @@
 
 // Obliteration is intrinsically really really complicated, so we're making an entire file dedicated to it.
 
-Frames::Frame *PlaceFrame(const char *name, TestEnvironment *env, Frames::Layout *parent, float x, float y) {
-  Frames::Frame *res = Frames::Frame::Create(parent, name);
-  res->PinSet(Frames::CENTER, (*env)->RootGet(), x, y);
-  res->BackgroundSet(Frames::Color(x, y, 0.5f));
+Frames::Frame *PlaceFrame(const char *name, TestEnvironment *env, Frames::Layout *parent, float x, float y, bool relative = false) {
+  Frames::Frame *res = Frames::Frame::Create(relative ? (*env)->RootGet() : parent, name);
+  res->PinSet(Frames::CENTER, relative ? parent : (*env)->RootGet(), relative ? 0.5f : x, relative ? 0.5f : y, relative ? x : 0.f, relative ? y : 0.f);
+  res->BackgroundSet(Frames::Color(relative ? (x / 120 + 0.5f) : x, relative ? (y / 120 + 0.5f) : y, 0.5f));
   return res;
 }
 
@@ -52,7 +52,6 @@ TEST(Obliterate, Basic) {
   TestSnapshot(env);
 }
 
-
 TEST(Obliterate, Parent) {
   TestEnvironment env;
 
@@ -75,6 +74,56 @@ TEST(Obliterate, Parent) {
   Frames::Frame *cab = PlaceFrame("cab", &env, ca, 0.45f, 0.7f);
   Frames::Frame *raa = PlaceFrame("raa", &env, ra, 0.64f, 0.7f);
   Frames::Frame *rab = PlaceFrame("rab", &env, ra, 0.70f, 0.7f);
+
+  TestSnapshot(env);
+
+  laa->Obliterate();
+  ca->Obliterate();
+  r->Obliterate();
+
+  TestSnapshot(env);
+
+  l->Obliterate();
+  cb->Obliterate();
+
+  TestSnapshot(env);
+
+  c->Obliterate();
+
+  TestSnapshot(env);
+}
+
+TEST(Obliterate, Linked) {
+  TestEnvironment env;
+  env.AllowErrors(); // This one creates a bunch of errors
+
+  // Looks a bit weird because they're reverting to default positions; we resize frames to ensure that all the appropriate frames are being displayed.
+
+  Frames::Frame *l = PlaceFrame("l", &env, env->RootGet(), 0.25f, 0.5f);
+  Frames::Frame *c = PlaceFrame("c", &env, env->RootGet(), 0.5f, 0.5f);
+  Frames::Frame *r = PlaceFrame("r", &env, env->RootGet(), 0.75f, 0.5f);
+  
+  Frames::Frame *la = PlaceFrame("la", &env, l, -60, 50, true);
+  Frames::Frame *lb = PlaceFrame("lb", &env, l, 60, 50, true);
+  Frames::Frame *ca = PlaceFrame("ca", &env, c, -60, 50, true);
+  Frames::Frame *cb = PlaceFrame("cb", &env, c, 60, 50, true);
+  Frames::Frame *ra = PlaceFrame("ra", &env, r, -60, 50, true);
+  Frames::Frame *rb = PlaceFrame("rb", &env, r, 60, 50, true);
+
+  Frames::Frame *laa = PlaceFrame("laa", &env, la, -30, 50, true);
+  Frames::Frame *lab = PlaceFrame("lab", &env, la, 30, 50, true);
+  Frames::Frame *caa = PlaceFrame("caa", &env, ca, -30, 50, true);
+  Frames::Frame *cab = PlaceFrame("cab", &env, ca, 30, 50, true);
+  Frames::Frame *raa = PlaceFrame("raa", &env, ra, -30, 50, true);
+  Frames::Frame *rab = PlaceFrame("rab", &env, ra, 30, 50, true);
+  
+  caa->WidthSet(50);
+  caa->HeightSet(30);
+  cab->WidthSet(30);
+  cab->HeightSet(50);
+
+  rb->WidthSet(60);
+  rb->HeightSet(20);
 
   TestSnapshot(env);
 

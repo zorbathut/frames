@@ -24,13 +24,15 @@
 === TESTING
 
 * Obliterate
-  * Things pinned to obliterated frame
+  * Obliteration during event
+  * Dive/bubble
+    * Obliteration during event
 * Events
   * Basics
   * Ordering
   * Creation during
   * Destruction during
-  * Obliteration during
+  
   * Dive/bubble
     * Basics
     * Reparenting during

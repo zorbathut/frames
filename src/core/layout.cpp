@@ -1296,6 +1296,11 @@ namespace Frames {
     // they're the same, but we want a consistent sort that won't result in Z-fighting
     return lhs->m_constructionOrder < rhs->m_constructionOrder;
   }
+
+  bool Layout::LayoutIdSorter::operator()(const Layout *lhs, const Layout *rhs) const {
+    // this is just for the sake of a consistent sort across executions
+    return lhs->m_constructionOrder < rhs->m_constructionOrder;
+  }
   
   void Layout::EventDestroy(EventLookup::iterator eventTable, EventMultiset::iterator toBeRemoved) {
     if (toBeRemoved->LockFlagGet()) {

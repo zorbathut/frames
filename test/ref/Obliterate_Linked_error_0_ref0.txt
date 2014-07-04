@@ -1,0 +1,12 @@
+Obliterated frame Root.ca is still referenced by active frame Root.caa on axis X/0.500000, clearing link
+Obliterated frame Root.ca is still referenced by active frame Root.cab on axis X/0.500000, clearing link
+Obliterated frame Root.ca is still referenced by active frame Root.caa on axis Y/0.500000, clearing link
+Obliterated frame Root.ca is still referenced by active frame Root.cab on axis Y/0.500000, clearing link
+Obliterated frame Root.r is still referenced by active frame Root.ra on axis X/0.500000, clearing link
+Obliterated frame Root.r is still referenced by active frame Root.rb on axis X/0.500000, clearing link
+Obliterated frame Root.r is still referenced by active frame Root.ra on axis Y/0.500000, clearing link
+Obliterated frame Root.r is still referenced by active frame Root.rb on axis Y/0.500000, clearing link
+Obliterated frame Root.l is still referenced by active frame Root.la on axis X/0.500000, clearing link
+Obliterated frame Root.l is still referenced by active frame Root.lb on axis X/0.500000, clearing link
+Obliterated frame Root.l is still referenced by active frame Root.la on axis Y/0.500000, clearing link
+Obliterated frame Root.l is still referenced by active frame Root.lb on axis Y/0.500000, clearing link

@@ -137,7 +137,9 @@ namespace Frames {
     inline bool ImplementationGet() const { return zinternalImplementationGet(); }
 
     /// Destroys this frame and all its children.
-    /** Also destroys all \ref layoutbasics "links" to and from these layouts. It is undefined behavior to refer to this frame or any of its children after this function is called. */
+    /** Also destroys all \ref layoutbasics "links" from these layouts. It is undefined behavior if any other layouts still reference these layouts; it will, however, not cause a crash.
+    
+    It is undefined behavior to refer to this frame or any of its children after this function is called. */
     inline void Obliterate() { return zinternalObliterate(); }
 
     /// Sets the background color.
