@@ -98,7 +98,8 @@ TEST(Input, Ordering) {
     b->InputModeSet((i & (1 << 1)) ? Frames::Layout::IM_ALL : Frames::Layout::IM_NONE);
     c->InputModeSet((i & (1 << 2)) ? Frames::Layout::IM_ALL : Frames::Layout::IM_NONE);
 
-    VerbLog log;
+    TestCompare compare("event");
+    VerbLog log(&compare);
 
     InputEventHook(&log, a);
     InputEventHook(&log, b);
@@ -156,7 +157,8 @@ TEST(Input, Mouse) {
 
     // For each button
     for (int button = 0; button < 4; ++button) {
-      VerbLog log(Frames::detail::Format("frame%d_button%d", i, button));
+      TestCompare compare(Frames::detail::Format("frame%d_button%d", i, button));
+      VerbLog log(&compare);
 
       InputEventHook(&log, a);
       InputEventHook(&log, b);
@@ -194,7 +196,8 @@ TEST(Input, Mouse) {
     {
       env->Input_MouseMove(coord[i], coord[i]);
 
-      VerbLog log(Frames::detail::Format("frame%d_misc", i));
+      TestCompare compare(Frames::detail::Format("frame%d_misc", i));
+      VerbLog log(&compare);
 
       InputEventHook(&log, a);
       InputEventHook(&log, b);
@@ -210,7 +213,8 @@ TEST(Input, Mouse) {
   for (int button = 0; button < 4; ++button) {
     env->Input_MouseClear();
 
-    VerbLog log(Frames::detail::Format("multi_button%d", button));
+    TestCompare compare(Frames::detail::Format("multi_button%d", button));
+    VerbLog log(&compare);
 
     InputEventHook(&log, a);
     InputEventHook(&log, b);
@@ -252,7 +256,8 @@ TEST(Input, Key) {
   Frames::Frame *a = Frames::Frame::Create(env->RootGet(), "a");
 
   for (int i = 0; i < 3; ++i) {
-    VerbLog log;
+    TestCompare compare;
+    VerbLog log(&compare);
 
     InputEventHook(&log, a);
 

@@ -65,7 +65,7 @@ TestNames GetTestNames(const std::string &family, const std::string &extension) 
     s_familyIds.clear();
   }
 
-  std::string testFilePrefix = Frames::detail::Format("%s_%s_%d", baseName, family, s_familyIds[family]++);
+  std::string testFilePrefix = Frames::detail::Format("%s_%s%s%d", baseName, family, family.empty() ? "" : "_", s_familyIds[family]++);
 
   rv.testName = testFilePrefix + "_ref%d" + extension;
   rv.resultName = testFilePrefix + "_result" + extension;
@@ -85,40 +85,47 @@ void ResetTestNames() {
   s_familyIds.clear();
 }
 
-void TestCompareStrings(const std::string &family, const std::string &data) {
-  TestNames testNames = GetTestNames(family, ".txt");
+TestCompare::TestCompare(const std::string &suffix /*= ""*/) : m_suffix(suffix) {
+}
+TestCompare::~TestCompare() {
+  TestNames testNames = GetTestNames(m_suffix, ".txt");
 
   // Multiple valid refs, NYI
   std::string tname = Frames::detail::Format(testNames.testName.c_str(), 0);
 
   // Grab our source file (or try to)
   std::string testsrc;
+  bool existed = false;
   {
     std::ifstream in(tname.c_str(), std::ios::binary); // Binary so we don't have to worry about \r\n's showing up in our event results
     if (in) {
+      existed = true;
       testsrc = std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
     }
   }
 
   // Write result to disk
-  {
+  if (existed || !m_records.empty()) {
     std::ofstream out(testNames.resultName.c_str(), std::ios::binary);
     if (out) {
-      out << data;
+      out << m_records;
     } else {
       ADD_FAILURE() << "Cannot write result " << testNames.resultName;
     }
   }
 
-  EXPECT_TRUE(data == testsrc);
+  EXPECT_TRUE(m_records == testsrc);
 }
 
-TestLogger::TestLogger() : m_allowErrors(false) { }
+void TestCompare::Append(const std::string &text) {
+  m_records += text;
+  m_records += "\n";
+}
+
+TestLogger::TestLogger() : m_allowErrors(false), m_seenErrors(false), m_compare("error") { }
 TestLogger::~TestLogger() {
   if (m_allowErrors) {
-    EXPECT_FALSE(m_loggedErrors.empty());
-
-    TestCompareStrings("error", m_loggedErrors);
+    EXPECT_TRUE(m_seenErrors);
   }
 }
 
@@ -127,10 +134,10 @@ void TestLogger::LogError(const std::string &log) {
     GTEST_FAIL() << log;
   } else {
     printf("[ERR-EXPCT] %s\n", log.c_str());
+    m_compare.Append(log);
   }
 
-  m_loggedErrors += log;
-  m_loggedErrors += "\n";
+  m_seenErrors = true;
 }
 
 void TestLogger::LogDebug(const std::string &log) {
@@ -224,28 +231,18 @@ void TestEnvironment::AllowErrors() {
   m_logger->AllowErrors();
 }
 
-VerbLog::VerbLog(const std::string &suffix) {
-  if (!suffix.empty()) {
-    m_suffix = "_" + suffix;
+VerbLog::VerbLog(TestCompare *compare, const std::string &descr /*= ""*/) : m_compare(compare) {
+  if (!descr.empty()) {
+    m_prefix = descr + ": ";
   }
 
-  m_records += "Begin log\n"; // this is honestly just for some code laziness in VerbLog, an empty record vector is treated specially
+  m_compare->Append("Begin log"); // an empty record vector is treated specially
 }
 
 VerbLog::~VerbLog() {
-  if (!m_records.empty()) {
-    Snapshot();
-  }
-
   for (int i = 0; i < (int)m_detachers.size(); ++i) {
     delete m_detachers[i];
   }
-}
-
-void VerbLog::Snapshot() {
-  TestCompareStrings("event" + m_suffix, m_records);
-
-  m_records.clear();
 }
 
 void VerbLog::RecordEvent(Frames::Handle *handle) {
@@ -279,7 +276,7 @@ void VerbLog::RecordResult(Frames::Handle *handle, const std::string &params) {
     param = Frames::detail::Format(" (%s)", params);
   }
 
-  m_records += Frames::detail::Format("Event %s%s on %s%s\n", handle->VerbGet()->NameGet(), param, handle->TargetGet()->DebugNameGet(), current);
+  m_compare->Append(Frames::detail::Format("Event %s%s on %s%s", handle->VerbGet()->NameGet(), param, handle->TargetGet()->DebugNameGet(), current));
 }
 
 void WritePng(const std::string &filename, const std::vector<unsigned char> &data, int width, int height) {

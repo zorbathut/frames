@@ -54,6 +54,19 @@ private:
   int m_height;
 };
 
+class TestCompare : Frames::detail::Noncopyable {
+public:
+  TestCompare(const std::string &suffix = "");
+  ~TestCompare();
+
+  void Append(const std::string &text);
+
+private:
+  std::string m_suffix;
+
+  std::string m_records;
+};
+
 class TestLogger : public Frames::Configuration::Logger {
 public:
   TestLogger();
@@ -65,8 +78,9 @@ public:
   void AllowErrors();
 
 private:
-  std::string m_loggedErrors;
+  TestCompare m_compare;
 
+  bool m_seenErrors;
   bool m_allowErrors;
 };
 
@@ -99,10 +113,9 @@ private:
 
 class VerbLog : Frames::detail::Noncopyable {
 public:
-  VerbLog(const std::string &suffix = "");
+  VerbLog(TestCompare *compare, const std::string &descr = "");
   ~VerbLog();
 
-  void Snapshot();  // auto-snapshot on exit
   template <typename Parameters> void Attach(Frames::Layout *layout, const Frames::Verb<Parameters> &verb) {
     EXPECT_TRUE(m_nameUniqueTest.count(layout->NameGet()) == 0 || m_nameUniqueTest[layout->NameGet()] == layout);
 
@@ -119,9 +132,10 @@ private:
   void RecordEvent(Frames::Handle *handle, const std::string &p1);
 
   void RecordResult(Frames::Handle *handle, const std::string &params);
-  std::string m_records;
+  
+  TestCompare *m_compare;
 
-  std::string m_suffix;
+  std::string m_prefix;
 
   std::map<std::string, Frames::Layout *> m_nameUniqueTest;
 

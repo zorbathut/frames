@@ -39,7 +39,8 @@ TEST(Event, Basic) {
   Frames::Frame *leaf2 = Frames::Frame::Create(branch, "leaf2");
 
   {
-    VerbLog log("basic");
+    TestCompare compare("basic");
+    VerbLog log(&compare);
 
     WheelEventHook(&log, env->RootGet());
     WheelEventHook(&log, branch);
@@ -53,7 +54,8 @@ TEST(Event, Basic) {
   }
 
   {
-    VerbLog log("bubble");
+    TestCompare compare("bubble");
+    VerbLog log(&compare);
 
     WheelEventHook(&log, env->RootGet());
     WheelEventHook(&log, branch);
