@@ -147,10 +147,10 @@ TEST(Obliterate, Linked) {
 
 // Verifies that obliterating things via events works properly
 TEST(Obliterate, Event) {
-  TestEnvironment env;
-
   FRAMES_VERB_DEFINE(ObliterateTestHelper, ());
   FRAMES_VERB_DEFINE_BUBBLE(ObliterateTestBDHelper, ());
+
+  TestEnvironment env;
 
   struct Container : Frames::detail::Noncopyable {
     Container(TestEnvironment &tenv) {
