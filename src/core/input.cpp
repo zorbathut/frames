@@ -338,6 +338,10 @@ namespace Frames {
     }
   }
 
+  bool Input::Command::Process(const EnvironmentPtr &env) const {
+    return Process(env.Get());
+  }
+
   void Input::Sequence::Queue(const Input::Command &element) {
     m_queue.push_back(element);
   }
@@ -347,6 +351,10 @@ namespace Frames {
     {
       m_queue[i].Process(env);
     }
+  }
+
+  void Input::Sequence::Process(const EnvironmentPtr &env) const {
+    Process(env.Get());
   }
 }
 

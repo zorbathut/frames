@@ -26,6 +26,8 @@
 namespace Frames {
   // Forward declarations
   class Environment;
+  template <typename T> class Ptr;
+  typedef Ptr<Environment> EnvironmentPtr;
 
   namespace Input {
 
@@ -257,10 +259,12 @@ namespace Frames {
       const std::string &KeyTextGet() const;
 
       /// Feeds this Command into an Environment.
-      /** Returns true if this event was consumed by the Environment, false otherwise.
-      
-      Call only if this is a KEYTEXT Command. */
+      /** Returns true if this event was consumed by the Environment, false otherwise. */
       bool Process(Environment *env) const;
+
+      /// Feeds this Command into an Environment.
+      /** Returns true if this event was consumed by the Environment, false otherwise. */
+      bool Process(const EnvironmentPtr &env) const;
         
     private:
       Type m_type;
@@ -292,10 +296,12 @@ namespace Frames {
       void Queue(const Command &element);
 
       /// Processes all Commands in order.
-      /** There is no way to detect whether a Command was consumed by the Environment or not; if you need this functionality, you should Process the Commands on your own.
-      
-      TODO add a feature request link */
+      /** There is no way to detect whether a specific Command was consumed by the Environment or not; if you need this functionality, you should Process the Commands on your own. */
       void Process(Environment *env) const;
+
+      /// Processes all Commands in order.
+      /** There is no way to detect whether a specific Command was consumed by the Environment or not; if you need this functionality, you should Process the Commands on your own. */
+      void Process(const EnvironmentPtr &env) const;
 
       /// Gets the Command queue.
       const std::vector<Command> &GetQueue() const { return m_queue; }
