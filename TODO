@@ -25,7 +25,6 @@
 === TESTING
 
 * Events
-  * Event creation during
   * Event destruction during
   * Dive/bubble
     * Basics

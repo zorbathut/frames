@@ -79,6 +79,7 @@ TEST(Event, Ordering) {
 
   {
     TestCompare compare;
+    Frames::Frame *frame = Frames::Frame::Create(env->RootGet(), "Frame");
     VerbLog llog(&compare, "botpri");
     VerbLog mlog(&compare, "midpri");
     VerbLog hlog(&compare, "highpri");
@@ -115,4 +116,65 @@ TEST(Event, Ordering) {
     
     frame->EventTrigger(EventOrderingHelper);
   }
+}
+
+// Dynamic event creation mid-event
+// Here's the plan:
+// 0: print to A log
+// 1: (n/a)
+// 2: print to A log
+// 3: Create new events printing to B log at 1 and 4
+// 4: (n/a)
+// 5: print to A log
+// Should output A A B A
+FRAMES_VERB_DEFINE(EventCreationHelper, ());
+TEST(Event, Creation) {
+  TestEnvironment env;
+  TestCompare compare;
+
+  struct Container : Frames::detail::Noncopyable {
+    Container(TestEnvironment &tenv, TestCompare *compare) : alog(compare, "alpha"), blog(compare, "beta") {
+      env = &tenv;
+      f = Frames::Frame::Create((*env)->RootGet(), "f");
+    }
+    ~Container() {
+      if (f) f->Obliterate();
+    }
+
+    void MakeEvents(Frames::Handle *) {
+      blog.Attach(f, EventCreationHelper, 1);
+      blog.Attach(f, EventCreationHelper, 4);
+    }
+
+    Frames::Frame *f;
+    TestEnvironment *env;
+
+    VerbLog alog;
+    VerbLog blog;
+  } container(env, &compare);
+
+  container.alog.Attach(container.f, EventCreationHelper, 0);
+  container.alog.Attach(container.f, EventCreationHelper, 2);
+  container.alog.Attach(container.f, EventCreationHelper, 5);
+
+  container.f->EventAttach(EventCreationHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::MakeEvents), 3);
+
+  compare.Append("Event trigger");
+
+  container.f->EventTrigger(EventCreationHelper);
+
+  compare.Append("Event trigger");
+
+  container.f->EventTrigger(EventCreationHelper);
+
+  // Strip the event creator this time
+  container.f->EventDetach(EventCreationHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::MakeEvents), 3);
+
+  compare.Append("Event trigger");
+
+  container.f->EventTrigger(EventCreationHelper);
+
+  compare.Append("Event trigger");
+
+  container.f->EventTrigger(EventCreationHelper);
 }
