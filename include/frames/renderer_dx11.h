@@ -32,6 +32,7 @@
 namespace Frames {
   namespace Configuration {
     /// Creates a Configuration::Renderer for DX11.
+    /** Frames will handle its own refcounting for this device context; you are welcome to ->Release() it immediately after calling this function. */
     RendererPtr RendererDX11(ID3D11DeviceContext *device);
   }
   

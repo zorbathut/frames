@@ -37,7 +37,13 @@ namespace Frames {
   namespace Configuration {
     class CfgRendererDX11 : public Renderer {
     public:
-      CfgRendererDX11(ID3D11DeviceContext *device) : m_context(device) {}
+      CfgRendererDX11(ID3D11DeviceContext *device) : m_context(device) {
+        m_context->AddRef();
+      }
+
+      ~CfgRendererDX11() {
+        m_context->Release();
+      }
 
       virtual detail::Renderer *Create(Environment *env) const {
         return new detail::RendererDX11(env, m_context);
