@@ -35,7 +35,7 @@ namespace Frames {
     static Sprite *Create(Layout *parent, const std::string &name);
 
     /// Sets the texture by ID.
-    /** See \ref resources "Resources" for details on Frames's resource system.
+    /** See \ref basicsresources "Resources" for details on Frames's resource system.
     
     The Sprite's default size will be set to the native size of the texture, in pixels.*/
     void TextureSet(const std::string &id);

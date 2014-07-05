@@ -81,17 +81,17 @@ namespace Frames {
     public:
       virtual ~Performance() { }
 
-      // Start a profiling block.
+      /// Start a profiling block.
       virtual void *Push(const char *name, Color color) { return 0; }
 
-      // End a profiling block.
+      /// End a profiling block.
       virtual void Pop(void *) { }
     };
     /// Refcounted Performance typedef.
     typedef Ptr<Performance> PerformancePtr;
 
-    /// Creates a Texture from a \ref resources "resource ID".
-    /** See \ref resources "Resources" for more detail.
+    /// Creates a Texture from a \ref basicsresources "resource ID".
+    /** See \ref basicsresources "Resources" for more detail.
 
     Default behavior is to use the configuration StreamFromId and the configuration TextureFromStream in order to produce the result. */
     class TextureFromId : public Refcountable<TextureFromId> {
@@ -104,8 +104,8 @@ namespace Frames {
     /// Refcounted TextureFromId typedef.
     typedef Ptr<TextureFromId> TextureFromIdPtr;
 
-    /// Creates a Stream from a \ref resources "resource ID".
-    /** See \ref resources "Resources" for more detail.
+    /// Creates a Stream from a \ref basicsresources "resource ID".
+    /** See \ref basicsresources "Resources" for more detail.
 
     Default behavior is to use the configuration PathFromId to create a path, then to create a StreamFile given that path. */
     class StreamFromId : public Refcountable<StreamFromId> {
@@ -118,8 +118,8 @@ namespace Frames {
     /// Refcounted StreamFromId typedef.
     typedef Ptr<StreamFromId> StreamFromIdPtr;
 
-    /// Creates a path from a \ref resources "resource ID".
-    /** See \ref resources "Resources" for more detail.
+    /// Creates a path from a \ref basicsresources "resource ID".
+    /** See \ref basicsresources "Resources" for more detail.
 
     Default behavior is to return to given path verbatim. */
     class PathFromId : public Refcountable<PathFromId> {
@@ -133,7 +133,7 @@ namespace Frames {
     typedef Ptr<PathFromId> PathFromIdPtr;
 
     /// Creates a Texture from a Stream.
-    /** See \ref resources "Resources" for more detail.
+    /** See \ref basicsresources "Resources" for more detail.
 
     Default behavior is to consult each TextureLoader in turn and use the first one that accepts the given Stream. */
     class TextureFromStream : public Refcountable<TextureFromStream> {

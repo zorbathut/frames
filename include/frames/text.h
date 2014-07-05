@@ -44,7 +44,7 @@ namespace Frames {
     const std::string &TextGet() const { return m_text; }
 
     /// Sets the font used to render text, given by ID.
-    /** See \ref resources "Resources" for details on Frames's resource system. */
+    /** See \ref basicsresources "Resources" for details on Frames's resource system. */
     void FontSet(const std::string &id);
     /// Gets the ID of the font used to render text.
     const std::string &GetFont() const { return m_font; }

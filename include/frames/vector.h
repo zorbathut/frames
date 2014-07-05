@@ -26,10 +26,18 @@ namespace Frames {
   /// Represents a 2d location or direction.
   /** This is nothing more than a pair of floats tied together. As is usual with Vector classes, the actual meaning of this structure depends strongly on its context. */
   struct Vector {
+    /// Default constructor.
+    /** Does not initialize to any defined value. */
     Vector() { };
+    
+    /// Initializes to provided coordinates.
     Vector(float x, float y) : x(x), y(y) { };
 
-    float x, y;
+    /// X coordinate.
+    float x;
+    
+    /// Y coordinate.
+    float y;
   };
   std::ostream &operator<<(std::ostream &str, const Vector &rhs);
   
