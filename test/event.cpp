@@ -24,6 +24,8 @@
 
 #include "lib.h"
 
+FRAMES_VERB_DEFINE(EventTestHelper, ());
+
 void WheelEventHook(VerbLog *log, Frames::Layout *frame) {
   log->Attach(frame, Frames::Layout::Event::MouseWheel);
   log->Attach(frame, Frames::Layout::Event::MouseWheel.Dive);
@@ -71,8 +73,6 @@ TEST(Event, Basic) {
 }
 
 TEST(Event, Ordering) {
-  FRAMES_VERB_DEFINE(EventOrderingHelper, ());
-
   TestEnvironment env;
 
   Frames::Frame *frame = Frames::Frame::Create(env->RootGet(), "Frame");
@@ -84,11 +84,11 @@ TEST(Event, Ordering) {
     VerbLog mlog(&compare, "midpri");
     VerbLog hlog(&compare, "highpri");
 
-    llog.Attach(frame, EventOrderingHelper, -1);
-    mlog.Attach(frame, EventOrderingHelper, 0);
-    hlog.Attach(frame, EventOrderingHelper, 1);
+    llog.Attach(frame, EventTestHelper, -1);
+    mlog.Attach(frame, EventTestHelper, 0);
+    hlog.Attach(frame, EventTestHelper, 1);
     
-    frame->EventTrigger(EventOrderingHelper);
+    frame->EventTrigger(EventTestHelper);
   }
 
   {
@@ -97,11 +97,11 @@ TEST(Event, Ordering) {
     VerbLog mlog(&compare, "midpri");
     VerbLog hlog(&compare, "highpri");
 
-    hlog.Attach(frame, EventOrderingHelper, -98.5);
-    mlog.Attach(frame, EventOrderingHelper, -99);
-    llog.Attach(frame, EventOrderingHelper, -100);
+    hlog.Attach(frame, EventTestHelper, -98.5);
+    mlog.Attach(frame, EventTestHelper, -99);
+    llog.Attach(frame, EventTestHelper, -100);
     
-    frame->EventTrigger(EventOrderingHelper);
+    frame->EventTrigger(EventTestHelper);
   }
 
   {
@@ -110,11 +110,11 @@ TEST(Event, Ordering) {
     VerbLog mlog(&compare, "midpri");
     VerbLog hlog(&compare, "highpri");
 
-    mlog.Attach(frame, EventOrderingHelper, 50.002f);
-    llog.Attach(frame, EventOrderingHelper, 50.001f);   
-    hlog.Attach(frame, EventOrderingHelper, 50.003f);
+    mlog.Attach(frame, EventTestHelper, 50.002f);
+    llog.Attach(frame, EventTestHelper, 50.001f);   
+    hlog.Attach(frame, EventTestHelper, 50.003f);
     
-    frame->EventTrigger(EventOrderingHelper);
+    frame->EventTrigger(EventTestHelper);
   }
 }
 
@@ -127,7 +127,6 @@ TEST(Event, Ordering) {
 // 4: (n/a)
 // 5: print to A log
 // Should output A A B A
-FRAMES_VERB_DEFINE(EventCreationHelper, ());
 TEST(Event, Creation) {
   TestEnvironment env;
   TestCompare compare;
@@ -142,8 +141,8 @@ TEST(Event, Creation) {
     }
 
     void MakeEvents(Frames::Handle *) {
-      blog.Attach(f, EventCreationHelper, 1);
-      blog.Attach(f, EventCreationHelper, 4);
+      blog.Attach(f, EventTestHelper, 1);
+      blog.Attach(f, EventTestHelper, 4);
     }
 
     Frames::Frame *f;
@@ -153,28 +152,28 @@ TEST(Event, Creation) {
     VerbLog blog;
   } container(env, &compare);
 
-  container.alog.Attach(container.f, EventCreationHelper, 0);
-  container.alog.Attach(container.f, EventCreationHelper, 2);
-  container.alog.Attach(container.f, EventCreationHelper, 5);
+  container.alog.Attach(container.f, EventTestHelper, 0);
+  container.alog.Attach(container.f, EventTestHelper, 2);
+  container.alog.Attach(container.f, EventTestHelper, 5);
 
-  container.f->EventAttach(EventCreationHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::MakeEvents), 3);
-
-  compare.Append("Event trigger");
-
-  container.f->EventTrigger(EventCreationHelper);
+  container.f->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::MakeEvents), 3);
 
   compare.Append("Event trigger");
 
-  container.f->EventTrigger(EventCreationHelper);
+  container.f->EventTrigger(EventTestHelper);
+
+  compare.Append("Event trigger");
+
+  container.f->EventTrigger(EventTestHelper);
 
   // Strip the event creator this time
-  container.f->EventDetach(EventCreationHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::MakeEvents), 3);
+  container.f->EventDetach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::MakeEvents), 3);
 
   compare.Append("Event trigger");
 
-  container.f->EventTrigger(EventCreationHelper);
+  container.f->EventTrigger(EventTestHelper);
 
   compare.Append("Event trigger");
 
-  container.f->EventTrigger(EventCreationHelper);
+  container.f->EventTrigger(EventTestHelper);
 }

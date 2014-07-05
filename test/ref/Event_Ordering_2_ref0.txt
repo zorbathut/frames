@@ -1,6 +1,6 @@
 botpri: Begin log
 midpri: Begin log
 highpri: Begin log
-botpri: Event EventOrderingHelper on Root.Frame
-midpri: Event EventOrderingHelper on Root.Frame
-highpri: Event EventOrderingHelper on Root.Frame
+botpri: Event EventTestHelper on Root.Frame
+midpri: Event EventTestHelper on Root.Frame
+highpri: Event EventTestHelper on Root.Frame
