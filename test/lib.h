@@ -116,11 +116,11 @@ public:
   VerbLog(TestCompare *compare, const std::string &descr = "");
   ~VerbLog();
 
-  template <typename Parameters> void Attach(Frames::Layout *layout, const Frames::Verb<Parameters> &verb) {
+  template <typename Parameters> void Attach(Frames::Layout *layout, const Frames::Verb<Parameters> &verb, float priority = 0.f) {
     EXPECT_TRUE(m_nameUniqueTest.count(layout->NameGet()) == 0 || m_nameUniqueTest[layout->NameGet()] == layout);
 
     typename Frames::Verb<Parameters>::TypeDelegate delegate = typename Frames::Verb<Parameters>::TypeDelegate(this, &VerbLog::RecordEvent);
-    layout->EventAttach(verb, delegate);
+    layout->EventAttach(verb, delegate, priority);
     m_detachers.push_back(new Detacher<Parameters>(layout, verb, delegate));
   }
 

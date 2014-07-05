@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 
 #include <frames/frame.h>
+#include <frames/event_definition.h>
 
 #include "lib.h"
 
@@ -66,5 +67,52 @@ TEST(Event, Basic) {
     branch->EventTrigger(Frames::Layout::Event::MouseWheel, 1);
     leaf1->EventTrigger(Frames::Layout::Event::MouseWheel, 1);
     leaf2->EventTrigger(Frames::Layout::Event::MouseWheel, 1);
+  }
+}
+
+TEST(Event, Ordering) {
+  FRAMES_VERB_DEFINE(EventOrderingHelper, ());
+
+  TestEnvironment env;
+
+  Frames::Frame *frame = Frames::Frame::Create(env->RootGet(), "Frame");
+
+  {
+    TestCompare compare;
+    VerbLog llog(&compare, "botpri");
+    VerbLog mlog(&compare, "midpri");
+    VerbLog hlog(&compare, "highpri");
+
+    llog.Attach(frame, EventOrderingHelper, -1);
+    mlog.Attach(frame, EventOrderingHelper, 0);
+    hlog.Attach(frame, EventOrderingHelper, 1);
+    
+    frame->EventTrigger(EventOrderingHelper);
+  }
+
+  {
+    TestCompare compare;
+    VerbLog llog(&compare, "botpri");
+    VerbLog mlog(&compare, "midpri");
+    VerbLog hlog(&compare, "highpri");
+
+    hlog.Attach(frame, EventOrderingHelper, -98.5);
+    mlog.Attach(frame, EventOrderingHelper, -99);
+    llog.Attach(frame, EventOrderingHelper, -100);
+    
+    frame->EventTrigger(EventOrderingHelper);
+  }
+
+  {
+    TestCompare compare;
+    VerbLog llog(&compare, "botpri");
+    VerbLog mlog(&compare, "midpri");
+    VerbLog hlog(&compare, "highpri");
+
+    mlog.Attach(frame, EventOrderingHelper, 50.002f);
+    llog.Attach(frame, EventOrderingHelper, 50.001f);   
+    hlog.Attach(frame, EventOrderingHelper, 50.003f);
+    
+    frame->EventTrigger(EventOrderingHelper);
   }
 }

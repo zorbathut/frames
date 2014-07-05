@@ -236,7 +236,7 @@ VerbLog::VerbLog(TestCompare *compare, const std::string &descr /*= ""*/) : m_co
     m_prefix = descr + ": ";
   }
 
-  m_compare->Append("Begin log"); // an empty record vector is treated specially
+  m_compare->Append(m_prefix + "Begin log"); // an empty record vector is treated specially
 }
 
 VerbLog::~VerbLog() {
@@ -276,7 +276,7 @@ void VerbLog::RecordResult(Frames::Handle *handle, const std::string &params) {
     param = Frames::detail::Format(" (%s)", params);
   }
 
-  m_compare->Append(Frames::detail::Format("Event %s%s on %s%s", handle->VerbGet()->NameGet(), param, handle->TargetGet()->DebugNameGet(), current));
+  m_compare->Append(Frames::detail::Format("%sEvent %s%s on %s%s", m_prefix, handle->VerbGet()->NameGet(), param, handle->TargetGet()->DebugNameGet(), current));
 }
 
 void WritePng(const std::string &filename, const std::vector<unsigned char> &data, int width, int height) {

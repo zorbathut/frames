@@ -1,0 +1,6 @@
+botpri: Begin log
+midpri: Begin log
+highpri: Begin log
+botpri: Event EventOrderingHelper on Root.Frame
+midpri: Event EventOrderingHelper on Root.Frame
+highpri: Event EventOrderingHelper on Root.Frame
