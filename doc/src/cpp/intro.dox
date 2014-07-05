@@ -4,4 +4,6 @@
 
 \ref cpphelloworld "Hello World": Bare-bones example to start an \ref Frames::Environment "Environment" and exercise the basics of Frames.
 
+\ref cppsetup "Further Setup": The remaining parts that should be connected to have a fully-functional Frames environment.
+
 */

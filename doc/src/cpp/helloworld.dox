@@ -16,7 +16,7 @@ If you can't make it fall out of scope, you can also explicitly destroy it when 
 environment.reset();
 @endcode
 
-After your rendering context is created, initialize the environment with an appropriate renderer.
+After your project's rendering context is created, initialize the environment with an appropriate renderer.
 
 If you're using DirectX 11:
 
@@ -27,7 +27,9 @@ If you're using DirectX 11:
 
 @code{.cpp}
 Frames::Configuration::Local config;
-config.RendererSet(Frames::RendererDX11(aDirectX11DeviceContext));
+// You'll need to either provide your DirectX11 device context, or create a new one for Frames.
+// Frames will handle its own reference counting; you are welcome to ->Release() immediately after passing the context into Frames::RendererDX11.
+config.RendererSet(Frames::RendererDX11(deviceContext));
 environment = Frames::Environment::Create(config);
 @endcode
 
@@ -47,8 +49,13 @@ environment = Frames::Environment::Create(config);
 Add a simple frame to verify that rendering works.
 
 @code{.cpp}
+// Create a new Frame named "Square"
 Frames::Frame *square = Frames::Frame::Create(environment->RootGet(), "Square");
+
+// Set it to render in blue
 square->BackgroundSet(Frames::Color(0.f, 0.f, 1.f));
+
+// Pin it in the center of the screen
 square->PinSet(Frames::CENTER, environment->RootGet(), Frames::CENTER);
 @endcode
 

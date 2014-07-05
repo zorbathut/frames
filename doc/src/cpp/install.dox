@@ -42,7 +42,7 @@ A one-line test to ensure that Frames code is actually linked:
 Frames::Environment::Create(Frames::Configuration::Local());
 @endcode
 
-This will create and immediately teardown an \ref Frames::Environment "Environment" with default values and a nonexistent renderer. Not something you'd want to do in production code, but it works as a nice verification that code is being linked.
+This will create and immediately teardown an \ref Frames::Environment "Environment" with default values and a nonexistent renderer. On Windows, it will also output several error messages to the system debug log. Not something you'd want to do in production code, but it works as a nice verification that code is being linked.
 
 Once you've got your project linking, continue to \ref cpphelloworld "Hello World" to test it out.
 

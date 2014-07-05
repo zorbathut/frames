@@ -1,12 +1,14 @@
 /** \page buildingsource Building from source package
 
-The packaged versions include pregenerated projects for all supported build targets. Look for them in the "project" directory and open the solution of your choice.
+The packaged versions include pregenerated projects for all supported build targets. Look for them in the "project" directory and choose the solution of your choice.
 
-If you can rely on the provided third-party library versions, it should Just Work. If you're planning to change to another set of third-party libraries, either to add features or for compatibility with your existing project, you'll need to modify linking settings and include paths. If this is a thing you're doing frequently, you may want to follow the process listed in \ref buildingrepo "Building from Source Repository". If it's an uncommon thing, we recommend opening up the project files in a text editor and using text replace to make whatever changes are needed.
+If you can rely on the provided third-party library versions, it should Just Work. If you're planning to change to another set of third-party libraries, either to add features or for compatibility with your existing project, you'll need to modify linking settings and include paths. If you're doing this frequently, you may want to follow the process listed in \ref buildingrepo "Building from Source Repository" and put your changes in the premake5.lua file. If it's infrequent, we recommend opening up the project files in a text editor and using search-and-replace to make whatever changes are needed.
 
-Once your headers and libraries are properly specified, building can be done in whatever manner is the usual for your platform.
+Once your headers and libraries are set up, building can be done in the usual manner for your platform.
 
-We strongly recommend running the test suite. Note that changes to Freetype versions tend to "break" the test suite, as Freetype frequently tweaks its text rasterization algorithm. Also, some graphics cards product slightly different output from others. Test reference files can be found in test/ref. Any filename ending in _ref(number) is a reference file that your data may be matched against. The test suite output ends in _result, and if the output differs from the reference, you'll also have a _diff that can be used to compare. If you decide that the difference is acceptable, you can simply replace the _result suffix with _ref(nextConsecutiveNumber) and it will be considered a valid result for future tests.
+We strongly recommend running the test suite. Test reference files can be found in test/ref. Any filename ending in _ref(number) is a reference file that your data may be matched against. The test suite output ends in _result, and if the output differs from the reference, you'll also have a _diff that can be used to compare.
+
+Note that changes to Freetype versions tend to "break" the test suite, as Freetype frequently tweaks its text rasterization algorithm. Also, some graphics cards product slightly different output from others.  If you decide that the difference is acceptable, you can simply replace the _result suffix with _ref(nextConsecutiveNumber) and it will be considered a valid result for future tests.
 
 Once everything is built, you should be able to link with your custom build of Frames.
 
