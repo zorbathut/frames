@@ -150,12 +150,14 @@ TEST(Obliterate, Event) {
   TestEnvironment env;
 
   FRAMES_VERB_DEFINE(ObliterateTestHelper, ());
+  FRAMES_VERB_DEFINE_BUBBLE(ObliterateTestBDHelper, ());
 
   struct Container : Frames::detail::Noncopyable {
-    Container(TestEnvironment &env) {
-      l = PlaceFrame("l", &env, env->RootGet(), 0.25f, 0.5f);
-      c = PlaceFrame("c", &env, env->RootGet(), 0.5f, 0.5f);
-      r = PlaceFrame("r", &env, env->RootGet(), 0.75f, 0.5f);
+    Container(TestEnvironment &tenv) {
+      env = &tenv;
+      l = PlaceFrame("l", env, (*env)->RootGet(), 0.25f, 0.5f);
+      c = PlaceFrame("c", env, (*env)->RootGet(), 0.5f, 0.5f);
+      r = PlaceFrame("r", env, (*env)->RootGet(), 0.75f, 0.5f);
     }
     ~Container() {
       if (l) l->Obliterate();
@@ -178,6 +180,18 @@ TEST(Obliterate, Event) {
     void ObliterateR(Frames::Handle *) {
       r->Obliterate();
       r = 0;
+    }
+
+    TestEnvironment *env;
+
+    void ReattachL(Frames::Handle *) {
+      l->ParentSet((*env)->RootGet());
+    }
+    void ReattachC(Frames::Handle *) {
+      c->ParentSet((*env)->RootGet());
+    }
+    void ReattachR(Frames::Handle *) {
+      r->ParentSet((*env)->RootGet());
     }
   };
 
@@ -267,5 +281,20 @@ TEST(Obliterate, Event) {
     container.c = 0; // no way for it to realistically know that this has been obliterated; to be fixed someday with the destroyed event
   }
   
-  // add parent-change fakery
+    // Cute parent-change stuff
+  {
+    Container container(env);
+
+    container.c->ParentSet(container.l);
+
+    container.l->EventAttach(ObliterateTestBDHelper.Dive, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ReattachC));
+    container.c->EventAttach(ObliterateTestBDHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateL));
+    container.l->EventAttach(ObliterateTestBDHelper.Bubble, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateR));  // This will still be executed because the frame still exists and the bubble path is set at event initiation
+
+    container.c->EventTrigger(ObliterateTestBDHelper);
+
+    TestSnapshot(env);
+
+    container.c = 0; // no way for it to realistically know that this has been obliterated; to be fixed someday with the destroyed event
+  }
 }
