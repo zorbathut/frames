@@ -1,0 +1,19 @@
+alpha: Begin log
+Event trigger
+alpha: Event EventTestHelper on Root.f
+Event dynlog
+alpha: Event EventTestHelper on Root.f
+Removing
+Selfremoving
+alpha: Event EventTestHelper on Root.f
+Event trigger
+alpha: Event EventTestHelper on Root.f
+alpha: Event EventTestHelper on Root.f
+Removing
+alpha: Event EventTestHelper on Root.f
+Event trigger
+alpha: Event EventTestHelper on Root.f
+Event dynlog
+alpha: Event EventTestHelper on Root.f
+Event dynlog
+alpha: Event EventTestHelper on Root.f

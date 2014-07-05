@@ -132,7 +132,7 @@ TEST(Event, Creation) {
   TestCompare compare;
 
   struct Container : Frames::detail::Noncopyable {
-    Container(TestEnvironment &tenv, TestCompare *compare) : alog(compare, "alpha"), blog(compare, "beta") {
+    Container(TestEnvironment &tenv, TestCompare *compare) : compare(compare), alog(compare, "alpha"), blog(compare, "beta") {
       env = &tenv;
       f = Frames::Frame::Create((*env)->RootGet(), "f");
     }
@@ -141,12 +141,15 @@ TEST(Event, Creation) {
     }
 
     void MakeEvents(Frames::Handle *) {
+      compare->Append("Making");
       blog.Attach(f, EventTestHelper, 1);
       blog.Attach(f, EventTestHelper, 4);
     }
 
     Frames::Frame *f;
     TestEnvironment *env;
+
+    TestCompare *compare;
 
     VerbLog alog;
     VerbLog blog;
@@ -172,6 +175,80 @@ TEST(Event, Creation) {
   compare.Append("Event trigger");
 
   container.f->EventTrigger(EventTestHelper);
+
+  compare.Append("Event trigger");
+
+  container.f->EventTrigger(EventTestHelper);
+}
+
+// Dynamic event destruction mid-event
+// Here's the plan:
+// 0: print to A log
+// 1: print to dynlog
+// 2: print to A log
+// 3: destroy events at 1 and 5
+// 4: destroy self
+// 5: print to dynlog
+// 6: print to A log
+// Should output A dyn A A
+TEST(Event, Destruction) {
+  TestEnvironment env;
+  TestCompare compare;
+
+  struct Container : Frames::detail::Noncopyable {
+    Container(TestEnvironment &tenv, TestCompare *compare) : compare(compare), alog(compare, "alpha") {
+      env = &tenv;
+      f = Frames::Frame::Create((*env)->RootGet(), "f");
+    }
+    ~Container() {
+      if (f) f->Obliterate();
+    }
+
+    void DynLog(Frames::Handle *) {
+      compare->Append("Event dynlog");
+    }
+
+    void RemoveEvents(Frames::Handle *) {
+      compare->Append("Removing");
+      f->EventDetach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(this, &Container::DynLog), 1);
+      f->EventDetach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(this, &Container::DynLog), 5);
+    }
+
+    void DestroySelf(Frames::Handle *) {
+      compare->Append("Selfremoving");
+      f->EventDetach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(this, &Container::DestroySelf));
+    }
+
+    Frames::Frame *f;
+    TestEnvironment *env;
+
+    TestCompare *compare;
+
+    VerbLog alog;
+  } container(env, &compare);
+
+  container.alog.Attach(container.f, EventTestHelper, 0);
+  container.alog.Attach(container.f, EventTestHelper, 2);
+  container.alog.Attach(container.f, EventTestHelper, 6);
+
+  container.f->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::DynLog), 1);
+  container.f->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::DynLog), 5);
+
+  container.f->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::RemoveEvents), 3);
+  container.f->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::DestroySelf), 4);
+
+  compare.Append("Event trigger");
+
+  container.f->EventTrigger(EventTestHelper);
+
+  compare.Append("Event trigger");
+
+  container.f->EventTrigger(EventTestHelper);
+
+  // Strip the event remover, reattach the removed events
+  container.f->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::DynLog), 1);
+  container.f->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::DynLog), 5);
+  container.f->EventDetach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::RemoveEvents), 3);
 
   compare.Append("Event trigger");
 

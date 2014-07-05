@@ -3,12 +3,14 @@ beta: Begin log
 Event trigger
 alpha: Event EventTestHelper on Root.f
 alpha: Event EventTestHelper on Root.f
+Making
 beta: Event EventTestHelper on Root.f
 alpha: Event EventTestHelper on Root.f
 Event trigger
 alpha: Event EventTestHelper on Root.f
 beta: Event EventTestHelper on Root.f
 alpha: Event EventTestHelper on Root.f
+Making
 beta: Event EventTestHelper on Root.f
 beta: Event EventTestHelper on Root.f
 alpha: Event EventTestHelper on Root.f

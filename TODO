@@ -25,7 +25,7 @@
 === TESTING
 
 * Events
-  * Event destruction during
+  * Ensure that both adding and removing events works
   * Dive/bubble
     * Basics
     * Reparenting during
