@@ -70,6 +70,85 @@ TEST(Event, Basic) {
     leaf1->EventTrigger(Frames::Layout::Event::MouseWheel, 1);
     leaf2->EventTrigger(Frames::Layout::Event::MouseWheel, 1);
   }
+
+  // I guess we sort of tested attach implicity, didn't we
+  {
+    TestCompare compare("detach");
+    VerbLog log(&compare);
+
+    Frames::Frame *target = Frames::Frame::Create(env->RootGet(), "Target");
+
+    struct Container : Frames::detail::Noncopyable {
+      Container(TestCompare *compare) : compare(compare) { }
+
+      TestCompare *compare;
+
+      void Trigger1(Frames::Handle *handle) {
+        compare->Append("  Trigger 1");
+      }
+
+      void Trigger2(Frames::Handle *handle) {
+        compare->Append("  Trigger 2");
+      }
+
+      void Trigger3(Frames::Handle *handle) {
+        compare->Append("  Trigger 3");
+      }
+
+      void EBegin(Frames::Handle *handle) {
+        compare->Append("Event Begin");
+      }
+      void EEnd(Frames::Handle *handle) {
+        compare->Append("Event End");
+      }
+    } container(&compare);
+
+    // Put bookends so we can debug more easily
+    target->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::EBegin), -1000);
+    target->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::EEnd), 1000);
+
+    target->EventTrigger(EventTestHelper);
+
+    // Test basic attach/detach
+    target->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger1));
+    target->EventTrigger(EventTestHelper);
+    target->EventDetach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger1));
+    target->EventTrigger(EventTestHelper);
+
+    // Ensure it's detached from 0
+    target->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger1));
+    target->EventTrigger(EventTestHelper);
+    target->EventDetach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger1), 0);
+    target->EventTrigger(EventTestHelper);
+
+    // One explicit, two search; should remove them all
+    target->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger2), -1);
+    target->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger2), 2);
+    target->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger2), 3);
+
+    target->EventTrigger(EventTestHelper);
+
+    target->EventDetach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger2), 2);
+    target->EventDetach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger2));
+    target->EventDetach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger2));
+
+    target->EventTrigger(EventTestHelper);
+
+    // should leave 1 and 3
+    target->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger1), 20);
+    target->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger2), 22);
+    target->EventAttach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger3), 24);
+
+    target->EventTrigger(EventTestHelper);
+
+    target->EventDetach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger2));
+    target->EventDetach(EventTestHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::Trigger2));
+
+    target->EventTrigger(EventTestHelper);
+
+    // cleanup
+    target->Obliterate();
+  }
 }
 
 TEST(Event, Ordering) {

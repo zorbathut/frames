@@ -1,0 +1,29 @@
+Begin log
+Event Begin
+Event End
+Event Begin
+  Trigger 1
+Event End
+Event Begin
+Event End
+Event Begin
+  Trigger 1
+Event End
+Event Begin
+Event End
+Event Begin
+  Trigger 2
+  Trigger 2
+  Trigger 2
+Event End
+Event Begin
+Event End
+Event Begin
+  Trigger 1
+  Trigger 2
+  Trigger 3
+Event End
+Event Begin
+  Trigger 1
+  Trigger 3
+Event End

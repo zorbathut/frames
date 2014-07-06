@@ -25,9 +25,7 @@
 === TESTING
 
 * Events
-  * Ensure that both adding and removing events works
   * Dive/bubble
-    * Basics
     * Reparenting during
     * Obliteration during
   * Modify events, re-call the same event recursively!
