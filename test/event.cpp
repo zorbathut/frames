@@ -136,9 +136,6 @@ TEST(Event, Creation) {
       env = &tenv;
       f = Frames::Frame::Create((*env)->RootGet(), "f");
     }
-    ~Container() {
-      if (f) f->Obliterate();
-    }
 
     void MakeEvents(Frames::Handle *) {
       compare->Append("Making");
@@ -199,9 +196,6 @@ TEST(Event, Destruction) {
     Container(TestEnvironment &tenv, TestCompare *compare) : compare(compare), alog(compare, "alpha") {
       env = &tenv;
       f = Frames::Frame::Create((*env)->RootGet(), "f");
-    }
-    ~Container() {
-      if (f) f->Obliterate();
     }
 
     void DynLog(Frames::Handle *) {
