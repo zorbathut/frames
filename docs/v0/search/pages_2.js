@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['frame',['Frame',['../basicsframe.html',1,'']]]
+  ['events',['Events',['../basicsevents.html',1,'']]]
 ];

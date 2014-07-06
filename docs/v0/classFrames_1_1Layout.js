@@ -3,7 +3,7 @@ var classFrames_1_1Layout =
     [ "Event", "classFrames_1_1Layout_1_1Event.html", null ],
     [ "PinAxis", "structFrames_1_1Layout_1_1PinAxis.html", "structFrames_1_1Layout_1_1PinAxis" ],
     [ "PinPoint", "structFrames_1_1Layout_1_1PinPoint.html", "structFrames_1_1Layout_1_1PinPoint" ],
-    [ "ChildrenList", "classFrames_1_1Layout.html#a5e699db0df98988e1fd20fb9b8a1b312", null ],
+    [ "ChildrenList", "classFrames_1_1Layout.html#a1a63c300f5c7646448e2031c6922ad4e", null ],
     [ "InputMode", "classFrames_1_1Layout.html#aa5f4821bc0cffe309fed2ce61a75923c", [
       [ "IM_NONE", "classFrames_1_1Layout.html#aa5f4821bc0cffe309fed2ce61a75923ca813c8117a8a79dfa910157e608cd4964", null ],
       [ "IM_ALL", "classFrames_1_1Layout.html#aa5f4821bc0cffe309fed2ce61a75923ca27fbef0b7578a8bc86425027de52122c", null ],
@@ -51,6 +51,8 @@ var classFrames_1_1Layout =
     [ "WidthGet", "classFrames_1_1Layout.html#ad40ca5139adf7df85121ce870ee8eae4", null ],
     [ "Cast", "classFrames_1_1Layout.html#aa2e0d6a8b92ab7b45d9bac91c55a2288", null ],
     [ "Cast", "classFrames_1_1Layout.html#a199929421c877a555974a26cd8e1d30f", null ],
+    [ "detail::FrameOrderSorter", "classFrames_1_1Layout.html#a95b63f215dddb92edb31bf51f3ff7470", null ],
+    [ "detail::LayoutIdSorter", "classFrames_1_1Layout.html#a63c7b4869857e7ef47d7ba500d879a99", null ],
     [ "Environment", "classFrames_1_1Layout.html#ad07f4de926e4e68b49b17ab4d13369d3", null ],
     [ "Frame", "classFrames_1_1Layout.html#aee3a66b0ddf3b769f015c89b610db0c7", null ],
     [ "Mask", "classFrames_1_1Layout.html#a3201b8c895430d7d98ddfb7bc28ac472", null ]

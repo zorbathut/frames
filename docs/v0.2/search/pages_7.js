@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['proportional_20pins',['Proportional pins',['../advproportional.html',1,'']]]
+  ['more_20setup',['More Setup',['../cppsetup.html',1,'']]]
 ];

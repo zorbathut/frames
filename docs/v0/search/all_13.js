@@ -2,6 +2,7 @@ var searchData=
 [
   ['valid',['valid',['../structFrames_1_1Layout_1_1PinAxis.html#aa2e9d75506f0f62d80058448fb7582a0',1,'Frames::Layout::PinAxis::valid()'],['../structFrames_1_1Layout_1_1PinPoint.html#a9e5aea7ed57cbb34c94b4d5612b338a5',1,'Frames::Layout::PinPoint::valid()']]],
   ['vector',['Vector',['../structFrames_1_1Vector.html',1,'Frames']]],
+  ['vector',['Vector',['../structFrames_1_1Vector.html#a769e2bab407f3da47487a3ca7de8ec88',1,'Frames::Vector::Vector()'],['../structFrames_1_1Vector.html#a25add93c4a98dc0e2f13b3cd6e0b4376',1,'Frames::Vector::Vector(float x, float y)']]],
   ['verb',['Verb',['../classFrames_1_1Verb.html',1,'Frames']]],
   ['verb',['Verb',['../classFrames_1_1Verb.html#afc9a8ebc7d35a4a86b02792d34cc4007',1,'Frames::Verb']]],
   ['verb_3c_20void_28_29_20_3e',['Verb&lt; void() &gt;',['../classFrames_1_1Verb.html',1,'Frames']]],

@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="basicsintro.html"><span>Basics</span></a></li>
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="reffiles.html"><span>Reference&#160;files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -121,10 +122,12 @@ Inheritance diagram for Frames::Configuration::Performance:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa8594e33fe94e7034519c5178f4b359d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa8594e33fe94e7034519c5178f4b359d"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>Pop</b> (void *)</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Performance.html#aa8594e33fe94e7034519c5178f4b359d">Pop</a> (void *)</td></tr>
+<tr class="memdesc:aa8594e33fe94e7034519c5178f4b359d"><td class="mdescLeft">&#160;</td><td class="mdescRight">End a profiling block. <br /></td></tr>
 <tr class="separator:aa8594e33fe94e7034519c5178f4b359d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a450f11b32a7c58cf1ce827bf26bd7773"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a450f11b32a7c58cf1ce827bf26bd7773"></a>
-virtual void *&#160;</td><td class="memItemRight" valign="bottom"><b>Push</b> (const char *name, <a class="el" href="classFrames_1_1Color.html">Color</a> color)</td></tr>
+virtual void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Performance.html#a450f11b32a7c58cf1ce827bf26bd7773">Push</a> (const char *name, <a class="el" href="classFrames_1_1Color.html">Color</a> color)</td></tr>
+<tr class="memdesc:a450f11b32a7c58cf1ce827bf26bd7773"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start a profiling block. <br /></td></tr>
 <tr class="separator:a450f11b32a7c58cf1ce827bf26bd7773"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classFrames_1_1Refcountable"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classFrames_1_1Refcountable')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classFrames_1_1Refcountable.html">Frames::Refcountable&lt; Performance &gt;</a></td></tr>
 <tr class="memitem:af47bb5a9bb57523065d3e4c009a7c91d inherit pub_methods_classFrames_1_1Refcountable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Refcountable.html#af47bb5a9bb57523065d3e4c009a7c91d">RefAdd</a> ()</td></tr>
@@ -136,7 +139,7 @@ virtual void *&#160;</td><td class="memItemRight" valign="bottom"><b>Push</b> (c
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Hooks for a performance monitoring system. </p>
-<p>Push() will be called with a human-readable name and a color ID code intended for use in visual profilers. It may return an opaque void* that will be provided in Pop().</p>
+<p><a class="el" href="classFrames_1_1Configuration_1_1Performance.html#a450f11b32a7c58cf1ce827bf26bd7773" title="Start a profiling block. ">Push()</a> will be called with a human-readable name and a color ID code intended for use in visual profilers. It may return an opaque void* that will be provided in <a class="el" href="classFrames_1_1Configuration_1_1Performance.html#aa8594e33fe94e7034519c5178f4b359d" title="End a profiling block. ">Pop()</a>.</p>
 <p>It is guaranteed that Push/Pop calls will be done in LIFO order.</p>
 <p>Default behavior is a no-op. </p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
@@ -148,7 +151,7 @@ virtual void *&#160;</td><td class="memItemRight" valign="bottom"><b>Push</b> (c
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>Frames</b></li><li class="navelem"><b>Configuration</b></li><li class="navelem"><a class="el" href="classFrames_1_1Configuration_1_1Performance.html">Performance</a></li>
-    <li class="footer">Generated on Thu Jun 12 2014 10:26:01 for Frames by
+    <li class="footer">Generated on Sun Jul 6 2014 09:04:14 for Frames by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

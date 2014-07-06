@@ -14,7 +14,7 @@ var searchData=
   ['sequence',['Sequence',['../classFrames_1_1Input_1_1Sequence.html',1,'Frames::Input']]],
   ['set',['Set',['../classFrames_1_1Configuration_1_1Clipboard.html#a4c71f682a94d2a3b1d093b3f318b1029',1,'Frames::Configuration::Clipboard']]],
   ['shift',['shift',['../structFrames_1_1Input_1_1Meta.html#a64b48e6bda99f287795f937f61ab68be',1,'Frames::Input::Meta']]],
-  ['size',['Size',['../classFrames_1_1Layout_1_1Event.html#aa28d16cc2e2bf340bb7b978e2b093235',1,'Frames::Layout::Event']]],
+  ['size',['Size',['../classFrames_1_1Layout_1_1Event.html#a47dbe6cb3f0159af15102267e99e7623',1,'Frames::Layout::Event']]],
   ['sizeclear',['SizeClear',['../classFrames_1_1Frame.html#a784c616045932180ebc7c7f877d94585',1,'Frames::Frame']]],
   ['sizedefaultset',['SizeDefaultSet',['../classFrames_1_1Layout.html#a7763d4c76acfba1324a9c498874c7681',1,'Frames::Layout']]],
   ['sizeget',['SizeGet',['../classFrames_1_1Layout.html#afd5e1880e83e4a3ac7e3044f2106aaa3',1,'Frames::Layout::SizeGet()'],['../classFrames_1_1Text.html#a201a9982676508828b8cfba128a7792a',1,'Frames::Text::SizeGet()']]],

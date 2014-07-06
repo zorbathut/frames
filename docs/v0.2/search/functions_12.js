@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['vector',['Vector',['../structFrames_1_1Vector.html#a769e2bab407f3da47487a3ca7de8ec88',1,'Frames::Vector::Vector()'],['../structFrames_1_1Vector.html#a25add93c4a98dc0e2f13b3cd6e0b4376',1,'Frames::Vector::Vector(float x, float y)']]],
   ['verb',['Verb',['../classFrames_1_1Verb.html#afc9a8ebc7d35a4a86b02792d34cc4007',1,'Frames::Verb']]],
   ['verbcontextget',['VerbContextGet',['../classFrames_1_1Handle.html#ab8d81dae83685a904cc3192e4055c3cb',1,'Frames::Handle']]],
   ['verbget',['VerbGet',['../classFrames_1_1Handle.html#af7f8dfaf26585f2bacd308c1cbc49bb3',1,'Frames::Handle']]],

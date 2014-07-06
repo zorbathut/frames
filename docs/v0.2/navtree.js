@@ -3,13 +3,14 @@ var NAVTREE =
   [ "Frames", "index.html", [
     [ "Introduction", "index.html", null ],
     [ "Getting Started", "gettingstarted.html", [
-      [ "C++ integration", "@ref cppintro", [
-        [ "Installation", "@ref cppinstall", null ],
-        [ "Hello, World", "@ref cpphelloworld", null ]
+      [ "C++ project integration", "cppintro.html", [
+        [ "Installation", "cppinstall.html", null ],
+        [ "Hello, World", "cpphelloworld.html", null ],
+        [ "Further setup", "cppsetup.html", null ]
       ] ],
-      [ "Unreal Engine 4 integration", "@ref ue4intro", [
-        [ "Installation", "@ref ue4install", null ],
-        [ "Hello, World", "@ref ue4helloworld", null ]
+      [ "Building", "buildingintro.html", [
+        [ "From source package", "buildingsource.html", null ],
+        [ "From source repository", "buildingrepo.html", null ]
       ] ]
     ] ],
     [ "Basics", "basicsintro.html", [
@@ -27,14 +28,18 @@ var NAVTREE =
       [ "Events", "basicsevents.html", null ]
     ] ],
     [ "Class List", "annotated.html", "annotated" ],
-    [ "Class Index", "classes.html", null ]
+    [ "Class Index", "classes.html", null ],
+    [ "Reference files", "reffiles.html", [
+      [ "LINKING", "linking.html", null ],
+      [ "LICENSES", "licenses.html", null ]
+    ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
 ".html",
-"classFrames_1_1Layout.html#ac12e34aac8288edcde84fc746e82a5b8"
+"classFrames_1_1Layout.html#ac077f8f88baaa07a61018920da2df3da"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
