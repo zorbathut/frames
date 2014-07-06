@@ -21,8 +21,8 @@
 #define FRAMES_COLOR
 
 namespace Frames {
-  /// Stores a color value.
-  /** Stores a standard RGBA color value with transparency. Each value is on a 0-to-1 scale, where 1 is fully lit or fully opaque. */
+  /// Represents an RGBA color value.
+  /** Each value is on a 0-to-1 scale, where 1 is fully lit or fully opaque. */
   class Color {
   public:
     Color() : r(0), g(0), b(0), a(1) { };

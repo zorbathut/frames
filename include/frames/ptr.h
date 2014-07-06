@@ -23,7 +23,7 @@
 #include "frames/noncopyable.h"
 
 namespace Frames {
-  /// Basic refcounting pointer.
+  /// Basic refcounted pointer.
   /** Requires that T conform to the interface of Refcountable<T>. The easiest way to accomplish this is to inherit T from Refcountable<T>. */
   template <typename T> class Ptr {
   public:
@@ -67,7 +67,7 @@ namespace Frames {
     T *p;
   };
 
-  /// Provides a pre-built intrusive refcount class for compatibility with Ptr.
+  /// Provides a pre-built intrusive refcounting interface for compatibility with Ptr.
   /** For efficiency, this class relies on the Curiously Recurring Template Pattern, and therefore must be specialized on the class that is inheriting from it.
   
   Example:

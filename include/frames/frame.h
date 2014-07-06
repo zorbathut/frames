@@ -24,7 +24,7 @@
 #include "frames/layout.h"
 
 namespace Frames {
-  /// The basic component of Frames UIs.
+  /// Basic component of Frames UIs, dynamically createable and movable.
   /** The Frame is the fundamental building block of the UI. It represents a rectangular area in space, aligned along the Scene axes. A Frame has exactly one parent and any number of children, each of which are also Frames.
 
   Frame itself is generally invisible, although BackgroundSet is provided for prototyping and debug output. If Frame is set to non-visible, all of its children will also be hidden. */

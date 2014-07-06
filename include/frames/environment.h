@@ -179,10 +179,10 @@ namespace Frames {
     /// Logs a string to the Logger's Debug path.
     void LogDebug(const std::string &log) { m_config.LoggerGet()->LogDebug(log); }
 
-    /// Does performance monitoring of scope blocks.
-    /** Monitoring is RAII-managed - merely create an Environment::Performance object with the appropriate scope, then its destructor will finish the performance block at the appropriate time.
+    /// RAII performance monitoring of scope blocks.
+    /** Monitors performance via Configuration::Performance. Create an Environment::Performance object with the appropriate scope, then its destructor will finish the performance block at the appropriate time.
     
-    Be careful if using weird scope-manipulation techniques - Environment::Performance objects must be strictly LIFO. */
+    Be careful if using scope-manipulation techniques like longjmps, fibers, or coroutines - Environment::Performance objects must be strictly LIFO. */
     class Performance {
     public:
       /// Begins a new performance block.

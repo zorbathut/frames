@@ -63,7 +63,7 @@ namespace Frames {
     virtual const char *TypeGet() const { return TypeStaticGet(); } \
   private:
 
-  /// Base class containing location and layout information for all Frames elements.
+  /// Location and layout interface, contained in all Frames elements.
   /** A Layout includes all information needed to calculate and update the position and ordering of an element in an Environment. The vast majority of all Layouts are actually \ref Frame "Frames"; the only exception is the Root layout.
   
   Layout includes all update-related functions as protected members, most of which are exposed by Frame.*/
@@ -269,7 +269,7 @@ namespace Frames {
 
     // --------- Layout accessors
 
-    /// Contains the information required to describe a single-axis Pin.
+    /// Represents a single-axis Pin.
     struct PinAxis {
       /// Constructs a default non-valid pin.
       PinAxis() : valid(false), target(0), point(0), offset(0) {}
@@ -288,7 +288,7 @@ namespace Frames {
     /// Returns information on a Pin.
     PinAxis PinGet(Axis axis, float mypt) const;
 
-    /// Contains the information required to describe a two-axis Pin.
+    /// Represents a two-axis Pin.
     struct PinPoint {
       /// Constructs a default non-valid pin.
       PinPoint() : valid(false), target(0), point(Vector(Nil, Nil)), offset(Vector(Nil, Nil)) {}

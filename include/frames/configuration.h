@@ -37,7 +37,7 @@ namespace Frames {
   }
 
   namespace Configuration {
-    /// Debug logging functionality.
+    /// Interface for debug logging functionality.
     /** Default behavior outputs to the Debug Log on Windows. */
     class Logger : public Refcountable<Logger> {
     public:
@@ -56,7 +56,7 @@ namespace Frames {
     /// Refcounted Logger typedef.
     typedef Ptr<Logger> LoggerPtr;
 
-    /// Provides clipboard access for copy-paste behavior on Text frames.
+    /// Interface for clipboard access.
     /** Default behavior uses the standard Windows global clipboard. */
     class Clipboard : public Refcountable<Clipboard> {
     public:
@@ -71,7 +71,7 @@ namespace Frames {
     /// Refcounted Clipboard typedef.
     typedef Ptr<Clipboard> ClipboardPtr;
 
-    /// Hooks for a performance monitoring system.
+    /// Interface for a performance monitoring system.
     /** Push() will be called with a human-readable name and a color ID code intended for use in visual profilers. It may return an opaque void* that will be provided in Pop().
 
     It is guaranteed that Push/Pop calls will be done in LIFO order.
@@ -90,7 +90,7 @@ namespace Frames {
     /// Refcounted Performance typedef.
     typedef Ptr<Performance> PerformancePtr;
 
-    /// Creates a Texture from a \ref basicsresources "resource ID".
+    /// Interface to create a Texture from a \ref basicsresources "resource ID".
     /** See \ref basicsresources "Resources" for more detail.
 
     Default behavior is to use the configuration StreamFromId and the configuration TextureFromStream in order to produce the result. */
@@ -104,7 +104,7 @@ namespace Frames {
     /// Refcounted TextureFromId typedef.
     typedef Ptr<TextureFromId> TextureFromIdPtr;
 
-    /// Creates a Stream from a \ref basicsresources "resource ID".
+    /// Interface to create a Stream from a \ref basicsresources "resource ID".
     /** See \ref basicsresources "Resources" for more detail.
 
     Default behavior is to use the configuration PathFromId to create a path, then to create a StreamFile given that path. */
@@ -118,7 +118,7 @@ namespace Frames {
     /// Refcounted StreamFromId typedef.
     typedef Ptr<StreamFromId> StreamFromIdPtr;
 
-    /// Creates a path from a \ref basicsresources "resource ID".
+    /// Interface to create a path from a \ref basicsresources "resource ID".
     /** See \ref basicsresources "Resources" for more detail.
 
     Default behavior is to return to given path verbatim. */
@@ -132,7 +132,7 @@ namespace Frames {
     /// Refcounted PathFromId typedef.
     typedef Ptr<PathFromId> PathFromIdPtr;
 
-    /// Creates a Texture from a Stream.
+    /// Interface to create a Texture from a Stream.
     /** See \ref basicsresources "Resources" for more detail.
 
     Default behavior is to consult each TextureLoader in turn and use the first one that accepts the given Stream. */
@@ -146,7 +146,7 @@ namespace Frames {
     /// Refcounted TextureFromStream typedef.
     typedef Ptr<TextureFromStream> TextureFromStreamPtr;
 
-    /// Creates a Renderer.
+    /// Interface to create a Renderer.
     /** Create is called once during the initialization of each Frames environment.
     
     Renderer has no default implementation. It must be set manually. */
@@ -160,7 +160,7 @@ namespace Frames {
     /// Refcounted Renderer typedef.
     typedef Ptr<Renderer> RendererPtr;
 
-    /// All configuration data that needs to be provided for a functioning Environment.
+    /// Configuration data associated with an Environment.
     /** Every Environment contains a Configuration. If a Configuration isn't provided when the Environment is constructed, a default Configuration will be built.
 
     Most Configuration settings are designed as a class that can be inherited from. The default behavior is available by calling the base class's members. */
@@ -228,7 +228,7 @@ namespace Frames {
       std::string m_fontDefaultId;
     };
 
-    /// Configuration data that cannot be associated with a single Environment.
+    /// Configuration data not associated with an Environment.
     /** Some Configuration elements don't have a valid Environment attached. This class allows you to configure log handlers for errors and debug messages without a Configuration available. */
     class Global {
     public:

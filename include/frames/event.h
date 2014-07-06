@@ -29,7 +29,7 @@ namespace Frames {
   
   template <typename Parameters> class VerbPackage;
 
-  /// Base class for type-specific Verbs.
+  /// Represents a type of event.
   /** This contains all members of Verb that do not require information about the verb parameter types.
 
   See Verb for detailed information. */
@@ -55,8 +55,8 @@ namespace Frames {
     const VerbBase *m_bubble;
   };
 
-  /// Event handle for storing metainformation and providing callbacks.
-  /** A Handle is provided for every event handler call. This handle has a limited lifetime - it is available only until the termination of that event call.*/
+  /// Passed along with every event call for storing event metainformation and providing callbacks.
+  /** This handle has a strictly limited lifetime - it is available only until the called function returns.*/
   class Handle : detail::Noncopyable {
   public:
     /// Returns the Layout this event refers to.
@@ -93,7 +93,7 @@ namespace Frames {
     const VerbBase *m_verbContext;
   };
 
-  /// Represents a type of event.
+  /// Represents a type of event with specific parameter typing.
   /** A Verb represents an event category that can be called on a Layout. */
   template <typename Parameters> class Verb : public VerbBase {
   private:
@@ -111,7 +111,7 @@ namespace Frames {
     typedef Delegate<typename detail::FunctionPrefix<Handle*, Parameters>::T> TypeDelegate;
   };
 
-  /// Represents a type of event with Sink and Bubble behavior.
+  /// Represents a type of event with specific parameter typing and Dive/Bubble behavior.
   template <typename Parameters> class VerbPackage : public Verb<Parameters> {
   public:
     /// Constructor for VerbPackages.
