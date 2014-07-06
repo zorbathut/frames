@@ -26,14 +26,14 @@
 
 require "script/lib/util"
 
-do
+--[[ do -- This is a nice idea, but doesn't work properly with cygwin's somewhat flaky git behavior, which is what I'm using for reasons that are becoming increasingly unclear to me
   local gitfil = io.popen("git status --porcelain", "r")
   local output = gitfil:read("*all")
   if #output ~= 0 then
     print("Error - git repo contains data that has not been committed!")
     assert(false)
   end
-end
+end]]
 
 local ver = ...
 
