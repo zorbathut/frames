@@ -4,7 +4,7 @@
 
 <h2>Logging</h2>
 
-Frames has a built-in logging system to report errors and debug information. It is strongly recommended that errors are put somewhere that developers will notice, up to and including big red text directly on the screen. After reporting, Frames will attempt to recover from any errors; if the report is never seen, this can make debugging extremely confusing.
+Frames has a built-in logging system to report errors and debug information. It is strongly recommended that errors are put somewhere that developers will notice, up to and including big red text directly on the screen and/or modal dialog warnings. After reporting, Frames will attempt to recover from any errors; if the report is never seen, this can make debugging extremely confusing.
 
 There are two locations that debug reports can come from. Each Environment has its own logging configuration, plus there's a global log for events that are not associated with an Environment. It's very easy to set these both up at the same time. Here's replacement code for the original Environment::Create() call, using fictional LOG() and PrintOnScreen() functions - reimplement MyLogger's functions as is appropriate for your project.
 
@@ -39,7 +39,7 @@ All classes stored in Frames::Configuration::Global or Frames::Configuration::Lo
 
 <h2>Resources</h2>
 
-You may want to hook Frames into your resource loading system. If you're using loose files relative to teh working directory, you won't need to make any changes. If you're reading from a dedicated data directory or from some sort of archive file, you'll want to look into the \ref basicsresources "Resources" documentation. Note that Frames does not currently provide support for asynchronous loading - if this is necessary for your project, please contact us.
+You may want to hook Frames into your resource loading system. If you're using loose files relative to the working directory, you won't need to make any changes. If you're reading from a dedicated data directory or from some sort of archive file, you'll want to look into the \ref basicsresources "Resources" documentation. Note that Frames does not currently provide support for asynchronous loading - if this is necessary for your project, please contact us.
 
 ----
 
@@ -65,7 +65,7 @@ Once you've done this, you should be able to test text rendering, as well as som
 Frames::Frame *backdrop = Frames::Frame::Create(environment->RootGet(), "Backdrop");
 Frames::Text *helloworld = Frames::Text::Create(backdrop, "Hello World");
 
-// Set the backdrop to render in blue, then ensure it follows helloworld
+// Set the backdrop to render in blue, then attach it to helloworld's position, extending slightly beyond its bounds
 backdrop->BackgroundSet(Frames::Color(0.f, 0.f, 1.f));
 backdrop->PinSet(Frames::TOPLEFT, helloworld, Frames::TOPLEFT, -5, -5);
 backdrop->PinSet(Frames::BOTTOMRIGHT, helloworld, Frames::BOTTOMRIGHT, 5, 5);

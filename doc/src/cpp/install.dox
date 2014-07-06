@@ -6,7 +6,7 @@ Download the latest package from <a href="http://www.framesui.com/">www.framesui
 
 <h2>Third-party libraries and include paths</h2>
 
-Frames relies on a variety of open-source libraries, some of which are commonly used in the game industry. Frames contains its libraries within the "deps" directory and has information on include directories linking requirements in the \ref linking "LINKING" file. If your project uses a different version of these libraries than the default installation of Frames does, you'll want to \ref buildingsource "rebuild Frames to reference your library versions".
+Frames relies on a variety of open-source libraries, some of which are commonly used in the game industry. Frames contains its libraries within the "deps" directory and has information on include directories and linking requirements in the \ref linking "LINKING" file. If your project uses a different version of these libraries than the default build of Frames does, you'll want to \ref buildingsource "rebuild Frames to reference your library versions".
 
 ----
 

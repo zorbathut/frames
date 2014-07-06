@@ -1,6 +1,6 @@
 /** \page gettingstarted Getting Started
 
-Everything you need in order to use Frames is packaged together in a single file and available from <a href="http://www.framesui.com/">www.framesui.com</a>. Download this file to get started. If you're able to use the provided third-party libraries, download this file, then continue with \ref cppinstall "C++ installation".
+Everything you need in order to use Frames is packaged together in a single file and available from <a href="http://www.framesui.com/">www.framesui.com</a>. Download this file to get started. If you're able to use the provided third-party libraries, continue with \ref cppinstall "C++ installation".
 
 If your project already includes different versions of the various third-party libraries, you should still start by downloading that file, but you'll have to \ref buildingsource "build from source package".
 

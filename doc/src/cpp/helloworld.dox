@@ -1,6 +1,6 @@
 /** \page cpphelloworld C++ Hello, World
 
-Somewhere in your code, create a variable that will fall out of scope before your rendering context is torn down.
+Somewhere in your code, create a Frames::Environment that will fall out of scope before your rendering context is torn down. When the last reference to a Frames::Environment falls out of scope, it will automatically clean up the environment and all associated frames.
 
 @code{.cpp}
 #include <frames/environment.h>
