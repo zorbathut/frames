@@ -47,7 +47,7 @@ namespace Frames {
     /** See \ref basicsresources "Resources" for details on Frames's resource system. */
     void FontSet(const std::string &id);
     /// Gets the ID of the font used to render text.
-    const std::string &GetFont() const { return m_font; }
+    const std::string &FontGet() const { return m_font; }
 
     /// Sets the size of the font.
     /** This is currently in arbitrary undefined units - this will change at some point in the future. */
@@ -68,10 +68,10 @@ namespace Frames {
     
     /// List of interactivity settings allowed.
     enum InteractivityMode {
-      INTERACTIVE_NONE, //< No interactivity at all.
-      INTERACTIVE_SELECT, //< Allows text selection with the mouse, plus copy to clipboard.
-      INTERACTIVE_CURSOR, //< Allows a cursor, text selection with mouse and keyboard, and copy to clipboard.
-      INTERACTIVE_EDIT, //< Allows full text editing with mouse and keyboard.
+      INTERACTIVE_NONE, ///< No interactivity at all.
+      INTERACTIVE_SELECT, ///< Allows text selection with the mouse, plus copy to clipboard.
+      INTERACTIVE_CURSOR, ///< Allows a cursor, text selection with mouse and keyboard, and copy to clipboard.
+      INTERACTIVE_EDIT, ///< Allows full text editing with mouse and keyboard.
     };
     /// Sets the interactivity mode.
     void InteractiveSet(InteractivityMode interactive);
@@ -79,8 +79,9 @@ namespace Frames {
     InteractivityMode InteractiveGet() const { return m_interactive; }
 
     /// Sets the cursor position.
-    /** Cursor position is done in terms of the character that the cursor is placed directly before.
+    /** Cursor position is done in terms of the byte that the cursor is placed directly before.
     0 places the cursor at the beginning of the textfield; TextGet().size() places the cursor at the end of the textfield.
+    Placing the character within a multibyte code point is undefined behavior.
     
     Also scrolls the textbox as appropriate to keep the cursor in view. */
     void CursorSet(int position);

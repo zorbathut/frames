@@ -38,9 +38,9 @@ namespace Frames {
 
     /// Pixel format. Not all formats make sense with all Types.
     enum Format {
-      FORMAT_RGBA_8, //< Color data with alpha channel. 8 bits per channel, 32 bits per pixel. Laid out as RGBA.
-      FORMAT_RGB_8, //< Color data, no alpha channel. 8 bits per channel, 24 bits per pixel. Laid out as RGB. Packed. Will be converted to RGBA for actual textures. Probably slower than FORMAT_RGBA.
-      FORMAT_R_8, //< Red only. 8 bits per channel, 8 bits per pixel.
+      FORMAT_RGBA_8, ///< Color data with alpha channel. 8 bits per channel, 32 bits per pixel. Laid out as RGBA.
+      FORMAT_RGB_8, ///< Color data, no alpha channel. 8 bits per channel, 24 bits per pixel. Laid out as RGB. Packed. Will be converted to RGBA for actual textures. Probably slower than FORMAT_RGBA.
+      FORMAT_R_8, ///< Red only. 8 bits per channel, 8 bits per pixel.
       FORMAT_COUNT,
     };
 
@@ -53,17 +53,12 @@ namespace Frames {
     /** If takeOwnership is true, the Texture will automatically deallocate data using the Environment's allocator. */
     static TexturePtr CreateRawUnmanaged(Environment *env, int width, int height, Format format, unsigned char *data, int stride, bool takeOwnership = false);
 
-    /// Creates a NIL Texture.
-    /** This is not valid to pass to any function expecting a Texture. */
-    Texture();
-    ~Texture();
-
     // ---- Generic data
 
     /// Texture type.
     enum Type {
-      NIL, //< Invalid texture used as a default value.
-      RAW, //< Raw byte array containing decompressed image data.
+      NIL, ///< Invalid texture used as a default value.
+      RAW, ///< Raw byte array containing decompressed image data in scanline order.
     };
     /// Returns the Type.
     Type TypeGet() const { return m_type; }
@@ -78,13 +73,15 @@ namespace Frames {
     // ---- Raw accessors
 
     /// Returns the raw data.
-    /** Not valid if this Texture type is not RAW. */
+    /** Undefined results if this Texture type is not RAW. */
     unsigned char *RawDataGet() { return m_raw_data; }
     /// Returns the raw data.
-    /** Not valid if this Texture type is not RAW. */
+    /** Undefined results if this Texture type is not RAW. */
     const unsigned char *RawDataGet() const { return m_raw_data; }
     /// Returns the raw data's stride.
-    /** Stride is the memory offset, in bytes, between rows of the texture. On densely-packed textures this will be WidthGet() * RawBPPGet(FormatGet()). It may be larger on textures with row padding. */
+    /** Stride is the memory offset, in bytes, between rows of the texture. On densely-packed textures this will be WidthGet() * RawBPPGet(FormatGet()). It may be larger on textures with row padding.
+    
+    Undefined results if this Texture type is not RAW. */
     int RawStrideGet() const { return m_raw_stride; }
 
     // ---- Helper functions
@@ -93,6 +90,11 @@ namespace Frames {
     static int RawBPPGet(Format format);
     
   private:
+    friend class Refcountable<Texture>;
+
+    Texture();
+    ~Texture();
+
     Type m_type;
 
     Format m_format;

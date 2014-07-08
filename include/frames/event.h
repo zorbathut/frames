@@ -33,26 +33,26 @@ namespace Frames {
   /** This contains all members of Verb that do not require information about the verb parameter types.
 
   See Verb for detailed information. */
-  class VerbBase : detail::Noncopyable {
+  class VerbGeneric : detail::Noncopyable {
   public:
     /// Returns human-readable name for this Verb.
     const char *NameGet() const { return m_name; }
 
-    /// Gets this verb's Dive version.
-    /** Guaranteed to return null if this verb is a Dive or Bubble. */
-    const VerbBase *DiveGet() const { return m_dive; }
-    /// Gets this verb's Bubble version.
-    /** Guaranteed to return null if this verb is a Dive or Bubble. */
-    const VerbBase *BubbleGet() const { return m_bubble; }
+    /// Gets this verb's Dive variant.
+    /** Returns null if this verb is a Dive or Bubble. */
+    const VerbGeneric *DiveGet() const { return m_dive; }
+    /// Gets this verb's Bubble variant.
+    /** Returns null if this verb is a Dive or Bubble. */
+    const VerbGeneric *BubbleGet() const { return m_bubble; }
 
   private:
     template <typename Parameters> friend class Verb;
-    VerbBase(const char *name) : m_name(name), m_dive(0), m_bubble(0) {};
-    VerbBase(const char *name, const VerbBase *dive, const VerbBase *bubble) : m_name(name), m_dive(dive), m_bubble(bubble) {};
+    VerbGeneric(const char *name) : m_name(name), m_dive(0), m_bubble(0) {};
+    VerbGeneric(const char *name, const VerbGeneric *dive, const VerbGeneric *bubble) : m_name(name), m_dive(dive), m_bubble(bubble) {};
 
     const char *m_name;
-    const VerbBase *m_dive;
-    const VerbBase *m_bubble;
+    const VerbGeneric *m_dive;
+    const VerbGeneric *m_bubble;
   };
 
   /// Passed along with every event call for storing event metainformation and providing callbacks.
@@ -65,7 +65,7 @@ namespace Frames {
 
     /// Returns the Verb this event refers to.
     /** If this is part of a Dive or Bubble series, this will return the specific Verb that is being called. */
-    const VerbBase *VerbGet() const { return m_verb; }
+    const VerbGeneric *VerbGet() const { return m_verb; }
 
     /// Returns the Layout this event is currently traversing.
     /** If this is not part of a Dive or Bubble series, this will be equivalent to TargetGet. */
@@ -73,37 +73,37 @@ namespace Frames {
 
     /// Returns the Verb this event is currently traversing.
     /** If this is not part of a Dive or Bubble series, this will be equivalent to VerbGet. */
-    const VerbBase *VerbContextGet() const { return m_verbContext; }
+    const VerbGeneric *VerbContextGet() const { return m_verbContext; }
     
   private:
     friend class Layout;
 
-    Handle(Layout *target, const VerbBase *verb) : m_target(target), m_verb(verb), m_targetContext(target), m_verbContext(verb) {}
+    Handle(Layout *target, const VerbGeneric *verb) : m_target(target), m_verb(verb), m_targetContext(target), m_verbContext(verb) {}
     ~Handle() {} // TODO - clean up handles in Lua?
 
-    void SetContext(Layout *target, const VerbBase *verb) {
+    void SetContext(Layout *target, const VerbGeneric *verb) {
       m_targetContext = target;
       m_verbContext = verb;
     }
 
     Layout *m_target;
-    const VerbBase *m_verb;
+    const VerbGeneric *m_verb;
 
     Layout *m_targetContext;
-    const VerbBase *m_verbContext;
+    const VerbGeneric *m_verbContext;
   };
 
   /// Represents a type of event with specific parameter typing.
   /** A Verb represents an event category that can be called on a Layout. */
-  template <typename Parameters> class Verb : public VerbBase {
+  template <typename Parameters> class Verb : public VerbGeneric {
   private:
     friend class VerbPackage<Parameters>;
-    Verb(const char *name, const Verb<Parameters> *dive, const Verb<Parameters> *bubble) : VerbBase(name, dive, bubble) { };
+    Verb(const char *name, const Verb<Parameters> *dive, const Verb<Parameters> *bubble) : VerbGeneric(name, dive, bubble) { };
 
   public:
     /// Constructor for standalone Verbs.
     /** Do not call manually - at the moment, it is required that you use FRAMES_VERB_DECLARE/FRAMES_VERB_DEFINE. */
-    Verb(const char *name) : VerbBase(name) { };
+    Verb(const char *name) : VerbGeneric(name) { };
     
     /// Convenience typedef for the function type which is needed to attach to this Verb.
     typedef typename detail::FunctionPrefix<Handle*, Parameters>::T TypeHandler;

@@ -227,11 +227,11 @@ namespace Frames {
     };
     
     typedef std::multiset<Callback, Callback::Sorter> EventMultiset;
-    typedef std::map<const VerbBase *, std::multiset<Callback, Callback::Sorter> > EventLookup;
+    typedef std::map<const VerbGeneric *, std::multiset<Callback, Callback::Sorter> > EventLookup;
     
     class CallbackIterator : detail::Noncopyable {
     public:
-      CallbackIterator(Layout *target, const VerbBase *event);
+      CallbackIterator(Layout *target, const VerbGeneric *event);
       ~CallbackIterator();
       
       void Setup(Handle *handle) {
@@ -246,7 +246,7 @@ namespace Frames {
       void IndexNext();
       
       Layout *LayoutGet();
-      const VerbBase *VerbGet();
+      const VerbGeneric *VerbGet();
       
       enum State { STATE_DIVE, STATE_MAIN, STATE_BUBBLE, STATE_COMPLETE };
       State m_state;
@@ -255,7 +255,7 @@ namespace Frames {
       int m_diveIndex;
       
       Layout *m_target;
-      const VerbBase *m_event;
+      const VerbGeneric *m_event;
       
       EventMultiset::iterator m_current;
       EventMultiset::iterator m_last;
@@ -390,14 +390,14 @@ namespace Frames {
     template <typename P1> void EventTrigger(const Verb<void (P1)> &event, typename detail::MakeConstRef<P1>::T p1);
 
     /// Determines if a verb is hooked.
-    bool EventHooked(const VerbBase &event) const;
+    bool EventHooked(const VerbGeneric &event) const;
 
     // --------- Misc
 
     /// Mode for input handling.
     enum InputMode {
-      IM_NONE, //< Indicates that the frame should not accept input of any kind; any input will pass through transparently.
-      IM_ALL, //< Indicates that the frame should accept all kinds of input, and input will not pass to a frame below this one.
+      IM_NONE, ///< Indicates that the frame should not accept input of any kind; any input will pass through transparently.
+      IM_ALL, ///< Indicates that the frame should accept all kinds of input, and input will not pass to a frame below this one.
       IM_COUNT,
     };
     /// Sets the input mode.

@@ -903,8 +903,8 @@ namespace Frames {
     ObliterateExtract();
   }
 
-  bool Layout::EventHooked(const VerbBase &event) const {
-    std::map<const VerbBase *, std::multiset<Callback, Callback::Sorter> >::const_iterator itr = m_events.find(&event);
+  bool Layout::EventHooked(const VerbGeneric &event) const {
+    std::map<const VerbGeneric *, std::multiset<Callback, Callback::Sorter> >::const_iterator itr = m_events.find(&event);
     if (itr == m_events.end()) {
       // no handles, we're good
       return false;
@@ -1116,7 +1116,7 @@ namespace Frames {
 
   //Layout::CallbackIterator::CallbackIterator() : m_state(STATE_COMPLETE), m_diveIndex(0), m_target(0), m_event(0) { };
 
-  Layout::CallbackIterator::CallbackIterator(Layout *target, const VerbBase *event) : m_state(STATE_DIVE), m_diveIndex(0), m_target(target), m_event(event) { // set to STATE_DIVE so that NextIndex() does the right thing
+  Layout::CallbackIterator::CallbackIterator(Layout *target, const VerbGeneric *event) : m_state(STATE_DIVE), m_diveIndex(0), m_target(target), m_event(event) { // set to STATE_DIVE so that NextIndex() does the right thing
     if (event->DiveGet()) {
       // Dive event! Accumulate everything we need
       Layout *ctar = target;
@@ -1174,7 +1174,7 @@ namespace Frames {
         layout = m_dives[m_diveIndex];
       }
       
-      const VerbBase *event = m_event;
+      const VerbGeneric *event = m_event;
       if (m_state == STATE_DIVE) {
         event = event->DiveGet();
       } else if (m_state == STATE_BUBBLE) {
@@ -1210,7 +1210,7 @@ namespace Frames {
       }
       
       Layout *layout = LayoutGet();
-      const VerbBase *event = VerbGet();
+      const VerbGeneric *event = VerbGet();
       
       // TODO: can probably be optimized by not doing a ton of lookups
       if (layout->m_events.count(event)) {
@@ -1230,7 +1230,7 @@ namespace Frames {
     }
   }
   
-  const VerbBase *Layout::CallbackIterator::VerbGet() {
+  const VerbGeneric *Layout::CallbackIterator::VerbGet() {
     if (m_state == STATE_DIVE) {
       return m_event->DiveGet();
     } else if (m_state == STATE_BUBBLE) {

@@ -38,7 +38,7 @@ namespace Frames {
   typedef Ptr<Environment> EnvironmentPtr;
   class Frame;
   class Layout;
-  class VerbBase;
+  class VerbGeneric;
 
   namespace detail {
     class CharacterInfo;
