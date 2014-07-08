@@ -12,7 +12,7 @@ var searchData=
   ['renderelement',['RenderElement',['../classFrames_1_1Frame.html#a9079b0f4a9652469f2645fe420f7d9bf',1,'Frames::Frame::RenderElement()'],['../classFrames_1_1Layout.html#a4491e055d9995aeb269662368a50c73b',1,'Frames::Layout::RenderElement()'],['../classFrames_1_1Raw.html#a7b8effca20c7ccd2dec76df6e4ce234f',1,'Frames::Raw::RenderElement()'],['../classFrames_1_1Sprite.html#ab59eeef4bf05b8033984838b5881dfc0',1,'Frames::Sprite::RenderElement()'],['../classFrames_1_1Text.html#a8b1e84491ded62308bd9e5425cec0737',1,'Frames::Text::RenderElement()']]],
   ['renderelementpostchild',['RenderElementPostChild',['../classFrames_1_1Layout.html#ad0c5ba6bffe368d87f245229b06b8278',1,'Frames::Layout']]],
   ['renderelementprechild',['RenderElementPreChild',['../classFrames_1_1Layout.html#a1f0f633f93b89228c1e12ce1abe40ae8',1,'Frames::Layout']]],
-  ['rendererget',['RendererGet',['../classFrames_1_1Configuration_1_1Local.html#a3f3bec9f79d15cdea9cf7c3cc2762b83',1,'Frames::Configuration::Local::RendererGet()'],['../classFrames_1_1Environment.html#a92db010b01319b713470fbd1be22c35e',1,'Frames::Environment::RendererGet()']]],
+  ['rendererget',['RendererGet',['../classFrames_1_1Configuration_1_1Local.html#a3f3bec9f79d15cdea9cf7c3cc2762b83',1,'Frames::Configuration::Local']]],
   ['rendererset',['RendererSet',['../classFrames_1_1Configuration_1_1Local.html#ae560a1f996c28e4285986e2513f97ba9',1,'Frames::Configuration::Local']]],
   ['reset',['Reset',['../classFrames_1_1Ptr.html#aded7b57e83d76e3706ce5b5e3e50c132',1,'Frames::Ptr::Reset()'],['../classFrames_1_1Ptr.html#a1166593190f0773f1b7fb4f47cae8a9f',1,'Frames::Ptr::Reset(T *rhs)']]],
   ['resizeroot',['ResizeRoot',['../classFrames_1_1Environment.html#a04bc24c958e49ff75b3beba61a30892a',1,'Frames::Environment']]],

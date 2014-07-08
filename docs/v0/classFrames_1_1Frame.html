@@ -108,7 +108,7 @@ $(document).ready(function(){initNavTree('classFrames_1_1Frame.html','');});
 </div><!--header-->
 <div class="contents">
 
-<p>The basic component of Frames UIs.  
+<p>Basic component of Frames UIs, dynamically createable and movable.  
  <a href="classFrames_1_1Frame.html#details">More...</a></p>
 
 <p><code>#include &lt;frame.h&gt;</code></p>
@@ -118,8 +118,8 @@ Inheritance diagram for Frames::Frame:</div>
  <div class="center">
   <img src="classFrames_1_1Frame.png" usemap="#Frames::Frame_map" alt=""/>
   <map id="Frames::Frame_map" name="Frames::Frame_map">
-<area href="classFrames_1_1Layout.html" title="Base class containing location and layout information for all Frames elements. " alt="Frames::Layout" shape="rect" coords="162,0,260,24"/>
-<area href="classFrames_1_1Mask.html" title="Used for clipping frames. " alt="Frames::Mask" shape="rect" coords="0,112,98,136"/>
+<area href="classFrames_1_1Layout.html" title="Location and layout interface, contained in all Frames elements. " alt="Frames::Layout" shape="rect" coords="162,0,260,24"/>
+<area href="classFrames_1_1Mask.html" title="Used for clipping the render area of frames against an arbitrary rectangle. " alt="Frames::Mask" shape="rect" coords="0,112,98,136"/>
 <area href="classFrames_1_1Raw.html" title="Used for deferring to user code for rendering. " alt="Frames::Raw" shape="rect" coords="108,112,206,136"/>
 <area href="classFrames_1_1Sprite.html" title="Used to render a texture. " alt="Frames::Sprite" shape="rect" coords="216,112,314,136"/>
 <area href="classFrames_1_1Text.html" title="Used to render and edit text. " alt="Frames::Text" shape="rect" coords="324,112,422,136"/>
@@ -137,7 +137,7 @@ const <a class="el" href="classFrames_1_1Color.html">Color</a> &amp;&#160;</td><
 <tr class="separator:a64710bf5c347dd6a0c6315362d398377"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1adf3877145f6346a1f4f4e270571651"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1adf3877145f6346a1f4f4e270571651"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a1adf3877145f6346a1f4f4e270571651">ConstraintClearAll</a> ()</td></tr>
-<tr class="memdesc:a1adf3877145f6346a1f4f4e270571651"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all links and sizes. <br /></td></tr>
+<tr class="memdesc:a1adf3877145f6346a1f4f4e270571651"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all pins and sizes. <br /></td></tr>
 <tr class="separator:a1adf3877145f6346a1f4f4e270571651"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f58a4152a1c59b5dca6954c443d810a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9f58a4152a1c59b5dca6954c443d810a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a9f58a4152a1c59b5dca6954c443d810a">HeightSet</a> (float size)</td></tr>
@@ -179,117 +179,117 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#ab632ab5740101497202f192ea832841d">PinClearAll</a> (Axis axis)</td></tr>
 <tr class="memdesc:ab632ab5740101497202f192ea832841d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all <a class="el" href="basicspinning.html">pins</a> on an axis. <br /></td></tr>
 <tr class="separator:ab632ab5740101497202f192ea832841d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f9a643c88a5b73f6b8f3b656abb5c66"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a6f9a643c88a5b73f6b8f3b656abb5c66">PinSet</a> (Axis axis, float mypt, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, float theirpt, float offset=0.f)</td></tr>
-<tr class="memdesc:a6f9a643c88a5b73f6b8f3b656abb5c66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates or redefines a single <a class="el" href="basicspinning.html">pin</a>.  <a href="#a6f9a643c88a5b73f6b8f3b656abb5c66">More...</a><br /></td></tr>
-<tr class="separator:a6f9a643c88a5b73f6b8f3b656abb5c66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93dfe6c9278aca0a2670ec2a1a3532a5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a93dfe6c9278aca0a2670ec2a1a3532a5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a93dfe6c9278aca0a2670ec2a1a3532a5">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, Anchor theiranchor)</td></tr>
-<tr class="memdesc:a93dfe6c9278aca0a2670ec2a1a3532a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two Anchors. <br /></td></tr>
-<tr class="separator:a93dfe6c9278aca0a2670ec2a1a3532a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28fb575bfff24ad9517bd7b0ffdcbd37"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a28fb575bfff24ad9517bd7b0ffdcbd37"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a28fb575bfff24ad9517bd7b0ffdcbd37">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, Anchor theiranchor, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
-<tr class="memdesc:a28fb575bfff24ad9517bd7b0ffdcbd37"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two Anchors with an offset. <br /></td></tr>
-<tr class="separator:a28fb575bfff24ad9517bd7b0ffdcbd37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a2d41407e05ca787ec7e2a23b23823d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6a2d41407e05ca787ec7e2a23b23823d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a6a2d41407e05ca787ec7e2a23b23823d">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, Anchor theiranchor, float xofs, float yofs)</td></tr>
-<tr class="memdesc:a6a2d41407e05ca787ec7e2a23b23823d"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two Anchors with an offset. <br /></td></tr>
-<tr class="separator:a6a2d41407e05ca787ec7e2a23b23823d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac03382c67b373fbfca5ee6c49652eed0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac03382c67b373fbfca5ee6c49652eed0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#ac03382c67b373fbfca5ee6c49652eed0">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their)</td></tr>
-<tr class="memdesc:ac03382c67b373fbfca5ee6c49652eed0"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> an Anchor to a relative point. <br /></td></tr>
-<tr class="separator:ac03382c67b373fbfca5ee6c49652eed0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96188777553395e00a92b0c9dcc6280c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a96188777553395e00a92b0c9dcc6280c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a96188777553395e00a92b0c9dcc6280c">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
-<tr class="memdesc:a96188777553395e00a92b0c9dcc6280c"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> an Anchor to a relative point with an offset. <br /></td></tr>
-<tr class="separator:a96188777553395e00a92b0c9dcc6280c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b39d424b9e93fb2dd5556b867481cd0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4b39d424b9e93fb2dd5556b867481cd0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a4b39d424b9e93fb2dd5556b867481cd0">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their, float xofs, float yofs)</td></tr>
-<tr class="memdesc:a4b39d424b9e93fb2dd5556b867481cd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> an Anchor to a relative point with an offset. <br /></td></tr>
-<tr class="separator:a4b39d424b9e93fb2dd5556b867481cd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1be508a8eaaa5b54ede1c836c636a2f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af1be508a8eaaa5b54ede1c836c636a2f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#af1be508a8eaaa5b54ede1c836c636a2f">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, float theirx, float theiry)</td></tr>
-<tr class="memdesc:af1be508a8eaaa5b54ede1c836c636a2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> an Anchor to a relative point. <br /></td></tr>
-<tr class="separator:af1be508a8eaaa5b54ede1c836c636a2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7b18804fc00e8010aa1b6cbf6dde12c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af7b18804fc00e8010aa1b6cbf6dde12c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#af7b18804fc00e8010aa1b6cbf6dde12c">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, float theirx, float theiry, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
-<tr class="memdesc:af7b18804fc00e8010aa1b6cbf6dde12c"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> an Anchor to a relative point with an offset. <br /></td></tr>
-<tr class="separator:af7b18804fc00e8010aa1b6cbf6dde12c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a665c1af317048d20800ae860e49fdbba"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a665c1af317048d20800ae860e49fdbba"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a665c1af317048d20800ae860e49fdbba">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, float theirx, float theiry, float xofs, float yofs)</td></tr>
-<tr class="memdesc:a665c1af317048d20800ae860e49fdbba"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> an Anchor to a relative point with an offset. <br /></td></tr>
-<tr class="separator:a665c1af317048d20800ae860e49fdbba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ef4da60a0d1516f6ede9e68d2f4dd9a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3ef4da60a0d1516f6ede9e68d2f4dd9a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a3ef4da60a0d1516f6ede9e68d2f4dd9a">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, Anchor theiranchor)</td></tr>
-<tr class="memdesc:a3ef4da60a0d1516f6ede9e68d2f4dd9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> a relative point to an Anchor. <br /></td></tr>
-<tr class="separator:a3ef4da60a0d1516f6ede9e68d2f4dd9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0430be8523118ac72b3b78d0a85ea237"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0430be8523118ac72b3b78d0a85ea237"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a0430be8523118ac72b3b78d0a85ea237">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, Anchor theiranchor, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
-<tr class="memdesc:a0430be8523118ac72b3b78d0a85ea237"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> a relative point to an Anchor with an offset. <br /></td></tr>
-<tr class="separator:a0430be8523118ac72b3b78d0a85ea237"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf72bcd45db5ad9018f5103dd64a9453"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abf72bcd45db5ad9018f5103dd64a9453"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#abf72bcd45db5ad9018f5103dd64a9453">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, Anchor theiranchor, float xofs, float yofs)</td></tr>
-<tr class="memdesc:abf72bcd45db5ad9018f5103dd64a9453"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> a relative point to an Anchor with an offset. <br /></td></tr>
-<tr class="separator:abf72bcd45db5ad9018f5103dd64a9453"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeaf5513b4bc3cbd659dd6a89624963e2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeaf5513b4bc3cbd659dd6a89624963e2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#aeaf5513b4bc3cbd659dd6a89624963e2">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their)</td></tr>
-<tr class="memdesc:aeaf5513b4bc3cbd659dd6a89624963e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points. <br /></td></tr>
-<tr class="separator:aeaf5513b4bc3cbd659dd6a89624963e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa34930928325088b3a7ef3f93c180112"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa34930928325088b3a7ef3f93c180112"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#aa34930928325088b3a7ef3f93c180112">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
-<tr class="memdesc:aa34930928325088b3a7ef3f93c180112"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
-<tr class="separator:aa34930928325088b3a7ef3f93c180112"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada605e9c79263f11a0f87e50d8cb8b89"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ada605e9c79263f11a0f87e50d8cb8b89"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#ada605e9c79263f11a0f87e50d8cb8b89">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their, float xofs, float yofs)</td></tr>
-<tr class="memdesc:ada605e9c79263f11a0f87e50d8cb8b89"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
-<tr class="separator:ada605e9c79263f11a0f87e50d8cb8b89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f61906f7ed6958a89a5382dc6bd1068"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3f61906f7ed6958a89a5382dc6bd1068"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a3f61906f7ed6958a89a5382dc6bd1068">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, float theirx, float theiry)</td></tr>
-<tr class="memdesc:a3f61906f7ed6958a89a5382dc6bd1068"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points. <br /></td></tr>
-<tr class="separator:a3f61906f7ed6958a89a5382dc6bd1068"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a9635d425b4f5698633342478d31308"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6a9635d425b4f5698633342478d31308"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a6a9635d425b4f5698633342478d31308">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, float theirx, float theiry, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
-<tr class="memdesc:a6a9635d425b4f5698633342478d31308"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
-<tr class="separator:a6a9635d425b4f5698633342478d31308"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aceffbadd7f4162640ced2217e455cfe7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aceffbadd7f4162640ced2217e455cfe7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#aceffbadd7f4162640ced2217e455cfe7">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, float theirx, float theiry, float xofs, float yofs)</td></tr>
-<tr class="memdesc:aceffbadd7f4162640ced2217e455cfe7"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
-<tr class="separator:aceffbadd7f4162640ced2217e455cfe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52ed3fb88adf67d8b5e0d4bbc05e6709"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a52ed3fb88adf67d8b5e0d4bbc05e6709"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a52ed3fb88adf67d8b5e0d4bbc05e6709">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, Anchor theiranchor)</td></tr>
-<tr class="memdesc:a52ed3fb88adf67d8b5e0d4bbc05e6709"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> a relative point to an Anchor. <br /></td></tr>
-<tr class="separator:a52ed3fb88adf67d8b5e0d4bbc05e6709"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a839f96ae5acd7fa9812bf5566fcf7609"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a839f96ae5acd7fa9812bf5566fcf7609"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a839f96ae5acd7fa9812bf5566fcf7609">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, Anchor theiranchor, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
-<tr class="memdesc:a839f96ae5acd7fa9812bf5566fcf7609"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> a relative point to an Anchor with an offset. <br /></td></tr>
-<tr class="separator:a839f96ae5acd7fa9812bf5566fcf7609"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a369a29965ab671a299d110dd5b2de984"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a369a29965ab671a299d110dd5b2de984"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a369a29965ab671a299d110dd5b2de984">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, Anchor theiranchor, float xofs, float yofs)</td></tr>
-<tr class="memdesc:a369a29965ab671a299d110dd5b2de984"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> a relative point to an Anchor with an offset. <br /></td></tr>
-<tr class="separator:a369a29965ab671a299d110dd5b2de984"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a338e78f210f272d16a9dc360ef8c34de"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a338e78f210f272d16a9dc360ef8c34de"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a338e78f210f272d16a9dc360ef8c34de">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their)</td></tr>
-<tr class="memdesc:a338e78f210f272d16a9dc360ef8c34de"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points. <br /></td></tr>
-<tr class="separator:a338e78f210f272d16a9dc360ef8c34de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a051f56ee004457952f994c31e1ddbc87"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a051f56ee004457952f994c31e1ddbc87"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a051f56ee004457952f994c31e1ddbc87">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
-<tr class="memdesc:a051f56ee004457952f994c31e1ddbc87"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
-<tr class="separator:a051f56ee004457952f994c31e1ddbc87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99a88826970deb39f8bf8a1ae9c03e39"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a99a88826970deb39f8bf8a1ae9c03e39"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a99a88826970deb39f8bf8a1ae9c03e39">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their, float xofs, float yofs)</td></tr>
-<tr class="memdesc:a99a88826970deb39f8bf8a1ae9c03e39"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
-<tr class="separator:a99a88826970deb39f8bf8a1ae9c03e39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50b612236e87a6010929ada797f019d3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a50b612236e87a6010929ada797f019d3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a50b612236e87a6010929ada797f019d3">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, float theirx, float theiry)</td></tr>
-<tr class="memdesc:a50b612236e87a6010929ada797f019d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points. <br /></td></tr>
-<tr class="separator:a50b612236e87a6010929ada797f019d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f862a4755f76dc26d13be998bdaa156"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1f862a4755f76dc26d13be998bdaa156"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a1f862a4755f76dc26d13be998bdaa156">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, float theirx, float theiry, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
-<tr class="memdesc:a1f862a4755f76dc26d13be998bdaa156"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
-<tr class="separator:a1f862a4755f76dc26d13be998bdaa156"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad211b6bab05ca99c28aaef37e02fad38"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad211b6bab05ca99c28aaef37e02fad38"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#ad211b6bab05ca99c28aaef37e02fad38">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *link, float theirx, float theiry, float xofs, float yofs)</td></tr>
-<tr class="memdesc:ad211b6bab05ca99c28aaef37e02fad38"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
-<tr class="separator:ad211b6bab05ca99c28aaef37e02fad38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d61c5bc36813d11b3e1b3766d95be60"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a8d61c5bc36813d11b3e1b3766d95be60">PinSet</a> (Axis axis, float mypt, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, float theirpt, float offset=0.f)</td></tr>
+<tr class="memdesc:a8d61c5bc36813d11b3e1b3766d95be60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates or redefines a single <a class="el" href="basicspinning.html">pin</a>.  <a href="#a8d61c5bc36813d11b3e1b3766d95be60">More...</a><br /></td></tr>
+<tr class="separator:a8d61c5bc36813d11b3e1b3766d95be60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74cc31712ea6d5a55dc82d96ceb7ded8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a74cc31712ea6d5a55dc82d96ceb7ded8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a74cc31712ea6d5a55dc82d96ceb7ded8">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, Anchor theiranchor)</td></tr>
+<tr class="memdesc:a74cc31712ea6d5a55dc82d96ceb7ded8"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two Anchors. <br /></td></tr>
+<tr class="separator:a74cc31712ea6d5a55dc82d96ceb7ded8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fa2e62d99a713f24c13f68419030daf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6fa2e62d99a713f24c13f68419030daf"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a6fa2e62d99a713f24c13f68419030daf">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, Anchor theiranchor, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
+<tr class="memdesc:a6fa2e62d99a713f24c13f68419030daf"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two Anchors with an offset. <br /></td></tr>
+<tr class="separator:a6fa2e62d99a713f24c13f68419030daf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04eb74a1705328e64e23c9149dd3039e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a04eb74a1705328e64e23c9149dd3039e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a04eb74a1705328e64e23c9149dd3039e">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, Anchor theiranchor, float xofs, float yofs)</td></tr>
+<tr class="memdesc:a04eb74a1705328e64e23c9149dd3039e"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two Anchors with an offset. <br /></td></tr>
+<tr class="separator:a04eb74a1705328e64e23c9149dd3039e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c61d56ff148e0f794b3d50d5ff80c68"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7c61d56ff148e0f794b3d50d5ff80c68"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a7c61d56ff148e0f794b3d50d5ff80c68">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their)</td></tr>
+<tr class="memdesc:a7c61d56ff148e0f794b3d50d5ff80c68"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> an Anchor to a relative point. <br /></td></tr>
+<tr class="separator:a7c61d56ff148e0f794b3d50d5ff80c68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10a31f0dd7a1a4550ec431ac8e0d3fab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a10a31f0dd7a1a4550ec431ac8e0d3fab"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a10a31f0dd7a1a4550ec431ac8e0d3fab">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
+<tr class="memdesc:a10a31f0dd7a1a4550ec431ac8e0d3fab"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> an Anchor to a relative point with an offset. <br /></td></tr>
+<tr class="separator:a10a31f0dd7a1a4550ec431ac8e0d3fab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06f172e351bc48f958d22009c1df6532"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a06f172e351bc48f958d22009c1df6532"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a06f172e351bc48f958d22009c1df6532">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their, float xofs, float yofs)</td></tr>
+<tr class="memdesc:a06f172e351bc48f958d22009c1df6532"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> an Anchor to a relative point with an offset. <br /></td></tr>
+<tr class="separator:a06f172e351bc48f958d22009c1df6532"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea3aa5cee77a3fabd33abd75af47a8c6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aea3aa5cee77a3fabd33abd75af47a8c6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#aea3aa5cee77a3fabd33abd75af47a8c6">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, float theirx, float theiry)</td></tr>
+<tr class="memdesc:aea3aa5cee77a3fabd33abd75af47a8c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> an Anchor to a relative point. <br /></td></tr>
+<tr class="separator:aea3aa5cee77a3fabd33abd75af47a8c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93654699a697ca5b4acb1f560b86028e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a93654699a697ca5b4acb1f560b86028e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a93654699a697ca5b4acb1f560b86028e">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, float theirx, float theiry, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
+<tr class="memdesc:a93654699a697ca5b4acb1f560b86028e"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> an Anchor to a relative point with an offset. <br /></td></tr>
+<tr class="separator:a93654699a697ca5b4acb1f560b86028e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ccd893d6edfa11094ca37326df3f870"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3ccd893d6edfa11094ca37326df3f870"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a3ccd893d6edfa11094ca37326df3f870">PinSet</a> (Anchor myanchor, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, float theirx, float theiry, float xofs, float yofs)</td></tr>
+<tr class="memdesc:a3ccd893d6edfa11094ca37326df3f870"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> an Anchor to a relative point with an offset. <br /></td></tr>
+<tr class="separator:a3ccd893d6edfa11094ca37326df3f870"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abecc8fada428883903f6ae6d1b34bb15"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abecc8fada428883903f6ae6d1b34bb15"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#abecc8fada428883903f6ae6d1b34bb15">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, Anchor theiranchor)</td></tr>
+<tr class="memdesc:abecc8fada428883903f6ae6d1b34bb15"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> a relative point to an Anchor. <br /></td></tr>
+<tr class="separator:abecc8fada428883903f6ae6d1b34bb15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42c77f3014767d44e313388714e07bdb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a42c77f3014767d44e313388714e07bdb"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a42c77f3014767d44e313388714e07bdb">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, Anchor theiranchor, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
+<tr class="memdesc:a42c77f3014767d44e313388714e07bdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> a relative point to an Anchor with an offset. <br /></td></tr>
+<tr class="separator:a42c77f3014767d44e313388714e07bdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a491cff75a384411b5a0d9d24bba4a0dc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a491cff75a384411b5a0d9d24bba4a0dc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a491cff75a384411b5a0d9d24bba4a0dc">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, Anchor theiranchor, float xofs, float yofs)</td></tr>
+<tr class="memdesc:a491cff75a384411b5a0d9d24bba4a0dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> a relative point to an Anchor with an offset. <br /></td></tr>
+<tr class="separator:a491cff75a384411b5a0d9d24bba4a0dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afab32db0f297d1e4bce54ae778285958"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afab32db0f297d1e4bce54ae778285958"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#afab32db0f297d1e4bce54ae778285958">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their)</td></tr>
+<tr class="memdesc:afab32db0f297d1e4bce54ae778285958"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points. <br /></td></tr>
+<tr class="separator:afab32db0f297d1e4bce54ae778285958"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7cddc9b165bd4ac4efd0e5cda65f629"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae7cddc9b165bd4ac4efd0e5cda65f629"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#ae7cddc9b165bd4ac4efd0e5cda65f629">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
+<tr class="memdesc:ae7cddc9b165bd4ac4efd0e5cda65f629"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
+<tr class="separator:ae7cddc9b165bd4ac4efd0e5cda65f629"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a605886aaa9eaee1fc80412fc49c4a9e3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a605886aaa9eaee1fc80412fc49c4a9e3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a605886aaa9eaee1fc80412fc49c4a9e3">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their, float xofs, float yofs)</td></tr>
+<tr class="memdesc:a605886aaa9eaee1fc80412fc49c4a9e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
+<tr class="separator:a605886aaa9eaee1fc80412fc49c4a9e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12bef8c51cf8bd32336cab415efcafc4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a12bef8c51cf8bd32336cab415efcafc4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a12bef8c51cf8bd32336cab415efcafc4">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, float theirx, float theiry)</td></tr>
+<tr class="memdesc:a12bef8c51cf8bd32336cab415efcafc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points. <br /></td></tr>
+<tr class="separator:a12bef8c51cf8bd32336cab415efcafc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90f737803ca01f8d6721843122cbaccf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a90f737803ca01f8d6721843122cbaccf"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a90f737803ca01f8d6721843122cbaccf">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, float theirx, float theiry, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
+<tr class="memdesc:a90f737803ca01f8d6721843122cbaccf"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
+<tr class="separator:a90f737803ca01f8d6721843122cbaccf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4061a921fc7f2b3b052d9b5ceeb5041b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4061a921fc7f2b3b052d9b5ceeb5041b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a4061a921fc7f2b3b052d9b5ceeb5041b">PinSet</a> (const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;my, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, float theirx, float theiry, float xofs, float yofs)</td></tr>
+<tr class="memdesc:a4061a921fc7f2b3b052d9b5ceeb5041b"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
+<tr class="separator:a4061a921fc7f2b3b052d9b5ceeb5041b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf97024409624dd144ac36d6196f6a84"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abf97024409624dd144ac36d6196f6a84"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#abf97024409624dd144ac36d6196f6a84">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, Anchor theiranchor)</td></tr>
+<tr class="memdesc:abf97024409624dd144ac36d6196f6a84"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> a relative point to an Anchor. <br /></td></tr>
+<tr class="separator:abf97024409624dd144ac36d6196f6a84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9add9f46deb2efef75eb2486ff4412b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac9add9f46deb2efef75eb2486ff4412b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#ac9add9f46deb2efef75eb2486ff4412b">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, Anchor theiranchor, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
+<tr class="memdesc:ac9add9f46deb2efef75eb2486ff4412b"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> a relative point to an Anchor with an offset. <br /></td></tr>
+<tr class="separator:ac9add9f46deb2efef75eb2486ff4412b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab7a1dea18fc8e31c760f46e3db91567"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aab7a1dea18fc8e31c760f46e3db91567"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#aab7a1dea18fc8e31c760f46e3db91567">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, Anchor theiranchor, float xofs, float yofs)</td></tr>
+<tr class="memdesc:aab7a1dea18fc8e31c760f46e3db91567"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> a relative point to an Anchor with an offset. <br /></td></tr>
+<tr class="separator:aab7a1dea18fc8e31c760f46e3db91567"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd8bdc6745a1287a5eea0f9cf612d8a7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acd8bdc6745a1287a5eea0f9cf612d8a7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#acd8bdc6745a1287a5eea0f9cf612d8a7">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their)</td></tr>
+<tr class="memdesc:acd8bdc6745a1287a5eea0f9cf612d8a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points. <br /></td></tr>
+<tr class="separator:acd8bdc6745a1287a5eea0f9cf612d8a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5c8acb4dcad939bc8e7c4b4da336811"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af5c8acb4dcad939bc8e7c4b4da336811"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#af5c8acb4dcad939bc8e7c4b4da336811">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
+<tr class="memdesc:af5c8acb4dcad939bc8e7c4b4da336811"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
+<tr class="separator:af5c8acb4dcad939bc8e7c4b4da336811"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b944a79d4cffa7739bca5b8fae64ff2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0b944a79d4cffa7739bca5b8fae64ff2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a0b944a79d4cffa7739bca5b8fae64ff2">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;their, float xofs, float yofs)</td></tr>
+<tr class="memdesc:a0b944a79d4cffa7739bca5b8fae64ff2"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
+<tr class="separator:a0b944a79d4cffa7739bca5b8fae64ff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaafb55f2dc3d895b96817d5bd424aad7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaafb55f2dc3d895b96817d5bd424aad7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#aaafb55f2dc3d895b96817d5bd424aad7">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, float theirx, float theiry)</td></tr>
+<tr class="memdesc:aaafb55f2dc3d895b96817d5bd424aad7"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points. <br /></td></tr>
+<tr class="separator:aaafb55f2dc3d895b96817d5bd424aad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a271b55059cb35b97e08cfd68c99f717e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a271b55059cb35b97e08cfd68c99f717e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a271b55059cb35b97e08cfd68c99f717e">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, float theirx, float theiry, const <a class="el" href="structFrames_1_1Vector.html">Vector</a> &amp;ofs)</td></tr>
+<tr class="memdesc:a271b55059cb35b97e08cfd68c99f717e"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
+<tr class="separator:a271b55059cb35b97e08cfd68c99f717e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1cc840269575b903fb0a349072f049e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae1cc840269575b903fb0a349072f049e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#ae1cc840269575b903fb0a349072f049e">PinSet</a> (float myx, float myy, const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *target, float theirx, float theiry, float xofs, float yofs)</td></tr>
+<tr class="memdesc:ae1cc840269575b903fb0a349072f049e"><td class="mdescLeft">&#160;</td><td class="mdescRight">PinSet variant for <a class="el" href="basicspinning.html">pinning</a> two relative points with an offset. <br /></td></tr>
+<tr class="separator:ae1cc840269575b903fb0a349072f049e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a784c616045932180ebc7c7f877d94585"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a784c616045932180ebc7c7f877d94585"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a784c616045932180ebc7c7f877d94585">SizeClear</a> (Axis axis)</td></tr>
 <tr class="memdesc:a784c616045932180ebc7c7f877d94585"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the size of an axis. <br /></td></tr>
@@ -327,17 +327,17 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 <tr class="memitem:a010d2d7d53312a302e34145a7aa90c7d inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classFrames_1_1Layout.html#a1a63c300f5c7646448e2031c6922ad4e">ChildrenList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#a010d2d7d53312a302e34145a7aa90c7d">ChildrenImplementationGet</a> ()</td></tr>
 <tr class="memdesc:a010d2d7d53312a302e34145a7aa90c7d inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the children of this frame.  <a href="#a010d2d7d53312a302e34145a7aa90c7d">More...</a><br /></td></tr>
 <tr class="separator:a010d2d7d53312a302e34145a7aa90c7d inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6ae506257a47142dabadf232373798d inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af6ae506257a47142dabadf232373798d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#af6ae506257a47142dabadf232373798d">DebugDumpLayout</a> () const </td></tr>
-<tr class="memdesc:af6ae506257a47142dabadf232373798d inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dumps comprehensive layout information to the debug log. <br /></td></tr>
-<tr class="separator:af6ae506257a47142dabadf232373798d inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd2835058ae0f5529f170271a5194444 inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acd2835058ae0f5529f170271a5194444"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#acd2835058ae0f5529f170271a5194444">DebugLayoutDump</a> () const </td></tr>
+<tr class="memdesc:acd2835058ae0f5529f170271a5194444 inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dumps comprehensive layout information to the debug log. <br /></td></tr>
+<tr class="separator:acd2835058ae0f5529f170271a5194444 inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a342958abdfaa0e15a23675078670c1f0 inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a342958abdfaa0e15a23675078670c1f0"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#a342958abdfaa0e15a23675078670c1f0">DebugNameGet</a> () const </td></tr>
 <tr class="memdesc:a342958abdfaa0e15a23675078670c1f0 inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs and return the full named path of this layout. <br /></td></tr>
 <tr class="separator:a342958abdfaa0e15a23675078670c1f0 inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73eefe50f1dfc849af79fdf99832ab8e inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a73eefe50f1dfc849af79fdf99832ab8e"></a>
 <a class="el" href="classFrames_1_1Environment.html">Environment</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#a73eefe50f1dfc849af79fdf99832ab8e">EnvironmentGet</a> () const </td></tr>
-<tr class="memdesc:a73eefe50f1dfc849af79fdf99832ab8e inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the environment. <br /></td></tr>
+<tr class="memdesc:a73eefe50f1dfc849af79fdf99832ab8e inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns this layout's environment. <br /></td></tr>
 <tr class="separator:a73eefe50f1dfc849af79fdf99832ab8e inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac32a41a4e42affb85a2cc30815df9126 inherit pub_methods_classFrames_1_1Layout"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac32a41a4e42affb85a2cc30815df9126"></a>
 template&lt;typename Parameters &gt; </td></tr>
@@ -348,10 +348,10 @@ template&lt;typename Parameters &gt; </td></tr>
 <tr class="memitem:a3b8018e756ba978f67a5e395c065f5f9 inherit pub_methods_classFrames_1_1Layout"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#a3b8018e756ba978f67a5e395c065f5f9">EventDetach</a> (const <a class="el" href="classFrames_1_1Verb.html">Verb</a>&lt; Parameters &gt; &amp;event, typename <a class="el" href="classFrames_1_1Verb.html">Verb</a>&lt; Parameters &gt;::TypeDelegate handler, float priority=detail::Undefined)</td></tr>
 <tr class="memdesc:a3b8018e756ba978f67a5e395c065f5f9 inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detaches a handler from a verb on this layout.  <a href="#a3b8018e756ba978f67a5e395c065f5f9">More...</a><br /></td></tr>
 <tr class="separator:a3b8018e756ba978f67a5e395c065f5f9 inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9f78e923b4fd56e5a48749329754d1b inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac9f78e923b4fd56e5a48749329754d1b"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#ac9f78e923b4fd56e5a48749329754d1b">EventHookedIs</a> (const <a class="el" href="classFrames_1_1VerbBase.html">VerbBase</a> &amp;event) const </td></tr>
-<tr class="memdesc:ac9f78e923b4fd56e5a48749329754d1b inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if a verb is hooked. <br /></td></tr>
-<tr class="separator:ac9f78e923b4fd56e5a48749329754d1b inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a772ad5dd3db14e8f57bff57bae8d60c7 inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a772ad5dd3db14e8f57bff57bae8d60c7"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#a772ad5dd3db14e8f57bff57bae8d60c7">EventHooked</a> (const <a class="el" href="classFrames_1_1VerbGeneric.html">VerbGeneric</a> &amp;event) const </td></tr>
+<tr class="memdesc:a772ad5dd3db14e8f57bff57bae8d60c7 inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if a verb is hooked. <br /></td></tr>
+<tr class="separator:a772ad5dd3db14e8f57bff57bae8d60c7 inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06190cc68493e22ed83ca23bb65bfdd8 inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a06190cc68493e22ed83ca23bb65bfdd8"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#a06190cc68493e22ed83ca23bb65bfdd8">EventTrigger</a> (const <a class="el" href="classFrames_1_1Verb.html">Verb</a>&lt; void()&gt; &amp;event)</td></tr>
 <tr class="memdesc:a06190cc68493e22ed83ca23bb65bfdd8 inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggers all attached handlers for a given verb. <br /></td></tr>
@@ -363,16 +363,16 @@ template&lt;typename P1 &gt; </td></tr>
 <tr class="separator:ac077f8f88baaa07a61018920da2df3da inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea6d76eb2abfebee2476ef98cf4ddbbf inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aea6d76eb2abfebee2476ef98cf4ddbbf"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#aea6d76eb2abfebee2476ef98cf4ddbbf">HeightGet</a> () const </td></tr>
-<tr class="memdesc:aea6d76eb2abfebee2476ef98cf4ddbbf inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the height. <br /></td></tr>
+<tr class="memdesc:aea6d76eb2abfebee2476ef98cf4ddbbf inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the height, measured from <a class="el" href="classFrames_1_1Layout.html#a095b51bab64bb0af3b2e2c6ee70d71b5" title="Returns the bottom edge&#39;s position. ">BottomGet()</a> to <a class="el" href="classFrames_1_1Layout.html#aa648ca2e5d68c656df3897d6d7a899f6" title="Returns the top edge&#39;s position. ">TopGet()</a>. <br /></td></tr>
 <tr class="separator:aea6d76eb2abfebee2476ef98cf4ddbbf inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae188bd87e0d1fd66e017042b78378cb4 inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae188bd87e0d1fd66e017042b78378cb4"></a>
+<a class="el" href="classFrames_1_1Layout.html#aa5f4821bc0cffe309fed2ce61a75923c">InputMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#ae188bd87e0d1fd66e017042b78378cb4">InputModeGet</a> () const </td></tr>
+<tr class="memdesc:ae188bd87e0d1fd66e017042b78378cb4 inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the input mode. <br /></td></tr>
+<tr class="separator:ae188bd87e0d1fd66e017042b78378cb4 inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf57fb522a148e4e42fc3a883cfd2ace inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abf57fb522a148e4e42fc3a883cfd2ace"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#abf57fb522a148e4e42fc3a883cfd2ace">InputModeSet</a> (<a class="el" href="classFrames_1_1Layout.html#aa5f4821bc0cffe309fed2ce61a75923c">InputMode</a> imode)</td></tr>
 <tr class="memdesc:abf57fb522a148e4e42fc3a883cfd2ace inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the input mode. <br /></td></tr>
 <tr class="separator:abf57fb522a148e4e42fc3a883cfd2ace inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a2f514cc7dbdf9ed5698d15fd1a48e2 inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2a2f514cc7dbdf9ed5698d15fd1a48e2"></a>
-<a class="el" href="classFrames_1_1Layout.html#aa5f4821bc0cffe309fed2ce61a75923c">InputMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#a2a2f514cc7dbdf9ed5698d15fd1a48e2">InputModeSet</a> () const </td></tr>
-<tr class="memdesc:a2a2f514cc7dbdf9ed5698d15fd1a48e2 inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the input mode. <br /></td></tr>
-<tr class="separator:a2a2f514cc7dbdf9ed5698d15fd1a48e2 inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e79a63289ebeda51b2ab4b19ff64d96 inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2e79a63289ebeda51b2ab4b19ff64d96"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#a2e79a63289ebeda51b2ab4b19ff64d96">LeftGet</a> () const </td></tr>
 <tr class="memdesc:a2e79a63289ebeda51b2ab4b19ff64d96 inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the left edge's position. <br /></td></tr>
@@ -395,17 +395,20 @@ const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a cl
 <tr class="memitem:af1f80d93b9f6fd852e3d578dae699619 inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structFrames_1_1Layout_1_1PinPoint.html">PinPoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#af1f80d93b9f6fd852e3d578dae699619">PinGet</a> (float x, float y) const </td></tr>
 <tr class="memdesc:af1f80d93b9f6fd852e3d578dae699619 inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns information on a Pin.  <a href="#af1f80d93b9f6fd852e3d578dae699619">More...</a><br /></td></tr>
 <tr class="separator:af1f80d93b9f6fd852e3d578dae699619 inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a766ae1af91f13610e83c3627e4233e4c inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#a766ae1af91f13610e83c3627e4233e4c">PointGet</a> (Axis axis, float pt) const </td></tr>
-<tr class="memdesc:a766ae1af91f13610e83c3627e4233e4c inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the position of an axis point.  <a href="#a766ae1af91f13610e83c3627e4233e4c">More...</a><br /></td></tr>
+<tr class="memitem:a766ae1af91f13610e83c3627e4233e4c inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a766ae1af91f13610e83c3627e4233e4c"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#a766ae1af91f13610e83c3627e4233e4c">PointGet</a> (Axis axis, float pt) const </td></tr>
+<tr class="memdesc:a766ae1af91f13610e83c3627e4233e4c inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the position of an axis point. <br /></td></tr>
 <tr class="separator:a766ae1af91f13610e83c3627e4233e4c inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae655626af32f06f58403821cdb52927 inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structFrames_1_1Vector.html">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#aae655626af32f06f58403821cdb52927">PointGet</a> (Anchor anchor) const </td></tr>
-<tr class="memdesc:aae655626af32f06f58403821cdb52927 inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the position of a point.  <a href="#aae655626af32f06f58403821cdb52927">More...</a><br /></td></tr>
+<tr class="memitem:aae655626af32f06f58403821cdb52927 inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aae655626af32f06f58403821cdb52927"></a>
+<a class="el" href="structFrames_1_1Vector.html">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#aae655626af32f06f58403821cdb52927">PointGet</a> (Anchor anchor) const </td></tr>
+<tr class="memdesc:aae655626af32f06f58403821cdb52927 inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the position of a point. <br /></td></tr>
 <tr class="separator:aae655626af32f06f58403821cdb52927 inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6aa1e657065ecaa0d13fd83159225a0d inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structFrames_1_1Vector.html">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#a6aa1e657065ecaa0d13fd83159225a0d">PointGet</a> (float x, float y) const </td></tr>
-<tr class="memdesc:a6aa1e657065ecaa0d13fd83159225a0d inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the position of a point.  <a href="#a6aa1e657065ecaa0d13fd83159225a0d">More...</a><br /></td></tr>
+<tr class="memitem:a6aa1e657065ecaa0d13fd83159225a0d inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6aa1e657065ecaa0d13fd83159225a0d"></a>
+<a class="el" href="structFrames_1_1Vector.html">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#a6aa1e657065ecaa0d13fd83159225a0d">PointGet</a> (float x, float y) const </td></tr>
+<tr class="memdesc:a6aa1e657065ecaa0d13fd83159225a0d inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the position of a point. <br /></td></tr>
 <tr class="separator:a6aa1e657065ecaa0d13fd83159225a0d inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6972d7906e0e1e28c1e7e95da97d2ae inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFrames_1_1Layout.html">Layout</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#af6972d7906e0e1e28c1e7e95da97d2ae">ProbeAsMouse</a> (float x, float y)</td></tr>
-<tr class="memdesc:af6972d7906e0e1e28c1e7e95da97d2ae inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the layout underneath a given coordinate in the context of mouse input.  <a href="#af6972d7906e0e1e28c1e7e95da97d2ae">More...</a><br /></td></tr>
+<tr class="memdesc:af6972d7906e0e1e28c1e7e95da97d2ae inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the layout underneath a given coordinate as if it were mouse input.  <a href="#af6972d7906e0e1e28c1e7e95da97d2ae">More...</a><br /></td></tr>
 <tr class="separator:af6972d7906e0e1e28c1e7e95da97d2ae inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59cf189949bd200ee8a58d17a6321e21 inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a59cf189949bd200ee8a58d17a6321e21"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#a59cf189949bd200ee8a58d17a6321e21">RightGet</a> () const </td></tr>
@@ -428,14 +431,14 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:ad34527a5f8b7d58081895ff2ac5eee64 inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad40ca5139adf7df85121ce870ee8eae4 inherit pub_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad40ca5139adf7df85121ce870ee8eae4"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#ad40ca5139adf7df85121ce870ee8eae4">WidthGet</a> () const </td></tr>
-<tr class="memdesc:ad40ca5139adf7df85121ce870ee8eae4 inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the width. <br /></td></tr>
+<tr class="memdesc:ad40ca5139adf7df85121ce870ee8eae4 inherit pub_methods_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the width, measured from <a class="el" href="classFrames_1_1Layout.html#a59cf189949bd200ee8a58d17a6321e21" title="Returns the right edge&#39;s position. ">RightGet()</a> to <a class="el" href="classFrames_1_1Layout.html#a2e79a63289ebeda51b2ab4b19ff64d96" title="Returns the left edge&#39;s position. ">LeftGet()</a>. <br /></td></tr>
 <tr class="separator:ad40ca5139adf7df85121ce870ee8eae4 inherit pub_methods_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a798e56199e43aedddcc779a77eccd967"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a798e56199e43aedddcc779a77eccd967"></a>
 static <a class="el" href="classFrames_1_1Frame.html">Frame</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a798e56199e43aedddcc779a77eccd967">Create</a> (<a class="el" href="classFrames_1_1Layout.html">Layout</a> *parent, const std::string &amp;name)</td></tr>
-<tr class="memdesc:a798e56199e43aedddcc779a77eccd967"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a>. <br /></td></tr>
+<tr class="memdesc:a798e56199e43aedddcc779a77eccd967"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a>. <br /></td></tr>
 <tr class="separator:a798e56199e43aedddcc779a77eccd967"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c3a23e138ecfe71d497ed3945c68791"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c3a23e138ecfe71d497ed3945c68791"></a>
 static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a8c3a23e138ecfe71d497ed3945c68791">TypeStaticGet</a> ()</td></tr>
@@ -451,11 +454,11 @@ static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class=
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:ad86a6fb19fe222add29148f81fe69fde"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad86a6fb19fe222add29148f81fe69fde"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#ad86a6fb19fe222add29148f81fe69fde">Frame</a> (<a class="el" href="classFrames_1_1Layout.html">Layout</a> *parent, const std::string &amp;name)</td></tr>
-<tr class="memdesc:ad86a6fb19fe222add29148f81fe69fde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a> with the given parameters. "parent" must be non-null. <br /></td></tr>
+<tr class="memdesc:ad86a6fb19fe222add29148f81fe69fde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a> with the given parameters. "parent" must be non-null. <br /></td></tr>
 <tr class="separator:ad86a6fb19fe222add29148f81fe69fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9079b0f4a9652469f2645fe420f7d9bf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9079b0f4a9652469f2645fe420f7d9bf"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a9079b0f4a9652469f2645fe420f7d9bf">RenderElement</a> (detail::Renderer *renderer) const </td></tr>
-<tr class="memdesc:a9079b0f4a9652469f2645fe420f7d9bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders the <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a> background. See <a class="el" href="classFrames_1_1Layout.html#a4491e055d9995aeb269662368a50c73b" title="Called when this frame is rendered. ">Layout::RenderElement</a> for inheritance info. <br /></td></tr>
+<tr class="memdesc:a9079b0f4a9652469f2645fe420f7d9bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders the <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a> background. See <a class="el" href="classFrames_1_1Layout.html#a4491e055d9995aeb269662368a50c73b" title="Called when this frame is rendered. ">Layout::RenderElement</a> for inheritance info. <br /></td></tr>
 <tr class="separator:a9079b0f4a9652469f2645fe420f7d9bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classFrames_1_1Layout"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classFrames_1_1Layout')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classFrames_1_1Layout.html">Frames::Layout</a></td></tr>
 <tr class="memitem:a6eda25a984c5846db4d5b97fdb20015a inherit pro_methods_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6eda25a984c5846db4d5b97fdb20015a"></a>
@@ -480,11 +483,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 Friends</h2></td></tr>
 <tr class="memitem:aa2e0d6a8b92ab7b45d9bac91c55a2288"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aa2e0d6a8b92ab7b45d9bac91c55a2288"><td class="memTemplItemLeft" align="right" valign="top">T *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#aa2e0d6a8b92ab7b45d9bac91c55a2288">Cast</a> (<a class="el" href="classFrames_1_1Layout.html">Layout</a> *)</td></tr>
-<tr class="memdesc:aa2e0d6a8b92ab7b45d9bac91c55a2288"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe dynamic cast for the <a class="el" href="classFrames_1_1Layout.html" title="Base class containing location and layout information for all Frames elements. ">Layout</a> hierarchy.  <a href="#aa2e0d6a8b92ab7b45d9bac91c55a2288">More...</a><br /></td></tr>
+<tr class="memdesc:aa2e0d6a8b92ab7b45d9bac91c55a2288"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe dynamic cast for the <a class="el" href="classFrames_1_1Layout.html" title="Location and layout interface, contained in all Frames elements. ">Layout</a> hierarchy.  <a href="#aa2e0d6a8b92ab7b45d9bac91c55a2288">More...</a><br /></td></tr>
 <tr class="separator:aa2e0d6a8b92ab7b45d9bac91c55a2288"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a199929421c877a555974a26cd8e1d30f"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a199929421c877a555974a26cd8e1d30f"><td class="memTemplItemLeft" align="right" valign="top">const T *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFrames_1_1Frame.html#a199929421c877a555974a26cd8e1d30f">Cast</a> (const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *)</td></tr>
-<tr class="memdesc:a199929421c877a555974a26cd8e1d30f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe dynamic cast for the <a class="el" href="classFrames_1_1Layout.html" title="Base class containing location and layout information for all Frames elements. ">Layout</a> hierarchy.  <a href="#a199929421c877a555974a26cd8e1d30f">More...</a><br /></td></tr>
+<tr class="memdesc:a199929421c877a555974a26cd8e1d30f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe dynamic cast for the <a class="el" href="classFrames_1_1Layout.html" title="Location and layout interface, contained in all Frames elements. ">Layout</a> hierarchy.  <a href="#a199929421c877a555974a26cd8e1d30f">More...</a><br /></td></tr>
 <tr class="separator:a199929421c877a555974a26cd8e1d30f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
@@ -495,17 +498,17 @@ typedef std::set&lt; <a class="el" href="classFrames_1_1Frame.html">Frame</a> <b
 *, detail::FrameOrderSorter &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#a1a63c300f5c7646448e2031c6922ad4e">ChildrenList</a></td></tr>
 <tr class="memdesc:a1a63c300f5c7646448e2031c6922ad4e inherit pub_types_classFrames_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type used to store a list of children, sorted from bottom to top. Conforms to std::set's interface; may not be a std::set. <br /></td></tr>
 <tr class="separator:a1a63c300f5c7646448e2031c6922ad4e inherit pub_types_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5f4821bc0cffe309fed2ce61a75923c inherit pub_types_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa5f4821bc0cffe309fed2ce61a75923c"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#aa5f4821bc0cffe309fed2ce61a75923c">InputMode</a> { <b>IM_NONE</b>, 
-<b>IM_ALL</b>, 
+<tr class="memitem:aa5f4821bc0cffe309fed2ce61a75923c inherit pub_types_classFrames_1_1Layout"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Layout.html#aa5f4821bc0cffe309fed2ce61a75923c">InputMode</a> { <a class="el" href="classFrames_1_1Layout.html#aa5f4821bc0cffe309fed2ce61a75923ca813c8117a8a79dfa910157e608cd4964">IM_NONE</a>, 
+<a class="el" href="classFrames_1_1Layout.html#aa5f4821bc0cffe309fed2ce61a75923ca27fbef0b7578a8bc86425027de52122c">IM_ALL</a>, 
 <b>IM_COUNT</b>
  }</td></tr>
-<tr class="memdesc:aa5f4821bc0cffe309fed2ce61a75923c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mode for input handling. <br /></td></tr>
+<tr class="memdesc:aa5f4821bc0cffe309fed2ce61a75923c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mode for input handling.  <a href="classFrames_1_1Layout.html#aa5f4821bc0cffe309fed2ce61a75923c">More...</a><br /></td></tr>
 <tr class="separator:aa5f4821bc0cffe309fed2ce61a75923c inherit pub_types_classFrames_1_1Layout"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The basic component of Frames UIs. </p>
-<p>The <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a> is the fundamental building block of the UI. It represents a rectangular area in space, aligned along the Scene axes. A <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a> has exactly one parent and any number of children, each of which are also Frames.</p>
-<p><a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a> itself is generally invisible, although BackgroundSet is provided for prototyping and debug output. If <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a> is set to non-visible, all of its children will also be hidden. </p>
+<div class="textblock"><p>Basic component of Frames UIs, dynamically createable and movable. </p>
+<p>The <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a> is the fundamental building block of the UI. It represents an axis-aligned rectangular area in space. A <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a> has exactly one parent and any number of children, each of which are also Frames.</p>
+<p><a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a> itself generally does not render visibly, although BackgroundSet is provided for prototyping and debug output. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="a64710bf5c347dd6a0c6315362d398377"></a>
 <div class="memitem">
@@ -549,7 +552,7 @@ typedef std::set&lt; <a class="el" href="classFrames_1_1Frame.html">Frame</a> <b
 </div><div class="memdoc">
 
 <p>Sets the implementation flag. </p>
-<p>The implementation flag is used to create new frame types that are composited out of subframes. All frames with this flag set will be rendered before frames without the flag set. In addition, frames with this flag will not be returned from <a class="el" href="classFrames_1_1Layout.html#abfa03d82729010fcdae1fc7895887037" title="Returns the children of this frame. ">ChildrenGet()</a> (TODO: nyi!). </p>
+<p>The implementation flag is used to create new frame types that are composited out of subframes. All frames with this flag set will be rendered before frames without the flag set. In addition, frames with this flag will not be returned from <a class="el" href="classFrames_1_1Layout.html#abfa03d82729010fcdae1fc7895887037" title="Returns the children of this frame. ">ChildrenGet()</a> by default. </p>
 
 </div>
 </div>
@@ -602,9 +605,9 @@ typedef std::set&lt; <a class="el" href="classFrames_1_1Frame.html">Frame</a> <b
 </div><div class="memdoc">
 
 <p>Destroys this frame and all its children. </p>
-<p>Also destroys all links from these layouts. It is undefined behavior if any other layouts still reference these layouts; it will, however, not cause a crash.</p>
+<p>Also destroys all pins from these layouts. It is undefined behavior if any other layouts still reference these layouts; it will, however, not cause a crash.</p>
 <p>Normally, it is undefined behavior to refer to this frame or any of its children after this function is called.</p>
-<p>An exception is if <a class="el" href="classFrames_1_1Frame.html#a0f28a37e131baaf642d4ee7326a6e518" title="Destroys this frame and all its children. ">Obliterate()</a> is called during any event handler in this environment. In that case, the effect of this call is guaranted to be deferred at least until the last in-flight event finishes with this frame or any of its children. The effect may be deferred until all in-flight events have completed entirely. </p>
+<p>An exception is if <a class="el" href="classFrames_1_1Frame.html#a0f28a37e131baaf642d4ee7326a6e518" title="Destroys this frame and all its children. ">Obliterate()</a> is called during any event handler in this environment. In that case, the effect of this call is guaranted to be deferred at least until the completion of the last in-flight event involving this frame or any of its children. The effect may be deferred until the completion of all in-flight events. </p>
 
 </div>
 </div>
@@ -635,7 +638,7 @@ typedef std::set&lt; <a class="el" href="classFrames_1_1Frame.html">Frame</a> <b
 
 </div>
 </div>
-<a class="anchor" id="a6f9a643c88a5b73f6b8f3b656abb5c66"></a>
+<a class="anchor" id="a8d61c5bc36813d11b3e1b3766d95be60"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -658,7 +661,7 @@ typedef std::set&lt; <a class="el" href="classFrames_1_1Frame.html">Frame</a> <b
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *&#160;</td>
-          <td class="paramname"><em>link</em>, </td>
+          <td class="paramname"><em>target</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -715,8 +718,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Safe dynamic cast for the <a class="el" href="classFrames_1_1Layout.html" title="Base class containing location and layout information for all Frames elements. ">Layout</a> hierarchy. </p>
-<p>Returns a valid pointer to T* if the provided <a class="el" href="classFrames_1_1Layout.html" title="Base class containing location and layout information for all Frames elements. ">Layout</a> is actually a T*, or a null pointer otherwise. </p>
+<p>Safe dynamic cast for the <a class="el" href="classFrames_1_1Layout.html" title="Location and layout interface, contained in all Frames elements. ">Layout</a> hierarchy. </p>
+<p>Returns a valid pointer to T* if the provided <a class="el" href="classFrames_1_1Layout.html" title="Location and layout interface, contained in all Frames elements. ">Layout</a> is actually a T*, or null otherwise. </p>
 
 </div>
 </div>
@@ -744,8 +747,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Safe dynamic cast for the <a class="el" href="classFrames_1_1Layout.html" title="Base class containing location and layout information for all Frames elements. ">Layout</a> hierarchy. </p>
-<p>Returns a valid pointer to T* if the provided <a class="el" href="classFrames_1_1Layout.html" title="Base class containing location and layout information for all Frames elements. ">Layout</a> is actually a T*, or a null pointer otherwise. </p>
+<p>Safe dynamic cast for the <a class="el" href="classFrames_1_1Layout.html" title="Location and layout interface, contained in all Frames elements. ">Layout</a> hierarchy. </p>
+<p>Returns a valid pointer to T* if the provided <a class="el" href="classFrames_1_1Layout.html" title="Location and layout interface, contained in all Frames elements. ">Layout</a> is actually a T*, or null otherwise. </p>
 
 </div>
 </div>
@@ -759,7 +762,7 @@ template&lt;typename T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>Frames</b></li><li class="navelem"><a class="el" href="classFrames_1_1Frame.html">Frame</a></li>
-    <li class="footer">Generated on Sun Jul 6 2014 09:04:14 for Frames by
+    <li class="footer">Generated on Mon Jul 7 2014 20:37:19 for Frames by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

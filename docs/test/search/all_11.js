@@ -19,12 +19,13 @@ var searchData=
   ['sizedefaultset',['SizeDefaultSet',['../classFrames_1_1Layout.html#a7763d4c76acfba1324a9c498874c7681',1,'Frames::Layout']]],
   ['sizeget',['SizeGet',['../classFrames_1_1Layout.html#afd5e1880e83e4a3ac7e3044f2106aaa3',1,'Frames::Layout::SizeGet()'],['../classFrames_1_1Text.html#a201a9982676508828b8cfba128a7792a',1,'Frames::Text::SizeGet()']]],
   ['sizeset',['SizeSet',['../classFrames_1_1Frame.html#a0e105efa8d05340df699a8ba9ab167ae',1,'Frames::Frame::SizeSet()'],['../classFrames_1_1Text.html#ad8f991cc04d434dea72b44c15b87d2e6',1,'Frames::Text::SizeSet()']]],
-  ['sprite',['Sprite',['../classFrames_1_1Sprite.html',1,'Frames']]],
   ['sprite',['Sprite',['../classFrames_1_1Sprite.html#aed18baf294f03010a07d04ac7a32bab6',1,'Frames::Sprite']]],
+  ['sprite',['Sprite',['../classFrames_1_1Sprite.html',1,'Frames']]],
   ['stream',['Stream',['../classFrames_1_1Stream.html',1,'Frames']]],
   ['streambuffer',['StreamBuffer',['../classFrames_1_1StreamBuffer.html',1,'Frames']]],
   ['streamfile',['StreamFile',['../classFrames_1_1StreamFile.html',1,'Frames']]],
   ['streamfromid',['StreamFromId',['../classFrames_1_1Configuration_1_1StreamFromId.html',1,'Frames::Configuration']]],
   ['streamfromidget',['StreamFromIdGet',['../classFrames_1_1Configuration_1_1Local.html#a7db7bb086f25cca40edb420586562ac2',1,'Frames::Configuration::Local']]],
-  ['streamfromidset',['StreamFromIdSet',['../classFrames_1_1Configuration_1_1Local.html#ab8c679c1d3a7ae740c8634b1b8ee6f20',1,'Frames::Configuration::Local']]]
+  ['streamfromidset',['StreamFromIdSet',['../classFrames_1_1Configuration_1_1Local.html#ab8c679c1d3a7ae740c8634b1b8ee6f20',1,'Frames::Configuration::Local']]],
+  ['swap',['Swap',['../classFrames_1_1Ptr.html#aff7b7bde87e3fa8dc86ed30cafe30fba',1,'Frames::Ptr']]]
 ];

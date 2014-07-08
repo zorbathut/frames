@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['im_5fall',['IM_ALL',['../classFrames_1_1Layout.html#aa5f4821bc0cffe309fed2ce61a75923ca27fbef0b7578a8bc86425027de52122c',1,'Frames::Layout']]],
+  ['im_5fnone',['IM_NONE',['../classFrames_1_1Layout.html#aa5f4821bc0cffe309fed2ce61a75923ca813c8117a8a79dfa910157e608cd4964',1,'Frames::Layout']]],
   ['implementationget',['ImplementationGet',['../classFrames_1_1Frame.html#a8d50ad925a0a17efa77e1cd692ad208d',1,'Frames::Frame']]],
   ['implementationset',['ImplementationSet',['../classFrames_1_1Frame.html#a03afe34f97db347a3cb483d41fdad465',1,'Frames::Frame']]],
   ['introduction',['Introduction',['../index.html',1,'']]],
@@ -16,7 +18,12 @@ var searchData=
   ['input_5fmouseup',['Input_MouseUp',['../classFrames_1_1Environment.html#aa591ae09f4260cf093f429c2409a7e9d',1,'Frames::Environment']]],
   ['input_5fmousewheel',['Input_MouseWheel',['../classFrames_1_1Environment.html#a9d5ec18c2f5fbe9d8f6628762c401e1b',1,'Frames::Environment']]],
   ['inputmode',['InputMode',['../classFrames_1_1Layout.html#aa5f4821bc0cffe309fed2ce61a75923c',1,'Frames::Layout']]],
-  ['inputmodeset',['InputModeSet',['../classFrames_1_1Layout.html#abf57fb522a148e4e42fc3a883cfd2ace',1,'Frames::Layout::InputModeSet(InputMode imode)'],['../classFrames_1_1Layout.html#a2a2f514cc7dbdf9ed5698d15fd1a48e2',1,'Frames::Layout::InputModeSet() const ']]],
+  ['inputmodeget',['InputModeGet',['../classFrames_1_1Layout.html#ae188bd87e0d1fd66e017042b78378cb4',1,'Frames::Layout']]],
+  ['inputmodeset',['InputModeSet',['../classFrames_1_1Layout.html#abf57fb522a148e4e42fc3a883cfd2ace',1,'Frames::Layout']]],
+  ['interactive_5fcursor',['INTERACTIVE_CURSOR',['../classFrames_1_1Text.html#a19725f5e68811feda21dcc8d8e81ea72a1b7dd6381cd1c1803302a3f883e67497',1,'Frames::Text']]],
+  ['interactive_5fedit',['INTERACTIVE_EDIT',['../classFrames_1_1Text.html#a19725f5e68811feda21dcc8d8e81ea72aef796784db2b933cabc5ad9ac4a86e6d',1,'Frames::Text']]],
+  ['interactive_5fnone',['INTERACTIVE_NONE',['../classFrames_1_1Text.html#a19725f5e68811feda21dcc8d8e81ea72a3f3a9a9f2712877e5a65025cbb399f64',1,'Frames::Text']]],
+  ['interactive_5fselect',['INTERACTIVE_SELECT',['../classFrames_1_1Text.html#a19725f5e68811feda21dcc8d8e81ea72af16c5f6d3042a6f75ecce30e2204f8f9',1,'Frames::Text']]],
   ['interactiveget',['InteractiveGet',['../classFrames_1_1Text.html#a5c0503e294dcb82f16f52805b8da27d6',1,'Frames::Text']]],
   ['interactiveset',['InteractiveSet',['../classFrames_1_1Text.html#a887f8af638814372c127de872763f6de',1,'Frames::Text']]],
   ['interactivitymode',['InteractivityMode',['../classFrames_1_1Text.html#a19725f5e68811feda21dcc8d8e81ea72',1,'Frames::Text']]],

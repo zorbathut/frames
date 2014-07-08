@@ -36,7 +36,7 @@ var annotated =
       [ "Texture", "classFrames_1_1Texture.html", "classFrames_1_1Texture" ],
       [ "Vector", "structFrames_1_1Vector.html", "structFrames_1_1Vector" ],
       [ "Verb", "classFrames_1_1Verb.html", "classFrames_1_1Verb" ],
-      [ "VerbBase", "classFrames_1_1VerbBase.html", "classFrames_1_1VerbBase" ],
+      [ "VerbGeneric", "classFrames_1_1VerbGeneric.html", "classFrames_1_1VerbGeneric" ],
       [ "VerbPackage", "classFrames_1_1VerbPackage.html", "classFrames_1_1VerbPackage" ]
     ] ]
 ];

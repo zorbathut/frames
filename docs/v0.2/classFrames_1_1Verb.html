@@ -106,7 +106,7 @@ $(document).ready(function(){initNavTree('classFrames_1_1Verb.html','');});
 </div><!--header-->
 <div class="contents">
 
-<p>Represents a type of event.  
+<p>Represents a type of event with specific parameter typing.  
  <a href="classFrames_1_1Verb.html#details">More...</a></p>
 
 <p><code>#include &lt;event.h&gt;</code></p>
@@ -116,8 +116,8 @@ Inheritance diagram for Frames::Verb&lt; Parameters &gt;:</div>
  <div class="center">
   <img src="classFrames_1_1Verb.png" usemap="#Frames::Verb&lt; Parameters &gt;_map" alt=""/>
   <map id="Frames::Verb&lt; Parameters &gt;_map" name="Frames::Verb&lt; Parameters &gt;_map">
-<area href="classFrames_1_1VerbBase.html" title="Base class for type-specific Verbs. " alt="Frames::VerbBase" shape="rect" coords="0,0,225,24"/>
-<area href="classFrames_1_1VerbPackage.html" title="Represents a type of event with Sink and Bubble behavior. " alt="Frames::VerbPackage&lt; Parameters &gt;" shape="rect" coords="0,112,225,136"/>
+<area href="classFrames_1_1VerbGeneric.html" title="Represents a type of event. " alt="Frames::VerbGeneric" shape="rect" coords="0,0,225,24"/>
+<area href="classFrames_1_1VerbPackage.html" title="Represents a type of event with specific parameter typing and Dive/Bubble behavior. " alt="Frames::VerbPackage&lt; Parameters &gt;" shape="rect" coords="0,112,225,136"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -127,12 +127,12 @@ Public Types</h2></td></tr>
 typedef Delegate&lt; typename <br class="typebreak" />
 detail::FunctionPrefix&lt; <a class="el" href="classFrames_1_1Handle.html">Handle</a> <br class="typebreak" />
 *, Parameters &gt;::T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Verb.html#a205f069b55c41ad4f33a87eb32d74a44">TypeDelegate</a></td></tr>
-<tr class="memdesc:a205f069b55c41ad4f33a87eb32d74a44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience typedef for the delegate type which is needed to attach to this <a class="el" href="classFrames_1_1Verb.html" title="Represents a type of event. ">Verb</a>. <br /></td></tr>
+<tr class="memdesc:a205f069b55c41ad4f33a87eb32d74a44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience typedef for the delegate type which is needed to attach to this <a class="el" href="classFrames_1_1Verb.html" title="Represents a type of event with specific parameter typing. ">Verb</a>. <br /></td></tr>
 <tr class="separator:a205f069b55c41ad4f33a87eb32d74a44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefac5f2af7ac429af75dabc89dcd914e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aefac5f2af7ac429af75dabc89dcd914e"></a>
 typedef detail::FunctionPrefix<br class="typebreak" />
 &lt; <a class="el" href="classFrames_1_1Handle.html">Handle</a> *, Parameters &gt;::T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Verb.html#aefac5f2af7ac429af75dabc89dcd914e">TypeHandler</a></td></tr>
-<tr class="memdesc:aefac5f2af7ac429af75dabc89dcd914e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience typedef for the function type which is needed to attach to this <a class="el" href="classFrames_1_1Verb.html" title="Represents a type of event. ">Verb</a>. <br /></td></tr>
+<tr class="memdesc:aefac5f2af7ac429af75dabc89dcd914e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience typedef for the function type which is needed to attach to this <a class="el" href="classFrames_1_1Verb.html" title="Represents a type of event with specific parameter typing. ">Verb</a>. <br /></td></tr>
 <tr class="separator:aefac5f2af7ac429af75dabc89dcd914e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -140,24 +140,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afc9a8ebc7d35a4a86b02792d34cc4007"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Verb.html#afc9a8ebc7d35a4a86b02792d34cc4007">Verb</a> (const char *name)</td></tr>
 <tr class="memdesc:afc9a8ebc7d35a4a86b02792d34cc4007"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for standalone Verbs.  <a href="#afc9a8ebc7d35a4a86b02792d34cc4007">More...</a><br /></td></tr>
 <tr class="separator:afc9a8ebc7d35a4a86b02792d34cc4007"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classFrames_1_1VerbBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classFrames_1_1VerbBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classFrames_1_1VerbBase.html">Frames::VerbBase</a></td></tr>
-<tr class="memitem:a9a8f8f7991c8dea7346d05f646489f71 inherit pub_methods_classFrames_1_1VerbBase"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classFrames_1_1VerbBase.html">VerbBase</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1VerbBase.html#a9a8f8f7991c8dea7346d05f646489f71">BubbleGet</a> () const </td></tr>
-<tr class="memdesc:a9a8f8f7991c8dea7346d05f646489f71 inherit pub_methods_classFrames_1_1VerbBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets this verb's Bubble version.  <a href="#a9a8f8f7991c8dea7346d05f646489f71">More...</a><br /></td></tr>
-<tr class="separator:a9a8f8f7991c8dea7346d05f646489f71 inherit pub_methods_classFrames_1_1VerbBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1612958f339f5c9d73de491f380b1bd4 inherit pub_methods_classFrames_1_1VerbBase"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classFrames_1_1VerbBase.html">VerbBase</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1VerbBase.html#a1612958f339f5c9d73de491f380b1bd4">DiveGet</a> () const </td></tr>
-<tr class="memdesc:a1612958f339f5c9d73de491f380b1bd4 inherit pub_methods_classFrames_1_1VerbBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets this verb's Dive version.  <a href="#a1612958f339f5c9d73de491f380b1bd4">More...</a><br /></td></tr>
-<tr class="separator:a1612958f339f5c9d73de491f380b1bd4 inherit pub_methods_classFrames_1_1VerbBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a727d253f6d8b15a884ce468ee0fe1dc1 inherit pub_methods_classFrames_1_1VerbBase"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a727d253f6d8b15a884ce468ee0fe1dc1"></a>
-const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1VerbBase.html#a727d253f6d8b15a884ce468ee0fe1dc1">NameGet</a> () const </td></tr>
-<tr class="memdesc:a727d253f6d8b15a884ce468ee0fe1dc1 inherit pub_methods_classFrames_1_1VerbBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns human-readable name for this <a class="el" href="classFrames_1_1Verb.html" title="Represents a type of event. ">Verb</a>. <br /></td></tr>
-<tr class="separator:a727d253f6d8b15a884ce468ee0fe1dc1 inherit pub_methods_classFrames_1_1VerbBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classFrames_1_1VerbGeneric"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classFrames_1_1VerbGeneric')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classFrames_1_1VerbGeneric.html">Frames::VerbGeneric</a></td></tr>
+<tr class="memitem:aa5b9653ecdc96e295de3cdc048236a41 inherit pub_methods_classFrames_1_1VerbGeneric"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classFrames_1_1VerbGeneric.html">VerbGeneric</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1VerbGeneric.html#aa5b9653ecdc96e295de3cdc048236a41">BubbleGet</a> () const </td></tr>
+<tr class="memdesc:aa5b9653ecdc96e295de3cdc048236a41 inherit pub_methods_classFrames_1_1VerbGeneric"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets this verb's Bubble variant.  <a href="#aa5b9653ecdc96e295de3cdc048236a41">More...</a><br /></td></tr>
+<tr class="separator:aa5b9653ecdc96e295de3cdc048236a41 inherit pub_methods_classFrames_1_1VerbGeneric"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95706c3c510f91c9cb784e6c604011d6 inherit pub_methods_classFrames_1_1VerbGeneric"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classFrames_1_1VerbGeneric.html">VerbGeneric</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1VerbGeneric.html#a95706c3c510f91c9cb784e6c604011d6">DiveGet</a> () const </td></tr>
+<tr class="memdesc:a95706c3c510f91c9cb784e6c604011d6 inherit pub_methods_classFrames_1_1VerbGeneric"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets this verb's Dive variant.  <a href="#a95706c3c510f91c9cb784e6c604011d6">More...</a><br /></td></tr>
+<tr class="separator:a95706c3c510f91c9cb784e6c604011d6 inherit pub_methods_classFrames_1_1VerbGeneric"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0293e36302a5134e6560db09630ea06e inherit pub_methods_classFrames_1_1VerbGeneric"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0293e36302a5134e6560db09630ea06e"></a>
+const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1VerbGeneric.html#a0293e36302a5134e6560db09630ea06e">NameGet</a> () const </td></tr>
+<tr class="memdesc:a0293e36302a5134e6560db09630ea06e inherit pub_methods_classFrames_1_1VerbGeneric"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns human-readable name for this <a class="el" href="classFrames_1_1Verb.html" title="Represents a type of event with specific parameter typing. ">Verb</a>. <br /></td></tr>
+<tr class="separator:a0293e36302a5134e6560db09630ea06e inherit pub_methods_classFrames_1_1VerbGeneric"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename Parameters&gt;<br />
 class Frames::Verb&lt; Parameters &gt;</h3>
 
-<p>Represents a type of event. </p>
-<p>A <a class="el" href="classFrames_1_1Verb.html" title="Represents a type of event. ">Verb</a> represents an event category that can be called on a <a class="el" href="classFrames_1_1Layout.html" title="Base class containing location and layout information for all Frames elements. ">Layout</a>. </p>
+<p>Represents a type of event with specific parameter typing. </p>
+<p>A <a class="el" href="classFrames_1_1Verb.html" title="Represents a type of event with specific parameter typing. ">Verb</a> represents an event category that can be called on a <a class="el" href="classFrames_1_1Layout.html" title="Location and layout interface, contained in all Frames elements. ">Layout</a>. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="afc9a8ebc7d35a4a86b02792d34cc4007"></a>
 <div class="memitem">
@@ -197,7 +197,7 @@ template&lt;typename Parameters&gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>Frames</b></li><li class="navelem"><a class="el" href="classFrames_1_1Verb.html">Verb</a></li>
-    <li class="footer">Generated on Sun Jul 6 2014 09:04:14 for Frames by
+    <li class="footer">Generated on Mon Jul 7 2014 20:37:19 for Frames by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

@@ -105,7 +105,7 @@ $(document).ready(function(){initNavTree('classFrames_1_1Configuration_1_1Local.
 </div><!--header-->
 <div class="contents">
 
-<p>All configuration data that needs to be provided for a functioning <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a>.  
+<p>Configuration data associated with an <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a>.  
  <a href="classFrames_1_1Configuration_1_1Local.html#details">More...</a></p>
 
 <p><code>#include &lt;configuration.h&gt;</code></p>
@@ -114,11 +114,11 @@ $(document).ready(function(){initNavTree('classFrames_1_1Configuration_1_1Local.
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a075257785d518e95a8ce076a41d76b44"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a075257785d518e95a8ce076a41d76b44"></a>
 const <a class="el" href="classFrames_1_1Ptr.html">ClipboardPtr</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a075257785d518e95a8ce076a41d76b44">ClipboardGet</a> () const </td></tr>
-<tr class="memdesc:a075257785d518e95a8ce076a41d76b44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1Clipboard.html" title="Provides clipboard access for copy-paste behavior on Text frames. ">Clipboard</a> module. <br /></td></tr>
+<tr class="memdesc:a075257785d518e95a8ce076a41d76b44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1Clipboard.html" title="Interface for clipboard access. ">Clipboard</a> module. <br /></td></tr>
 <tr class="separator:a075257785d518e95a8ce076a41d76b44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0687dcfecfae00f1968d31a102e38d24"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0687dcfecfae00f1968d31a102e38d24"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a0687dcfecfae00f1968d31a102e38d24">ClipboardSet</a> (const <a class="el" href="classFrames_1_1Ptr.html">ClipboardPtr</a> &amp;clipboard)</td></tr>
-<tr class="memdesc:a0687dcfecfae00f1968d31a102e38d24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1Clipboard.html" title="Provides clipboard access for copy-paste behavior on Text frames. ">Clipboard</a> module. <br /></td></tr>
+<tr class="memdesc:a0687dcfecfae00f1968d31a102e38d24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1Clipboard.html" title="Interface for clipboard access. ">Clipboard</a> module. <br /></td></tr>
 <tr class="separator:a0687dcfecfae00f1968d31a102e38d24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a886ab76990c61195cbaf46a6cd2c22"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5a886ab76990c61195cbaf46a6cd2c22"></a>
 const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a5a886ab76990c61195cbaf46a6cd2c22">FontDefaultIdGet</a> () const </td></tr>
@@ -130,66 +130,171 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:aa317edb0dd890ea7859eee8c79e3265e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a446fe8cee1f4e55ffc4ff660aace3843"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a446fe8cee1f4e55ffc4ff660aace3843"></a>
 const <a class="el" href="classFrames_1_1Ptr.html">LoggerPtr</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a446fe8cee1f4e55ffc4ff660aace3843">LoggerGet</a> () const </td></tr>
-<tr class="memdesc:a446fe8cee1f4e55ffc4ff660aace3843"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1Logger.html" title="Debug logging functionality. ">Logger</a> module. <br /></td></tr>
+<tr class="memdesc:a446fe8cee1f4e55ffc4ff660aace3843"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1Logger.html" title="Interface for debug logging functionality. ">Logger</a> module. <br /></td></tr>
 <tr class="separator:a446fe8cee1f4e55ffc4ff660aace3843"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74a3d83762ce337ccc2e033d1a05d2da"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a74a3d83762ce337ccc2e033d1a05d2da"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a74a3d83762ce337ccc2e033d1a05d2da">LoggerSet</a> (const <a class="el" href="classFrames_1_1Ptr.html">LoggerPtr</a> &amp;logger)</td></tr>
-<tr class="memdesc:a74a3d83762ce337ccc2e033d1a05d2da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1Logger.html" title="Debug logging functionality. ">Logger</a> module. <br /></td></tr>
+<tr class="memdesc:a74a3d83762ce337ccc2e033d1a05d2da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1Logger.html" title="Interface for debug logging functionality. ">Logger</a> module. <br /></td></tr>
 <tr class="separator:a74a3d83762ce337ccc2e033d1a05d2da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c7b25ab0b2c62ee04eec7d7060871f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3c7b25ab0b2c62ee04eec7d7060871f2"></a>
 const <a class="el" href="classFrames_1_1Ptr.html">PathFromIdPtr</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a3c7b25ab0b2c62ee04eec7d7060871f2">PathFromIdGet</a> () const </td></tr>
-<tr class="memdesc:a3c7b25ab0b2c62ee04eec7d7060871f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1PathFromId.html" title="Creates a path from a resource ID. ">PathFromId</a> module. <br /></td></tr>
+<tr class="memdesc:a3c7b25ab0b2c62ee04eec7d7060871f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1PathFromId.html" title="Interface to create a path from a resource ID. ">PathFromId</a> module. <br /></td></tr>
 <tr class="separator:a3c7b25ab0b2c62ee04eec7d7060871f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4f8b32d447beafd818a423096b40a59"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac4f8b32d447beafd818a423096b40a59"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#ac4f8b32d447beafd818a423096b40a59">PathFromIdSet</a> (const <a class="el" href="classFrames_1_1Ptr.html">PathFromIdPtr</a> &amp;pathFromId)</td></tr>
-<tr class="memdesc:ac4f8b32d447beafd818a423096b40a59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1PathFromId.html" title="Creates a path from a resource ID. ">PathFromId</a> module. <br /></td></tr>
+<tr class="memitem:ac4f8b32d447beafd818a423096b40a59"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#ac4f8b32d447beafd818a423096b40a59">PathFromIdSet</a> (const <a class="el" href="classFrames_1_1Ptr.html">PathFromIdPtr</a> &amp;pathFromId)</td></tr>
+<tr class="memdesc:ac4f8b32d447beafd818a423096b40a59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1PathFromId.html" title="Interface to create a path from a resource ID. ">PathFromId</a> module.  <a href="#ac4f8b32d447beafd818a423096b40a59">More...</a><br /></td></tr>
 <tr class="separator:ac4f8b32d447beafd818a423096b40a59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a950ce41f7f97347dcdbd498f528dcd96"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a950ce41f7f97347dcdbd498f528dcd96"></a>
 const <a class="el" href="classFrames_1_1Ptr.html">PerformancePtr</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a950ce41f7f97347dcdbd498f528dcd96">PerformanceGet</a> () const </td></tr>
-<tr class="memdesc:a950ce41f7f97347dcdbd498f528dcd96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1Performance.html" title="Hooks for a performance monitoring system. ">Performance</a> module. <br /></td></tr>
+<tr class="memdesc:a950ce41f7f97347dcdbd498f528dcd96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1Performance.html" title="Interface for a performance monitoring system. ">Performance</a> module. <br /></td></tr>
 <tr class="separator:a950ce41f7f97347dcdbd498f528dcd96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fbe581ab477d16dc3203a2f78a75d7f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7fbe581ab477d16dc3203a2f78a75d7f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a7fbe581ab477d16dc3203a2f78a75d7f">PerformanceSet</a> (const <a class="el" href="classFrames_1_1Ptr.html">PerformancePtr</a> &amp;performance)</td></tr>
-<tr class="memdesc:a7fbe581ab477d16dc3203a2f78a75d7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1Performance.html" title="Hooks for a performance monitoring system. ">Performance</a> module. <br /></td></tr>
+<tr class="memdesc:a7fbe581ab477d16dc3203a2f78a75d7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1Performance.html" title="Interface for a performance monitoring system. ">Performance</a> module. <br /></td></tr>
 <tr class="separator:a7fbe581ab477d16dc3203a2f78a75d7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f3bec9f79d15cdea9cf7c3cc2762b83"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3f3bec9f79d15cdea9cf7c3cc2762b83"></a>
 const <a class="el" href="classFrames_1_1Ptr.html">RendererPtr</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a3f3bec9f79d15cdea9cf7c3cc2762b83">RendererGet</a> () const </td></tr>
-<tr class="memdesc:a3f3bec9f79d15cdea9cf7c3cc2762b83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1TextureFromStream.html" title="Creates a Texture from a Stream. ">TextureFromStream</a> module. <br /></td></tr>
+<tr class="memdesc:a3f3bec9f79d15cdea9cf7c3cc2762b83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1TextureFromStream.html" title="Interface to create a Texture from a Stream. ">TextureFromStream</a> module. <br /></td></tr>
 <tr class="separator:a3f3bec9f79d15cdea9cf7c3cc2762b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae560a1f996c28e4285986e2513f97ba9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae560a1f996c28e4285986e2513f97ba9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#ae560a1f996c28e4285986e2513f97ba9">RendererSet</a> (const <a class="el" href="classFrames_1_1Ptr.html">RendererPtr</a> &amp;renderer)</td></tr>
-<tr class="memdesc:ae560a1f996c28e4285986e2513f97ba9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1Renderer.html" title="Creates a Renderer. ">Renderer</a> module. <br /></td></tr>
+<tr class="memdesc:ae560a1f996c28e4285986e2513f97ba9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1Renderer.html" title="Interface to create a Renderer. ">Renderer</a> module. <br /></td></tr>
 <tr class="separator:ae560a1f996c28e4285986e2513f97ba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7db7bb086f25cca40edb420586562ac2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7db7bb086f25cca40edb420586562ac2"></a>
 const <a class="el" href="classFrames_1_1Ptr.html">StreamFromIdPtr</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a7db7bb086f25cca40edb420586562ac2">StreamFromIdGet</a> () const </td></tr>
-<tr class="memdesc:a7db7bb086f25cca40edb420586562ac2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1StreamFromId.html" title="Creates a Stream from a resource ID. ">StreamFromId</a> module. <br /></td></tr>
+<tr class="memdesc:a7db7bb086f25cca40edb420586562ac2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1StreamFromId.html" title="Interface to create a Stream from a resource ID. ">StreamFromId</a> module. <br /></td></tr>
 <tr class="separator:a7db7bb086f25cca40edb420586562ac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab8c679c1d3a7ae740c8634b1b8ee6f20"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab8c679c1d3a7ae740c8634b1b8ee6f20"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#ab8c679c1d3a7ae740c8634b1b8ee6f20">StreamFromIdSet</a> (const <a class="el" href="classFrames_1_1Ptr.html">StreamFromIdPtr</a> &amp;streamFromId)</td></tr>
-<tr class="memdesc:ab8c679c1d3a7ae740c8634b1b8ee6f20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1StreamFromId.html" title="Creates a Stream from a resource ID. ">StreamFromId</a> module. <br /></td></tr>
+<tr class="memitem:ab8c679c1d3a7ae740c8634b1b8ee6f20"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#ab8c679c1d3a7ae740c8634b1b8ee6f20">StreamFromIdSet</a> (const <a class="el" href="classFrames_1_1Ptr.html">StreamFromIdPtr</a> &amp;streamFromId)</td></tr>
+<tr class="memdesc:ab8c679c1d3a7ae740c8634b1b8ee6f20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1StreamFromId.html" title="Interface to create a Stream from a resource ID. ">StreamFromId</a> module.  <a href="#ab8c679c1d3a7ae740c8634b1b8ee6f20">More...</a><br /></td></tr>
 <tr class="separator:ab8c679c1d3a7ae740c8634b1b8ee6f20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07d75878d0e0a18b9a7a7aa6ac0d13ea"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a07d75878d0e0a18b9a7a7aa6ac0d13ea"></a>
 const <a class="el" href="classFrames_1_1Ptr.html">TextureFromIdPtr</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a07d75878d0e0a18b9a7a7aa6ac0d13ea">TextureFromIdGet</a> () const </td></tr>
-<tr class="memdesc:a07d75878d0e0a18b9a7a7aa6ac0d13ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1TextureFromId.html" title="Creates a Texture from a resource ID. ">TextureFromId</a> module. <br /></td></tr>
+<tr class="memdesc:a07d75878d0e0a18b9a7a7aa6ac0d13ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1TextureFromId.html" title="Interface to create a Texture from a resource ID. ">TextureFromId</a> module. <br /></td></tr>
 <tr class="separator:a07d75878d0e0a18b9a7a7aa6ac0d13ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a068359fe2156d9267ff749be4f1acefb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a068359fe2156d9267ff749be4f1acefb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a068359fe2156d9267ff749be4f1acefb">TextureFromIdSet</a> (const <a class="el" href="classFrames_1_1Ptr.html">TextureFromIdPtr</a> &amp;textureFromId)</td></tr>
-<tr class="memdesc:a068359fe2156d9267ff749be4f1acefb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1TextureFromId.html" title="Creates a Texture from a resource ID. ">TextureFromId</a> module. <br /></td></tr>
+<tr class="memitem:a068359fe2156d9267ff749be4f1acefb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a068359fe2156d9267ff749be4f1acefb">TextureFromIdSet</a> (const <a class="el" href="classFrames_1_1Ptr.html">TextureFromIdPtr</a> &amp;textureFromId)</td></tr>
+<tr class="memdesc:a068359fe2156d9267ff749be4f1acefb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1TextureFromId.html" title="Interface to create a Texture from a resource ID. ">TextureFromId</a> module.  <a href="#a068359fe2156d9267ff749be4f1acefb">More...</a><br /></td></tr>
 <tr class="separator:a068359fe2156d9267ff749be4f1acefb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95f5ba66bdc9203c783d64e4c1b100cb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a95f5ba66bdc9203c783d64e4c1b100cb"></a>
 const <a class="el" href="classFrames_1_1Ptr.html">TextureFromStreamPtr</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a95f5ba66bdc9203c783d64e4c1b100cb">TextureFromStreamGet</a> () const </td></tr>
-<tr class="memdesc:a95f5ba66bdc9203c783d64e4c1b100cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1TextureFromStream.html" title="Creates a Texture from a Stream. ">TextureFromStream</a> module. <br /></td></tr>
+<tr class="memdesc:a95f5ba66bdc9203c783d64e4c1b100cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1TextureFromStream.html" title="Interface to create a Texture from a Stream. ">TextureFromStream</a> module. <br /></td></tr>
 <tr class="separator:a95f5ba66bdc9203c783d64e4c1b100cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e957bbebec22e6aa4eca66ba21c3415"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5e957bbebec22e6aa4eca66ba21c3415"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a5e957bbebec22e6aa4eca66ba21c3415">TextureFromStreamSet</a> (const <a class="el" href="classFrames_1_1Ptr.html">TextureFromStreamPtr</a> &amp;textureFromStream)</td></tr>
-<tr class="memdesc:a5e957bbebec22e6aa4eca66ba21c3415"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1TextureFromStream.html" title="Creates a Texture from a Stream. ">TextureFromStream</a> module. <br /></td></tr>
+<tr class="memitem:a5e957bbebec22e6aa4eca66ba21c3415"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Configuration_1_1Local.html#a5e957bbebec22e6aa4eca66ba21c3415">TextureFromStreamSet</a> (const <a class="el" href="classFrames_1_1Ptr.html">TextureFromStreamPtr</a> &amp;textureFromStream)</td></tr>
+<tr class="memdesc:a5e957bbebec22e6aa4eca66ba21c3415"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1TextureFromStream.html" title="Interface to create a Texture from a Stream. ">TextureFromStream</a> module.  <a href="#a5e957bbebec22e6aa4eca66ba21c3415">More...</a><br /></td></tr>
 <tr class="separator:a5e957bbebec22e6aa4eca66ba21c3415"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>All configuration data that needs to be provided for a functioning <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a>. </p>
-<p>Every <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a> contains a Configuration. If a Configuration isn't provided when the <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a> is constructed, a default Configuration will be built.</p>
+<div class="textblock"><p>Configuration data associated with an <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a>. </p>
+<p>Every <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a> contains an immutable <a class="el" href="classFrames_1_1Configuration_1_1Local.html" title="Configuration data associated with an Environment. ">Configuration::Local</a>.</p>
 <p>Most Configuration settings are designed as a class that can be inherited from. The default behavior is available by calling the base class's members. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="ac4f8b32d447beafd818a423096b40a59"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Frames::Configuration::Local::PathFromIdSet </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classFrames_1_1Ptr.html">PathFromIdPtr</a> &amp;&#160;</td>
+          <td class="paramname"><em>pathFromId</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1PathFromId.html" title="Interface to create a path from a resource ID. ">PathFromId</a> module. </p>
+<p>See <a class="el" href="basicsresources.html">Resources</a> for more detail. </p>
+
+</div>
+</div>
+<a class="anchor" id="ab8c679c1d3a7ae740c8634b1b8ee6f20"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Frames::Configuration::Local::StreamFromIdSet </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classFrames_1_1Ptr.html">StreamFromIdPtr</a> &amp;&#160;</td>
+          <td class="paramname"><em>streamFromId</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1StreamFromId.html" title="Interface to create a Stream from a resource ID. ">StreamFromId</a> module. </p>
+<p>See <a class="el" href="basicsresources.html">Resources</a> for more detail. </p>
+
+</div>
+</div>
+<a class="anchor" id="a068359fe2156d9267ff749be4f1acefb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Frames::Configuration::Local::TextureFromIdSet </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classFrames_1_1Ptr.html">TextureFromIdPtr</a> &amp;&#160;</td>
+          <td class="paramname"><em>textureFromId</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1TextureFromId.html" title="Interface to create a Texture from a resource ID. ">TextureFromId</a> module. </p>
+<p>See <a class="el" href="basicsresources.html">Resources</a> for more detail. </p>
+
+</div>
+</div>
+<a class="anchor" id="a5e957bbebec22e6aa4eca66ba21c3415"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Frames::Configuration::Local::TextureFromStreamSet </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classFrames_1_1Ptr.html">TextureFromStreamPtr</a> &amp;&#160;</td>
+          <td class="paramname"><em>textureFromStream</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the Configuration's <a class="el" href="classFrames_1_1Configuration_1_1TextureFromStream.html" title="Interface to create a Texture from a Stream. ">TextureFromStream</a> module. </p>
+<p>See <a class="el" href="basicsresources.html">Resources</a> for more detail. </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/frames/configuration.h</li>
 </ul>
 </div><!-- contents -->
@@ -198,7 +303,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>Frames</b></li><li class="navelem"><b>Configuration</b></li><li class="navelem"><a class="el" href="classFrames_1_1Configuration_1_1Local.html">Local</a></li>
-    <li class="footer">Generated on Sun Jul 6 2014 09:04:14 for Frames by
+    <li class="footer">Generated on Mon Jul 7 2014 20:37:19 for Frames by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

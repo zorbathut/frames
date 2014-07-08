@@ -106,7 +106,7 @@ $(document).ready(function(){initNavTree('classFrames_1_1Ptr.html','');});
 </div><!--header-->
 <div class="contents">
 
-<p>Basic refcounting pointer.  
+<p>Basic refcounted pointer.  
  <a href="classFrames_1_1Ptr.html#details">More...</a></p>
 
 <p><code>#include &lt;ptr.h&gt;</code></p>
@@ -124,22 +124,24 @@ typedef T *this_type::*&#160;</td><td class="memItemRight" valign="bottom"><b>un
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a70c99f720a934764373dd241bb734c7d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a70c99f720a934764373dd241bb734c7d"></a>
 T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Ptr.html#a70c99f720a934764373dd241bb734c7d">Get</a> () const </td></tr>
-<tr class="memdesc:a70c99f720a934764373dd241bb734c7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the contents of this pointer, or NULL if it points to nothing valid. <br /></td></tr>
+<tr class="memdesc:a70c99f720a934764373dd241bb734c7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the contents of this pointer, or null if it points to nothing valid. <br /></td></tr>
 <tr class="separator:a70c99f720a934764373dd241bb734c7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9a36eba9f8b8b7b31aaa4f08bb37456"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af9a36eba9f8b8b7b31aaa4f08bb37456"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>operator unspecified_bool_type</b> () const </td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Ptr.html#af9a36eba9f8b8b7b31aaa4f08bb37456">operator unspecified_bool_type</a> () const </td></tr>
+<tr class="memdesc:af9a36eba9f8b8b7b31aaa4f08bb37456"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit cast so this pointer can be used in a conditional. <br /></td></tr>
 <tr class="separator:af9a36eba9f8b8b7b31aaa4f08bb37456"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe3cb436b966b5266504195c934680ef"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abe3cb436b966b5266504195c934680ef"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!</b> () const </td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Ptr.html#abe3cb436b966b5266504195c934680ef">operator!</a> () const </td></tr>
+<tr class="memdesc:abe3cb436b966b5266504195c934680ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this pointer is null. <br /></td></tr>
 <tr class="separator:abe3cb436b966b5266504195c934680ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff2f5323818e470db69e00374ae37363"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aff2f5323818e470db69e00374ae37363"></a>
-T &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> () const </td></tr>
+<tr class="memitem:aff2f5323818e470db69e00374ae37363"><td class="memItemLeft" align="right" valign="top">T &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Ptr.html#aff2f5323818e470db69e00374ae37363">operator*</a> () const </td></tr>
+<tr class="memdesc:aff2f5323818e470db69e00374ae37363"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dereferences the pointer.  <a href="#aff2f5323818e470db69e00374ae37363">More...</a><br /></td></tr>
 <tr class="separator:aff2f5323818e470db69e00374ae37363"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5317a46887054eaba0ed884c62c0d736"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5317a46887054eaba0ed884c62c0d736"></a>
-T *&#160;</td><td class="memItemRight" valign="bottom"><b>operator-&gt;</b> () const </td></tr>
+<tr class="memitem:a5317a46887054eaba0ed884c62c0d736"><td class="memItemLeft" align="right" valign="top">T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Ptr.html#a5317a46887054eaba0ed884c62c0d736">operator-&gt;</a> () const </td></tr>
+<tr class="memdesc:a5317a46887054eaba0ed884c62c0d736"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dereferences the pointer.  <a href="#a5317a46887054eaba0ed884c62c0d736">More...</a><br /></td></tr>
 <tr class="separator:a5317a46887054eaba0ed884c62c0d736"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a874f6163b41141ffaf3bafbafef833d7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a874f6163b41141ffaf3bafbafef833d7"></a>
-<a class="el" href="classFrames_1_1Ptr.html">Ptr</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classFrames_1_1Ptr.html">Ptr</a> &amp;rhs)</td></tr>
+<tr class="memitem:a874f6163b41141ffaf3bafbafef833d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFrames_1_1Ptr.html">Ptr</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Ptr.html#a874f6163b41141ffaf3bafbafef833d7">operator=</a> (const <a class="el" href="classFrames_1_1Ptr.html">Ptr</a> &amp;rhs)</td></tr>
+<tr class="memdesc:a874f6163b41141ffaf3bafbafef833d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Standard assignment operator.  <a href="#a874f6163b41141ffaf3bafbafef833d7">More...</a><br /></td></tr>
 <tr class="separator:a874f6163b41141ffaf3bafbafef833d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e750d066008eb08a84cc002dba7d130"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9e750d066008eb08a84cc002dba7d130"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Ptr.html#a9e750d066008eb08a84cc002dba7d130">Ptr</a> ()</td></tr>
@@ -148,12 +150,12 @@ T *&#160;</td><td class="memItemRight" valign="bottom"><b>operator-&gt;</b> () c
 <tr class="memitem:a0a390dd45cc5f82ddd8ef35ae58b1b0a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Ptr.html#a0a390dd45cc5f82ddd8ef35ae58b1b0a">Ptr</a> (T *p)</td></tr>
 <tr class="memdesc:a0a390dd45cc5f82ddd8ef35ae58b1b0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes to an instance of T and takes ownership of that object.  <a href="#a0a390dd45cc5f82ddd8ef35ae58b1b0a">More...</a><br /></td></tr>
 <tr class="separator:a0a390dd45cc5f82ddd8ef35ae58b1b0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a433fbeee5b44107a27419924624ff8b3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a433fbeee5b44107a27419924624ff8b3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Ptr</b> (const <a class="el" href="classFrames_1_1Ptr.html">Ptr</a> &amp;rhs)</td></tr>
+<tr class="memitem:a433fbeee5b44107a27419924624ff8b3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Ptr.html#a433fbeee5b44107a27419924624ff8b3">Ptr</a> (const <a class="el" href="classFrames_1_1Ptr.html">Ptr</a> &amp;rhs)</td></tr>
+<tr class="memdesc:a433fbeee5b44107a27419924624ff8b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Standard copy constructor.  <a href="#a433fbeee5b44107a27419924624ff8b3">More...</a><br /></td></tr>
 <tr class="separator:a433fbeee5b44107a27419924624ff8b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2ff40fed960807590188edd19ddc235"><td class="memTemplParams" colspan="2"><a class="anchor" id="aa2ff40fed960807590188edd19ddc235"></a>
-template&lt;typename U &gt; </td></tr>
-<tr class="memitem:aa2ff40fed960807590188edd19ddc235"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Ptr</b> (const <a class="el" href="classFrames_1_1Ptr.html">Ptr</a>&lt; U &gt; &amp;rhs)</td></tr>
+<tr class="memitem:aa2ff40fed960807590188edd19ddc235"><td class="memTemplParams" colspan="2">template&lt;typename U &gt; </td></tr>
+<tr class="memitem:aa2ff40fed960807590188edd19ddc235"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFrames_1_1Ptr.html#aa2ff40fed960807590188edd19ddc235">Ptr</a> (const <a class="el" href="classFrames_1_1Ptr.html">Ptr</a>&lt; U &gt; &amp;rhs)</td></tr>
+<tr class="memdesc:aa2ff40fed960807590188edd19ddc235"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type-converting copy constructor.  <a href="#aa2ff40fed960807590188edd19ddc235">More...</a><br /></td></tr>
 <tr class="separator:aa2ff40fed960807590188edd19ddc235"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aded7b57e83d76e3706ce5b5e3e50c132"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aded7b57e83d76e3706ce5b5e3e50c132"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Ptr.html#aded7b57e83d76e3706ce5b5e3e50c132">Reset</a> ()</td></tr>
@@ -163,15 +165,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Ptr.html#a1166593190f0773f1b7fb4f47cae8a9f">Reset</a> (T *rhs)</td></tr>
 <tr class="memdesc:a1166593190f0773f1b7fb4f47cae8a9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets this pointer to a new object. <br /></td></tr>
 <tr class="separator:a1166593190f0773f1b7fb4f47cae8a9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff7b7bde87e3fa8dc86ed30cafe30fba"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aff7b7bde87e3fa8dc86ed30cafe30fba"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Swap</b> (<a class="el" href="classFrames_1_1Ptr.html">Ptr</a> &amp;rhs)</td></tr>
+<tr class="memitem:aff7b7bde87e3fa8dc86ed30cafe30fba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Ptr.html#aff7b7bde87e3fa8dc86ed30cafe30fba">Swap</a> (<a class="el" href="classFrames_1_1Ptr.html">Ptr</a> &amp;rhs)</td></tr>
+<tr class="memdesc:aff7b7bde87e3fa8dc86ed30cafe30fba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Swaps two smart pointers.  <a href="#aff7b7bde87e3fa8dc86ed30cafe30fba">More...</a><br /></td></tr>
 <tr class="separator:aff7b7bde87e3fa8dc86ed30cafe30fba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a583c947d0f31b9611460f5fd5c72c2fc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Ptr.html#a583c947d0f31b9611460f5fd5c72c2fc">~Ptr</a> ()</td></tr>
+<tr class="memdesc:a583c947d0f31b9611460f5fd5c72c2fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Standard destructor.  <a href="#a583c947d0f31b9611460f5fd5c72c2fc">More...</a><br /></td></tr>
+<tr class="separator:a583c947d0f31b9611460f5fd5c72c2fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename T&gt;<br />
 class Frames::Ptr&lt; T &gt;</h3>
 
-<p>Basic refcounting pointer. </p>
+<p>Basic refcounted pointer. </p>
 <p>Requires that T conform to the interface of Refcountable&lt;T&gt;. The easiest way to accomplish this is to inherit T from Refcountable&lt;T&gt;. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a0a390dd45cc5f82ddd8ef35ae58b1b0a"></a>
@@ -199,8 +204,211 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 
 <p>Initializes to an instance of T and takes ownership of that object. </p>
-<p>If you have a T you don't want to be owned by <a class="el" href="classFrames_1_1Ptr.html" title="Basic refcounting pointer. ">Ptr</a>, call -&gt;RefAdd() on that T before removing all <a class="el" href="classFrames_1_1Ptr.html" title="Basic refcounting pointer. ">Ptr</a> references.</p>
+<p>If you have a T you don't want to be owned by <a class="el" href="classFrames_1_1Ptr.html" title="Basic refcounted pointer. ">Ptr</a>, call -&gt;RefAdd() on that T before removing all <a class="el" href="classFrames_1_1Ptr.html" title="Basic refcounted pointer. ">Ptr</a> references.</p>
 <p>Obviously, it will now be your responsibility to call -&gt;RefRelease() the appropriate number of times. </p>
+
+</div>
+</div>
+<a class="anchor" id="a433fbeee5b44107a27419924624ff8b3"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classFrames_1_1Ptr.html">Frames::Ptr</a>&lt; T &gt;::<a class="el" href="classFrames_1_1Ptr.html">Ptr</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classFrames_1_1Ptr.html">Ptr</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Standard copy constructor. </p>
+<p>Will add a reference. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa2ff40fed960807590188edd19ddc235"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<div class="memtemplate">
+template&lt;typename U &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classFrames_1_1Ptr.html">Frames::Ptr</a>&lt; T &gt;::<a class="el" href="classFrames_1_1Ptr.html">Ptr</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classFrames_1_1Ptr.html">Ptr</a>&lt; U &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type-converting copy constructor. </p>
+<p>Will add a reference. If the destination type cannot be implicitly converted from this type, will fail to compile. </p>
+
+</div>
+</div>
+<a class="anchor" id="a583c947d0f31b9611460f5fd5c72c2fc"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classFrames_1_1Ptr.html">Frames::Ptr</a>&lt; T &gt;::~<a class="el" href="classFrames_1_1Ptr.html">Ptr</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Standard destructor. </p>
+<p>Will remove a reference, possibly destroying the object. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="aff2f5323818e470db69e00374ae37363"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T&amp; <a class="el" href="classFrames_1_1Ptr.html">Frames::Ptr</a>&lt; T &gt;::operator* </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Dereferences the pointer. </p>
+<p>Undefined results if the pointer is currently null. </p>
+
+</div>
+</div>
+<a class="anchor" id="a5317a46887054eaba0ed884c62c0d736"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T* <a class="el" href="classFrames_1_1Ptr.html">Frames::Ptr</a>&lt; T &gt;::operator-&gt; </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Dereferences the pointer. </p>
+<p>Undefined results if the pointer is currently null. </p>
+
+</div>
+</div>
+<a class="anchor" id="a874f6163b41141ffaf3bafbafef833d7"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classFrames_1_1Ptr.html">Ptr</a>&amp; <a class="el" href="classFrames_1_1Ptr.html">Frames::Ptr</a>&lt; T &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classFrames_1_1Ptr.html">Ptr</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Standard assignment operator. </p>
+<p>Will both add and remove a reference, possibly destroying the assignment target. </p>
+
+</div>
+</div>
+<a class="anchor" id="aff7b7bde87e3fa8dc86ed30cafe30fba"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classFrames_1_1Ptr.html">Frames::Ptr</a>&lt; T &gt;::Swap </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classFrames_1_1Ptr.html">Ptr</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Swaps two smart pointers. </p>
+<p>Guaranteed to not deallocate anything. </p>
 
 </div>
 </div>
@@ -214,7 +422,7 @@ template&lt;typename T&gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>Frames</b></li><li class="navelem"><a class="el" href="classFrames_1_1Ptr.html">Ptr</a></li>
-    <li class="footer">Generated on Sun Jul 6 2014 09:04:14 for Frames by
+    <li class="footer">Generated on Mon Jul 7 2014 20:37:19 for Frames by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

@@ -124,7 +124,7 @@ Inheritance diagram for Frames::Environment:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment_1_1Performance.html">Performance</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does performance monitoring of scope blocks.  <a href="classFrames_1_1Environment_1_1Performance.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">RAII performance monitoring of scope blocks.  <a href="classFrames_1_1Environment_1_1Performance.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -133,16 +133,14 @@ Public Member Functions</h2></td></tr>
 const <a class="el" href="classFrames_1_1Configuration_1_1Local.html">Configuration::Local</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#a33239d95e8b02bab05ff5ca55dfb9e05">ConfigurationGet</a> ()</td></tr>
 <tr class="memdesc:a33239d95e8b02bab05ff5ca55dfb9e05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the environment's Configuration. <br /></td></tr>
 <tr class="separator:a33239d95e8b02bab05ff5ca55dfb9e05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a106c46fcf9d4183f8ca16dce02c79f7e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a106c46fcf9d4183f8ca16dce02c79f7e"></a>
-<a class="el" href="classFrames_1_1Layout.html">Layout</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#a106c46fcf9d4183f8ca16dce02c79f7e">FocusGet</a> ()</td></tr>
-<tr class="memdesc:a106c46fcf9d4183f8ca16dce02c79f7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current key focus. <br /></td></tr>
+<tr class="memitem:a106c46fcf9d4183f8ca16dce02c79f7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFrames_1_1Layout.html">Layout</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#a106c46fcf9d4183f8ca16dce02c79f7e">FocusGet</a> ()</td></tr>
+<tr class="memdesc:a106c46fcf9d4183f8ca16dce02c79f7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current key focus target frame.  <a href="#a106c46fcf9d4183f8ca16dce02c79f7e">More...</a><br /></td></tr>
 <tr class="separator:a106c46fcf9d4183f8ca16dce02c79f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a296cf10f4d08212256bc1c13e2721691"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a296cf10f4d08212256bc1c13e2721691"></a>
-const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#a296cf10f4d08212256bc1c13e2721691">FocusGet</a> () const </td></tr>
-<tr class="memdesc:a296cf10f4d08212256bc1c13e2721691"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current key focus. <br /></td></tr>
+<tr class="memitem:a296cf10f4d08212256bc1c13e2721691"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#a296cf10f4d08212256bc1c13e2721691">FocusGet</a> () const </td></tr>
+<tr class="memdesc:a296cf10f4d08212256bc1c13e2721691"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current key focus target frame.  <a href="#a296cf10f4d08212256bc1c13e2721691">More...</a><br /></td></tr>
 <tr class="separator:a296cf10f4d08212256bc1c13e2721691"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af445a41e32530b69c8fbcadc5c765b1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#af445a41e32530b69c8fbcadc5c765b1a">FocusSet</a> (<a class="el" href="classFrames_1_1Layout.html">Layout</a> *layout)</td></tr>
-<tr class="memdesc:af445a41e32530b69c8fbcadc5c765b1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the key focus to the given <a class="el" href="classFrames_1_1Layout.html" title="Base class containing location and layout information for all Frames elements. ">Layout</a>.  <a href="#af445a41e32530b69c8fbcadc5c765b1a">More...</a><br /></td></tr>
+<tr class="memdesc:af445a41e32530b69c8fbcadc5c765b1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the key focus to the given <a class="el" href="classFrames_1_1Layout.html" title="Location and layout interface, contained in all Frames elements. ">Layout</a>.  <a href="#af445a41e32530b69c8fbcadc5c765b1a">More...</a><br /></td></tr>
 <tr class="separator:af445a41e32530b69c8fbcadc5c765b1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1fc8d5ce1ec7ead04169ef1f6e5e9e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#ab1fc8d5ce1ec7ead04169ef1f6e5e9e6">Input_KeyDown</a> (const Input::Key &amp;key)</td></tr>
 <tr class="memdesc:ab1fc8d5ce1ec7ead04169ef1f6e5e9e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Informs the environment that a key has been pressed.  <a href="#ab1fc8d5ce1ec7ead04169ef1f6e5e9e6">More...</a><br /></td></tr>
@@ -157,10 +155,10 @@ const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *&#160;</td><td
 <tr class="memdesc:af328681d411c9c84fac8e5acd5fdf835"><td class="mdescLeft">&#160;</td><td class="mdescRight">Informs the environment that a key has released.  <a href="#af328681d411c9c84fac8e5acd5fdf835">More...</a><br /></td></tr>
 <tr class="separator:af328681d411c9c84fac8e5acd5fdf835"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22f97e4772cff639d8d44a53d39a8443"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structFrames_1_1Input_1_1Meta.html">Input::Meta</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#a22f97e4772cff639d8d44a53d39a8443">Input_MetaGet</a> () const </td></tr>
-<tr class="memdesc:a22f97e4772cff639d8d44a53d39a8443"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the environment's current metakey flags.  <a href="#a22f97e4772cff639d8d44a53d39a8443">More...</a><br /></td></tr>
+<tr class="memdesc:a22f97e4772cff639d8d44a53d39a8443"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the environment's current meta key flags.  <a href="#a22f97e4772cff639d8d44a53d39a8443">More...</a><br /></td></tr>
 <tr class="separator:a22f97e4772cff639d8d44a53d39a8443"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae133200738c0200b90625a2f6142dffe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#ae133200738c0200b90625a2f6142dffe">Input_MetaSet</a> (const <a class="el" href="structFrames_1_1Input_1_1Meta.html">Input::Meta</a> &amp;meta)</td></tr>
-<tr class="memdesc:ae133200738c0200b90625a2f6142dffe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the environment's current metakey flags.  <a href="#ae133200738c0200b90625a2f6142dffe">More...</a><br /></td></tr>
+<tr class="memdesc:ae133200738c0200b90625a2f6142dffe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the environment's current meta key flags.  <a href="#ae133200738c0200b90625a2f6142dffe">More...</a><br /></td></tr>
 <tr class="separator:ae133200738c0200b90625a2f6142dffe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afac8d969e8ab22e64ea662a3ec4776dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#afac8d969e8ab22e64ea662a3ec4776dd">Input_MouseClear</a> ()</td></tr>
 <tr class="memdesc:afac8d969e8ab22e64ea662a3ec4776dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Informs the environment that the mouse no longer exists in the scene.  <a href="#afac8d969e8ab22e64ea662a3ec4776dd">More...</a><br /></td></tr>
@@ -182,22 +180,18 @@ const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *&#160;</td><td
 <tr class="separator:a9d5ec18c2f5fbe9d8f6628762c401e1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa34f78e38ed6dab233443025f1430fe9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa34f78e38ed6dab233443025f1430fe9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#aa34f78e38ed6dab233443025f1430fe9">LogDebug</a> (const std::string &amp;log)</td></tr>
-<tr class="memdesc:aa34f78e38ed6dab233443025f1430fe9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a string to the Logger's Debug path. <br /></td></tr>
+<tr class="memdesc:aa34f78e38ed6dab233443025f1430fe9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a string to the Debug log. <br /></td></tr>
 <tr class="separator:aa34f78e38ed6dab233443025f1430fe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe60be2e6d7180270346ab7d8fefc8d7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abe60be2e6d7180270346ab7d8fefc8d7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#abe60be2e6d7180270346ab7d8fefc8d7">LogError</a> (const std::string &amp;log)</td></tr>
-<tr class="memdesc:abe60be2e6d7180270346ab7d8fefc8d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a string to the Logger's Error path. <br /></td></tr>
+<tr class="memdesc:abe60be2e6d7180270346ab7d8fefc8d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a string to the Error log. <br /></td></tr>
 <tr class="separator:abe60be2e6d7180270346ab7d8fefc8d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66e989fd9a1ccec33c7373fbf2b99afb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFrames_1_1Layout.html">Layout</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#a66e989fd9a1ccec33c7373fbf2b99afb">ProbeAsMouse</a> (float x, float y)</td></tr>
-<tr class="memdesc:a66e989fd9a1ccec33c7373fbf2b99afb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the layout underneath a given coordinate in the context of mouse input.  <a href="#a66e989fd9a1ccec33c7373fbf2b99afb">More...</a><br /></td></tr>
+<tr class="memdesc:a66e989fd9a1ccec33c7373fbf2b99afb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the layout underneath a given coordinate as if it were mouse input.  <a href="#a66e989fd9a1ccec33c7373fbf2b99afb">More...</a><br /></td></tr>
 <tr class="separator:a66e989fd9a1ccec33c7373fbf2b99afb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa891a364f0986a953b0eba54488c6412"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#aa891a364f0986a953b0eba54488c6412">Render</a> (const <a class="el" href="classFrames_1_1Layout.html">Layout</a> *root=0)</td></tr>
 <tr class="memdesc:aa891a364f0986a953b0eba54488c6412"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders a tree of Frames.  <a href="#aa891a364f0986a953b0eba54488c6412">More...</a><br /></td></tr>
 <tr class="separator:aa891a364f0986a953b0eba54488c6412"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92db010b01319b713470fbd1be22c35e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a92db010b01319b713470fbd1be22c35e"></a>
-detail::Renderer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#a92db010b01319b713470fbd1be22c35e">RendererGet</a> () const </td></tr>
-<tr class="memdesc:a92db010b01319b713470fbd1be22c35e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the environment's active Renderer. This should probably not be used by endusers; this will be fixed later. <br /></td></tr>
-<tr class="separator:a92db010b01319b713470fbd1be22c35e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04bc24c958e49ff75b3beba61a30892a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Environment.html#a04bc24c958e49ff75b3beba61a30892a">ResizeRoot</a> (int x, int y)</td></tr>
 <tr class="memdesc:a04bc24c958e49ff75b3beba61a30892a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Informs the environment that the rendering environment has resized.  <a href="#a04bc24c958e49ff75b3beba61a30892a">More...</a><br /></td></tr>
 <tr class="separator:a04bc24c958e49ff75b3beba61a30892a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -223,8 +217,9 @@ Static Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Coordinator class for almost all Frames state. Every Frames-using program will contain at least one <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a>. </p>
-<p>A <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Frames::Environment</a> is a self-contained Frames instance. It handles input, owns a hierarchy of <a class="el" href="classFrames_1_1Frame.html">Frames</a>, manages resources, and contains all the configuration data needed to use Frames. Every Frames-using program will contain at least one <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a>.</p>
-<p>While <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a> is not locked to any individual thread, it is fundamentally single-threaded. It is undefined behavior to call any <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a> function, or any function on a <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a> owned by an <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a>, while any other such function is being run in another thread. However, multiple Environments can be used in parallel without issue. In most cases, it is also valid to call an <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a> or <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a> function while handling an event dispatch.</p>
+<p>A <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Frames::Environment</a> is a self-contained Frames instance. It handles input, owns a hierarchy of <a class="el" href="classFrames_1_1Frame.html">Frames</a>, manages resources, and contains all the configuration data needed to use Frames.</p>
+<p>While <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a> is not locked to any individual thread, it is fundamentally single-threaded. It is undefined behavior to call any <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a> function, or any function on a <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a> owned by an <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a>, while any other such function is being run in another thread. However, multiple Environments can be used in parallel without issue.</p>
+<p>Except when specified otherwise, it is always valid to call an <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a> or <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a> function while handling an event dispatch in that same thread.</p>
 <p><a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a> will clean itself up entirely when it is destroyed, including destroying all child <a class="el" href="classFrames_1_1Frame.html">Frames</a>, cleaning up all stored resources and event handles, cleaning up any hooks in scripting languages, and so forth. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="a2094a77e9620f1efeb314426c5701433"></a>
@@ -250,7 +245,59 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Initialize an <a class="el" href="classFrames_1_1Environment.html" title="Coordinator class for almost all Frames state. Every Frames-using program will contain at least one E...">Environment</a>. </p>
-<p>See <a class="el" href="classFrames_1_1Configuration_1_1Local.html" title="All configuration data that needs to be provided for a functioning Environment. ">Configuration::Local</a> for parameter details. </p>
+<p>See <a class="el" href="classFrames_1_1Configuration_1_1Local.html" title="Configuration data associated with an Environment. ">Configuration::Local</a> for parameter details. </p>
+
+</div>
+</div>
+<a class="anchor" id="a106c46fcf9d4183f8ca16dce02c79f7e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classFrames_1_1Layout.html">Layout</a>* Frames::Environment::FocusGet </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the current key focus target frame. </p>
+<p>Returns null if no frame has key focus. </p>
+
+</div>
+</div>
+<a class="anchor" id="a296cf10f4d08212256bc1c13e2721691"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classFrames_1_1Layout.html">Layout</a>* Frames::Environment::FocusGet </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the current key focus target frame. </p>
+<p>Returns null if no frame has key focus. </p>
 
 </div>
 </div>
@@ -268,9 +315,9 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sets the key focus to the given <a class="el" href="classFrames_1_1Layout.html" title="Base class containing location and layout information for all Frames elements. ">Layout</a>. </p>
-<p>The key focus directs all key input to a specific <a class="el" href="classFrames_1_1Layout.html" title="Base class containing location and layout information for all Frames elements. ">Layout</a> (more commonly, <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a>). Without a focus, key input will not be consumed.</p>
-<p>Call with a parameter of 0 to clear the key focus. </p>
+<p>Sets the key focus to the given <a class="el" href="classFrames_1_1Layout.html" title="Location and layout interface, contained in all Frames elements. ">Layout</a>. </p>
+<p>The key focus directs all key input to a specific <a class="el" href="classFrames_1_1Layout.html" title="Location and layout interface, contained in all Frames elements. ">Layout</a> (more commonly, <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a>). Without a focus, key input will not be consumed.</p>
+<p>Call with a parameter of null to clear the key focus. </p>
 
 </div>
 </div>
@@ -290,7 +337,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Informs the environment that a key has been pressed. </p>
 <p>Keypresses happen immediately and may trigger <a class="el" href="classFrames_1_1Layout_1_1Event.html#ad90bc1015effdaccd0341601e7dbb595" title="Signals that a key has been pressed while a frame has the key focus. ">Layout::Event::KeyDown</a> events.</p>
-<p>Returns true if the event was consumed by a <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a>. </p>
+<p>Returns true if the event was consumed by a <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a>. </p>
 
 </div>
 </div>
@@ -310,7 +357,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Informs the environment that a key has repeated. </p>
 <p>Key repeats happen immediately and may trigger <a class="el" href="classFrames_1_1Layout_1_1Event.html#a225f7b10dcadd759a788cf7d64e7c524" title="Signals that a keypress has repeated while a frame has the key focus. ">Layout::Event::KeyRepeat</a> events.</p>
-<p>Returns true if the event was consumed by a <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a>. </p>
+<p>Returns true if the event was consumed by a <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a>. </p>
 
 </div>
 </div>
@@ -329,8 +376,8 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Informs the environment that text has been typed. </p>
-<p>Typing happens immediately and may trigger Layout::Event::KeyType events.</p>
-<p>Returns true if the event was consumed by a <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a>. </p>
+<p>Typing happens immediately and may trigger <a class="el" href="classFrames_1_1Layout_1_1Event.html#a0bf0a1f06d9fc7414f1d071037e84229" title="Signals that text has been typed while a frame has the key focus. ">Layout::Event::KeyText</a> events.</p>
+<p>Returns true if the event was consumed by a <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a>. </p>
 
 </div>
 </div>
@@ -350,7 +397,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Informs the environment that a key has released. </p>
 <p>Key releases happen immediately and may trigger <a class="el" href="classFrames_1_1Layout_1_1Event.html#ac92e2002192e67941a9c636b9489be57" title="Signals that a key has been released while a frame has the key focus. ">Layout::Event::KeyUp</a> events.</p>
-<p>Returns true if the event was consumed by a <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a>. </p>
+<p>Returns true if the event was consumed by a <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a>. </p>
 
 </div>
 </div>
@@ -375,7 +422,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the environment's current metakey flags. </p>
+<p>Gets the environment's current meta key flags. </p>
 <p>This is intended for input handlers to check if the standard meta buttons - shift, ctrl, and alt - are pressed or not. </p>
 
 </div>
@@ -402,7 +449,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Sets the environment's current metakey flags. </p>
+<p>Sets the environment's current meta key flags. </p>
 <p>This does not trigger events, merely updates the key meta state intended for event handlers. </p>
 
 </div>
@@ -441,7 +488,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Informs the environment that a mouse button has been pressed. </p>
 <p>Button state changes happen immediately and may trigger <a class="el" href="classFrames_1_1Layout_1_1Event.html#a250d5f6b144a0b526998fad4ef038c7f">Layout::Event::Mouse*Down</a> events. All integers are valid and will trigger the appropriate <a class="el" href="classFrames_1_1Layout_1_1Event.html#aa71dcdc889a4d0b15bcab6539c08c78d">Layout::Event::MouseButton*</a> event. However, 0 will also trigger <a class="el" href="classFrames_1_1Layout_1_1Event.html#a250d5f6b144a0b526998fad4ef038c7f">Layout::Event::MouseLeft*</a> events, 1 will also trigger <a class="el" href="classFrames_1_1Layout_1_1Event.html#a7247438eb50f2a80dc2706004e7aae34">Layout::Event::MouseRight*</a> events, and 2 will also trigger <a class="el" href="classFrames_1_1Layout_1_1Event.html#a9d21654356569f27c158ad6597027b78">Layout::Event::MouseMiddle*</a> events.</p>
-<p>Returns true if the event was consumed by a <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a>. </p>
+<p>Returns true if the event was consumed by a <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a>. </p>
 
 </div>
 </div>
@@ -516,7 +563,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Informs the environment that a mouse button has been released. </p>
 <p>Button state changes happen immediately and may trigger <a class="el" href="classFrames_1_1Layout_1_1Event.html#a0003ad7eba87697ad6b378adec145b99">Layout::Event::Mouse*Up</a>, <a class="el" href="classFrames_1_1Layout_1_1Event.html#a4a0af857d0905ecfe5b3d29c9bb7e91d">Layout::Event::Mouse*Upoutside</a>, and <a class="el" href="classFrames_1_1Layout_1_1Event.html#afb1c7e614315c7033b728ef1e3390fda">Layout::Event::Mouse*Click</a> events. All integers are valid and will trigger the appropriate <a class="el" href="classFrames_1_1Layout_1_1Event.html#a4f7e4a4fd02ab28a3b9191ea94c6869c">Layout::Event::MouseButton*</a> event. However, 0 will also trigger <a class="el" href="classFrames_1_1Layout_1_1Event.html#a0003ad7eba87697ad6b378adec145b99">Layout::Event::MouseLeft*</a> events, 1 will also trigger <a class="el" href="classFrames_1_1Layout_1_1Event.html#acd2a0cca8e75783b946196515cfb0f62">Layout::Event::MouseRight*</a> events, and 2 will also trigger <a class="el" href="classFrames_1_1Layout_1_1Event.html#a97290ffa1e8255a542d05be337f3f0b8">Layout::Event::MouseMiddle*</a> events.</p>
-<p>Returns true if the event was consumed by a <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a>. </p>
+<p>Returns true if the event was consumed by a <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a>. </p>
 
 </div>
 </div>
@@ -536,7 +583,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Informs the environment that the mouse wheel has been rotated. </p>
 <p>Wheel state changes happen immediately and may trigger <a class="el" href="classFrames_1_1Layout_1_1Event.html#a82d88086d7ba6f625b3b70791216831e" title="Signals that the mouse wheel has been moved while inside a frame. ">Layout::Event::MouseWheel</a> events.</p>
-<p>Returns true if the event was consumed by a <a class="el" href="classFrames_1_1Frame.html" title="The basic component of Frames UIs. ">Frame</a>. </p>
+<p>Returns true if the event was consumed by a <a class="el" href="classFrames_1_1Frame.html" title="Basic component of Frames UIs, dynamically createable and movable. ">Frame</a>. </p>
 
 </div>
 </div>
@@ -564,8 +611,8 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Returns the layout underneath a given coordinate in the context of mouse input. </p>
-<p>This can be used to find out what frame would be hit by a mouse even at a certain coordinate. </p>
+<p>Returns the layout underneath a given coordinate as if it were mouse input. </p>
+<p>This can be used to find out what frame would be hit by a mouse event at a certain coordinate. </p>
 
 </div>
 </div>
@@ -639,7 +686,7 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the root layout. </p>
-<p>The root layout is the bottom-most <a class="el" href="classFrames_1_1Layout.html" title="Base class containing location and layout information for all Frames elements. ">Layout</a>. Everything is a child of this. </p>
+<p>The root layout is the bottom-most <a class="el" href="classFrames_1_1Layout.html" title="Location and layout interface, contained in all Frames elements. ">Layout</a>. Everything is a child of this. </p>
 
 </div>
 </div>
@@ -665,7 +712,7 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the root layout. </p>
-<p>The root layout is the bottom-most <a class="el" href="classFrames_1_1Layout.html" title="Base class containing location and layout information for all Frames elements. ">Layout</a>. Everything is a child of this. </p>
+<p>The root layout is the bottom-most <a class="el" href="classFrames_1_1Layout.html" title="Location and layout interface, contained in all Frames elements. ">Layout</a>. Everything is a child of this. </p>
 
 </div>
 </div>
@@ -679,7 +726,7 @@ Static Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>Frames</b></li><li class="navelem"><a class="el" href="classFrames_1_1Environment.html">Environment</a></li>
-    <li class="footer">Generated on Sun Jul 6 2014 09:04:14 for Frames by
+    <li class="footer">Generated on Mon Jul 7 2014 20:37:19 for Frames by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

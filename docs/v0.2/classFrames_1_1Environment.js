@@ -21,7 +21,6 @@ var classFrames_1_1Environment =
     [ "LogError", "classFrames_1_1Environment.html#abe60be2e6d7180270346ab7d8fefc8d7", null ],
     [ "ProbeAsMouse", "classFrames_1_1Environment.html#a66e989fd9a1ccec33c7373fbf2b99afb", null ],
     [ "Render", "classFrames_1_1Environment.html#aa891a364f0986a953b0eba54488c6412", null ],
-    [ "RendererGet", "classFrames_1_1Environment.html#a92db010b01319b713470fbd1be22c35e", null ],
     [ "ResizeRoot", "classFrames_1_1Environment.html#a04bc24c958e49ff75b3beba61a30892a", null ],
     [ "RootGet", "classFrames_1_1Environment.html#ae461d8f38f29739b53eaa90f7da48d97", null ],
     [ "RootGet", "classFrames_1_1Environment.html#a7a303454496f2555f6a87ce369c20ef2", null ],

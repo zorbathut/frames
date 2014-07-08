@@ -16,5 +16,6 @@ var searchData=
   ['sizeset',['SizeSet',['../classFrames_1_1Frame.html#a0e105efa8d05340df699a8ba9ab167ae',1,'Frames::Frame::SizeSet()'],['../classFrames_1_1Text.html#ad8f991cc04d434dea72b44c15b87d2e6',1,'Frames::Text::SizeSet()']]],
   ['sprite',['Sprite',['../classFrames_1_1Sprite.html#aed18baf294f03010a07d04ac7a32bab6',1,'Frames::Sprite']]],
   ['streamfromidget',['StreamFromIdGet',['../classFrames_1_1Configuration_1_1Local.html#a7db7bb086f25cca40edb420586562ac2',1,'Frames::Configuration::Local']]],
-  ['streamfromidset',['StreamFromIdSet',['../classFrames_1_1Configuration_1_1Local.html#ab8c679c1d3a7ae740c8634b1b8ee6f20',1,'Frames::Configuration::Local']]]
+  ['streamfromidset',['StreamFromIdSet',['../classFrames_1_1Configuration_1_1Local.html#ab8c679c1d3a7ae740c8634b1b8ee6f20',1,'Frames::Configuration::Local']]],
+  ['swap',['Swap',['../classFrames_1_1Ptr.html#aff7b7bde87e3fa8dc86ed30cafe30fba',1,'Frames::Ptr']]]
 ];

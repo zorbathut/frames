@@ -127,7 +127,7 @@ $(document).ready(function(){initNavTree('cppsetup.html','');});
 <div class="line">localConfig.LoggerSet(logger);</div>
 <div class="line">localConfig.RendererSet(Frames::RendererOpengl());</div>
 <div class="line">environment = Frames::Environment::Create(localConfig);</div>
-</div><!-- fragment --><p>All classes stored in <a class="el" href="classFrames_1_1Configuration_1_1Global.html" title="Configuration data that cannot be associated with a single Environment. ">Frames::Configuration::Global</a> or <a class="el" href="classFrames_1_1Configuration_1_1Local.html" title="All configuration data that needs to be provided for a functioning Environment. ">Frames::Configuration::Local</a> are refcounted and will be cleaned up when appropriate. </p><hr/>
+</div><!-- fragment --><p>All classes stored in <a class="el" href="classFrames_1_1Configuration_1_1Global.html" title="Configuration data not associated with an Environment. ">Frames::Configuration::Global</a> or <a class="el" href="classFrames_1_1Configuration_1_1Local.html" title="Configuration data associated with an Environment. ">Frames::Configuration::Local</a> are refcounted and will be cleaned up when appropriate. </p><hr/>
 <h2>Resources</h2>
 <p>You may want to hook Frames into your resource loading system. If you're using loose files relative to the working directory, you won't need to make any changes. If you're reading from a dedicated data directory or from some sort of archive file, you'll want to look into the <a class="el" href="basicsresources.html">Resources</a> documentation. Note that Frames does not currently provide support for asynchronous loading - if this is necessary for your project, please contact us. </p><hr/>
 <h2>Defaults</h2>
@@ -144,8 +144,8 @@ $(document).ready(function(){initNavTree('cppsetup.html','');});
 <div class="line"></div>
 <div class="line"><span class="comment">// Set the backdrop to render in blue, then attach it to helloworld&#39;s position, extending slightly beyond its bounds</span></div>
 <div class="line">backdrop-&gt;<a class="code" href="classFrames_1_1Frame.html#a64710bf5c347dd6a0c6315362d398377">BackgroundSet</a>(<a class="code" href="classFrames_1_1Color.html">Frames::Color</a>(0.f, 0.f, 1.f));</div>
-<div class="line">backdrop-&gt;<a class="code" href="classFrames_1_1Frame.html#a6f9a643c88a5b73f6b8f3b656abb5c66">PinSet</a>(Frames::TOPLEFT, helloworld, Frames::TOPLEFT, -5, -5);</div>
-<div class="line">backdrop-&gt;<a class="code" href="classFrames_1_1Frame.html#a6f9a643c88a5b73f6b8f3b656abb5c66">PinSet</a>(Frames::BOTTOMRIGHT, helloworld, Frames::BOTTOMRIGHT, 5, 5);</div>
+<div class="line">backdrop-&gt;<a class="code" href="classFrames_1_1Frame.html#a8d61c5bc36813d11b3e1b3766d95be60">PinSet</a>(Frames::TOPLEFT, helloworld, Frames::TOPLEFT, -5, -5);</div>
+<div class="line">backdrop-&gt;<a class="code" href="classFrames_1_1Frame.html#a8d61c5bc36813d11b3e1b3766d95be60">PinSet</a>(Frames::BOTTOMRIGHT, helloworld, Frames::BOTTOMRIGHT, 5, 5);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// Set the text for helloworld</span></div>
 <div class="line">helloworld-&gt;TextSet(<span class="stringliteral">&quot;Hello, World!&quot;</span>);</div>
@@ -171,7 +171,7 @@ $(document).ready(function(){initNavTree('cppsetup.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Jul 6 2014 09:04:14 for Frames by
+    <li class="footer">Generated on Mon Jul 7 2014 20:37:18 for Frames by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

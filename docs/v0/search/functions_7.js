@@ -14,7 +14,8 @@ var searchData=
   ['input_5fmousemove',['Input_MouseMove',['../classFrames_1_1Environment.html#ae60aff6231959f4bf3b75fcd50cba69a',1,'Frames::Environment']]],
   ['input_5fmouseup',['Input_MouseUp',['../classFrames_1_1Environment.html#aa591ae09f4260cf093f429c2409a7e9d',1,'Frames::Environment']]],
   ['input_5fmousewheel',['Input_MouseWheel',['../classFrames_1_1Environment.html#a9d5ec18c2f5fbe9d8f6628762c401e1b',1,'Frames::Environment']]],
-  ['inputmodeset',['InputModeSet',['../classFrames_1_1Layout.html#abf57fb522a148e4e42fc3a883cfd2ace',1,'Frames::Layout::InputModeSet(InputMode imode)'],['../classFrames_1_1Layout.html#a2a2f514cc7dbdf9ed5698d15fd1a48e2',1,'Frames::Layout::InputModeSet() const ']]],
+  ['inputmodeget',['InputModeGet',['../classFrames_1_1Layout.html#ae188bd87e0d1fd66e017042b78378cb4',1,'Frames::Layout']]],
+  ['inputmodeset',['InputModeSet',['../classFrames_1_1Layout.html#abf57fb522a148e4e42fc3a883cfd2ace',1,'Frames::Layout']]],
   ['interactiveget',['InteractiveGet',['../classFrames_1_1Text.html#a5c0503e294dcb82f16f52805b8da27d6',1,'Frames::Text']]],
   ['interactiveset',['InteractiveSet',['../classFrames_1_1Text.html#a887f8af638814372c127de872763f6de',1,'Frames::Text']]]
 ];

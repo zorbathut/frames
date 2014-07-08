@@ -105,7 +105,7 @@ $(document).ready(function(){initNavTree('classFrames_1_1Configuration_1_1Logger
 </div><!--header-->
 <div class="contents">
 
-<p>Debug logging functionality.  
+<p>Interface for debug logging functionality.  
  <a href="classFrames_1_1Configuration_1_1Logger.html#details">More...</a></p>
 
 <p><code>#include &lt;configuration.h&gt;</code></p>
@@ -136,7 +136,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a441a2f524a7cc1fd179750a998d71fe2 inherit pub_methods_classFrames_1_1Refcountable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Debug logging functionality. </p>
+<div class="textblock"><p>Interface for debug logging functionality. </p>
 <p>Default behavior outputs to the Debug Log on Windows. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="ae59530950289b081ff9c267bfdf82cad"></a>
@@ -162,7 +162,8 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Called when debug output is logged. </p>
-<p>This tends to be pretty spammy. It's very helpful for analyzing what's going on internally, but you may want to disable it by default or provide some convenient way of filtering it. </p>
+<p>This tends to be pretty spammy. It's very helpful for analyzing what's going on internally, but you may want to disable it by default or provide some convenient way of filtering it.</p>
+<p>The implementation of this function must be threadsafe. </p>
 
 </div>
 </div>
@@ -189,7 +190,9 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Called when errors are logged. </p>
-<p>Errors include anything that is thoroughly incorrect, including invalid parameters and conflicting input. It is strongly recommend that Error messages be treated with the same severity as an assert(). Technically, the entire Frames system is left in an inconsistent and unpredictable state after a single Error, although the code does make an attempt to clean up and avoid crashes. </p>
+<p>Errors include anything that is thoroughly incorrect, including invalid parameters and conflicting input. Technically, the entire Frames system is left in an inconsistent and unpredictable state after a single Error, although the code does make an attempt to clean up and avoid crashes.</p>
+<p>It is strongly recommend that Error messages be treated with similar severity to an assert(), up to and including large visible error messages and/or modal dialogs.</p>
+<p>The implementation of this function must be threadsafe. </p>
 
 </div>
 </div>
@@ -203,7 +206,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>Frames</b></li><li class="navelem"><b>Configuration</b></li><li class="navelem"><a class="el" href="classFrames_1_1Configuration_1_1Logger.html">Logger</a></li>
-    <li class="footer">Generated on Sun Jul 6 2014 09:04:14 for Frames by
+    <li class="footer">Generated on Mon Jul 7 2014 20:37:19 for Frames by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

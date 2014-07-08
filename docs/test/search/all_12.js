@@ -8,7 +8,6 @@ var searchData=
   ['textget',['TextGet',['../classFrames_1_1Text.html#adefcee3a0bfe8a30d5fa34c9034532e5',1,'Frames::Text']]],
   ['textset',['TextSet',['../classFrames_1_1Text.html#ac01154e64df0293bded264d78b44140e',1,'Frames::Text']]],
   ['texture',['Texture',['../classFrames_1_1Texture.html',1,'Frames']]],
-  ['texture',['Texture',['../classFrames_1_1Texture.html#a61563fc3375c4f11cf101c57f37eb034',1,'Frames::Texture']]],
   ['texturefromid',['TextureFromId',['../classFrames_1_1Configuration_1_1TextureFromId.html',1,'Frames::Configuration']]],
   ['texturefromidget',['TextureFromIdGet',['../classFrames_1_1Configuration_1_1Local.html#a07d75878d0e0a18b9a7a7aa6ac0d13ea',1,'Frames::Configuration::Local']]],
   ['texturefromidset',['TextureFromIdSet',['../classFrames_1_1Configuration_1_1Local.html#a068359fe2156d9267ff749be4f1acefb',1,'Frames::Configuration::Local']]],

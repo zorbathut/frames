@@ -105,7 +105,7 @@ $(document).ready(function(){initNavTree('classFrames_1_1Configuration_1_1Perfor
 </div><!--header-->
 <div class="contents">
 
-<p>Hooks for a performance monitoring system.  
+<p>Interface for a performance monitoring system.  
  <a href="classFrames_1_1Configuration_1_1Performance.html#details">More...</a></p>
 
 <p><code>#include &lt;configuration.h&gt;</code></p>
@@ -138,10 +138,10 @@ virtual void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 <tr class="separator:a441a2f524a7cc1fd179750a998d71fe2 inherit pub_methods_classFrames_1_1Refcountable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Hooks for a performance monitoring system. </p>
-<p><a class="el" href="classFrames_1_1Configuration_1_1Performance.html#a450f11b32a7c58cf1ce827bf26bd7773" title="Start a profiling block. ">Push()</a> will be called with a human-readable name and a color ID code intended for use in visual profilers. It may return an opaque void* that will be provided in <a class="el" href="classFrames_1_1Configuration_1_1Performance.html#aa8594e33fe94e7034519c5178f4b359d" title="End a profiling block. ">Pop()</a>.</p>
+<div class="textblock"><p>Interface for a performance monitoring system. </p>
+<p><a class="el" href="classFrames_1_1Configuration_1_1Performance.html#a450f11b32a7c58cf1ce827bf26bd7773" title="Start a profiling block. ">Push()</a> will be called with a human-readable name and a color ID code intended for use in visual profilers. The void* it returns will be passed into <a class="el" href="classFrames_1_1Configuration_1_1Performance.html#aa8594e33fe94e7034519c5178f4b359d" title="End a profiling block. ">Pop()</a>.</p>
 <p>It is guaranteed that Push/Pop calls will be done in LIFO order.</p>
-<p>Default behavior is a no-op. </p>
+<p>Default behavior is no-op. </p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/frames/configuration.h</li>
 </ul>
@@ -151,7 +151,7 @@ virtual void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>Frames</b></li><li class="navelem"><b>Configuration</b></li><li class="navelem"><a class="el" href="classFrames_1_1Configuration_1_1Performance.html">Performance</a></li>
-    <li class="footer">Generated on Sun Jul 6 2014 09:04:14 for Frames by
+    <li class="footer">Generated on Mon Jul 7 2014 20:37:19 for Frames by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

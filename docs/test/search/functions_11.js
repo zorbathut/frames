@@ -5,7 +5,6 @@ var searchData=
   ['text',['Text',['../classFrames_1_1Text.html#a77e63cd63641be3a93f6e812f2d6fbef',1,'Frames::Text']]],
   ['textget',['TextGet',['../classFrames_1_1Text.html#adefcee3a0bfe8a30d5fa34c9034532e5',1,'Frames::Text']]],
   ['textset',['TextSet',['../classFrames_1_1Text.html#ac01154e64df0293bded264d78b44140e',1,'Frames::Text']]],
-  ['texture',['Texture',['../classFrames_1_1Texture.html#a61563fc3375c4f11cf101c57f37eb034',1,'Frames::Texture']]],
   ['texturefromidget',['TextureFromIdGet',['../classFrames_1_1Configuration_1_1Local.html#a07d75878d0e0a18b9a7a7aa6ac0d13ea',1,'Frames::Configuration::Local']]],
   ['texturefromidset',['TextureFromIdSet',['../classFrames_1_1Configuration_1_1Local.html#a068359fe2156d9267ff749be4f1acefb',1,'Frames::Configuration::Local']]],
   ['texturefromstreamget',['TextureFromStreamGet',['../classFrames_1_1Configuration_1_1Local.html#a95f5ba66bdc9203c783d64e4c1b100cb',1,'Frames::Configuration::Local']]],
