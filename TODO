@@ -1,9 +1,6 @@
 
 === DOCS
 
-* spellcheck
-* read through all main documentation again :|
-
 * detailed usage of all frame types
 
 * deal with removing the temporary documentation files better, even if they're open?
@@ -16,6 +13,11 @@
     * add example "code" to pinning
 
 * Final pass
+
+=== DOCS TWEAK
+
+* spellcheck
+* The buttons on top don't behave properly
 
 === TWEAK
 

@@ -100,6 +100,6 @@ if not suffix then
   branchto("v" .. major .. "." .. minor)
 end
 
-os.execute([[cd tagtemp && git add . && git commit -a -m "Documentation update for version v]] .. ver .. [[" && git push && cd .. && rm -rf tagtemp]])
+os.execute([[cd tagtemp && git add -A . && git commit -a -m "Documentation update for version v]] .. ver .. [[" && git push && cd .. && rm -rf tagtemp]])
 
 os.execute("git tag v" .. ver .. " -m \"Version " .. ver .. "\"")
