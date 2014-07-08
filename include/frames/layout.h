@@ -66,7 +66,7 @@ namespace Frames {
   /// Location and layout interface, contained in all Frames elements.
   /** A Layout includes all information needed to calculate and update the position and ordering of an element in an Environment. The vast majority of all Layouts are actually \ref Frame "Frames"; the only exception is the Root layout.
   
-  Layout includes all update-related functions as protected members, most of which are exposed by Frame.*/
+  Layout includes all layout-modifying functions as protected members, most of which are exposed by Frame.*/
   class Layout : detail::Noncopyable {
   public:
 
@@ -312,13 +312,10 @@ namespace Frames {
     PinPoint PinGet(float x, float y) const;
 
     /// Returns the position of an axis point.
-    /** See \ref layoutbasics for details. */
     float PointGet(Axis axis, float pt) const;
     /// Returns the position of a point.
-    /** See \ref layoutbasics for details. */
     Vector PointGet(Anchor anchor) const;
     /// Returns the position of a point.
-    /** See \ref layoutbasics for details. */
     Vector PointGet(float x, float y) const;
 
     /// Returns the left edge's position.
@@ -334,16 +331,16 @@ namespace Frames {
 
     /// Returns the size along a given axis.
     float SizeGet(Axis axis) const;
-    /// Returns the width.
+    /// Returns the width, measured from RightGet() to LeftGet().
     float WidthGet() const { return SizeGet(X); }
-    /// Returns the height.
+    /// Returns the height, measured from BottomGet() to TopGet().
     float HeightGet() const { return SizeGet(Y); }
 
     /// Returns the parent. Guaranteed to be non-null unless this is Root.
     Layout *ParentGet() const { return m_parent; }
 
-    /// Returns the layout underneath a given coordinate in the context of mouse input.
-    /** This can be used to find out what frame would be hit by a mouse even at a certain coordinate. */
+    /// Returns the layout underneath a given coordinate as if it were mouse input.
+    /** This can be used to find out what frame would be hit by a mouse event at a certain coordinate. */
     Layout *ProbeAsMouse(float x, float y);
 
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
@@ -393,7 +390,7 @@ namespace Frames {
     template <typename P1> void EventTrigger(const Verb<void (P1)> &event, typename detail::MakeConstRef<P1>::T p1);
 
     /// Determines if a verb is hooked.
-    bool EventHookedIs(const VerbBase &event) const;
+    bool EventHooked(const VerbBase &event) const;
 
     // --------- Misc
 
@@ -406,15 +403,15 @@ namespace Frames {
     /// Sets the input mode.
     void InputModeSet(InputMode imode);
     /// Gets the input mode.
-    inline InputMode InputModeSet() const { return m_inputMode; }
+    inline InputMode InputModeGet() const { return m_inputMode; }
 
-    /// Returns the environment.
+    /// Returns this layout's environment.
     Environment *EnvironmentGet() const { return m_env; }
 
     // --------- Debug
 
     /// Dumps comprehensive layout information to the debug log.
-    void DebugDumpLayout() const;
+    void DebugLayoutDump() const;
 
     /// Constructs and return the full named path of this layout.
     std::string DebugNameGet() const;

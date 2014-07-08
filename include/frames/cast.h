@@ -42,13 +42,13 @@ namespace Frames {
   }
 
   /// Safe dynamic cast for the Layout hierarchy.
-  /** Returns a valid pointer to T* if the provided Layout is actually a T*, or a null pointer otherwise. */
+  /** Returns a valid pointer to T* if the provided Layout is actually a T*, or null otherwise. */
   template <typename T> T *Cast(Layout *layout) {
     return const_cast<T *>(Cast<T>(const_cast<const Layout *>(layout))); // yes I know this is nasty
   }
 
   /// Safe dynamic cast for the Layout hierarchy.
-  /** Returns a valid pointer to T* if the provided Layout is actually a T*, or a null pointer otherwise. */
+  /** Returns a valid pointer to T* if the provided Layout is actually a T*, or null otherwise. */
   template <typename T> const T *Cast(const Layout *layout) {
     const detail::Rtti *target = T::RttiStaticGet();
     const detail::Rtti *current = layout->RttiVirtualGet();

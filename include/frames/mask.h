@@ -25,7 +25,7 @@
 namespace Frames {
   /// Used for clipping the render area of frames against an arbitrary rectangle.
   /** All children of Mask will be clipped to the dimensions of Mask.
-  This is useful for situations where part of a frame may be visible, but the invisible part is not occluded by a frame "above" it.
+  This is useful for situations where only part of a frame should be visible, but the invisible part is not occluded by a frame "above" it.
   A good example is a scrollable list - the body of the list would be contained in a Mask frame.
   
   Mask will also clip mouse input, ensuring that the user can't accidentally click on a clipped UI element.

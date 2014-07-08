@@ -25,9 +25,9 @@
 
 namespace Frames {
   /// Basic component of Frames UIs, dynamically createable and movable.
-  /** The Frame is the fundamental building block of the UI. It represents a rectangular area in space, aligned along the Scene axes. A Frame has exactly one parent and any number of children, each of which are also Frames.
+  /** The Frame is the fundamental building block of the UI. It represents an axis-aligned rectangular area in space. A Frame has exactly one parent and any number of children, each of which are also Frames.
 
-  Frame itself is generally invisible, although BackgroundSet is provided for prototyping and debug output. If Frame is set to non-visible, all of its children will also be hidden. */
+  Frame itself generally does not render visibly, although BackgroundSet is provided for prototyping and debug output. */
   class Frame : public Layout {
     FRAMES_DECLARE_RTTI();
     friend class Environment;
@@ -131,7 +131,7 @@ namespace Frames {
     inline float LayerGet() const { return zinternalLayerGet(); }
 
     /// Sets the implementation flag.
-    /** The implementation flag is used to create new frame types that are composited out of subframes. All frames with this flag set will be rendered before frames without the flag set. In addition, frames with this flag will not be returned from ChildrenGet() (TODO: nyi!). */
+    /** The implementation flag is used to create new frame types that are composited out of subframes. All frames with this flag set will be rendered before frames without the flag set. In addition, frames with this flag will not be returned from ChildrenGet() by default. */
     inline void ImplementationSet(bool implementation) { return zinternalImplementationSet(implementation); }
     /// Gets the implementation flag.
     inline bool ImplementationGet() const { return zinternalImplementationGet(); }
@@ -142,8 +142,8 @@ namespace Frames {
     Normally, it is undefined behavior to refer to this frame or any of its children after this function is called.
     
     An exception is if Obliterate() is called during any event handler in this environment.
-    In that case, the effect of this call is guaranted to be deferred at least until the last in-flight event finishes with this frame or any of its children.
-    The effect may be deferred until all in-flight events have completed entirely. */
+    In that case, the effect of this call is guaranted to be deferred at least until the completion of the last in-flight event involving this frame or any of its children.
+    The effect may be deferred until the completion of all in-flight events. */
     inline void Obliterate() { return zinternalObliterate(); }
 
     /// Sets the background color.

@@ -36,10 +36,18 @@ namespace Frames {
 
     Obviously, it will now be your responsibility to call ->RefRelease() the appropriate number of times. */
     explicit Ptr(T *p) : p(p) { if (p) p->RefAdd(); }
+    /// Standard copy constructor.
+    /** Will add a reference. */
     Ptr(const Ptr &rhs) : p(rhs.p) { if (p) p->RefAdd(); }
+    /// Type-converting copy constructor.
+    /** Will add a reference. If the destination type cannot be implicitly converted from this type, will fail to compile. */
     template <typename U> Ptr(const Ptr<U> &rhs) : p(rhs.p) { if (p) p->RefAdd(); }
+    /// Standard destructor.
+    /** Will remove a reference, possibly destroying the object. */
     ~Ptr() { if (p) p->RefRelease(); }
 
+    /// Standard assignment operator.
+    /** Will both add and remove a reference, possibly destroying the assignment target. */
     Ptr &operator=(const Ptr &rhs) { this_type(rhs).Swap(*this); return *this; }
 
     /// Clears this pointer.
@@ -47,18 +55,25 @@ namespace Frames {
     /// Sets this pointer to a new object.
     void Reset(T *rhs) { this_type(rhs).Swap(*this); }
 
-    /// Gets the contents of this pointer, or NULL if it points to nothing valid.
+    /// Gets the contents of this pointer, or null if it points to nothing valid.
     T *Get() const { return p; }
 
-    // todo: assert
+    /// Dereferences the pointer.
+    /** Undefined results if the pointer is currently null. */
     T &operator*() const { return *p; }
+    /// Dereferences the pointer.
+    /** Undefined results if the pointer is currently null. */
     T *operator->() const { return p; }
 
+    /// Swaps two smart pointers.
+    /** Guaranteed to not deallocate anything. */
     void Swap(Ptr &rhs) { T *t = p; p = rhs.p; rhs.p = t; }
 
     typedef T *this_type::*unspecified_bool_type;
 
+    /// Implicit cast so this pointer can be used in a conditional.
     operator unspecified_bool_type() const { return !p ? 0 : &this_type::p; }
+    /// Returns true if this pointer is null.
     bool operator!() const { return !p; }
 
   private:

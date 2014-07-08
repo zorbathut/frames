@@ -306,7 +306,7 @@ namespace Frames {
     return 0;
   }
 
-  void Layout::DebugDumpLayout() const {
+  void Layout::DebugLayoutDump() const {
     FRAMES_DEBUG("Dump for layout %s", DebugNameGet().c_str());
     FRAMES_DEBUG("  XAXIS:");
     FRAMES_DEBUG("    Connector 0 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[0].point_mine, (int)m_axes[X].connections[0].target, m_axes[X].connections[0].point_target, m_axes[X].connections[0].offset, m_axes[X].connections[0].cached);
@@ -903,7 +903,7 @@ namespace Frames {
     ObliterateExtract();
   }
 
-  bool Layout::EventHookedIs(const VerbBase &event) const {
+  bool Layout::EventHooked(const VerbBase &event) const {
     std::map<const VerbBase *, std::multiset<Callback, Callback::Sorter> >::const_iterator itr = m_events.find(&event);
     if (itr == m_events.end()) {
       // no handles, we're good
