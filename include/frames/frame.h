@@ -40,7 +40,7 @@ namespace Frames {
 
     /// Creates or redefines a single \ref basicspinning "pin".
     /** It is generally recommended to use the other PinSet overloads before this one. See \ref basicspinning for more information. */
-    inline void PinSet(Axis axis, float mypt, const Layout *link, float theirpt, float offset = 0.f) { return zinternalPinSet(axis, mypt, link, theirpt, offset); }
+    inline void PinSet(Axis axis, float mypt, const Layout *target, float theirpt, float offset = 0.f) { return zinternalPinSet(axis, mypt, target, theirpt, offset); }
     /// Clears a single \ref basicspinning "pin".
     inline void PinClear(Axis axis, float mypt) { return zinternalPinClear(axis, mypt); }
     /// Clears a single \ref basicspinning "pin".
@@ -51,59 +51,59 @@ namespace Frames {
     // --------- PinSet variants
 
     /// PinSet variant for \ref basicspinning "pinning" two \ref Anchor "Anchors".
-    inline void PinSet(Anchor myanchor, const Layout *link, Anchor theiranchor) { return zinternalPinSet(myanchor, link, theiranchor); }
+    inline void PinSet(Anchor myanchor, const Layout *target, Anchor theiranchor) { return zinternalPinSet(myanchor, target, theiranchor); }
     /// PinSet variant for \ref basicspinning "pinning" two \ref Anchor "Anchors" with an offset.
-    inline void PinSet(Anchor myanchor, const Layout *link, Anchor theiranchor, const Vector &ofs) { return zinternalPinSet(myanchor, link, theiranchor, ofs); }
+    inline void PinSet(Anchor myanchor, const Layout *target, Anchor theiranchor, const Vector &ofs) { return zinternalPinSet(myanchor, target, theiranchor, ofs); }
     /// PinSet variant for \ref basicspinning "pinning" two \ref Anchor "Anchors" with an offset.
-    inline void PinSet(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs) { return zinternalPinSet(myanchor, link, theiranchor, xofs, yofs); }
+    inline void PinSet(Anchor myanchor, const Layout *target, Anchor theiranchor, float xofs, float yofs) { return zinternalPinSet(myanchor, target, theiranchor, xofs, yofs); }
     /// PinSet variant for \ref basicspinning "pinning" an Anchor to a relative point.
-    inline void PinSet(Anchor myanchor, const Layout *link, const Vector &their) { return zinternalPinSet(myanchor, link, their); }
+    inline void PinSet(Anchor myanchor, const Layout *target, const Vector &their) { return zinternalPinSet(myanchor, target, their); }
     /// PinSet variant for \ref basicspinning "pinning" an Anchor to a relative point with an offset.
-    inline void PinSet(Anchor myanchor, const Layout *link, const Vector &their, const Vector &ofs) { return zinternalPinSet(myanchor, link, their, ofs); }
+    inline void PinSet(Anchor myanchor, const Layout *target, const Vector &their, const Vector &ofs) { return zinternalPinSet(myanchor, target, their, ofs); }
     /// PinSet variant for \ref basicspinning "pinning" an Anchor to a relative point with an offset.
-    inline void PinSet(Anchor myanchor, const Layout *link, const Vector &their, float xofs, float yofs) { return zinternalPinSet(myanchor, link, their, xofs, yofs); }
+    inline void PinSet(Anchor myanchor, const Layout *target, const Vector &their, float xofs, float yofs) { return zinternalPinSet(myanchor, target, their, xofs, yofs); }
     /// PinSet variant for \ref basicspinning "pinning" an Anchor to a relative point.
-    inline void PinSet(Anchor myanchor, const Layout *link, float theirx, float theiry) { return zinternalPinSet(myanchor, link, theirx, theiry); }
+    inline void PinSet(Anchor myanchor, const Layout *target, float theirx, float theiry) { return zinternalPinSet(myanchor, target, theirx, theiry); }
     /// PinSet variant for \ref basicspinning "pinning" an Anchor to a relative point with an offset.
-    inline void PinSet(Anchor myanchor, const Layout *link, float theirx, float theiry, const Vector &ofs) { return zinternalPinSet(myanchor, link, theirx, theiry, ofs); }
+    inline void PinSet(Anchor myanchor, const Layout *target, float theirx, float theiry, const Vector &ofs) { return zinternalPinSet(myanchor, target, theirx, theiry, ofs); }
     /// PinSet variant for \ref basicspinning "pinning" an Anchor to a relative point with an offset.
-    inline void PinSet(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs) { return zinternalPinSet(myanchor, link, theirx, theiry, xofs, yofs); }
+    inline void PinSet(Anchor myanchor, const Layout *target, float theirx, float theiry, float xofs, float yofs) { return zinternalPinSet(myanchor, target, theirx, theiry, xofs, yofs); }
     /// PinSet variant for \ref basicspinning "pinning" a relative point to an Anchor.
-    inline void PinSet(const Vector &my, const Layout *link, Anchor theiranchor) { return zinternalPinSet(my, link, theiranchor); }
+    inline void PinSet(const Vector &my, const Layout *target, Anchor theiranchor) { return zinternalPinSet(my, target, theiranchor); }
     /// PinSet variant for \ref basicspinning "pinning" a relative point to an Anchor with an offset.
-    inline void PinSet(const Vector &my, const Layout *link, Anchor theiranchor, const Vector &ofs) { return zinternalPinSet(my, link, theiranchor, ofs); }
+    inline void PinSet(const Vector &my, const Layout *target, Anchor theiranchor, const Vector &ofs) { return zinternalPinSet(my, target, theiranchor, ofs); }
     /// PinSet variant for \ref basicspinning "pinning" a relative point to an Anchor with an offset.
-    inline void PinSet(const Vector &my, const Layout *link, Anchor theiranchor, float xofs, float yofs) { return zinternalPinSet(my, link, theiranchor, xofs, yofs); }
+    inline void PinSet(const Vector &my, const Layout *target, Anchor theiranchor, float xofs, float yofs) { return zinternalPinSet(my, target, theiranchor, xofs, yofs); }
     /// PinSet variant for \ref basicspinning "pinning" two relative points.
-    inline void PinSet(const Vector &my, const Layout *link, const Vector &their) { return zinternalPinSet(my, link, their); }
+    inline void PinSet(const Vector &my, const Layout *target, const Vector &their) { return zinternalPinSet(my, target, their); }
     /// PinSet variant for \ref basicspinning "pinning" two relative points with an offset.
-    inline void PinSet(const Vector &my, const Layout *link, const Vector &their, const Vector &ofs) { return zinternalPinSet(my, link, their, ofs); }
+    inline void PinSet(const Vector &my, const Layout *target, const Vector &their, const Vector &ofs) { return zinternalPinSet(my, target, their, ofs); }
     /// PinSet variant for \ref basicspinning "pinning" two relative points with an offset.
-    inline void PinSet(const Vector &my, const Layout *link, const Vector &their, float xofs, float yofs) { return zinternalPinSet(my, link, their, xofs, yofs); }
+    inline void PinSet(const Vector &my, const Layout *target, const Vector &their, float xofs, float yofs) { return zinternalPinSet(my, target, their, xofs, yofs); }
     /// PinSet variant for \ref basicspinning "pinning" two relative points.
-    inline void PinSet(const Vector &my, const Layout *link, float theirx, float theiry) { return zinternalPinSet(my, link, theirx, theiry); }
+    inline void PinSet(const Vector &my, const Layout *target, float theirx, float theiry) { return zinternalPinSet(my, target, theirx, theiry); }
     /// PinSet variant for \ref basicspinning "pinning" two relative points with an offset.
-    inline void PinSet(const Vector &my, const Layout *link, float theirx, float theiry, const Vector &ofs) { return zinternalPinSet(my, link, theirx, theiry, ofs); }
+    inline void PinSet(const Vector &my, const Layout *target, float theirx, float theiry, const Vector &ofs) { return zinternalPinSet(my, target, theirx, theiry, ofs); }
     /// PinSet variant for \ref basicspinning "pinning" two relative points with an offset.
-    inline void PinSet(const Vector &my, const Layout *link, float theirx, float theiry, float xofs, float yofs) { return zinternalPinSet(my, link, theirx, theiry, xofs, yofs); }
+    inline void PinSet(const Vector &my, const Layout *target, float theirx, float theiry, float xofs, float yofs) { return zinternalPinSet(my, target, theirx, theiry, xofs, yofs); }
     /// PinSet variant for \ref basicspinning "pinning" a relative point to an Anchor.
-    inline void PinSet(float myx, float myy, const Layout *link, Anchor theiranchor) { return zinternalPinSet(myx, myy, link, theiranchor); }
+    inline void PinSet(float myx, float myy, const Layout *target, Anchor theiranchor) { return zinternalPinSet(myx, myy, target, theiranchor); }
     /// PinSet variant for \ref basicspinning "pinning" a relative point to an Anchor with an offset.
-    inline void PinSet(float myx, float myy, const Layout *link, Anchor theiranchor, const Vector &ofs) { return zinternalPinSet(myx, myy, link, theiranchor, ofs); }
+    inline void PinSet(float myx, float myy, const Layout *target, Anchor theiranchor, const Vector &ofs) { return zinternalPinSet(myx, myy, target, theiranchor, ofs); }
     /// PinSet variant for \ref basicspinning "pinning" a relative point to an Anchor with an offset.
-    inline void PinSet(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs) { return zinternalPinSet(myx, myy, link, theiranchor, xofs, yofs); }
+    inline void PinSet(float myx, float myy, const Layout *target, Anchor theiranchor, float xofs, float yofs) { return zinternalPinSet(myx, myy, target, theiranchor, xofs, yofs); }
     /// PinSet variant for \ref basicspinning "pinning" two relative points.
-    inline void PinSet(float myx, float myy, const Layout *link, const Vector &their) { return zinternalPinSet(myx, myy, link, their); }
+    inline void PinSet(float myx, float myy, const Layout *target, const Vector &their) { return zinternalPinSet(myx, myy, target, their); }
     /// PinSet variant for \ref basicspinning "pinning" two relative points with an offset.
-    inline void PinSet(float myx, float myy, const Layout *link, const Vector &their, const Vector &ofs) { return zinternalPinSet(myx, myy, link, their, ofs); }
+    inline void PinSet(float myx, float myy, const Layout *target, const Vector &their, const Vector &ofs) { return zinternalPinSet(myx, myy, target, their, ofs); }
     /// PinSet variant for \ref basicspinning "pinning" two relative points with an offset.
-    inline void PinSet(float myx, float myy, const Layout *link, const Vector &their, float xofs, float yofs) { return zinternalPinSet(myx, myy, link, their, xofs, yofs); }
+    inline void PinSet(float myx, float myy, const Layout *target, const Vector &their, float xofs, float yofs) { return zinternalPinSet(myx, myy, target, their, xofs, yofs); }
     /// PinSet variant for \ref basicspinning "pinning" two relative points.
-    inline void PinSet(float myx, float myy, const Layout *link, float theirx, float theiry) { return zinternalPinSet(myx, myy, link, theirx, theiry); }
+    inline void PinSet(float myx, float myy, const Layout *target, float theirx, float theiry) { return zinternalPinSet(myx, myy, target, theirx, theiry); }
     /// PinSet variant for \ref basicspinning "pinning" two relative points with an offset.
-    inline void PinSet(float myx, float myy, const Layout *link, float theirx, float theiry, const Vector &ofs) { return zinternalPinSet(myx, myy, link, theirx, theiry, ofs); }
+    inline void PinSet(float myx, float myy, const Layout *target, float theirx, float theiry, const Vector &ofs) { return zinternalPinSet(myx, myy, target, theirx, theiry, ofs); }
     /// PinSet variant for \ref basicspinning "pinning" two relative points with an offset.
-    inline void PinSet(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs) { return zinternalPinSet(myx, myy, link, theirx, theiry, xofs, yofs); }
+    inline void PinSet(float myx, float myy, const Layout *target, float theirx, float theiry, float xofs, float yofs) { return zinternalPinSet(myx, myy, target, theirx, theiry, xofs, yofs); }
 
     /// Sets the size of an axis.
     inline void SizeSet(Axis axis, float size) { return zinternalSizeSet(axis, size); }
@@ -114,7 +114,7 @@ namespace Frames {
     /// Clears the size of an axis.
     inline void SizeClear(Axis axis) { return zinternalSizeClear(axis); }
 
-    /// Clears all links and sizes.
+    /// Clears all pins and sizes.
     inline void ConstraintClearAll() { return zinternalConstraintClearAll(); }
 
     /// Sets the parent.
@@ -137,7 +137,7 @@ namespace Frames {
     inline bool ImplementationGet() const { return zinternalImplementationGet(); }
 
     /// Destroys this frame and all its children.
-    /** Also destroys all \ref layoutbasics "links" from these layouts. It is undefined behavior if any other layouts still reference these layouts; it will, however, not cause a crash.
+    /** Also destroys all \ref layoutbasics "pins" from these layouts. It is undefined behavior if any other layouts still reference these layouts; it will, however, not cause a crash.
     
     Normally, it is undefined behavior to refer to this frame or any of its children after this function is called.
     

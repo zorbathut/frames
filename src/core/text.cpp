@@ -208,7 +208,7 @@ namespace Frames {
       // PROBLEM
       EnvironmentGet()->LogError("Error - attempting to render text without a valid font");
     } else {
-      detail::TextInfoPtr tinfo = EnvironmentGet()->GetTextManager()->GetTextInfo(m_font, m_size, m_text);
+      detail::TextInfoPtr tinfo = EnvironmentGet()->TextManagerGet()->GetTextInfo(m_font, m_size, m_text);
       WidthDefaultSet(tinfo->GetFullWidth());
 
       m_layout = tinfo->GetLayout(WidthGet(), m_wordwrap);

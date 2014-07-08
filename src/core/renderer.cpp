@@ -214,6 +214,10 @@ namespace Frames {
     
       return true;
     }
+
+    /*static*/ Renderer *Renderer::GetFrom(Environment *env) {
+      return env->RendererGet();
+    }
   }
 }
 

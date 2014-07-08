@@ -48,11 +48,11 @@ namespace Frames {
         }
       }
 
-      if (m_face_data.empty() || FT_New_Memory_Face(m_env->GetTextManager()->GetFreetype(), &m_face_data[0], (int)m_face_data.size(), 0, &m_face)) {
+      if (m_face_data.empty() || FT_New_Memory_Face(m_env->TextManagerGet()->GetFreetype(), &m_face_data[0], (int)m_face_data.size(), 0, &m_face)) {
         m_env->LogError("Can't load Freetype face");
       }
     
-      m_texture = m_env->GetRenderer()->TextureCreate(1024, 1024, Texture::FORMAT_R_8);
+      m_texture = m_env->RendererGet()->TextureCreate(1024, 1024, Texture::FORMAT_R_8);
     }
 
     FontInfo::~FontInfo() {
@@ -60,7 +60,7 @@ namespace Frames {
         m_env->LogError("Can't close Freetype face");
       }
 
-      m_env->GetTextManager()->Internal_Shutdown_Font(this);
+      m_env->TextManagerGet()->Internal_Shutdown_Font(this);
     }
 
     TextInfoPtr FontInfo::GetTextInfo(float size, const std::string &text) {

@@ -81,7 +81,7 @@ namespace Frames {
     const AxisData &ax = m_axes[axis];
     for (int i = 0; i < 2; ++i) {
       if (ax.connections[i].point_mine == mypt) {
-        return PinAxis(ax.connections[i].link, ax.connections[i].point_link, ax.connections[i].offset);
+        return PinAxis(ax.connections[i].target, ax.connections[i].point_target, ax.connections[i].offset);
       }
     }
 
@@ -139,10 +139,10 @@ namespace Frames {
         }
         return axa.cached;
       }
-      if (axa.link) {
+      if (axa.target) {
         m_env->LayoutStack_Push(this, axis, pt);
         axa.cached = detail::Processing; // seed it with processing so we'll exit if this turns out to be an infinite loop
-        axa.cached = axa.link->PointGet(axis, axa.point_link) + axa.offset;
+        axa.cached = axa.target->PointGet(axis, axa.point_target) + axa.offset;
         m_env->LayoutStack_Pop();
         return axa.cached;
       }
@@ -161,10 +161,10 @@ namespace Frames {
         }
         return axb.cached;
       }
-      if (axb.link) {
+      if (axb.target) {
         m_env->LayoutStack_Push(this, axis, pt);
         axb.cached = detail::Processing; // seed it with processing so we'll exit if this turns out to be an infinite loop
-        axb.cached = axb.link->PointGet(axis, axb.point_link) + axb.offset;
+        axb.cached = axb.target->PointGet(axis, axb.point_target) + axb.offset;
         m_env->LayoutStack_Pop();
         return axb.cached;
       }
@@ -309,15 +309,15 @@ namespace Frames {
   void Layout::DebugDumpLayout() const {
     FRAMES_DEBUG("Dump for layout %s", DebugNameGet().c_str());
     FRAMES_DEBUG("  XAXIS:");
-    FRAMES_DEBUG("    Connector 0 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[0].point_mine, (int)m_axes[X].connections[0].link, m_axes[X].connections[0].point_link, m_axes[X].connections[0].offset, m_axes[X].connections[0].cached);
-    FRAMES_DEBUG("    Connector 1 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[1].point_mine, (int)m_axes[X].connections[1].link, m_axes[X].connections[1].point_link, m_axes[X].connections[1].offset, m_axes[X].connections[0].cached);
+    FRAMES_DEBUG("    Connector 0 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[0].point_mine, (int)m_axes[X].connections[0].target, m_axes[X].connections[0].point_target, m_axes[X].connections[0].offset, m_axes[X].connections[0].cached);
+    FRAMES_DEBUG("    Connector 1 from %f to %08x:%f offset %f, cache %f", m_axes[X].connections[1].point_mine, (int)m_axes[X].connections[1].target, m_axes[X].connections[1].point_target, m_axes[X].connections[1].offset, m_axes[X].connections[0].cached);
     FRAMES_DEBUG("    Size %f (def %f), cache %f", m_axes[X].size_set, m_axes[X].size_default, m_axes[X].size_cached);
-    FRAMES_DEBUG("    Linkcount %d", m_axes[X].children.size());
+    FRAMES_DEBUG("    Pincount %d", m_axes[X].children.size());
     FRAMES_DEBUG("  YAXIS:");
-    FRAMES_DEBUG("    Connector 0 from %f to %08x:%f offset %f, cache %f", m_axes[Y].connections[0].point_mine, (int)m_axes[Y].connections[0].link, m_axes[Y].connections[0].point_link, m_axes[Y].connections[0].offset, m_axes[Y].connections[0].cached);
-    FRAMES_DEBUG("    Connector 1 from %f to %08x:%f offset %f, cache %f", m_axes[Y].connections[1].point_mine, (int)m_axes[Y].connections[1].link, m_axes[Y].connections[1].point_link, m_axes[Y].connections[1].offset, m_axes[Y].connections[0].cached);
+    FRAMES_DEBUG("    Connector 0 from %f to %08x:%f offset %f, cache %f", m_axes[Y].connections[0].point_mine, (int)m_axes[Y].connections[0].target, m_axes[Y].connections[0].point_target, m_axes[Y].connections[0].offset, m_axes[Y].connections[0].cached);
+    FRAMES_DEBUG("    Connector 1 from %f to %08x:%f offset %f, cache %f", m_axes[Y].connections[1].point_mine, (int)m_axes[Y].connections[1].target, m_axes[Y].connections[1].point_target, m_axes[Y].connections[1].offset, m_axes[Y].connections[0].cached);
     FRAMES_DEBUG("    Size %f (def %f), cache %f", m_axes[Y].size_set, m_axes[Y].size_default, m_axes[Y].size_cached);
-    FRAMES_DEBUG("    Linkcount %d", m_axes[Y].children.size());
+    FRAMES_DEBUG("    Pincount %d", m_axes[Y].children.size());
   }
 
   std::string Layout::DebugNameGet() const {
@@ -382,13 +382,13 @@ namespace Frames {
     m_env->DestroyingLayout(this);
   }
 
-  void Layout::zinternalPinSet(Axis axis, float mypt, const Layout *link, float linkpt, float offset /*= 0.f*/) {
-    if (link && link->m_env != m_env) {
+  void Layout::zinternalPinSet(Axis axis, float mypt, const Layout *target, float targetpt, float offset /*= 0.f*/) {
+    if (target && target->m_env != m_env) {
       FRAMES_LAYOUT_CHECK(false, "Attempted to constrain a frame to a frame from another environment");
       return;
     }
 
-    if (this == link) {
+    if (this == target) {
       FRAMES_LAYOUT_CHECK(false, "Attempted to constrain a frame to itself");
       return;
     }
@@ -403,7 +403,7 @@ namespace Frames {
     AxisData::Connector &axa = ax.connections[0];
     if (axa.point_mine == mypt) {
       // We don't care if we haven't changed
-      if (axa.link == link && (!link || axa.point_link == linkpt) && axa.offset == offset) {
+      if (axa.target == target && (!target || axa.point_target == targetpt) && axa.offset == offset) {
         return;
       }
 
@@ -412,17 +412,17 @@ namespace Frames {
         Invalidate(axis);
       }
 
-      if (axa.link != link) {
-        if (axa.link) {
-          axa.link->m_axes[axis].children.erase(this);
+      if (axa.target != target) {
+        if (axa.target) {
+          axa.target->m_axes[axis].children.erase(this);
         }
-        if (link) {
-          link->m_axes[axis].children.insert(this);
+        if (target) {
+          target->m_axes[axis].children.insert(this);
         }
       }
 
-      axa.link = link;
-      axa.point_link = linkpt;
+      axa.target = target;
+      axa.point_target = targetpt;
       axa.offset = offset;
       
       return;
@@ -431,7 +431,7 @@ namespace Frames {
     AxisData::Connector &axb = ax.connections[1];
     if (axb.point_mine == mypt) {
       // We don't care if we haven't changed
-      if (axb.link == link && (!link || axb.point_link == linkpt) && axb.offset == offset) {
+      if (axb.target == target && (!target || axb.point_target == targetpt) && axb.offset == offset) {
         return;
       }
 
@@ -440,17 +440,17 @@ namespace Frames {
         Invalidate(axis);
       }
 
-      if (axb.link != link) {
-        if (axb.link) {
-          axb.link->m_axes[axis].children.erase(this);
+      if (axb.target != target) {
+        if (axb.target) {
+          axb.target->m_axes[axis].children.erase(this);
         }
-        if (link) {
-          link->m_axes[axis].children.insert(this);
+        if (target) {
+          target->m_axes[axis].children.insert(this);
         }
       }
 
-      axb.link = link;
-      axb.point_link = linkpt;
+      axb.target = target;
+      axb.point_target = targetpt;
       axb.offset = offset;
       
       return;
@@ -460,7 +460,7 @@ namespace Frames {
     bool axbu = detail::IsUndefined(axb.point_mine);
 
     if (!detail::IsUndefined(ax.size_set) && (!axau || !axbu)) {
-      FRAMES_LAYOUT_CHECK(link, "Frame overconstrained - attempted to assign a second point to a frame axis that already contained a size and one point");
+      FRAMES_LAYOUT_CHECK(target, "Frame overconstrained - attempted to assign a second point to a frame axis that already contained a size and one point");
       return;
     }
 
@@ -478,13 +478,13 @@ namespace Frames {
     Invalidate(axis); // Adding a new point is always dangerous
 
     replace->point_mine = mypt;
-    replace->link = link;
-    replace->point_link = linkpt;
+    replace->target = target;
+    replace->point_target = targetpt;
     replace->offset = offset;
 
-    if (link)
+    if (target)
     {
-      link->m_axes[axis].children.insert(this);
+      target->m_axes[axis].children.insert(this);
     }
 
     return;
@@ -504,13 +504,13 @@ namespace Frames {
         Invalidate(axis);
       }
 
-      if (axa.link) {
-        axa.link->m_axes[axis].children.erase(this);
+      if (axa.target) {
+        axa.target->m_axes[axis].children.erase(this);
       }
 
-      axa.link = 0;
+      axa.target = 0;
       axa.point_mine = detail::Undefined;
-      axa.point_link = detail::Undefined;
+      axa.point_target = detail::Undefined;
       axa.offset = detail::Undefined;
 
       return;
@@ -522,13 +522,13 @@ namespace Frames {
         Invalidate(axis);
       }
 
-      if (axb.link) {
-        axb.link->m_axes[axis].children.erase(this);
+      if (axb.target) {
+        axb.target->m_axes[axis].children.erase(this);
       }
 
-      axb.link = 0;
+      axb.target = 0;
       axb.point_mine = detail::Undefined;
-      axb.point_link = detail::Undefined;
+      axb.point_target = detail::Undefined;
       axb.offset = detail::Undefined;
 
       return;
@@ -575,7 +575,7 @@ namespace Frames {
 
   // PinSet anchor adapters
   // All the anchor versions just transform themselves into no-anchor versions first
-  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, Anchor theiranchor) {
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *target, Anchor theiranchor) {
     if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
       FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
       return;
@@ -586,9 +586,9 @@ namespace Frames {
       return;
     }
 
-    zinternalPinSet(detail::AnchorLookup[myanchor].x, detail::AnchorLookup[myanchor].y, link, detail::AnchorLookup[theiranchor].x, detail::AnchorLookup[theiranchor].y);
+    zinternalPinSet(detail::AnchorLookup[myanchor].x, detail::AnchorLookup[myanchor].y, target, detail::AnchorLookup[theiranchor].x, detail::AnchorLookup[theiranchor].y);
   }
-  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *target, Anchor theiranchor, float xofs, float yofs) {
     if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
       FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
       return;
@@ -599,73 +599,73 @@ namespace Frames {
       return;
     }
     
-    zinternalPinSet(detail::AnchorLookup[myanchor].x, detail::AnchorLookup[myanchor].y, link, detail::AnchorLookup[theiranchor].x, detail::AnchorLookup[theiranchor].y, xofs, yofs);
+    zinternalPinSet(detail::AnchorLookup[myanchor].x, detail::AnchorLookup[myanchor].y, target, detail::AnchorLookup[theiranchor].x, detail::AnchorLookup[theiranchor].y, xofs, yofs);
   }
   
-  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, float theirx, float theiry) {
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *target, float theirx, float theiry) {
     if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
       FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
       return;
     }
 
-    zinternalPinSet(detail::AnchorLookup[myanchor].x, detail::AnchorLookup[myanchor].y, link, theirx, theiry);
+    zinternalPinSet(detail::AnchorLookup[myanchor].x, detail::AnchorLookup[myanchor].y, target, theirx, theiry);
   }
-  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *target, float theirx, float theiry, float xofs, float yofs) {
     if (myanchor < 0 || myanchor >= ANCHOR_COUNT) {
       FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
       return;
     }
     
-    zinternalPinSet(detail::AnchorLookup[myanchor].x, detail::AnchorLookup[myanchor].y, link, theirx, theiry, xofs, yofs);
+    zinternalPinSet(detail::AnchorLookup[myanchor].x, detail::AnchorLookup[myanchor].y, target, theirx, theiry, xofs, yofs);
   }
 
-  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, Anchor theiranchor) {
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *target, Anchor theiranchor) {
     if (theiranchor < 0 || theiranchor >= ANCHOR_COUNT) {
       FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
       return;
     }
 
-    zinternalPinSet(myx, myy, link, detail::AnchorLookup[theiranchor].x, detail::AnchorLookup[theiranchor].y);
+    zinternalPinSet(myx, myy, target, detail::AnchorLookup[theiranchor].x, detail::AnchorLookup[theiranchor].y);
   }
-  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, Anchor theiranchor, float xofs, float yofs) {
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *target, Anchor theiranchor, float xofs, float yofs) {
     if (theiranchor < 0 || theiranchor >= ANCHOR_COUNT) {
       FRAMES_LAYOUT_CHECK(false, "Anchor is invalid");
       return;
     }
 
-    zinternalPinSet(myx, myy, link, detail::AnchorLookup[theiranchor].x, detail::AnchorLookup[theiranchor].y, xofs, yofs);
+    zinternalPinSet(myx, myy, target, detail::AnchorLookup[theiranchor].x, detail::AnchorLookup[theiranchor].y, xofs, yofs);
   }
 
   // PinSet vector adapters
   // All the vector adapters just unroll, possibly calling an anchor adapter after unrolling
-  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, Anchor theiranchor, const Vector &ofs) { zinternalPinSet(myanchor, link, theiranchor, ofs.x, ofs.y); }
-  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, const Vector &their) { zinternalPinSet(myanchor, link, their.x, their.y); }
-  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, const Vector &their, const Vector &ofs) { zinternalPinSet(myanchor, link, their.x, their.y, ofs.x, ofs.y); }
-  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, const Vector &their, float xofs, float yofs) { zinternalPinSet(myanchor, link, their.x, their.y, xofs, yofs); }
-  void Layout::zinternalPinSet(Anchor myanchor, const Layout *link, float theirx, float theiry, const Vector &ofs) { zinternalPinSet(myanchor, link, theirx, theiry, ofs.x, ofs.y); }
-  void Layout::zinternalPinSet(const Vector &my, const Layout *link, Anchor theiranchor) { zinternalPinSet(my.x, my.y, link, theiranchor); }
-  void Layout::zinternalPinSet(const Vector &my, const Layout *link, Anchor theiranchor, const Vector &ofs) { zinternalPinSet(my.x, my.y, link, theiranchor, ofs.x, ofs.y); }
-  void Layout::zinternalPinSet(const Vector &my, const Layout *link, Anchor theiranchor, float xofs, float yofs) { zinternalPinSet(my.x, my.y, link, theiranchor, xofs, yofs); }
-  void Layout::zinternalPinSet(const Vector &my, const Layout *link, const Vector &their) { zinternalPinSet(my.x, my.y, link, their.x, their.y); }
-  void Layout::zinternalPinSet(const Vector &my, const Layout *link, const Vector &their, const Vector &ofs) { zinternalPinSet(my.x, my.y, link, their.x, their.y, ofs.x, ofs.y); }
-  void Layout::zinternalPinSet(const Vector &my, const Layout *link, const Vector &their, float xofs, float yofs) { zinternalPinSet(my.x, my.y, link, their.x, their.y, xofs, yofs); }
-  void Layout::zinternalPinSet(const Vector &my, const Layout *link, float theirx, float theiry) { zinternalPinSet(my.x, my.y, link, theirx, theiry); }
-  void Layout::zinternalPinSet(const Vector &my, const Layout *link, float theirx, float theiry, const Vector &ofs) { zinternalPinSet(my.x, my.y, link, theirx, theiry, ofs.x, ofs.y); }
-  void Layout::zinternalPinSet(const Vector &my, const Layout *link, float theirx, float theiry, float xofs, float yofs) { zinternalPinSet(my.x, my.y, link, theirx, theiry, xofs, yofs); }
-  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, Anchor theiranchor, const Vector &ofs) { zinternalPinSet(myx, myy, link, theiranchor, ofs.x, ofs.y); }
-  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, const Vector &their) { zinternalPinSet(myx, myy, link, their.x, their.y); }
-  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, const Vector &their, const Vector &ofs) { zinternalPinSet(myx, myy, link, their.x, their.y, ofs.x, ofs.y); }
-  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, const Vector &their, float xofs, float yofs) { zinternalPinSet(myx, myy, link, their.x, their.y, xofs, yofs); }
-  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, float theirx, float theiry, const Vector &ofs) { zinternalPinSet(myx, myy, link, theirx, theiry, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *target, Anchor theiranchor, const Vector &ofs) { zinternalPinSet(myanchor, target, theiranchor, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *target, const Vector &their) { zinternalPinSet(myanchor, target, their.x, their.y); }
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *target, const Vector &their, const Vector &ofs) { zinternalPinSet(myanchor, target, their.x, their.y, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *target, const Vector &their, float xofs, float yofs) { zinternalPinSet(myanchor, target, their.x, their.y, xofs, yofs); }
+  void Layout::zinternalPinSet(Anchor myanchor, const Layout *target, float theirx, float theiry, const Vector &ofs) { zinternalPinSet(myanchor, target, theirx, theiry, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *target, Anchor theiranchor) { zinternalPinSet(my.x, my.y, target, theiranchor); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *target, Anchor theiranchor, const Vector &ofs) { zinternalPinSet(my.x, my.y, target, theiranchor, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *target, Anchor theiranchor, float xofs, float yofs) { zinternalPinSet(my.x, my.y, target, theiranchor, xofs, yofs); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *target, const Vector &their) { zinternalPinSet(my.x, my.y, target, their.x, their.y); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *target, const Vector &their, const Vector &ofs) { zinternalPinSet(my.x, my.y, target, their.x, their.y, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *target, const Vector &their, float xofs, float yofs) { zinternalPinSet(my.x, my.y, target, their.x, their.y, xofs, yofs); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *target, float theirx, float theiry) { zinternalPinSet(my.x, my.y, target, theirx, theiry); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *target, float theirx, float theiry, const Vector &ofs) { zinternalPinSet(my.x, my.y, target, theirx, theiry, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(const Vector &my, const Layout *target, float theirx, float theiry, float xofs, float yofs) { zinternalPinSet(my.x, my.y, target, theirx, theiry, xofs, yofs); }
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *target, Anchor theiranchor, const Vector &ofs) { zinternalPinSet(myx, myy, target, theiranchor, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *target, const Vector &their) { zinternalPinSet(myx, myy, target, their.x, their.y); }
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *target, const Vector &their, const Vector &ofs) { zinternalPinSet(myx, myy, target, their.x, their.y, ofs.x, ofs.y); }
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *target, const Vector &their, float xofs, float yofs) { zinternalPinSet(myx, myy, target, their.x, their.y, xofs, yofs); }
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *target, float theirx, float theiry, const Vector &ofs) { zinternalPinSet(myx, myy, target, theirx, theiry, ofs.x, ofs.y); }
 
-  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, float theirx, float theiry) {
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *target, float theirx, float theiry) {
     if (detail::IsNil(myx) && detail::IsNil(myy)) {
       FRAMES_LAYOUT_CHECK(false, "PinSet not provided with any pin axes");
       return;
     }
 
-    if (!link) {
-      FRAMES_LAYOUT_CHECK(false, "PinSet requires offsets when linking to origin");
+    if (!target) {
+      FRAMES_LAYOUT_CHECK(false, "PinSet requires offsets when pinning to origin");
       return;
     }
 
@@ -680,20 +680,20 @@ namespace Frames {
     }
 
     if (!detail::IsNil(myx)) {
-      zinternalPinSet(X, myx, link, theirx);
+      zinternalPinSet(X, myx, target, theirx);
     }
 
     if (!detail::IsNil(myy)) {
-      zinternalPinSet(Y, myy, link, theiry);
+      zinternalPinSet(Y, myy, target, theiry);
     }
   }
-  void Layout::zinternalPinSet(float myx, float myy, const Layout *link, float theirx, float theiry, float xofs, float yofs) {
+  void Layout::zinternalPinSet(float myx, float myy, const Layout *target, float theirx, float theiry, float xofs, float yofs) {
     if (detail::IsNil(myx) && detail::IsNil(myy)) {
       FRAMES_LAYOUT_CHECK(false, "PinSet not provided with any pin axes");
       return;
     }
 
-    if (link) {
+    if (target) {
       if (detail::IsNil(myx) != detail::IsNil(theirx)) {
         FRAMES_LAYOUT_CHECK(false, "PinSet provided with only one pin position for X axis");
         return;
@@ -705,7 +705,7 @@ namespace Frames {
       }
     } else {
       if (!detail::IsNil(theirx) != !detail::IsNil(theiry)) {
-        FRAMES_LAYOUT_CHECK(false, "PinSet must have nil target anchor points when linking to origin");
+        FRAMES_LAYOUT_CHECK(false, "PinSet must have nil target anchor points when pinning to origin");
         return;
       }
     }
@@ -731,11 +731,11 @@ namespace Frames {
     }
 
     if (!detail::IsNil(myx)) {
-      zinternalPinSet(X, myx, link, theirx, xofs);
+      zinternalPinSet(X, myx, target, theirx, xofs);
     }
 
     if (!detail::IsNil(myy)) {
-      zinternalPinSet(Y, myy, link, theiry, yofs);
+      zinternalPinSet(Y, myy, target, theiry, yofs);
     }
   }
 
@@ -992,7 +992,7 @@ namespace Frames {
   }
 
   void Layout::ObliterateDetach() {
-    zinternalConstraintClearAll();  // kill my layout to unlink things
+    zinternalConstraintClearAll();  // kill my layout to unpin things
 
     if (m_env->FocusGet() == this) {
       m_env->FocusSet(0);
@@ -1065,13 +1065,13 @@ namespace Frames {
 
     const AxisData &ax = m_axes[axis];
 
-    if (ax.connections[0].link == layout) {
-      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->DebugNameGet().c_str(), DebugNameGet().c_str(), axis ? 'Y' : 'X', ax.connections[0].point_mine);
+    if (ax.connections[0].target == layout) {
+      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing pin", layout->DebugNameGet().c_str(), DebugNameGet().c_str(), axis ? 'Y' : 'X', ax.connections[0].point_mine);
       zinternalPinClear(axis, ax.connections[0].point_mine);
     }
 
-    if (ax.connections[1].link == layout) {
-      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing link", layout->DebugNameGet().c_str(), DebugNameGet().c_str(), axis ? 'Y' : 'X', ax.connections[1].point_mine);
+    if (ax.connections[1].target == layout) {
+      FRAMES_LAYOUT_ASSERT(false, "Obliterated frame %s is still referenced by active frame %s on axis %c/%f, clearing pin", layout->DebugNameGet().c_str(), DebugNameGet().c_str(), axis ? 'Y' : 'X', ax.connections[1].point_mine);
       zinternalPinClear(axis, ax.connections[1].point_mine);
     }
   }

@@ -109,6 +109,9 @@ namespace Frames {
       static bool WriteCroppedRect(Vertex *vertex, const Rect &screen, const Color &color, const Rect &bounds); // no fancy lerping
       static bool WriteCroppedTexRect(Vertex *vertex, const Rect &screen, const Rect &tex, const Color &color, const Rect &bounds);  // fancy lerping
 
+      // Exists so that people who are using Renderer anyway can get a Renderer from the Environment.
+      static Renderer *GetFrom(Environment *env);
+
     protected:
       int WidthGet() { return m_width; }
       int HeightGet() { return m_height; }

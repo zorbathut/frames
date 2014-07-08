@@ -36,15 +36,15 @@ namespace Frames {
       /// Initialize to all values false.
       Meta() : shift(false), ctrl(false), alt(false) { }
 
-      /// True if either "shift" key is depressed.
+      /// Indicates if either "shift" key is pressed.
       bool shift;
-      /// True if either "ctrl" key is depressed.
+      /// Indicates if either "ctrl" key is pressed.
       bool ctrl;
-      /// True if either "alt" key is depressed.
+      /// Indicates if either "alt" key is pressed.
       bool alt;
     };
 
-    /// Represents the scancode of a single keyboard key in QWERTY layout.
+    /// Represents the scancode of a single keyboard key relative to QWERTY layout.
     enum Key {
       INVALID,
       // Letters
@@ -173,13 +173,13 @@ namespace Frames {
     };
 
     /// Converts a scancode into a human-readable constant string.
-    /** This is intended for internal development purposes; the string returned does not respect locale.
+    /** This is intended only for internal development and debug purposes; the string returned does not respect locale.
     
     Pointers returned are valid forever. */
     const char *StringFromKey(Key key);
 
     /// Represents a single input command that can be sent to the Environment.
-    /** This is not required to use Frames. It's provided as a convenient way method for generic event transport from an OS abstraction layer to a Frames Environment. */
+    /** This is not required to use Frames. It's provided as a convenient method for generic event transport from an OS abstraction layer to a Frames::Environment. */
     class Command {
     public:
       /// Creates a MOUSEDOWN Command.

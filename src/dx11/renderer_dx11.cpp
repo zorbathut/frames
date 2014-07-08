@@ -105,7 +105,7 @@ namespace Frames {
       desc.CPUAccessFlags = 0;
       desc.MiscFlags = 0;
 
-      RendererDX11 *renderer = static_cast<RendererDX11*>(env->RendererGet());
+      RendererDX11 *renderer = static_cast<RendererDX11*>(Renderer::GetFrom(env));
 
       if (renderer->DeviceGet()->CreateTexture2D(&desc, 0, &m_tex) != S_OK) {
         env->LogError("DX11: Failure to create texture");
@@ -168,7 +168,7 @@ namespace Frames {
       box.bottom = sy + tex->HeightGet();
       box.front = 0;
       box.back = 1;
-      static_cast<RendererDX11*>(EnvironmentGet()->RendererGet())->ContextGet()->UpdateSubresource(m_tex, 0, &box, data, stride, 0);
+      static_cast<RendererDX11*>(Renderer::GetFrom(EnvironmentGet()))->ContextGet()->UpdateSubresource(m_tex, 0, &box, data, stride, 0);
     }
 
     RendererDX11::RendererDX11(Environment *env, ID3D11DeviceContext *context) :

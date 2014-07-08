@@ -54,11 +54,12 @@ namespace Frames {
 
   /// Coordinator class for almost all Frames state. Every Frames-using program will contain at least one Environment.
   /** A Frames::Environment is a self-contained Frames instance. It handles input, owns a hierarchy of \ref Frame "Frames", manages resources, and contains all the configuration data needed to use Frames.
-  Every Frames-using program will contain at least one Environment.
   
   While Environment is not locked to any individual thread, it is fundamentally single-threaded.
   It is undefined behavior to call any Environment function, or any function on a Frame owned by an Environment, while any other such function is being run in another thread.
-  However, multiple Environments can be used in parallel without issue. In most cases, it is also valid to call an Environment or Frame function while handling an event dispatch.
+  However, multiple Environments can be used in parallel without issue.
+  
+  Except when specified otherwise, it is always valid to call an Environment or Frame function while handling an event dispatch in that same thread.
   
   Environment will clean itself up entirely when it is destroyed, including destroying all child \ref Frame "Frames", cleaning up all stored resources and event handles, cleaning up any hooks in scripting languages, and so forth.*/
   class Environment : public Refcountable<Environment> {
@@ -105,11 +106,11 @@ namespace Frames {
     /** If MouseClear() has been called, this may be inaccurate. */ // TODO come up with a better system >:(
     const Vector &Input_MouseGet() const { return m_mouse; }
 
-    /// Sets the environment's current metakey flags.
+    /// Sets the environment's current meta key flags.
     /** This does not trigger events, merely updates the key meta state intended for event handlers. */
     void Input_MetaSet(const Input::Meta &meta) { m_lastMeta = meta; }
 
-    /// Gets the environment's current metakey flags.
+    /// Gets the environment's current meta key flags.
     /** This is intended for input handlers to check if the standard meta buttons - shift, ctrl, and alt - are pressed or not. */
     const Input::Meta &Input_MetaGet() const { return m_lastMeta; }
 
@@ -120,7 +121,7 @@ namespace Frames {
     bool Input_KeyDown(const Input::Key &key);
 
     /// Informs the environment that text has been typed.
-    /** Typing happens immediately and may trigger Layout::Event::KeyType events.
+    /** Typing happens immediately and may trigger Layout::Event::KeyText events.
     
     Returns true if the event was consumed by a Frame.*/
     bool Input_KeyText(const std::string &text);
@@ -141,11 +142,13 @@ namespace Frames {
     /// Sets the key focus to the given Layout.
     /** The key focus directs all key input to a specific Layout (more commonly, Frame). Without a focus, key input will not be consumed.
     
-    Call with a parameter of 0 to clear the key focus.*/
+    Call with a parameter of null to clear the key focus.*/
     void FocusSet(Layout *layout);
-    /// Gets the current key focus.
+    /// Gets the current key focus target frame.
+    /** Returns null if no frame has key focus. */
     Layout *FocusGet() { return m_focus; }
-    /// Gets the current key focus.
+    /// Gets the current key focus target frame.
+    /** Returns null if no frame has key focus. */
     const Layout *FocusGet() const { return m_focus; }
     
 
@@ -166,17 +169,17 @@ namespace Frames {
     /** The root layout is the bottom-most Layout. Everything is a child of this. */
     const Layout *RootGet() const { return m_root; }
 
-    /// Returns the layout underneath a given coordinate in the context of mouse input.
-    /** This can be used to find out what frame would be hit by a mouse even at a certain coordinate. */
+    /// Returns the layout underneath a given coordinate as if it were mouse input.
+    /** This can be used to find out what frame would be hit by a mouse event at a certain coordinate. */
     Layout *ProbeAsMouse(float x, float y);
 
     /// Returns the environment's Configuration.
     const Configuration::Local &ConfigurationGet() { return m_config; }
 
     // ==== Logging and debugging
-    /// Logs a string to the Logger's Error path.
+    /// Sends a string to the Error log.
     void LogError(const std::string &log) { m_config.LoggerGet()->LogError(log); }
-    /// Logs a string to the Logger's Debug path.
+    /// Sends a string to the Debug log.
     void LogDebug(const std::string &log) { m_config.LoggerGet()->LogDebug(log); }
 
     /// RAII performance monitoring of scope blocks.
@@ -196,8 +199,6 @@ namespace Frames {
       void *m_handle;
     };
 
-    /// Returns the environment's active Renderer. This should probably not be used by endusers; this will be fixed later.
-    detail::Renderer *RendererGet() const { return m_renderer;  }
   private:
     friend class Layout;
     friend class Frame;
@@ -248,8 +249,8 @@ namespace Frames {
     Configuration::Local m_config;
 
     // Managers
-    detail::Renderer *GetRenderer() { return m_renderer; }
-    detail::TextManager *GetTextManager() { return m_text_manager; }
+    detail::Renderer *RendererGet() { return m_renderer; }
+    detail::TextManager *TextManagerGet() { return m_text_manager; }
 
     detail::Renderer *m_renderer;
     detail::TextManager *m_text_manager;

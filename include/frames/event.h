@@ -39,10 +39,10 @@ namespace Frames {
     const char *NameGet() const { return m_name; }
 
     /// Gets this verb's Dive version.
-    /** Guaranteed to return NULL if this verb is a Dive or Bubble. */
+    /** Guaranteed to return null if this verb is a Dive or Bubble. */
     const VerbBase *DiveGet() const { return m_dive; }
     /// Gets this verb's Bubble version.
-    /** Guaranteed to return NULL if this verb is a Dive or Bubble. */
+    /** Guaranteed to return null if this verb is a Dive or Bubble. */
     const VerbBase *BubbleGet() const { return m_bubble; }
 
   private:
