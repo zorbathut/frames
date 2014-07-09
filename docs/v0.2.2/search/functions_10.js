@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['scrollget',['ScrollGet',['../classFrames_1_1Text.html#aaedf5001ed8cc36297dabf1b3a03aca0',1,'Frames::Text']]],
+  ['scrollset',['ScrollSet',['../classFrames_1_1Text.html#afb8b90f46400a889b5ad01ed0d22b968',1,'Frames::Text']]],
+  ['seek',['Seek',['../classFrames_1_1Stream.html#a62eec768bb7a30eb58d21ba67345c443',1,'Frames::Stream::Seek()'],['../classFrames_1_1StreamFile.html#adbd9953d1759736768d9af471e9c562e',1,'Frames::StreamFile::Seek()'],['../classFrames_1_1StreamBuffer.html#a5c0c0cbccdca7a0403ba8d024ecbbcbf',1,'Frames::StreamBuffer::Seek()']]],
+  ['seekable',['Seekable',['../classFrames_1_1Stream.html#a959d39dfc12151cfa99b9ac1a9249dd4',1,'Frames::Stream::Seekable()'],['../classFrames_1_1StreamFile.html#ae4ba16900c38c0d4fa7228ea44ba4627',1,'Frames::StreamFile::Seekable()'],['../classFrames_1_1StreamBuffer.html#adf7f97cef3b678aa9e8b5f2ef4ee975e',1,'Frames::StreamBuffer::Seekable()']]],
+  ['selectionactiveget',['SelectionActiveGet',['../classFrames_1_1Text.html#a0645e2a35bd84bc6b42a5e02b93a496d',1,'Frames::Text']]],
+  ['selectionbeginget',['SelectionBeginGet',['../classFrames_1_1Text.html#a314d62c978513f9318c6e4a4e29a8d5d',1,'Frames::Text']]],
+  ['selectionclear',['SelectionClear',['../classFrames_1_1Text.html#a80bd18a4d6c4b2a9d2fc82051787e182',1,'Frames::Text']]],
+  ['selectionendget',['SelectionEndGet',['../classFrames_1_1Text.html#afe9f0731a4cc91edabcb6a9b2b3cc82b',1,'Frames::Text']]],
+  ['selectionset',['SelectionSet',['../classFrames_1_1Text.html#a8d568f6bec906e46aa1b10d47d6d2ec0',1,'Frames::Text']]],
+  ['set',['Set',['../classFrames_1_1Configuration_1_1Clipboard.html#a4c71f682a94d2a3b1d093b3f318b1029',1,'Frames::Configuration::Clipboard']]],
+  ['sizeclear',['SizeClear',['../classFrames_1_1Frame.html#a784c616045932180ebc7c7f877d94585',1,'Frames::Frame']]],
+  ['sizedefaultset',['SizeDefaultSet',['../classFrames_1_1Layout.html#a7763d4c76acfba1324a9c498874c7681',1,'Frames::Layout']]],
+  ['sizeget',['SizeGet',['../classFrames_1_1Layout.html#afd5e1880e83e4a3ac7e3044f2106aaa3',1,'Frames::Layout::SizeGet()'],['../classFrames_1_1Text.html#a201a9982676508828b8cfba128a7792a',1,'Frames::Text::SizeGet()']]],
+  ['sizeset',['SizeSet',['../classFrames_1_1Frame.html#a0e105efa8d05340df699a8ba9ab167ae',1,'Frames::Frame::SizeSet()'],['../classFrames_1_1Text.html#ad8f991cc04d434dea72b44c15b87d2e6',1,'Frames::Text::SizeSet()']]],
+  ['sprite',['Sprite',['../classFrames_1_1Sprite.html#aed18baf294f03010a07d04ac7a32bab6',1,'Frames::Sprite']]],
+  ['streamfromidget',['StreamFromIdGet',['../classFrames_1_1Configuration_1_1Local.html#a7db7bb086f25cca40edb420586562ac2',1,'Frames::Configuration::Local']]],
+  ['streamfromidset',['StreamFromIdSet',['../classFrames_1_1Configuration_1_1Local.html#ab8c679c1d3a7ae740c8634b1b8ee6f20',1,'Frames::Configuration::Local']]],
+  ['swap',['Swap',['../classFrames_1_1Ptr.html#aff7b7bde87e3fa8dc86ed30cafe30fba',1,'Frames::Ptr']]]
+];
