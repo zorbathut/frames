@@ -75,13 +75,18 @@ os.execute("cd tagtemp && git checkout gh-pages")
 -- get documentation built
 os.execute("lua script/generateDocs.lua")
 
+local function docto(tag)
+  os.execute("rm -rf tagtemp/docs/" .. tag)
+  os.execute("mkdir -p tagtemp/docs/" .. tag)
+  os.execute("cp -r doc/html/* tagtemp/docs/" .. tag)
+end
+
 local function branchto(branch)
   os.execute("git branch -f " .. branch)
   os.execute("git config branch." .. branch .. ".remote origin")
   os.execute("git config branch." .. branch .. ".merge refs/heads/" .. branch)
-  os.execute("rm -rf tagtemp/docs/" .. branch)
-  os.execute("mkdir -p tagtemp/docs/" .. branch)
-  os.execute("cp -r doc/html/* tagtemp/docs/" .. branch)
+  
+  docto(branch)
 end
 
 if not suffix then
@@ -99,6 +104,9 @@ if not suffix then
   -- Push to vM.N branch
   branchto("v" .. major .. "." .. minor)
 end
+
+-- Add docs
+docto("v" .. ver);
 
 os.execute([[cd tagtemp && git add -A . && git commit -a -m "Documentation update for version v]] .. ver .. [[" && git push && cd .. && rm -rf tagtemp]])
 
