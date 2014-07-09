@@ -1,3 +1,5 @@
 Frame is an in-development UI library. It can be used under the GPL. Commercial licensing may be available later (if you're interested, send me an email.)
 
 It is currently highly undocumented and provides no guarantees of backwards compatibility.
+
+Most information is stored in the documentation. The latest documentation can be accessed at http://www.framesui.com/dev and release packages can be found at http://www.framesui.com .
