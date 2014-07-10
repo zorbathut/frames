@@ -148,7 +148,7 @@ TEST(Obliterate, Linked) {
 // Verifies that obliterating things via events works properly
 TEST(Obliterate, Event) {
   FRAMES_VERB_DEFINE(ObliterateTestHelper, ());
-  FRAMES_VERB_DEFINE_BUBBLE(ObliterateTestBDHelper, ());
+  FRAMES_VERB_DEFINE_BUBBLE(ObliterateTestDBHelper, ());
 
   TestEnvironment env;
 
@@ -287,11 +287,11 @@ TEST(Obliterate, Event) {
 
     container.c->ParentSet(container.l);
 
-    container.l->EventAttach(ObliterateTestBDHelper.Dive, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ReattachC));
-    container.c->EventAttach(ObliterateTestBDHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateL));
-    container.l->EventAttach(ObliterateTestBDHelper.Bubble, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateR));  // This will still be executed because the frame still exists and the bubble path is set at event initiation
+    container.l->EventAttach(ObliterateTestDBHelper.Dive, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ReattachC));
+    container.c->EventAttach(ObliterateTestDBHelper, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateL));
+    container.l->EventAttach(ObliterateTestDBHelper.Bubble, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ObliterateR));  // This will still be executed because the frame still exists and the bubble path is set at event initiation
 
-    container.c->EventTrigger(ObliterateTestBDHelper);
+    container.c->EventTrigger(ObliterateTestDBHelper);
 
     TestSnapshot(env);
 
