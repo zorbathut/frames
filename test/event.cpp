@@ -25,6 +25,7 @@
 #include "lib.h"
 
 FRAMES_VERB_DEFINE(EventTestHelper, ());
+FRAMES_VERB_DEFINE_BUBBLE(EventTestHelperDB, ());
 
 void WheelEventHook(VerbLog *log, Frames::Layout *frame) {
   log->Attach(frame, Frames::Layout::Event::MouseWheel);
@@ -326,4 +327,61 @@ TEST(Event, Destruction) {
   compare.Append("Event trigger");
 
   container.f->EventTrigger(EventTestHelper);
+}
+
+TEST(Event, Reparent) {
+  TestEnvironment env;
+  TestCompare compare;
+
+  struct Container : Frames::detail::Noncopyable {
+    Container(TestEnvironment &tenv, TestCompare *compare) : compare(compare), env(&tenv), alog(compare, "alpha") {
+      a = Frames::Frame::Create((*env)->RootGet(), "a");
+      b = Frames::Frame::Create(a, "b");
+    }
+
+    void ReparentFlatten(Frames::Handle *) {
+      compare->Append("Reparent Flatten");
+      b->ParentSet((*env)->RootGet());
+    }
+
+    void ReparentSwap(Frames::Handle *) {
+      compare->Append("Reparent Swap");
+      b->ParentSet((*env)->RootGet());
+      a->ParentSet(b);
+    }
+
+    Frames::Frame *a;
+    Frames::Frame *b;
+
+    TestEnvironment *env;
+    TestCompare *compare;
+
+    VerbLog alog;
+  } container(env, &compare);
+
+  container.alog.Attach(container.a, EventTestHelperDB.Dive);
+  container.alog.Attach(container.a, EventTestHelperDB.Bubble);
+  container.alog.Attach(container.a, EventTestHelperDB);
+  container.alog.Attach(container.b, EventTestHelperDB.Dive);
+  container.alog.Attach(container.b, EventTestHelperDB.Bubble);
+  container.alog.Attach(container.b, EventTestHelperDB);
+
+  container.b->EventAttach(EventTestHelperDB, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ReparentFlatten), 1);
+
+  compare.Append("EVENT");
+  container.b->EventTrigger(EventTestHelperDB);
+
+  compare.Append("EVENT");
+  container.b->EventTrigger(EventTestHelperDB);
+
+  // reset
+  container.b->ParentSet(container.a);
+  container.b->EventDetach(EventTestHelperDB, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ReparentFlatten), 1);
+  container.b->EventAttach(EventTestHelperDB, Frames::Delegate<void (Frames::Handle *)>(&container, &Container::ReparentSwap), 1);
+
+  compare.Append("EVENT");
+  container.b->EventTrigger(EventTestHelperDB);
+
+  compare.Append("EVENT");
+  container.b->EventTrigger(EventTestHelperDB);
 }

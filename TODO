@@ -35,10 +35,9 @@
 
 === TESTING
 
+* Circular parent set!
+
 * Events
-  * Dive/bubble
-    * Reparenting during
-    * Obliteration during
   * Modify events, re-call the same event recursively!
 
 * Frames

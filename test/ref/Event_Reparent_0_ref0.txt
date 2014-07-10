@@ -1,0 +1,25 @@
+alpha: Begin log
+EVENT
+alpha: Event EventTestHelperDB on Root.a.b (currently EventTestHelperDBDive on Root.a)
+alpha: Event EventTestHelperDB on Root.a.b (currently EventTestHelperDBDive on Root.a.b)
+alpha: Event EventTestHelperDB on Root.a.b
+Reparent Flatten
+alpha: Event EventTestHelperDB on Root.b (currently EventTestHelperDBBubble on Root.b)
+alpha: Event EventTestHelperDB on Root.b (currently EventTestHelperDBBubble on Root.a)
+EVENT
+alpha: Event EventTestHelperDB on Root.b (currently EventTestHelperDBDive on Root.b)
+alpha: Event EventTestHelperDB on Root.b
+Reparent Flatten
+alpha: Event EventTestHelperDB on Root.b (currently EventTestHelperDBBubble on Root.b)
+EVENT
+alpha: Event EventTestHelperDB on Root.a.b (currently EventTestHelperDBDive on Root.a)
+alpha: Event EventTestHelperDB on Root.a.b (currently EventTestHelperDBDive on Root.a.b)
+alpha: Event EventTestHelperDB on Root.a.b
+Reparent Swap
+alpha: Event EventTestHelperDB on Root.b (currently EventTestHelperDBBubble on Root.b)
+alpha: Event EventTestHelperDB on Root.b (currently EventTestHelperDBBubble on Root.b.a)
+EVENT
+alpha: Event EventTestHelperDB on Root.b (currently EventTestHelperDBDive on Root.b)
+alpha: Event EventTestHelperDB on Root.b
+Reparent Swap
+alpha: Event EventTestHelperDB on Root.b (currently EventTestHelperDBBubble on Root.b)
