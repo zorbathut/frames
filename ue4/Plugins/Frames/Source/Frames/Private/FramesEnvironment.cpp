@@ -20,6 +20,7 @@
 #include "FramesPCH.h"
 
 #include "FramesEnvironment.h"
+#include "FramesHUDHack.h"
 #include "FramesRendererRHI.h"
 
 #include "AllowWindowsPlatformTypes.h"
@@ -77,6 +78,7 @@ UFramesEnvironment::UFramesEnvironment(const class FPostConstructInitializePrope
 
 void UFramesEnvironment::Render(AHUD *hud)
 {
-  m_env->ResizeRoot(hud->Canvas->SizeX, hud->Canvas->SizeY);
+  UCanvas *canvas = FramesHUDHack(hud);
+  m_env->ResizeRoot(canvas->SizeX, canvas->SizeY);
   m_env->Render();
 }

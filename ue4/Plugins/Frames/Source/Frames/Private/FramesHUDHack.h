@@ -18,32 +18,7 @@
     along with Frames.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
+class AHUD;
+class FCanvas;
 
-#include "AllowWindowsPlatformTypes.h"
-#include <frames/environment.h>
-#include <frames/configuration.h>
-#include <frames/renderer_null.h>
-#include "HideWindowsPlatformTypes.h"
-
-#include "Engine.h"
-
-#include "FramesEnvironment.generated.h"
-
-DECLARE_LOG_CATEGORY_EXTERN(FramesLog, Log, All);
-
-/**
- * Frames main environment.
- */
-UCLASS(Transient, Blueprintable, BlueprintType, NotPlaceable)
-class UFramesEnvironment : public UObject
-{
-	GENERATED_UCLASS_BODY()
-
-public:
-  UFUNCTION(BlueprintCallable, Category="Render")
-  void Render(AHUD *hud);
-
-private:
-  Frames::EnvironmentPtr m_env;
-};
+UCanvas *FramesHUDHack(AHUD *hud);

@@ -21,11 +21,5 @@
 
 #include "CoreUObject.h"
 
-// This is awful.
-// We do it because there is otherwise almost no way to access the HUD's canvas; we'd have to ask people to inherit from HUD and provide a function.
-// But, given that they *could* do this, we don't feel too bad about forcing access to that canvas.
-// Still.
-// Eww.
-#define protected public
-#include "Engine.h"
-#undef protected
+// Annoyingly, we can't include Engine.h here because Engine.h includes HUD.h and we need, in some files, to include HUD.h with that ghastly define hack
+// WELP
