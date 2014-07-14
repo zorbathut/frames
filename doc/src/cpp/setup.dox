@@ -4,7 +4,7 @@
 
 <h2>Logging</h2>
 
-Frames has a built-in logging system to report errors and debug information. It is strongly recommended that errors are put somewhere that developers will notice, up to and including big red text directly on the screen and/or modal dialog warnings. After reporting, Frames will attempt to recover from any errors; if the report is never seen, this can make debugging extremely confusing.
+Frames has a built-in logging system to report errors and debug information. It is strongly recommended that errors are put somewhere that developers will notice, up to and including big red text directly on the screen and/or modal dialog warnings. The importance of this is difficult to overstate; in development builds, given a choice between displaying Errors somewhere which may be missed versus simply crashing the game, we recommend crashing the game. After reporting, Frames will attempt to recover from any errors, usually successfully; if the report is never seen, this can make debugging extremely confusing.
 
 There are two locations that debug reports can come from. Each Environment has its own logging configuration, plus there's a global log for events that are not associated with an Environment. It's very easy to set these both up at the same time. Here's replacement code for the original Environment::Create() call, using fictional LOG() and PrintOnScreen() functions - reimplement MyLogger's functions as is appropriate for your project.
 
