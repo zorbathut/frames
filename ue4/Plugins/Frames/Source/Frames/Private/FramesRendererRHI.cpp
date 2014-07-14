@@ -21,6 +21,8 @@
 
 #include "FramesRendererRHI.h"
 
+#include "RenderingThread.h"
+
 #include "frames/configuration.h"
 #include "frames/detail.h"
 #include "frames/detail_format.h"
@@ -68,15 +70,41 @@ namespace Frames {
       */
 
     TextureBackingRHI::TextureBackingRHI(Environment *env, int width, int height, Texture::Format format) : TextureBacking(env, width, height, format) {
-      m_tex = RHICreateTexture2D(width, height, (format), 1, 1, TexCreate_ShaderResource, 0);
+      EPixelFormat rhiformat = PF_Unknown;
+      if (format == Texture::FORMAT_RGBA_8) {
+        rhiformat = PF_R8G8B8A8;
+      } else if (format == Texture::FORMAT_RGB_8) {
+        rhiformat = PF_R8G8B8A8;
+      } else if (format == Texture::FORMAT_R_8) {
+        rhiformat = PF_G8;  // why is this g, not r
+      } else {
+        EnvironmentGet()->LogError(detail::Format("Unrecognized raw type %d in texture", format));
+        return;
+      }
+
+      m_tex = new RHIData;
+      
+      ENQUEUE_UNIQUE_RENDER_COMMAND_FOURPARAMETER(
+        Frames_TextureBacking_Constructor,
+        RHIData *, rhi, m_tex,
+        int, width, width,
+        int, height, height,
+        EPixelFormat, rhiformat, rhiformat,
+      {
+        rhi->m_tex = RHICreateTexture2D(width, height, rhiformat, 1, 1, TexCreate_ShaderResource, 0);
+      });
     }
 
     TextureBackingRHI::~TextureBackingRHI() {
-      // toot
+      ENQUEUE_UNIQUE_RENDER_COMMAND_ONEPARAMETER(
+        Frames_TextureBacking_Destructor,
+        RHIData *, rhi, m_tex,
+      {
+        delete rhi; // texture contained gets cleaned up by the destructor
+      });
     }
 
-    #if 0
-    void TextureBackingDX11::Write(int sx, int sy, const TexturePtr &tex) {
+    void TextureBackingRHI::Write(int sx, int sy, const TexturePtr &tex) {
       if (tex->TypeGet() != Texture::RAW) {
         EnvironmentGet()->LogError(detail::Format("Unrecognized type %d in texture", tex->TypeGet()));
         return;
@@ -92,16 +120,26 @@ namespace Frames {
         return;
       }
 
-      const unsigned char *data = tex->RawDataGet();
-      int stride = tex->RawStrideGet();
-      std::vector<unsigned char> dataStorage;
+      struct TBWrite {
+        int sx;
+        int sy;
+        int width;
+        int height;
+        int stride;
+        std::vector<unsigned char> data;
+      } tbw;
+
+      tbw.sx = sx;
+      tbw.sy = sy;
+      tbw.width = tex->WidthGet();
+      tbw.height = tex->HeightGet();
 
       if (tex->FormatGet() == Texture::FORMAT_RGB_8) {
         // we get to do some conversion! yaaaay.
         int pixels = tex->WidthGet() * tex->HeightGet();
-        dataStorage.resize(pixels * Texture::RawBPPGet(Texture::FORMAT_RGBA_8));
-        const unsigned char *read = data;
-        unsigned char *write = &dataStorage[0];
+        tbw.data.resize(pixels * Texture::RawBPPGet(Texture::FORMAT_RGBA_8));
+        const unsigned char *read = tex->RawDataGet();
+        unsigned char *write = &tbw.data[0];
         
         for (int i = 0; i < pixels; ++i) {
           *write++ = *read++;
@@ -110,20 +148,34 @@ namespace Frames {
           *write++ = 255;
         }
 
-        data = &dataStorage[0];
-        stride = (int)dataStorage.size() / tex->HeightGet(); // yes, this is a wasted div; it's not really going to be an issue, though.
+        tbw.stride = (int)tbw.data.size() / tex->HeightGet(); // yes, this is a wasted div; it's not really going to be an issue, though.
+      } else {     
+        tbw.stride = tex->RawStrideGet();
+        tbw.data = std::vector<unsigned char>(tex->RawDataGet(), tex->RawDataGet() + tbw.height * tbw.stride);
       }
 
-      D3D11_BOX box;
-      box.left = sx;
-      box.top = sy;
-      box.right = sx + tex->WidthGet();
-      box.bottom = sy + tex->HeightGet();
-      box.front = 0;
-      box.back = 1;
-      static_cast<RendererDX11*>(Renderer::GetFrom(EnvironmentGet()))->ContextGet()->UpdateSubresource(m_tex, 0, &box, data, stride, 0);
+      ENQUEUE_UNIQUE_RENDER_COMMAND_TWOPARAMETER(
+        Frames_TextureBacking_Write,
+        RHIData *, rhi, m_tex,
+        TBWrite, tbw, tbw,
+      {
+        RHIUpdateTexture2D(rhi->m_tex, 0, FUpdateTextureRegion2D(tbw.sx, tbw.sy, 0, 0, tbw.width, tbw.height), tbw.stride, tbw.data.data());
+      });
     }
 
+    /*RendererRHI::RendererRHI(Environment *env) : Renderer(env) { }
+    RendererRHI::~RendererRHI() { }
+    void RendererRHI::Begin(int w, int h) { }
+    void RendererRHI::End() { };
+    detail::Renderer::Vertex *RendererRHI::Request(int c) { return 0; }
+    void RendererRHI::Return(int c) { }
+    TextureBackingPtr RendererRHI::TextureCreate(int width, int height, Texture::Format format) {
+      return TextureBackingPtr(new TextureBackingRHI(EnvironmentGet(), width, height, format));
+    }
+    void RendererRHI::TextureSet(const TextureBackingPtr &tex) { }
+    void RendererRHI::ScissorSet(const Rect &rect) { }*/
+
+#if 0
     RendererDX11::RendererDX11(Environment *env, ID3D11DeviceContext *context) :
       Renderer(env),
       m_device(0),

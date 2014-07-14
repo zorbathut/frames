@@ -20,6 +20,7 @@
 #ifndef FRAMES_RENDERER_RHI
 #define FRAMES_RENDERER_RHI
 
+#include "RHI.h"
 #include "RHIResources.h"
 
 #include "frames/renderer.h"
@@ -33,6 +34,15 @@ namespace Frames {
   }
   
   namespace detail {
+
+    // Stores actual data of the RHI texture; this class's lifetime is dictated more by the render queue system than anything else
+    // Needed because we pass data to the renderer, and the TextureBackingRHI may theoretically have been torn down by then
+    // We manually handle this object's lifetime, which is a pain, but so it goes.
+    // It's mostly a container for the Ref object.
+    struct RHIData : detail::Noncopyable {
+      FTexture2DRHIRef m_tex;
+    };
+
     class TextureBackingRHI : public TextureBacking {
     public:
       TextureBackingRHI(Environment *env, int width, int height, Texture::Format format);
@@ -41,7 +51,7 @@ namespace Frames {
       virtual void Write(int sx, int sy, const TexturePtr &tex);
 
     private:
-      FTexture2DRHIRef m_tex;
+      RHIData *m_tex;
     };
 
     class RendererRHI : public Renderer {

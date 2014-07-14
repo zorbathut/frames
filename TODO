@@ -1,14 +1,4 @@
 
-FTexture2DRHI - RHICreateTexture2D
-  RHILockTexture2D
-  RHIUnlockTexture2D
-FTexture2DResource
-UTexture2D
-
-
-UpdateTexture2D
-FTexture2DRHIRef
-
 === DOCS
 
 * detailed usage of all frame types
