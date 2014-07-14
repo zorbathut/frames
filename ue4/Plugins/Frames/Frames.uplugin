@@ -1,18 +1,19 @@
 {
-  "PluginFileVersion" : 1,
+  "PluginFileVersion" : 3,
 
   "FriendlyName" : "Frames",
   "Version" : 1,
   "VersionName" : "$$VERSION$$",
   "CreatedBy" : "Mandible Games",
   "CreatedByURL" : "http://framesui.com",
+  "EngineVersion" : 1579795,
   "Description" : "Unreal Engine 4 bindings and classes for Frames UI.",
     
   "Modules" :
   [
     {
       "Name" : "Frames",
-      "Type" : "Developer"
+      "Type" : "Runtime"
     }
   ]
 }
