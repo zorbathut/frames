@@ -20,6 +20,7 @@
 #include "FramesPCH.h"
 
 #include "FramesEnvironment.h"
+#include "FramesRendererRHI.h"
 
 #include "AllowWindowsPlatformTypes.h"
 #include <frames/configuration.h>
@@ -69,7 +70,7 @@ UFramesEnvironment::UFramesEnvironment(const class FPostConstructInitializePrope
 	: Super(PCIP)
 {
   Frames::Configuration::Local conf;
-  conf.RendererSet(Frames::Configuration::RendererNull());
+  conf.RendererSet(Frames::Configuration::RendererRHI());
   conf.LoggerSet(Frames::Configuration::LoggerPtr(new FramesUE4Logger()));
   m_env = Frames::Environment::Create(conf);
 }

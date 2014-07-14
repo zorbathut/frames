@@ -30,6 +30,7 @@ public class Frames : ModuleRules
       "CoreUObject",  // for UObject
       //"InputCore",  // almost certain to be re-added
       "Engine", // for AHUD
+      "RHI", // for actual rendering
     });
     
     string PlatformString = (Target.Platform == UnrealTargetPlatform.Win64) ? "x64" : "x32";
