@@ -26,10 +26,11 @@ public class Frames : ModuleRules
   public Frames(TargetInfo Target)
   {
     PublicDependencyModuleNames.AddRange(new string[] {
-      "Core", // I sorta feel like I should just have this
+      "Core", // needed for many many things
       "CoreUObject",  // for UObject
       //"InputCore",  // almost certain to be re-added
       "Engine", // for AHUD
+      "RenderCore", // render queueing
       "RHI", // for actual rendering
     });
     
