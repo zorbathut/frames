@@ -88,6 +88,10 @@
 
 === TWEAK
 
+* Memory leak tracking
+  * Max-frame-count value
+  * Frame enumeration
+
 * dxgidebug on vger
 
 * get rid of split headers
