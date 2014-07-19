@@ -384,41 +384,53 @@ namespace Frames {
     void RendererRHI::End() {
     }
 
-#if 0
-    Renderer::Vertex *RendererDX11::Request(int quads) {
+    Renderer::Vertex *RendererRHI::Request(int quads) {
       if (quads > m_verticesQuadcount) {
         EnvironmentGet()->LogError("Exceeded valid quad count in a single draw call; splitting NYI");
         return 0;
       }
 
-      D3D11_MAP mapFlag = D3D11_MAP_WRITE_NO_OVERWRITE;
-      if (m_verticesQuadpos + quads > m_verticesQuadcount) {
-        // we'll have to clear it out
-        m_verticesQuadpos = 0;
-        mapFlag = D3D11_MAP_WRITE_DISCARD;
-      }
-
-      D3D11_MAPPED_SUBRESOURCE mapData;
-      if (m_context->Map(m_vertices, 0, mapFlag, 0, &mapData) != S_OK) {
-        EnvironmentGet()->LogError("Error mapping data");
+      if (m_request) {
+        EnvironmentGet()->LogError("Request called with inflight request");
         return 0;
       }
 
-      m_verticesLastQuadpos = m_verticesQuadpos;
-      m_verticesLastQuadsize = quads;
-      m_verticesQuadpos += quads;
+      m_request = new RequestData;
+      m_request->quads = quads;
+      m_request->data = new Renderer::Vertex[quads * 4];
 
-      return (Renderer::Vertex*)mapData.pData + m_verticesLastQuadpos * 4;
+      return m_request->data;
     }
 
-    void RendererDX11::Return(int quads /*= -1*/) {
-      m_context->Unmap(m_vertices, 0);
+    void RendererRHI::Return(int quads /*= -1*/) {
+      if (!m_request)
+      {
+        EnvironmentGet()->LogError("Return called without inflight request");
+        return;
+      }
 
-      if (quads == -1) quads = m_verticesLastQuadsize;
+      if (quads != -1) m_request->quads = quads;
 
-      m_context->DrawIndexed(quads * 6, 0, m_verticesLastQuadpos * 4);
+      ENQUEUE_UNIQUE_RENDER_COMMAND_TWOPARAMETER(
+        Frames_Begin,
+        Data *, rhi, m_rhi,
+        RequestData *, request, m_request,
+      {
+        {
+          void *data = RHILockVertexBuffer(rhi->m_vertices, 0, request->quads * sizeof(Vertex) * 4, RLM_WriteOnly);
+        
+          memcpy(data, request->data, request->quads * sizeof(Vertex) * 4);
+
+          RHIUnlockVertexBuffer(rhi->m_vertices);
+        }
+
+        RHIDrawIndexedPrimitive(rhi->m_indices, PT_TriangleList, 0, 0, request->quads * 4, 0, request->quads * 2, 1);
+
+        delete request;
+      });
+
+      m_request = 0;  // will be cleaned up in render thread
     }
-    #endif
 
     TextureBackingPtr RendererRHI::TextureCreate(int width, int height, Texture::Format mode) {
       return TextureBackingPtr(new TextureBackingRHI(EnvironmentGet(), width, height, mode));
@@ -509,5 +521,8 @@ namespace Frames {
       m_verticesQuadpos = m_verticesQuadcount; // will force an array rebuild
     }
   #endif
+
+    RendererRHI::RequestData::RequestData() : quads(0), data(0) { }
+    RendererRHI::RequestData::~RequestData() { delete [] data; }
   }
 }

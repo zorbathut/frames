@@ -98,19 +98,24 @@ namespace Frames {
         FSamplerStateRHIRef m_sampler;
 
         //ID3D11InputLayout *m_verticesLayout;
-        //ID3D11Buffer *m_vertices;
-        //int m_verticesQuadcount;
-        //int m_verticesQuadpos;
-    
-        //int m_verticesLastQuadpos;
-        //int m_verticesLastQuadsize;
+        FVertexBufferRHIRef m_vertices;
 
-        //ID3D11Buffer *m_indices;
-
-        //ID3D11ShaderResourceView *m_currentTexture;
+        FIndexBufferRHIRef m_indices;
       };
 
       Data *m_rhi;
+
+      struct RequestData : detail::Noncopyable {
+        RequestData();
+        ~RequestData();
+
+        int quads;
+        Renderer::Vertex *data;
+      };
+
+      RequestData *m_request;
+
+      int m_verticesQuadcount;
 
       TextureBackingRHI *m_currentTexture;
 
