@@ -19,7 +19,7 @@
 
 local projectInfo = ...
 
-external "ue4"
+external "plugin_ue4"
   location "ue4/Intermediate/ProjectFiles"
   kind "StaticLib"
   removeconfigurations { "Debug" }

@@ -3,9 +3,9 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class ue4Target : TargetRules
+public class plugin_ue4Target : TargetRules
 {
-	public ue4Target(TargetInfo Target)
+	public plugin_ue4Target(TargetInfo Target)
 	{
 		Type = TargetType.Game;
 	}
@@ -20,6 +20,6 @@ public class ue4Target : TargetRules
 		ref List<string> OutExtraModuleNames
 		)
 	{
-		OutExtraModuleNames.AddRange( new string[] { "ue4" } );
+		OutExtraModuleNames.AddRange( new string[] { "plugin_ue4" } );
 	}
 }

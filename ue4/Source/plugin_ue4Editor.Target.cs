@@ -3,9 +3,9 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class ue4EditorTarget : TargetRules
+public class plugin_ue4EditorTarget : TargetRules
 {
-	public ue4EditorTarget(TargetInfo Target)
+	public plugin_ue4EditorTarget(TargetInfo Target)
 	{
 		Type = TargetType.Editor;
 	}
@@ -20,6 +20,6 @@ public class ue4EditorTarget : TargetRules
 		ref List<string> OutExtraModuleNames
 		)
 	{
-		OutExtraModuleNames.AddRange( new string[] { "ue4" } );
+		OutExtraModuleNames.AddRange( new string[] { "plugin_ue4" } );
 	}
 }

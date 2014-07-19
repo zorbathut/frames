@@ -13,7 +13,7 @@
 	"CreatedByURL": "",
 	"Modules": [
 		{
-			"Name": "ue4",
+			"Name": "plugin_ue4",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
