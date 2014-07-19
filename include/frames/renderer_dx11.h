@@ -90,7 +90,7 @@ namespace Frames {
 
       ID3D11Buffer *m_shader_ci_size_buffer;
 
-      // may as well keep 'em both around
+      // may as well keep 'em all around
       ID3D11Buffer *m_shader_ci_item_buffer_sample_off;
       ID3D11Buffer *m_shader_ci_item_buffer_sample_full;
       ID3D11Buffer *m_shader_ci_item_buffer_sample_alpha;
