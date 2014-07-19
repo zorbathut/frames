@@ -22,6 +22,13 @@
 
 === TWEAK
 
+* Rename projects
+  core
+  renderer_
+  plugin_
+  test_lib
+  test_standalone
+
 * Verify that appropriate files are all being included
 * /Zl compiler option?
 * script to build deps
