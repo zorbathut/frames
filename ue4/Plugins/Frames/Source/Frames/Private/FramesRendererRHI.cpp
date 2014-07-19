@@ -461,66 +461,42 @@ namespace Frames {
       }
     }
 
-    #if 0
-    void RendererDX11::ScissorSet(const Rect &rect) {
-      D3D11_RECT d3drect;
-      d3drect.left = (int)floor(rect.s.x + 0.5f);
-      d3drect.top = (int)floor(rect.s.y + 0.5f);
-      d3drect.right = (int)floor(rect.e.x + 0.5f);
-      d3drect.bottom = (int)floor(rect.e.y + 0.5f);
-      ContextGet()->RSSetScissorRects(1, &d3drect);
+    void RendererRHI::ScissorSet(const Rect &rect) {
+      RHISetScissorRect(true, (int)floor(rect.s.x + 0.5f), (int)floor(rect.s.y + 0.5f), (int)floor(rect.e.x + 0.5f), (int)floor(rect.e.y + 0.5f));
     }
 
-    void RendererDX11::CreateBuffers(int len) {
-      int quadLen = len / 4;
-
+    void RendererRHI::CreateBuffers(int len) {
+      ENQUEUE_UNIQUE_RENDER_COMMAND_TWOPARAMETER(
+        Frames_TextureSet,
+        Data *, rhi, m_rhi,
+        int, len, len,
       {
-        D3D11_BUFFER_DESC vertexBufferDesc;
-        memset(&vertexBufferDesc, 0, sizeof(vertexBufferDesc));
-        vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-        vertexBufferDesc.ByteWidth = sizeof(Vertex) * quadLen * 4;
-        vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-        vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        vertexBufferDesc.MiscFlags = 0;
+        int quadLen = len / 4;
 
-        if (DeviceGet()->CreateBuffer(&vertexBufferDesc, 0, &m_vertices) != S_OK) {
-          EnvironmentGet()->LogError("Failure to allocate vertex buffer");
+        rhi->m_vertices = RHICreateVertexBuffer(len * sizeof(Vertex), 0, BUF_Volatile);
+        
+        {
+          vector<unsigned short> elements(quadLen * 6);
+          int writepos = 0;
+          for (int i = 0; i < quadLen; ++i) {
+            elements[writepos++] = i * 4 + 0;
+            elements[writepos++] = i * 4 + 1;
+            elements[writepos++] = i * 4 + 3;
+            elements[writepos++] = i * 4 + 1;
+            elements[writepos++] = i * 4 + 2;
+            elements[writepos++] = i * 4 + 3;
+          }
+
+          rhi->m_indices = RHICreateIndexBuffer(sizeof(unsigned short), elements.size() * sizeof(unsigned short), 0, BUF_Static);
+
+       		void *data = RHILockIndexBuffer(rhi->m_indices, 0, elements.size() * sizeof(unsigned short), RLM_WriteOnly);
+          memcpy(data, elements.data(), elements.size() * sizeof(unsigned short));
+		      RHIUnlockIndexBuffer(rhi->m_indices);
         }
-      }
-
-      {
-        vector<unsigned short> elements(quadLen * 6);
-        int writepos = 0;
-        for (int i = 0; i < quadLen; ++i) {
-          elements[writepos++] = i * 4 + 0;
-          elements[writepos++] = i * 4 + 1;
-          elements[writepos++] = i * 4 + 3;
-          elements[writepos++] = i * 4 + 1;
-          elements[writepos++] = i * 4 + 2;
-          elements[writepos++] = i * 4 + 3;
-        }
-
-        D3D11_BUFFER_DESC indexBufferDesc;
-        memset(&indexBufferDesc, 0, sizeof(indexBufferDesc));
-        indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-        indexBufferDesc.ByteWidth = sizeof(unsigned short) * quadLen * 6;
-        indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-        indexBufferDesc.CPUAccessFlags = 0;
-        indexBufferDesc.MiscFlags = 0;
-
-        D3D11_SUBRESOURCE_DATA indexBufferData;
-        memset(&indexBufferData, 0, sizeof(indexBufferData));
-        indexBufferData.pSysMem = &elements[0];
-
-        if (DeviceGet()->CreateBuffer(&indexBufferDesc, &indexBufferData, &m_indices) != S_OK) {
-          EnvironmentGet()->LogError("Failure to allocate index buffer");
-        }
-      }
+      });
       
-      m_verticesQuadcount = quadLen;
-      m_verticesQuadpos = m_verticesQuadcount; // will force an array rebuild
+      m_verticesQuadcount = len / 4;
     }
-  #endif
 
     RendererRHI::RequestData::RequestData() : quads(0), data(0) { }
     RendererRHI::RequestData::~RequestData() { delete [] data; }
