@@ -35,13 +35,9 @@ namespace Frames {
   
   namespace detail {
 
-    // Stores actual data of the RHI texture; this class's lifetime is dictated more by the render queue system than anything else
-    // Needed because we pass data to the renderer, and the TextureBackingRHI may theoretically have been torn down by then
+    // Actual data is stored in "Data" subclasses; this class's lifetime is dictated more by the render queue system than anything else
+    // Needed because we pass data to the renderer, and the parent class may theoretically have been torn down by then
     // We manually handle this object's lifetime, which is a pain, but so it goes.
-    // It's mostly a container for the Ref object.
-    struct RHIData : detail::Noncopyable {
-      FTexture2DRHIRef m_tex;
-    };
 
     class TextureBackingRHI : public TextureBacking {
     public:
@@ -50,8 +46,13 @@ namespace Frames {
 
       virtual void Write(int sx, int sy, const TexturePtr &tex);
 
+      struct Data : detail::Noncopyable {
+        FTexture2DRHIRef m_tex;
+      };
+      Data *DataGet() const { return m_rhi; }
+
     private:
-      RHIData *m_tex;
+      Data *m_rhi;
     };
 
     class RendererRHI : public Renderer {
@@ -71,40 +72,47 @@ namespace Frames {
     private:
       void CreateBuffers(int len);
 
-      /*
-      ID3D11RasterizerState *m_rasterizerState;
-      ID3D11BlendState *m_blendState;
-      ID3D11DepthStencilState *m_depthState;
+      struct Data : detail::Noncopyable {
+        //ID3D11RasterizerState *m_rasterizerState;
+        //ID3D11BlendState *m_blendState;
+        //ID3D11DepthStencilState *m_depthState;
 
-      ID3D11VertexShader *m_vs;
-      ID3D11PixelShader *m_ps;
+        FVertexShaderRHIRef m_vs;
+        FPixelShaderRHIRef m_ps;
 
-      // shader indices
-      int m_shader_ci_size;
-      int m_shader_ci_item;
-      int m_shader_tex;
-      int m_shader_sample;
+        FBoundShaderStateRHIParamRef m_boundShaderState;
 
-      ID3D11Buffer *m_shader_ci_size_buffer;
+        // shader indices
+        //int m_shader_ci_size;
+        //int m_shader_ci_item;
+        //int m_shader_tex;
+        //int m_shader_sample;
 
-      // may as well keep 'em both around
-      ID3D11Buffer *m_shader_ci_item_buffer_sample_off;
-      ID3D11Buffer *m_shader_ci_item_buffer_sample_full;
-      ID3D11Buffer *m_shader_ci_item_buffer_sample_alpha;
+        //ID3D11Buffer *m_shader_ci_size_buffer;
 
-      ID3D11SamplerState *m_sampler;
+        // may as well keep 'em all around
+        FUniformBufferRHIRef m_shader_ci_item_buffer_sample_off;
+        FUniformBufferRHIRef m_shader_ci_item_buffer_sample_full;
+        FUniformBufferRHIRef m_shader_ci_item_buffer_sample_alpha;
 
-      ID3D11InputLayout *m_verticesLayout;
-      ID3D11Buffer *m_vertices;
-      int m_verticesQuadcount;
-      int m_verticesQuadpos;
+        FSamplerStateRHIRef m_sampler;
+
+        //ID3D11InputLayout *m_verticesLayout;
+        //ID3D11Buffer *m_vertices;
+        //int m_verticesQuadcount;
+        //int m_verticesQuadpos;
     
-      int m_verticesLastQuadpos;
-      int m_verticesLastQuadsize;
+        //int m_verticesLastQuadpos;
+        //int m_verticesLastQuadsize;
 
-      ID3D11Buffer *m_indices;
+        //ID3D11Buffer *m_indices;
 
-      ID3D11ShaderResourceView *m_currentTexture;*/
+        //ID3D11ShaderResourceView *m_currentTexture;
+      };
+
+      Data *m_rhi;
+
+      TextureBackingRHI *m_currentTexture;
 
       virtual void ScissorSet(const Rect &rect);
     };

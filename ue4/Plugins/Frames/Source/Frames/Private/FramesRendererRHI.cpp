@@ -82,11 +82,11 @@ namespace Frames {
         return;
       }
 
-      m_tex = new RHIData;
+      m_rhi = new Data;
       
       ENQUEUE_UNIQUE_RENDER_COMMAND_FOURPARAMETER(
         Frames_TextureBacking_Constructor,
-        RHIData *, rhi, m_tex,
+        Data *, rhi, m_rhi,
         int, width, width,
         int, height, height,
         EPixelFormat, rhiformat, rhiformat,
@@ -98,7 +98,7 @@ namespace Frames {
     TextureBackingRHI::~TextureBackingRHI() {
       ENQUEUE_UNIQUE_RENDER_COMMAND_ONEPARAMETER(
         Frames_TextureBacking_Destructor,
-        RHIData *, rhi, m_tex,
+        Data *, rhi, m_rhi,
       {
         delete rhi; // texture contained gets cleaned up by the destructor
       });
@@ -156,24 +156,12 @@ namespace Frames {
 
       ENQUEUE_UNIQUE_RENDER_COMMAND_TWOPARAMETER(
         Frames_TextureBacking_Write,
-        RHIData *, rhi, m_tex,
+        Data *, rhi, m_rhi,
         TBWrite, tbw, tbw,
       {
         RHIUpdateTexture2D(rhi->m_tex, 0, FUpdateTextureRegion2D(tbw.sx, tbw.sy, 0, 0, tbw.width, tbw.height), tbw.stride, tbw.data.data());
       });
     }
-
-    /*RendererRHI::RendererRHI(Environment *env) : Renderer(env) { }
-    RendererRHI::~RendererRHI() { }
-    void RendererRHI::Begin(int w, int h) { }
-    void RendererRHI::End() { };
-    detail::Renderer::Vertex *RendererRHI::Request(int c) { return 0; }
-    void RendererRHI::Return(int c) { }
-    TextureBackingPtr RendererRHI::TextureCreate(int width, int height, Texture::Format format) {
-      return TextureBackingPtr(new TextureBackingRHI(EnvironmentGet(), width, height, format));
-    }
-    void RendererRHI::TextureSet(const TextureBackingPtr &tex) { }
-    void RendererRHI::ScissorSet(const Rect &rect) { }*/
 
 #if 0
     RendererDX11::RendererDX11(Environment *env, ID3D11DeviceContext *context) :
@@ -328,116 +316,75 @@ namespace Frames {
         DeviceGet()->CreateDepthStencilState(&ds, &m_depthState);
       }
     }
+#endif
 
-    RendererDX11::~RendererDX11() {
-      if (m_rasterizerState) {
-        m_rasterizerState->Release();
-      }
-
-      if (m_blendState) {
-        m_blendState->Release();
-      }
-
-      if (m_depthState) {
-        m_depthState->Release();
-      }
-
-      if (m_vs) {
-        m_vs->Release();
-      }
-
-      if (m_ps) {
-        m_ps->Release();
-      }
-
-      if (m_shader_ci_size_buffer) {
-        m_shader_ci_size_buffer->Release();
-      }
-
-      if (m_shader_ci_item_buffer_sample_off) {
-        m_shader_ci_item_buffer_sample_off->Release();
-      }
-
-      if (m_shader_ci_item_buffer_sample_full) {
-        m_shader_ci_item_buffer_sample_full->Release();
-      }
-
-      if (m_shader_ci_item_buffer_sample_alpha) {
-        m_shader_ci_item_buffer_sample_alpha->Release();
-      }
-
-      if (m_sampler) {
-        m_sampler->Release();
-      }
-
-      if (m_verticesLayout) {
-        m_verticesLayout->Release();
-      }
-
-      if (m_vertices) {
-        m_vertices->Release();
-      }
-
-      if (m_indices) {
-        m_indices->Release();
-      }
-
-      if (m_context) {
-        m_context->Release();
-      }
-
-      if (m_device) {
-        m_device->Release();
-      }
+    RendererRHI::~RendererRHI() {
+      ENQUEUE_UNIQUE_RENDER_COMMAND_ONEPARAMETER(
+        Frames_Destructor,
+        Data *, rhi, m_rhi,
+      {
+        delete rhi; // texture contained gets cleaned up by the destructor
+      });
     }
 
-    void RendererDX11::Begin(int width, int height) {
+    void RendererRHI::Begin(int width, int height) {
       Renderer::Begin(width, height);
 
       m_currentTexture = 0;
 
+      ENQUEUE_UNIQUE_RENDER_COMMAND_THREEPARAMETER(
+        Frames_Begin,
+        Data *, rhi, m_rhi,
+        int, width, width,
+        int, height, height,
       {
-        D3D11_MAPPED_SUBRESOURCE map;
-        // TODO: don't update if width/height didn't change
-        if (ContextGet()->Map(m_shader_ci_size_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map) != S_OK) {
-          EnvironmentGet()->LogError("Failure to update size buffer");
-        } else {
-          float *dat = (float*)map.pData;
-          dat[0] = (float)width;
-          dat[1] = (float)height;
-          ContextGet()->Unmap(m_shader_ci_size_buffer, 0);
+        FUniformBufferRHIRef consts;
+        {
+          uint32_t data[4]; // normally we'd initialize these inline, but, macros
+          data[0] = width;
+          data[1] = height;
+          data[2] = 0;
+          data[3] = 0;
+          consts = RHICreateUniformBuffer(data, sizeof(data), UniformBuffer_MultiUse);
         }
-      }
 
-      UINT stride = sizeof(Vertex);
-      UINT offset = 0;
-      ContextGet()->IASetVertexBuffers(0, 1, &m_vertices, &stride, &offset);
-      ContextGet()->IASetIndexBuffer(m_indices, DXGI_FORMAT_R16_UINT, 0);
-      ContextGet()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-      ContextGet()->IASetInputLayout(m_verticesLayout);
-      ContextGet()->VSSetShader(m_vs, 0, 0);
-      ContextGet()->VSSetConstantBuffers(m_shader_ci_size, 1, &m_shader_ci_size_buffer);
-      ContextGet()->PSSetShader(m_ps, 0, 0);
-      ContextGet()->PSSetSamplers(m_shader_sample, 1, &m_sampler);
-      ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_shader_ci_item_buffer_sample_off);
-      ContextGet()->RSSetState(m_rasterizerState);
-      ContextGet()->OMSetBlendState(m_blendState, 0, ~0);
-      ContextGet()->OMSetDepthStencilState(m_depthState, 0);
+        RHISetBoundShaderState(rhi->m_boundShaderState);
+
+        RHISetShaderUniformBuffer(rhi->m_vs, 0, consts);
+        RHISetShaderUniformBuffer(rhi->m_ps, 0, rhi->m_shader_ci_item_buffer_sample_off);
+
+        RHISetShaderSampler(rhi->m_ps, 0, rhi->m_sampler);
+
+        // I don't think these are needed here, but I'm leaving them in for reference for the time being (if you see this in production code please yell at the frames developers 'cause this should have been removed long ago)
+        /*
+        UINT stride = sizeof(Vertex);
+        UINT offset = 0;
+        ContextGet()->IASetVertexBuffers(0, 1, &m_vertices, &stride, &offset);
+        ContextGet()->IASetIndexBuffer(m_indices, DXGI_FORMAT_R16_UINT, 0);
+        ContextGet()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        ContextGet()->IASetInputLayout(m_verticesLayout);
+        ContextGet()->VSSetShader(m_vs, 0, 0);
+        ContextGet()->PSSetShader(m_ps, 0, 0);
+        ContextGet()->RSSetState(m_rasterizerState);
+        ContextGet()->OMSetBlendState(m_blendState, 0, ~0);
+        ContextGet()->OMSetDepthStencilState(m_depthState, 0);
       
-      D3D11_VIEWPORT viewport;
-      memset(&viewport, 0, sizeof(viewport));
-      viewport.TopLeftX = 0;
-      viewport.TopLeftY = 0;
-      viewport.Width = (float)width;
-      viewport.Height = (float)height;
-      viewport.MinDepth = 0.0f;
-      viewport.MaxDepth = 1.0f;
-      ContextGet()->RSSetViewports(1, &viewport);
+        D3D11_VIEWPORT viewport;
+        memset(&viewport, 0, sizeof(viewport));
+        viewport.TopLeftX = 0;
+        viewport.TopLeftY = 0;
+        viewport.Width = (float)width;
+        viewport.Height = (float)height;
+        viewport.MinDepth = 0.0f;
+        viewport.MaxDepth = 1.0f;
+        ContextGet()->RSSetViewports(1, &viewport);*/
+      });
     }
 
-    void RendererDX11::End() {
+    void RendererRHI::End() {
     }
 
+#if 0
     Renderer::Vertex *RendererDX11::Request(int quads) {
       if (quads > m_verticesQuadcount) {
         EnvironmentGet()->LogError("Exceeded valid quad count in a single draw call; splitting NYI");
@@ -471,30 +418,38 @@ namespace Frames {
 
       m_context->DrawIndexed(quads * 6, 0, m_verticesLastQuadpos * 4);
     }
+    #endif
 
-    TextureBackingPtr RendererDX11::TextureCreate(int width, int height, Texture::Format mode) {
-      return TextureBackingPtr(new TextureBackingDX11(EnvironmentGet(), width, height, mode));
+    TextureBackingPtr RendererRHI::TextureCreate(int width, int height, Texture::Format mode) {
+      return TextureBackingPtr(new TextureBackingRHI(EnvironmentGet(), width, height, mode));
     }
 
-    void RendererDX11::TextureSet(const detail::TextureBackingPtr &tex) {
-      TextureBackingDX11 *backing = tex.Get() ? static_cast<TextureBackingDX11*>(tex.Get()) : 0;
-      ID3D11ShaderResourceView *ntex = backing ? backing->ShaderResourceViewGet() : 0;
-      if (m_currentTexture != ntex) {
-        m_currentTexture = ntex;
+    void RendererRHI::TextureSet(const detail::TextureBackingPtr &tex) {
+      TextureBackingRHI *backing = tex.Get() ? static_cast<TextureBackingRHI*>(tex.Get()) : 0;
+      if (m_currentTexture != backing) {
+        m_currentTexture = backing;
         
-        if (m_currentTexture) {
-          if (backing->FormatGet() == Texture::FORMAT_R_8) {
-            ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_shader_ci_item_buffer_sample_alpha);
+        ENQUEUE_UNIQUE_RENDER_COMMAND_THREEPARAMETER(
+          Frames_TextureSet,
+          Data *, rhi, m_rhi,
+          TextureBackingRHI::Data *, tex, m_currentTexture ? m_currentTexture->DataGet() : 0,
+          Texture::Format, format, m_currentTexture ? m_currentTexture->FormatGet() : Texture::FORMAT_R_8,  // fallback value is irrelevant
+        {
+          if (tex) {
+            if (format == Texture::FORMAT_R_8) {
+              RHISetShaderUniformBuffer(rhi->m_ps, 0, rhi->m_shader_ci_item_buffer_sample_alpha);
+            } else {
+              RHISetShaderUniformBuffer(rhi->m_ps, 0, rhi->m_shader_ci_item_buffer_sample_full);
+            }
+            RHISetShaderTexture(rhi->m_ps, 0, tex->m_tex);
           } else {
-            ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_shader_ci_item_buffer_sample_full);
+            RHISetShaderUniformBuffer(rhi->m_ps, 0, rhi->m_shader_ci_item_buffer_sample_off);
           }
-          ContextGet()->PSSetShaderResources(m_shader_tex, 1, &m_currentTexture);
-        } else {
-          ContextGet()->PSSetConstantBuffers(m_shader_ci_item, 1, &m_shader_ci_item_buffer_sample_off);
-        }
+        });
       }
     }
 
+    #if 0
     void RendererDX11::ScissorSet(const Rect &rect) {
       D3D11_RECT d3drect;
       d3drect.left = (int)floor(rect.s.x + 0.5f);
