@@ -22,6 +22,7 @@
 #include "FramesRendererRHI.h"
 
 #include "RenderingThread.h"
+#include "GlobalShader.h"
 
 #include "frames/configuration.h"
 #include "frames/detail.h"
@@ -49,14 +50,80 @@ namespace Frames {
   }
 
   namespace detail {
-    //The input-layout description
-    /*static const D3D11_INPUT_ELEMENT_DESC sLayout[] =
+    // I guess this is how shaders work in the crazy world of ue4
+    class FFramesVS : public FGlobalShader
     {
-      { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, offsetof(Renderer::Vertex, p), D3D11_INPUT_PER_VERTEX_DATA, 0 },
-      { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, offsetof(Renderer::Vertex, t), D3D11_INPUT_PER_VERTEX_DATA, 0 },
-      { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, offsetof(Renderer::Vertex, c), D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
+	    DECLARE_SHADER_TYPE(FFramesVS, Global);
+    public:
 
+	    static bool ShouldCache(EShaderPlatform Platform) { return true; }
+
+	    FFramesVS(const ShaderMetaType::CompiledShaderInitializerType &Initializer) :
+		    FGlobalShader(Initializer)
+	    {
+		    m_size.Bind(Initializer.ParameterMap, TEXT("size"), SPF_Mandatory);
+	    }
+	    FFramesVS() {}
+
+	    void SetParameterSize(int width, int height) {
+		    SetShaderValue(GetVertexShader(), m_size, FVector2D(width, height));
+	    }
+
+	    virtual bool Serialize(FArchive& Ar) {
+		    bool outdated = FGlobalShader::Serialize(Ar);
+		    Ar << m_size;
+
+		    return outdated;
+	    }
+
+    private:
+	    FShaderParameter m_size;
+    };
+    IMPLEMENT_SHADER_TYPE(, FFramesVS, TEXT("TBD"), TEXT("main"), SF_Vertex);
+
+    class FFramesPS : public FGlobalShader
+    {
+	    DECLARE_SHADER_TYPE(FFramesPS, Global);
+    public:
+
+	    static bool ShouldCache(EShaderPlatform Platform) { return true; }
+
+	    FFramesPS(const ShaderMetaType::CompiledShaderInitializerType &Initializer) :
+		    FGlobalShader(Initializer)
+	    {
+        m_textureMode.Bind(Initializer.ParameterMap, TEXT("textureMode"), SPF_Mandatory);
+        m_texture.Bind(Initializer.ParameterMap, TEXT("texture"), SPF_Mandatory);
+	    }
+	    FFramesPS() {}
+
+	    void SetParameterTexture(FTexture2DRHIParamRef tex, bool alpha) {
+        if (tex) {
+          if (alpha) {
+            SetShaderValue(GetPixelShader(), m_textureMode, 2);
+          } else {
+            SetShaderValue(GetPixelShader(), m_textureMode, 1);
+          }
+          SetTextureParameter(GetPixelShader(), m_texture, tex);
+        } else {
+          SetShaderValue(GetPixelShader(), m_textureMode, 0);
+        }
+	    }
+
+	    virtual bool Serialize(FArchive& Ar) {
+		    bool outdated = FGlobalShader::Serialize(Ar);
+		    Ar << m_textureMode;
+        Ar << m_texture;
+
+		    return outdated;
+	    }
+
+    private:
+	    FShaderParameter m_textureMode;
+      FShaderResourceParameter m_texture;
+    };
+    IMPLEMENT_SHADER_TYPE(, FFramesPS, TEXT("TBD"), TEXT("main"), SF_Pixel);
+
+    /*
     static const char sShader[] =
       "cbuffer Size : register(b0) { float width : packoffset(c0.x); float height : packoffset(c0.y); };\n"  // size of screen; changes rarely
       "cbuffer Item : register(b1) { int sampleMode : packoffset(c0); };\n"  // 0 means don't sample. 1 means do sample and multiply. 2 means do sample and multiply; pretend .rgb is 1.f.
@@ -163,160 +230,29 @@ namespace Frames {
       });
     }
 
-#if 0
-    RendererDX11::RendererDX11(Environment *env, ID3D11DeviceContext *context) :
+    RendererRHI::RendererRHI(Environment *env) :
       Renderer(env),
-      m_device(0),
-      m_context(context),
-      m_rasterizerState(0),
-      m_blendState(0),
-      m_depthState(0),
-      m_vs(0),
-      m_ps(0),
-      m_shader_ci_size(0),  // hardcoded for now
-      m_shader_ci_item(1),  // hardcoded for now
-      m_shader_tex(0),  // hardcoded for now
-      m_shader_sample(0),  // hardcoded for now
-      m_shader_ci_size_buffer(0),
-      m_shader_ci_item_buffer_sample_off(0),
-      m_shader_ci_item_buffer_sample_full(0),
-      m_shader_ci_item_buffer_sample_alpha(0),
-      m_sampler(0),
-      m_vertices(0),
-      m_verticesLayout(0),
+      m_rhi(0),
+      m_request(0),
       m_verticesQuadcount(0),
-      m_verticesQuadpos(0),
-      m_verticesLastQuadsize(0),
-      m_verticesLastQuadpos(0),
-      m_indices(0),
       m_currentTexture(0)
     {
-      m_context->AddRef();  // we're storing this value, so let's add a reference to it
-      m_context->GetDevice(&m_device);
+      m_rhi = new Data;
+
+      ENQUEUE_UNIQUE_RENDER_COMMAND_ONEPARAMETER(
+        Frames_Constructor,
+        Data *, rhi, m_rhi,
+      {
+        FVertexDeclarationElementList elements;
+        elements.Add(FVertexElement(0, offsetof(Renderer::Vertex, p), VET_Float2, 0));
+        elements.Add(FVertexElement(0, offsetof(Renderer::Vertex, t), VET_Float2, 1));
+        elements.Add(FVertexElement(0, offsetof(Renderer::Vertex, c), VET_Float4, 2));
+
+        rhi->m_vertexDecl = RHICreateVertexDeclaration(elements);
+      });
 
       CreateBuffers(1 << 16); // maximum size that will fit in a ushort
-
-      // Create shaders
-      ID3DBlob *vs = 0;
-      ID3DBlob *ps = 0;
-      ID3DBlob *errors = 0;
-      if (D3DCompile(sShader, strlen(sShader), 0, 0, 0, "VS", "vs_4_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_WARNINGS_ARE_ERRORS, 0, &vs, &errors) != S_OK) {
-        EnvironmentGet()->LogError("Failure to compile vertex shader");
-        EnvironmentGet()->LogError("Err: " + std::string((const char *)errors->GetBufferPointer(), (const char *)errors->GetBufferPointer() + errors->GetBufferSize()));
-        errors->Release();
-      }
-      if (D3DCompile(sShader, strlen(sShader), 0, 0, 0, "PS", "ps_4_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_WARNINGS_ARE_ERRORS, 0, &ps, &errors) != S_OK) {
-        EnvironmentGet()->LogError("Failure to compile pixel shader");
-        EnvironmentGet()->LogError("Err: " + std::string((const char *)errors->GetBufferPointer(), (const char *)errors->GetBufferPointer() + errors->GetBufferSize()));
-        errors->Release();
-      }
-
-      if (DeviceGet()->CreateVertexShader(vs->GetBufferPointer(), vs->GetBufferSize(), NULL, &m_vs) != S_OK) {
-        EnvironmentGet()->LogError("Failure to create vertex shader");
-      }
-      if (DeviceGet()->CreatePixelShader(ps->GetBufferPointer(), ps->GetBufferSize(), NULL, &m_ps) != S_OK) {
-        EnvironmentGet()->LogError("Failure to create pixel shader");
-      }
-
-      if (DeviceGet()->CreateInputLayout(sLayout, sizeof(sLayout) / sizeof(*sLayout), vs->GetBufferPointer(), vs->GetBufferSize(), &m_verticesLayout) != S_OK) {
-        EnvironmentGet()->LogError("Failure to create input layout");
-      }
-
-      vs->Release();
-      ps->Release();
-
-      // Create size buffer
-      {
-        // TODO: make this immutable when possible
-        D3D11_BUFFER_DESC desc;
-        memset(&desc, 0, sizeof(desc));
-        desc.ByteWidth = 16;
-        desc.Usage = D3D11_USAGE_DYNAMIC;
-        desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-        desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-
-        if (DeviceGet()->CreateBuffer(&desc, 0, &m_shader_ci_size_buffer) != S_OK) {
-          EnvironmentGet()->LogError("Failure to create size buffer");
-        }
-      }
-
-      // Create item buffers
-      {
-        D3D11_BUFFER_DESC desc;
-        memset(&desc, 0, sizeof(desc));
-        desc.ByteWidth = 16;
-        desc.Usage = D3D11_USAGE_IMMUTABLE;
-        desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-
-        int flag[4] = { 0, };
-
-        D3D11_SUBRESOURCE_DATA data;
-        memset(&data, 0, sizeof(data));
-        data.pSysMem = flag;
-        
-        if (DeviceGet()->CreateBuffer(&desc, &data, &m_shader_ci_item_buffer_sample_off) != S_OK) {
-          EnvironmentGet()->LogError("Failure to create disabled sample flag");
-        }
-
-        flag[0] = 1;
-        if (DeviceGet()->CreateBuffer(&desc, &data, &m_shader_ci_item_buffer_sample_full) != S_OK) {
-          EnvironmentGet()->LogError("Failure to create enabled sample flag");
-        }
-
-        flag[0] = 2;
-        if (DeviceGet()->CreateBuffer(&desc, &data, &m_shader_ci_item_buffer_sample_alpha) != S_OK) {
-          EnvironmentGet()->LogError("Failure to create enabled sample flag");
-        }
-      }
-
-      // Create states
-      {
-        D3D11_SAMPLER_DESC ss;
-        memset(&ss, 0, sizeof(ss));
-        ss.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-        ss.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-        ss.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-        ss.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-        ss.MipLODBias = 0.f;
-        ss.MaxAnisotropy = 1;
-        ss.MinLOD = 0.f;
-        ss.MaxLOD = D3D11_FLOAT32_MAX;
-        DeviceGet()->CreateSamplerState(&ss, &m_sampler);
-      }
-
-      {
-        D3D11_RASTERIZER_DESC rs;
-        memset(&rs, 0, sizeof(rs));
-        rs.FillMode = D3D11_FILL_SOLID;
-        rs.CullMode = D3D11_CULL_NONE;
-        rs.ScissorEnable = true;
-        rs.MultisampleEnable = true;
-        rs.AntialiasedLineEnable = true;
-        DeviceGet()->CreateRasterizerState(&rs, &m_rasterizerState);
-      }
-
-      {
-        D3D11_BLEND_DESC bs;
-        memset(&bs, 0, sizeof(bs));
-        bs.RenderTarget[0].BlendEnable = true;
-        bs.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-        bs.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-        bs.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-        bs.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
-        bs.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
-        bs.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-        bs.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-        DeviceGet()->CreateBlendState(&bs, &m_blendState);
-      }
-
-      {
-        D3D11_DEPTH_STENCIL_DESC ds;
-        memset(&ds, 0, sizeof(ds));
-        ds.DepthEnable = false;
-        DeviceGet()->CreateDepthStencilState(&ds, &m_depthState);
-      }
     }
-#endif
 
     RendererRHI::~RendererRHI() {
       ENQUEUE_UNIQUE_RENDER_COMMAND_ONEPARAMETER(
@@ -338,46 +274,18 @@ namespace Frames {
         int, width, width,
         int, height, height,
       {
-        FUniformBufferRHIRef consts;
-        {
-          uint32_t data[4]; // normally we'd initialize these inline, but, macros
-          data[0] = width;
-          data[1] = height;
-          data[2] = 0;
-          data[3] = 0;
-          consts = RHICreateUniformBuffer(data, sizeof(data), UniformBuffer_MultiUse);
-        }
+      	TShaderMapRef<FFramesVS> VertexShader(GetGlobalShaderMap());
+	      TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap());
 
-        RHISetBoundShaderState(rhi->m_boundShaderState);
+	      static FGlobalBoundShaderState boundShaderState;
+	      SetGlobalBoundShaderState(boundShaderState, rhi->m_vertexDecl, *VertexShader, *PixelShader);
+        
+	      VertexShader->SetParameterSize(width, height);
+	      PixelShader->SetParameterTexture(0, false);
 
-        RHISetShaderUniformBuffer(rhi->m_vs, 0, consts);
-        RHISetShaderUniformBuffer(rhi->m_ps, 0, rhi->m_shader_ci_item_buffer_sample_off);
-
-        RHISetShaderSampler(rhi->m_ps, 0, rhi->m_sampler);
-
-        // I don't think these are needed here, but I'm leaving them in for reference for the time being (if you see this in production code please yell at the frames developers 'cause this should have been removed long ago)
-        /*
-        UINT stride = sizeof(Vertex);
-        UINT offset = 0;
-        ContextGet()->IASetVertexBuffers(0, 1, &m_vertices, &stride, &offset);
-        ContextGet()->IASetIndexBuffer(m_indices, DXGI_FORMAT_R16_UINT, 0);
-        ContextGet()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        ContextGet()->IASetInputLayout(m_verticesLayout);
-        ContextGet()->VSSetShader(m_vs, 0, 0);
-        ContextGet()->PSSetShader(m_ps, 0, 0);
-        ContextGet()->RSSetState(m_rasterizerState);
-        ContextGet()->OMSetBlendState(m_blendState, 0, ~0);
-        ContextGet()->OMSetDepthStencilState(m_depthState, 0);
-      
-        D3D11_VIEWPORT viewport;
-        memset(&viewport, 0, sizeof(viewport));
-        viewport.TopLeftX = 0;
-        viewport.TopLeftY = 0;
-        viewport.Width = (float)width;
-        viewport.Height = (float)height;
-        viewport.MinDepth = 0.0f;
-        viewport.MaxDepth = 1.0f;
-        ContextGet()->RSSetViewports(1, &viewport);*/
+	      RHISetBlendState(TStaticBlendState<CW_RGBA, BO_Add, BF_SourceAlpha, BF_InverseSourceAlpha, BO_Add, BF_Zero, BF_One>::GetRHI());
+        RHISetDepthStencilState(TStaticDepthStencilState<false, CF_Always>::GetRHI());
+        RHISetRasterizerState(TStaticRasterizerState<>::GetRHI());
       });
     }
 
@@ -447,16 +355,9 @@ namespace Frames {
           TextureBackingRHI::Data *, tex, m_currentTexture ? m_currentTexture->DataGet() : 0,
           Texture::Format, format, m_currentTexture ? m_currentTexture->FormatGet() : Texture::FORMAT_R_8,  // fallback value is irrelevant
         {
-          if (tex) {
-            if (format == Texture::FORMAT_R_8) {
-              RHISetShaderUniformBuffer(rhi->m_ps, 0, rhi->m_shader_ci_item_buffer_sample_alpha);
-            } else {
-              RHISetShaderUniformBuffer(rhi->m_ps, 0, rhi->m_shader_ci_item_buffer_sample_full);
-            }
-            RHISetShaderTexture(rhi->m_ps, 0, tex->m_tex);
-          } else {
-            RHISetShaderUniformBuffer(rhi->m_ps, 0, rhi->m_shader_ci_item_buffer_sample_off);
-          }
+          TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap());
+
+          PixelShader->SetParameterTexture(tex->m_tex, format == Texture::FORMAT_R_8);
         });
       }
     }

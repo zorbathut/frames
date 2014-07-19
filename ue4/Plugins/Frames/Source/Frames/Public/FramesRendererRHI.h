@@ -73,31 +73,8 @@ namespace Frames {
       void CreateBuffers(int len);
 
       struct Data : detail::Noncopyable {
-        //ID3D11RasterizerState *m_rasterizerState;
-        //ID3D11BlendState *m_blendState;
-        //ID3D11DepthStencilState *m_depthState;
+        FVertexDeclarationRHIRef m_vertexDecl;
 
-        FVertexShaderRHIRef m_vs;
-        FPixelShaderRHIRef m_ps;
-
-        FBoundShaderStateRHIParamRef m_boundShaderState;
-
-        // shader indices
-        //int m_shader_ci_size;
-        //int m_shader_ci_item;
-        //int m_shader_tex;
-        //int m_shader_sample;
-
-        //ID3D11Buffer *m_shader_ci_size_buffer;
-
-        // may as well keep 'em all around
-        FUniformBufferRHIRef m_shader_ci_item_buffer_sample_off;
-        FUniformBufferRHIRef m_shader_ci_item_buffer_sample_full;
-        FUniformBufferRHIRef m_shader_ci_item_buffer_sample_alpha;
-
-        FSamplerStateRHIRef m_sampler;
-
-        //ID3D11InputLayout *m_verticesLayout;
         FVertexBufferRHIRef m_vertices;
 
         FIndexBufferRHIRef m_indices;

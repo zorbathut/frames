@@ -31,6 +31,7 @@ public class Frames : ModuleRules
       //"InputCore",  // almost certain to be re-added
       "Engine", // for AHUD
       "RenderCore", // render queueing
+      "ShaderCore", // shader machinery
       "RHI", // for actual rendering
     });
     
