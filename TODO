@@ -65,14 +65,12 @@
 
 === UE4
 
+* Need to get building working properly
+  * Really do need one build for every appropriate target; need to make it so main project matches standard UE4 project
+  * Build changes so that debug/release/etc link up properly
+
 * Integrate with rendering subsystem
 * Integrate with loading subsystem
-
-* Start RHI renderer
-  * UE-target only
-    * Look into hud, postrender, etc
-      * FD3D11DynamicRHI
-      * RHIMethods
 
 * Test suite
   * Base - may be difficult - thread sync?
