@@ -1,11 +1,19 @@
 #ue4 really really loves its temporary files
 
 /Binaries
+/DerivedDataCache
 /Intermediate
 /Plugins/Frames/Binaries
 /Plugins/Frames/Intermediate
-/Saved
 /*.sln
 /*.suo
 /*.sdf
 /*.opensdf
+
+#thanks to git's braindamaged exception system
+/Saved/*
+!/Saved/Config
+/Saved/Config/*
+!/Saved/Config/Windows
+/Saved/Config/Windows/*
+!/Saved/Config/Windows/Engine.ini
