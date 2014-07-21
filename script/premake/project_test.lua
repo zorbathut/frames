@@ -68,13 +68,13 @@ project "test"
     links {"gtestd"}
     
   filter {}
-    links {"frames", "frames_opengl", "frames_null", "SDL2", "winmm", "version", "imm32"}
+    links {"frames", "frames_renderer_opengl", "frames_renderer_null", "SDL2", "winmm", "version", "imm32"}
   
     -- These should really be part of frames, but premake doesn't deal with them properly in that case
     links {"glew32s", "opengl32", "jpeg"}
     
   filter "action:vs*"
-    links {"frames_dx11", "d3d11", "dxgi", "lua51", "d3dcompiler"}
+    links {"frames_renderer_dx11", "d3d11", "dxgi", "lua51", "d3dcompiler"}
     
     if not projectInfo.ue4_path then
       links {"freetype253MT", "libpng14", "zlib"}

@@ -18,11 +18,11 @@ Frames makes extensive use of the C++ standard library, and as such, built libra
 
 frames.lib is required.
 
-frames_dx11.lib lets you make use of the DirectX 11 renderer.
+frames_renderer_dx11.lib lets you make use of the DirectX 11 renderer.
 
-frames_opengl.lib lets you make use of the OpenGL renderer.
+frames_renderer_opengl.lib lets you make use of the OpenGL renderer.
 
-frames_null.lib provides a null renderer that does no actual rendering work. It can be useful for testing and debugging but should generally not be linked in production code.
+frames_renderer_null.lib provides a null renderer that does no actual rendering work. It can be useful for testing and debugging but should generally not be linked in production code.
 
 Consult the \ref linking "LINKING" file for further dependencies; Frames will require several support libraries to be added. If you've rebuilt Frames to make use of your game's existing libraries, you will of course not have to link Frames's versions of those.
 

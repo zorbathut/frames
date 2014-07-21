@@ -17,4 +17,4 @@
     You should have received a copy of the GNU General Public License
     along with Frames.  If not, see <http://www.gnu.org/licenses/>. ]]
 
-dofile("script/premake/project_general.lua", "frames_dx11", "src/dx11/*.cpp", "include/frames/renderer_dx11.h", ...)
+dofile("script/premake/project_general.lua", "frames_renderer_opengl", "src/opengl/*.cpp", "include/frames/renderer_opengl.h", ...)

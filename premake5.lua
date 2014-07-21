@@ -180,7 +180,7 @@ solution "Frames"
   
   -- UE4 project; do this first if available so it's the default project  
   if projectInfo.ue4_path then
-    dofile("script/premake/project_ue4.lua", projectInfo)
+    dofile("script/premake/project_plugin_ue4.lua", projectInfo)
   end
 
   -- Test project; alternate default project
@@ -190,6 +190,6 @@ solution "Frames"
   dofile("script/premake/project_core.lua", projectInfo)
   
   -- Renderers
-  dofile("script/premake/project_opengl.lua", projectInfo)
-  dofile("script/premake/project_dx11.lua", projectInfo)
-  dofile("script/premake/project_null.lua", projectInfo)
+  dofile("script/premake/project_renderer_opengl.lua", projectInfo)
+  dofile("script/premake/project_renderer_dx11.lua", projectInfo)
+  dofile("script/premake/project_renderer_null.lua", projectInfo)
