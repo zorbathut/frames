@@ -88,6 +88,13 @@
 * Figure out how to link in the precompiled shader
   * Remove d3dcompiler linkage
 
+* Single-project integration?
+  * Read all solutions from .sln file
+  * Find all connections to .prj file
+  * Recreate all solutions, recreate connections
+    * Figure out linkages to Frames based on that
+      * Debug without Game is the only one that connects to debug, everything else connects to release
+
 === TWEAK
 
 * Memory leak tracking

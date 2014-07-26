@@ -178,10 +178,11 @@ solution "Frames"
   filter "configurations:Release"
     optimize "Full"
   
-  -- UE4 project; do this first if available so it's the default project  
-  if projectInfo.ue4_path then
-    dofile("script/premake/project_plugin_ue4.lua", projectInfo)
-  end
+  -- UE4 project; do this first if available so it's the default project
+  -- Disabled because it's proving very difficult to tie the projects together
+  --if projectInfo.ue4_path then
+    --dofile("script/premake/project_plugin_ue4.lua", projectInfo)
+  --end
 
   -- Test project; alternate default project
   dofile("script/premake/project_test.lua", projectInfo)

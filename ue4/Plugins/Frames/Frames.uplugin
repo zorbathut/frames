@@ -13,7 +13,8 @@
   [
     {
       "Name" : "Frames",
-      "Type" : "Runtime"
+      "Type" : "Runtime",
+      "LoadingPhase" : "PostConfigInit"
     }
   ]
 }
