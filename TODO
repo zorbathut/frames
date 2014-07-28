@@ -62,11 +62,10 @@
 
 === UE4
 
-* Need to get building working properly
-  * Really do need one build for every appropriate target, but this can happen 
-  * Build changes so that debug/release/etc link up properly
-
 * Integrate with rendering subsystem
+  * symlink to pretend shaders match up
+  * just make it work
+
 * Integrate with loading subsystem
 
 * Test suite
@@ -74,9 +73,7 @@
 
 * Start integration layer
 
-* This means . . . an internal UE4-hook class, then the UE4 code itself hooks that?
-* That seems ugly, but might be necessary
-* Maybe some way to provide the right set of verbs to provide external APIs?
+* Some way to provide the right set of verbs to provide external APIs
 * That may be extremely difficult
   * Thoughts:
   * Obliterate is needed - last event fired before shutdown
