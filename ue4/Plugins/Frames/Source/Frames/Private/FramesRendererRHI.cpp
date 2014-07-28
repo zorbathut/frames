@@ -21,8 +21,10 @@
 
 #include "FramesRendererRHI.h"
 
+#include "ShaderParameterUtils.h"
 #include "RenderingThread.h"
 #include "GlobalShader.h"
+#include "RHIStaticStates.h"
 
 #include "frames/configuration.h"
 #include "frames/detail.h"
@@ -65,8 +67,8 @@ namespace Frames {
 	    }
 	    FFramesVS() {}
 
-	    void SetParameterSize(int width, int height) {
-		    SetShaderValue(GetVertexShader(), m_size, FVector2D(width, height));
+	    void SetParameterSize(FRHICommandList &RHICmdList, int width, int height) {
+		    SetShaderValue(RHICmdList, GetVertexShader(), m_size, FVector2D(width, height));
 	    }
 
 	    virtual bool Serialize(FArchive& Ar) {
@@ -79,7 +81,7 @@ namespace Frames {
     private:
 	    FShaderParameter m_size;
     };
-    IMPLEMENT_SHADER_TYPE(, FFramesVS, TEXT("TBD"), TEXT("main"), SF_Vertex);
+    IMPLEMENT_SHADER_TYPE(, FFramesVS, TEXT("FluidSurfaceShader"), TEXT("ComputeFluidSurface"), SF_Vertex);
 
     class FFramesPS : public FGlobalShader
     {
@@ -96,16 +98,16 @@ namespace Frames {
 	    }
 	    FFramesPS() {}
 
-	    void SetParameterTexture(FTexture2DRHIParamRef tex, bool alpha) {
+	    void SetParameterTexture(FRHICommandList &RHICmdList, FTexture2DRHIParamRef tex, bool alpha) {
         if (tex) {
           if (alpha) {
-            SetShaderValue(GetPixelShader(), m_textureMode, 2);
+            SetShaderValue(RHICmdList, GetPixelShader(), m_textureMode, 2);
           } else {
-            SetShaderValue(GetPixelShader(), m_textureMode, 1);
+            SetShaderValue(RHICmdList, GetPixelShader(), m_textureMode, 1);
           }
-          SetTextureParameter(GetPixelShader(), m_texture, tex);
+          SetTextureParameter(RHICmdList, GetPixelShader(), m_texture, tex);
         } else {
-          SetShaderValue(GetPixelShader(), m_textureMode, 0);
+          SetShaderValue(RHICmdList, GetPixelShader(), m_textureMode, 0);
         }
 	    }
 
@@ -121,7 +123,7 @@ namespace Frames {
 	    FShaderParameter m_textureMode;
       FShaderResourceParameter m_texture;
     };
-    IMPLEMENT_SHADER_TYPE(, FFramesPS, TEXT("TBD"), TEXT("main"), SF_Pixel);
+    IMPLEMENT_SHADER_TYPE(, FFramesPS, TEXT("FluidSurfaceShader"), TEXT("ComputeFluidSurface"), SF_Pixel);
 
     /*
     static const char sShader[] =
@@ -158,7 +160,8 @@ namespace Frames {
         int, height, height,
         EPixelFormat, rhiformat, rhiformat,
       {
-        rhi->m_tex = RHICreateTexture2D(width, height, rhiformat, 1, 1, TexCreate_ShaderResource, 0);
+        FRHIResourceCreateInfo cinfo;
+        rhi->m_tex = RHICreateTexture2D(width, height, rhiformat, 1, 1, TexCreate_ShaderResource, cinfo);
       });
     }
 
@@ -244,9 +247,9 @@ namespace Frames {
         Data *, rhi, m_rhi,
       {
         FVertexDeclarationElementList elements;
-        elements.Add(FVertexElement(0, offsetof(Renderer::Vertex, p), VET_Float2, 0));
-        elements.Add(FVertexElement(0, offsetof(Renderer::Vertex, t), VET_Float2, 1));
-        elements.Add(FVertexElement(0, offsetof(Renderer::Vertex, c), VET_Float4, 2));
+        elements.Add(FVertexElement(0, offsetof(Renderer::Vertex, p), VET_Float2, 0, sizeof(Renderer::Vertex)));
+        elements.Add(FVertexElement(0, offsetof(Renderer::Vertex, t), VET_Float2, 1, sizeof(Renderer::Vertex)));
+        elements.Add(FVertexElement(0, offsetof(Renderer::Vertex, c), VET_Float4, 2, sizeof(Renderer::Vertex)));
 
         rhi->m_vertexDecl = RHICreateVertexDeclaration(elements);
       });
@@ -278,14 +281,14 @@ namespace Frames {
 	      TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap());
 
 	      static FGlobalBoundShaderState boundShaderState;
-	      SetGlobalBoundShaderState(boundShaderState, rhi->m_vertexDecl, *VertexShader, *PixelShader);
+	      SetGlobalBoundShaderState(RHICmdList, boundShaderState, rhi->m_vertexDecl, *VertexShader, *PixelShader);
         
-	      VertexShader->SetParameterSize(width, height);
-	      PixelShader->SetParameterTexture(0, false);
+	      VertexShader->SetParameterSize(RHICmdList, width, height);
+	      PixelShader->SetParameterTexture(RHICmdList, 0, false);
 
-	      RHISetBlendState(TStaticBlendState<CW_RGBA, BO_Add, BF_SourceAlpha, BF_InverseSourceAlpha, BO_Add, BF_Zero, BF_One>::GetRHI());
-        RHISetDepthStencilState(TStaticDepthStencilState<false, CF_Always>::GetRHI());
-        RHISetRasterizerState(TStaticRasterizerState<>::GetRHI());
+	      RHICmdList.SetBlendState(TStaticBlendState<CW_RGBA, BO_Add, BF_SourceAlpha, BF_InverseSourceAlpha, BO_Add, BF_Zero, BF_One>::GetRHI());
+        RHICmdList.SetDepthStencilState(TStaticDepthStencilState<false, CF_Always>::GetRHI());
+        RHICmdList.SetRasterizerState(TStaticRasterizerState<>::GetRHI());
       });
     }
 
@@ -332,7 +335,7 @@ namespace Frames {
           RHIUnlockVertexBuffer(rhi->m_vertices);
         }
 
-        RHIDrawIndexedPrimitive(rhi->m_indices, PT_TriangleList, 0, 0, request->quads * 4, 0, request->quads * 2, 1);
+        RHICmdList.DrawIndexedPrimitive(rhi->m_indices, PT_TriangleList, 0, 0, request->quads * 4, 0, request->quads * 2, 1);
 
         delete request;
       });
@@ -357,13 +360,18 @@ namespace Frames {
         {
           TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap());
 
-          PixelShader->SetParameterTexture(tex->m_tex, format == Texture::FORMAT_R_8);
+          PixelShader->SetParameterTexture(RHICmdList, tex->m_tex, format == Texture::FORMAT_R_8);
         });
       }
     }
 
     void RendererRHI::ScissorSet(const Rect &rect) {
-      RHISetScissorRect(true, (int)floor(rect.s.x + 0.5f), (int)floor(rect.s.y + 0.5f), (int)floor(rect.e.x + 0.5f), (int)floor(rect.e.y + 0.5f));
+      ENQUEUE_UNIQUE_RENDER_COMMAND_ONEPARAMETER(
+        Frames_ScissorSet,
+        Rect, rect, rect,
+      {
+        RHICmdList.SetScissorRect(true, (int)floor(rect.s.x + 0.5f), (int)floor(rect.s.y + 0.5f), (int)floor(rect.e.x + 0.5f), (int)floor(rect.e.y + 0.5f));
+      });
     }
 
     void RendererRHI::CreateBuffers(int len) {
@@ -374,7 +382,8 @@ namespace Frames {
       {
         int quadLen = len / 4;
 
-        rhi->m_vertices = RHICreateVertexBuffer(len * sizeof(Vertex), 0, BUF_Volatile);
+        FRHIResourceCreateInfo cinfo;
+        rhi->m_vertices = RHICreateVertexBuffer(len * sizeof(Vertex), BUF_Volatile, cinfo);
         
         {
           vector<unsigned short> elements(quadLen * 6);
@@ -388,7 +397,8 @@ namespace Frames {
             elements[writepos++] = i * 4 + 3;
           }
 
-          rhi->m_indices = RHICreateIndexBuffer(sizeof(unsigned short), elements.size() * sizeof(unsigned short), 0, BUF_Static);
+          FRHIResourceCreateInfo cinfo;
+          rhi->m_indices = RHICreateIndexBuffer(sizeof(unsigned short), elements.size() * sizeof(unsigned short), BUF_Static, cinfo);
 
        		void *data = RHILockIndexBuffer(rhi->m_indices, 0, elements.size() * sizeof(unsigned short), RLM_WriteOnly);
           memcpy(data, elements.data(), elements.size() * sizeof(unsigned short));

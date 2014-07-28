@@ -20,12 +20,18 @@
 #ifndef FRAMES_RENDERER_RHI
 #define FRAMES_RENDERER_RHI
 
+// for whatever reason, ue4.3 broke several includes, so now we need to include this even though we don't really use it
+// thanks obama
+#include "Engine.h"
+
 #include "RHI.h"
 #include "RHIResources.h"
 
 #include "frames/renderer.h"
 
 #include "frames/configuration.h"
+
+class FRHICommandList;
 
 namespace Frames {
   namespace Configuration {
