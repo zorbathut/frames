@@ -47,8 +47,19 @@ end
 local success = true
 
 for k, v in pairs(src) do
-  if os.execute(("cd project/%s && %s"):format(k, v.build(platform, configuration))) ~= 0 then
+  local builddata = v.build(k, platform, configuration)
+  
+  if os.execute(("cd project/%s && %s"):format(k, builddata.cli)) ~= 0 then
     success = false
+  end
+  
+  if builddata.verify then
+    for k, v in pairs(builddata.verify) do
+      if not io.open(v, "rb") then
+        print("Cannot find output file", v)
+        success = false
+      end
+    end
   end
 end
 

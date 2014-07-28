@@ -18,7 +18,7 @@
     along with Frames.  If not, see <http://www.gnu.org/licenses/>. ]]
 
 local function msbuild(version)
-  return function (platform, configuration)
+  return function (target, platform, configuration)
     local platlookup = {
       x32 = "Win32",
       x64 = "x64",
@@ -30,17 +30,20 @@ local function msbuild(version)
     
     -- vs2008 doesn't seem to like multiple environment variables that are identical when compared case-insensitively
     -- because we're lazy, we strip them for all compilers
-    return string.format([[tmp= temp= cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio %s/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=%s /p:platform=%s]],
-      version, configuration, platform)
+    return {cli = string.format([[tmp= temp= cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio %s/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=%s /p:platform=%s]],
+      version, conflookup[configuration], platlookup[platform]),
+      verify = {string.format("lib/%s/%s/%s", target, platform, configuration == "release" and "frames.lib" or "framesd.lib")}
+    }
   end
 end
 
 local function uebuild(version)
-  return function (platform, configuration)
+  return function (target, platform, configuration)
     local msb = msbuild("12.0")(platform, configuration)
     
     if platform == "x64" and configuration == "release" then
-      msb = msb .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor Win64 Development %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version)
+      msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor Win64 Development %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version)
+      table.insert(msb.verify, "ue4/Plugins/Frames/Binaries/UE4Editor-Frames.dll")
     end
     
     return msb
@@ -50,19 +53,19 @@ end
 projects = {
   msvc9 = {
     generator = "vs2008",
-    build = msbuild("9.0")
+    build = msbuild("9.0"),
   },
   msvc10 = {
     generator = "vs2010",
-    build = msbuild("10.0")
+    build = msbuild("10.0"),
   },
   msvc11 = {
     generator = "vs2012",
-    build = msbuild("11.0")
+    build = msbuild("11.0"),
   },
   msvc12 = {
     generator = "vs2013",
-    build = msbuild("12.0")
+    build = msbuild("12.0"),
   },
   ue4_2 = {
     generator = "vs2013",
