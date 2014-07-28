@@ -41,9 +41,17 @@ local function uebuild(version)
   return function (target, platform, configuration)
     local msb = msbuild("12.0")(target, platform, configuration)
     
+    -- not yet included - Development, DebugGame, Shipping
+    -- For some reason these don't include the plugin and it is not yet clear why, given that it doesn't run at all. Fix this once it's running. :V
     if platform == "x64" and configuration == "release" then
       msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor Win64 Development %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version)
       table.insert(msb.verify, "ue4/Plugins/Frames/Binaries/Win64/UE4Editor-Frames.dll")
+    elseif platform == "x64" and configuration == "debug" then
+      -- DISABLED, build mismatch
+      --msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor Win64 DebugGame %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version)
+      --table.insert(msb.verify, "ue4/Plugins/Frames/Binaries/Win64/UE4Editor-Frames.dll")
+    elseif platform == "x32" and configuration == "release" then
+      -- shipping will be here
     end
     
     return msb

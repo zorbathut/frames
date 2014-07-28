@@ -62,6 +62,8 @@
 
 === UE4
 
+* DebugGame build
+
 * Need to get building working properly
   * Really do need one build for every appropriate target, but this can happen 
   * Build changes so that debug/release/etc link up properly
