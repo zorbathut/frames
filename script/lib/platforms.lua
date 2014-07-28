@@ -43,7 +43,7 @@ local function uebuild(version)
     
     if platform == "x64" and configuration == "release" then
       msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor Win64 Development %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version)
-      table.insert(msb.verify, "ue4/Plugins/Frames/Binaries/UE4Editor-Frames.dll")
+      table.insert(msb.verify, "ue4/Plugins/Frames/Binaries/Win64/UE4Editor-Frames.dll")
     end
     
     return msb
