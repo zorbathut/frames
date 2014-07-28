@@ -29,6 +29,8 @@ newoption {
   }
 }
 
+if _OPTIONS["ue"] then assert(_ACTION == "vs2013") end
+
 -- utility functions
 function filereplace(filename, src, dst)
   local f = io.open(filename, "rb")
@@ -67,14 +69,6 @@ elseif _ACTION == "vs2013" and _OPTIONS["ue"] == "4_2" then
   projectInfo.platformFull = "win_msvc12_"
   projectInfo.ue4_path = "C:/Program Files/Unreal Engine/4.2/"
   
-  projectInfo.platformSettings = function ()
-    filter "configurations:Debug"
-      defines "_ITERATOR_DEBUG_LEVEL=0"
-      flags { "ReleaseRuntime" }
-    
-    filter {}
-  end
-  
   -- Disabled for now because of build conflicts, we'll figure out how to solve this later
   --[=[os.execute([["/Program Files/Unreal Engine/Launcher/Engine/Binaries/Win64/UnrealVersionSelector.exe" /projectfiles %cd%/ue4/plugin_ue4.uproject]])
   filereplace("ue4/Intermediate/ProjectFiles/plugin_ue4.vcxproj", "$%(SolutionDir%)$%(SolutionName%)", "$(ProjectDir)/../../$(ProjectName)")
@@ -92,6 +86,16 @@ else
   projectInfo.platformFull = ""
 end
 
+if projectInfo.ue4_path then
+  projectInfo.platformSettings = function ()
+    filter "configurations:Debug"
+      defines "_ITERATOR_DEBUG_LEVEL=0"
+      flags { "ReleaseRuntime" }
+    
+    filter {}
+  end
+end
+
 if not projectInfo.platformSettings then
   projectInfo.platformSettings = function () end
 end
@@ -104,7 +108,25 @@ solution "Frames"
   
   projectInfo.platformSettings()
   
-  flags { "FatalWarnings" }
+  if projectInfo.ue4_path then
+    -- Some complexity of the ue4 build process results in the linker warning "ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification".
+    -- There is unfortunately no way to disable this warning - it's explicitly excluded from visual studio.
+    -- There's no way to disable editandcontinue on its own without the warning.
+    -- SafeSEH *can* be disabled, but premake doesn't support it. If the commandline option is used directly, it ironically works fine but then spews a warning on its own.
+    -- The "right" solution here (barring Microsoft fixing their braindamaged warning system) is to modify premake but right now I just don't have time for it.
+    -- So you get this comment instead. Sorry.
+    -- There's a cat sleeping next to me, by the way. He's pretty cute.
+    -- Learning about the cat was the reward for reading the entire comment.
+    filter "architecture:x32"
+      flags { "FatalCompileWarnings" }
+    
+    filter "architecture:x64"
+      flags { "FatalWarnings" }
+    
+    filter {}
+  else
+    flags { "FatalWarnings" }
+  end
   
   -- Paths
   location(projectInfo.path)
