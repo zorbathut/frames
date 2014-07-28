@@ -67,6 +67,14 @@ elseif _ACTION == "vs2013" and _OPTIONS["ue"] == "4_2" then
   projectInfo.platformFull = "win_msvc12_"
   projectInfo.ue4_path = "C:/Program Files/Unreal Engine/4.2/"
   
+  projectInfo.platformSettings = function ()
+    filter "configurations:Debug"
+      defines "_ITERATOR_DEBUG_LEVEL=0"
+      flags { "ReleaseRuntime" }
+    
+    filter {}
+  end
+  
   -- Disabled for now because of build conflicts, we'll figure out how to solve this later
   --[=[os.execute([["/Program Files/Unreal Engine/Launcher/Engine/Binaries/Win64/UnrealVersionSelector.exe" /projectfiles %cd%/ue4/plugin_ue4.uproject]])
   filereplace("ue4/Intermediate/ProjectFiles/plugin_ue4.vcxproj", "$%(SolutionDir%)$%(SolutionName%)", "$(ProjectDir)/../../$(ProjectName)")
@@ -84,11 +92,17 @@ else
   projectInfo.platformFull = ""
 end
 
+if not projectInfo.platformSettings then
+  projectInfo.platformSettings = function () end
+end
+
 projectInfo.path = "project/" .. projectInfo.slug
 
 solution "Frames"
   platforms { "x32", "x64" }
   configurations { "Debug", "Release" }
+  
+  projectInfo.platformSettings()
   
   flags { "FatalWarnings" }
   

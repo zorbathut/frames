@@ -47,9 +47,8 @@ local function uebuild(version)
       msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor Win64 Development %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version)
       table.insert(msb.verify, "ue4/Plugins/Frames/Binaries/Win64/UE4Editor-Frames.dll")
     elseif platform == "x64" and configuration == "debug" then
-      -- DISABLED, build mismatch
-      --msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor Win64 DebugGame %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version)
-      --table.insert(msb.verify, "ue4/Plugins/Frames/Binaries/Win64/UE4Editor-Frames.dll")
+      msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor Win64 DebugGame %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version)
+      table.insert(msb.verify, "ue4/Plugins/Frames/Binaries/Win64/UE4Editor-Frames.dll")
     elseif platform == "x32" and configuration == "release" then
       -- shipping will be here
     end

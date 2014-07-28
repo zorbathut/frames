@@ -36,8 +36,10 @@ project "test"
     linkoptions {"/ignore:4099"}  -- ue4 libraries don't include pdb's
   end
   
-  filter {"action:vs*", "configurations:Debug"}
-    linkoptions {"/NODEFAULTLIB:MSVCRT"}
+  if not projectInfo.ue4_path then
+    filter {"action:vs*", "configurations:Debug"}
+      linkoptions {"/NODEFAULTLIB:MSVCRT"}
+  end
   
   filter "architecture:x32"
     targetdir("bin/" .. projectInfo.slug .. "/x32/test")
@@ -65,7 +67,11 @@ project "test"
     links {"gtest"}
     
   filter "configurations:Debug"
-    links {"gtestd"}
+    if projectInfo.ue4_path then
+      links {"gtest"}
+    else
+      links {"gtestd"}
+    end
     
   filter {}
     links {"frames", "frames_renderer_opengl", "frames_renderer_null", "SDL2", "winmm", "version", "imm32"}
