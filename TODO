@@ -28,6 +28,8 @@
 * /Zl compiler option?
 * script to build deps
 
+* Font corpus cleanup
+
 === DEPLOY
 
 * Get licensing
@@ -80,11 +82,6 @@
   * Obliterate is needed - last event fired before shutdown
     * fix up obliterate.cpp test case
     * will have to happen after events are finished processing
-
-* Font corpus cleanup
-
-* Figure out how to link in the precompiled shader
-  * Remove d3dcompiler linkage
 
 * Single-project integration?
   * Read all solutions from .sln file
