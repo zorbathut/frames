@@ -20,6 +20,7 @@
 using UnrealBuildTool;
 
 using System.IO;
+using System.Text.RegularExpressions;
 
 public class Frames : ModuleRules
 {
@@ -35,6 +36,23 @@ public class Frames : ModuleRules
       "RHI", // for actual rendering
     });
     
+    // We need to figure out the engine version so we know which directory to look in.
+    // Unfortunately there is apparently no good way to do this, so we try pulling it from version.h.
+    string vMajor = "4";
+    string vMinor = "1";
+    {
+      string vHeader = Utils.ReadAllText("../Source/Runtime/Launch/Resources/Version.h");
+      Match mMajor = new Regex(@"#define ENGINE_MAJOR_VERSION\t([^\r\n]+)").Match(vHeader);
+      Match mMinor = new Regex(@"#define ENGINE_MINOR_VERSION\t([^\r\n]+)").Match(vHeader);
+      if (mMajor.Success && mMinor.Success)
+      {
+        vMajor = mMajor.Groups[1].Value;
+        vMinor = mMinor.Groups[1].Value;
+      }
+    }
+    
+    string UESlug = "ue" + vMajor + "_" + vMinor;
+    
     string PlatformString = (Target.Platform == UnrealTargetPlatform.Win64) ? "x64" : "x32";
     string PlatformStringFrames = (Target.Platform == UnrealTargetPlatform.Win64) ? "win64" : "win32";
     string DirectoryName = Path.GetDirectoryName( RulesCompiler.GetModuleFilename( this.GetType().Name ) );
@@ -43,11 +61,11 @@ public class Frames : ModuleRules
     // choose appropriate libraries
     if (Target.Configuration == UnrealTargetConfiguration.Debug || Target.Configuration == UnrealTargetConfiguration.DebugGame)
     {
-      PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "lib", "ue4_2", PlatformString, "framesd.lib"));
+      PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "lib", UESlug, PlatformString, "framesd.lib"));
     }
     else
     {
-      PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "lib", "ue4_2", PlatformString, "frames.lib"));
+      PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "lib", UESlug, PlatformString, "frames.lib"));
     }
     
     PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "deps", "jpeg-9", PlatformStringFrames, "lib", "jpeg.lib"));

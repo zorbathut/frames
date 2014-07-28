@@ -33,6 +33,9 @@ if target then
   src[target] = projects[target]
 end
 
+-- gotta have at least one project
+assert(next(src))
+
 if not platform then
   platform = "x32"
 end

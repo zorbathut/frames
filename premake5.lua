@@ -25,6 +25,7 @@ newoption {
   description = "Choose an Unreal Engine version to target; requires vs2013 target",
   allowed = {
     { "4_2", "Unreal Engine 4.2" },
+    { "4_3", "Unreal Engine 4.3" },
   }
 }
 
@@ -65,10 +66,17 @@ elseif _ACTION == "vs2013" and _OPTIONS["ue"] == "4_2" then
   projectInfo.platform = "win"
   projectInfo.platformFull = "win_msvc12_"
   projectInfo.ue4_path = "C:/Program Files/Unreal Engine/4.2/"
-  os.execute([["/Program Files/Unreal Engine/Launcher/Engine/Binaries/Win64/UnrealVersionSelector.exe" /projectfiles %cd%/ue4/plugin_ue4.uproject]])
+  
+  -- Disabled for now because of build conflicts, we'll figure out how to solve this later
+  --[=[os.execute([["/Program Files/Unreal Engine/Launcher/Engine/Binaries/Win64/UnrealVersionSelector.exe" /projectfiles %cd%/ue4/plugin_ue4.uproject]])
   filereplace("ue4/Intermediate/ProjectFiles/plugin_ue4.vcxproj", "$%(SolutionDir%)$%(SolutionName%)", "$(ProjectDir)/../../$(ProjectName)")
   filereplace("ue4/Intermediate/ProjectFiles/plugin_ue4.vcxproj.user", "$%(SolutionDir%)$%(SolutionName%)", "$(ProjectDir)/../../$(ProjectName)")
-  filereplace("ue4/Intermediate/ProjectFiles/plugin_ue4.vcxproj.user", "</LocalDebuggerCommandArguments>", " -opengl</LocalDebuggerCommandArguments>") -- Run in opengl mode because that's the only renderer we support right now
+  filereplace("ue4/Intermediate/ProjectFiles/plugin_ue4.vcxproj.user", "</LocalDebuggerCommandArguments>", " -opengl</LocalDebuggerCommandArguments>") -- Run in opengl mode because that's the only renderer we support right now]=]
+elseif _ACTION == "vs2013" and _OPTIONS["ue"] == "4_3" then
+  projectInfo.slug = "ue4_3"
+  projectInfo.platform = "win"
+  projectInfo.platformFull = "win_msvc12_"
+  projectInfo.ue4_path = "C:/Program Files/Unreal Engine/4.3/"
 else
   print(("Not supported: target %s with OS %s"):format(_ACTION or "", _OS or ""))
   projectInfo.slug = ""
@@ -112,7 +120,7 @@ solution "Frames"
         "deps/zlib-1.2.8/" .. projectInfo.platform .. suffix .. "/lib",
         "deps/gtest-1.7.0/" .. projectInfo.platformFull .. suffix .. "/lib",
       }
-    else
+    elseif projectInfo.slug == "ue4_2" or projectInfo.slug == "ue4_3" then
       local ue4libsuffix = "Win" .. suffix .. "/VS2013"
       includedirs {
         "include",

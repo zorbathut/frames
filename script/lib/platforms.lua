@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Frames.  If not, see <http://www.gnu.org/licenses/>. ]]
 
-local function msbuild(core)
+local function msbuild(version)
   return function (platform, configuration)
     local platlookup = {
       x32 = "Win32",
@@ -27,31 +27,52 @@ local function msbuild(core)
       release = "Release",
       debug = "Debug",
     }
-    return core:gsub("<configuration>", conflookup[configuration]):gsub("<platform>", platlookup[platform])
+    
+    -- vs2008 doesn't seem to like multiple environment variables that are identical when compared case-insensitively
+    -- because we're lazy, we strip them for all compilers
+    return string.format([[tmp= temp= cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio %s/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=%s /p:platform=%s]],
+      version, configuration, platform)
+  end
+end
+
+local function uebuild(version)
+  return function (platform, configuration)
+    local msb = msbuild("12.0")(platform, configuration)
+    
+    if platform == "x64" and configuration == "release" then
+      msb = msb .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor Win64 Development %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version)
+    end
+    
+    return msb
   end
 end
 
 projects = {
   msvc9 = {
     generator = "vs2008",
-    build = msbuild([[tmp= temp= cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 9.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform>]]),  -- vs2008 doesn't seem to like multiple environment variables that are identical when compared case-insensitively
+    build = msbuild("9.0")
   },
   msvc10 = {
     generator = "vs2010",
-    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 10.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform>]]),
+    build = msbuild("10.0")
   },
   msvc11 = {
     generator = "vs2012",
-    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 11.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform>]]),
+    build = msbuild("11.0")
   },
   msvc12 = {
     generator = "vs2013",
-    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 12.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform>]]),
+    build = msbuild("12.0")
   },
   ue4_2 = {
     generator = "vs2013",
     parameters = "--ue=4_2",
-    build = msbuild([[cmd /Q /C call "c:/Program Files (x86)/Microsoft Visual Studio 12.0/Common7/Tools/vsvars32.bat" "&&" msbuild Frames.sln /p:configuration=<configuration> /p:platform=<platform>]]),
+    build = uebuild("4.2"),
+  },
+  ue4_3 = {
+    generator = "vs2013",
+    parameters = "--ue=4_3",
+    build = uebuild("4.3")
   },
   -- disabled, possibly permanently
   --[[mingw = {
