@@ -39,7 +39,7 @@ end
 
 local function uebuild(version)
   return function (target, platform, configuration)
-    local msb = msbuild("12.0")(platform, configuration)
+    local msb = msbuild("12.0")(target, platform, configuration)
     
     if platform == "x64" and configuration == "release" then
       msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor Win64 Development %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version)
