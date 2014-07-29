@@ -1,0 +1,37 @@
+float2 size;
+
+int sampleMode;
+
+Texture2D sprite;
+SamplerState spriteSample;
+
+struct VIn {
+  float2 position : ATTRIBUTE0;
+  float2 tex : ATTRIBUTE1;
+  float4 color : ATTRIBUTE2;
+};
+
+struct VOut {
+  float4 position : SV_POSITION;
+  float2 tex : TEXCOORD0;
+  float4 color : COLOR;
+};
+
+VOut VS(VIn input) {
+  VOut output;
+  float2 cp = input.position;
+  cp.x /= size.x;
+  cp.y /= -size.y;
+  cp *= 2;
+  cp += float2(-1.f, 1.f);
+  output.position = float4(cp, 0.f, 1.f);
+  output.tex = input.tex;
+  output.color = input.color;
+  return output;
+}
+
+float4 PS(VOut input) : SV_TARGET {
+  if (sampleMode == 1) input.color *= sprite.Sample(spriteSample, input.tex);
+  if (sampleMode == 2) input.color.a *= sprite.Sample(spriteSample, input.tex).r;
+  return input.color;
+}

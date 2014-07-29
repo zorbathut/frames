@@ -113,6 +113,7 @@ solution "Frames"
     -- There is unfortunately no way to disable this warning - it's explicitly excluded from visual studio.
     -- There's no way to disable editandcontinue on its own without the warning.
     -- SafeSEH *can* be disabled, but premake doesn't support it. If the commandline option is used directly, it ironically works fine but then spews a warning on its own.
+    -- None of this is relevant on x64 because there's no such thing as SafeSEH.
     -- The "right" solution here (barring Microsoft fixing their braindamaged warning system) is to modify premake but right now I just don't have time for it.
     -- So you get this comment instead. Sorry.
     -- There's a cat sleeping next to me, by the way. He's pretty cute.

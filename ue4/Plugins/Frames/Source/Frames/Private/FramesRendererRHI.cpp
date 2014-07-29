@@ -81,7 +81,7 @@ namespace Frames {
     private:
 	    FShaderParameter m_size;
     };
-    IMPLEMENT_SHADER_TYPE(, FFramesVS, TEXT("FluidSurfaceShader"), TEXT("ComputeFluidSurface"), SF_Vertex);
+    IMPLEMENT_SHADER_TYPE(, FFramesVS, TEXT("FramesShader"), TEXT("VS"), SF_Vertex);
 
     class FFramesPS : public FGlobalShader
     {
@@ -93,8 +93,8 @@ namespace Frames {
 	    FFramesPS(const ShaderMetaType::CompiledShaderInitializerType &Initializer) :
 		    FGlobalShader(Initializer)
 	    {
-        m_textureMode.Bind(Initializer.ParameterMap, TEXT("textureMode"), SPF_Mandatory);
-        m_texture.Bind(Initializer.ParameterMap, TEXT("texture"), SPF_Mandatory);
+        m_textureMode.Bind(Initializer.ParameterMap, TEXT("sampleMode"), SPF_Mandatory);
+        m_texture.Bind(Initializer.ParameterMap, TEXT("sprite"), SPF_Mandatory);
 	    }
 	    FFramesPS() {}
 
@@ -123,7 +123,7 @@ namespace Frames {
 	    FShaderParameter m_textureMode;
       FShaderResourceParameter m_texture;
     };
-    IMPLEMENT_SHADER_TYPE(, FFramesPS, TEXT("FluidSurfaceShader"), TEXT("ComputeFluidSurface"), SF_Pixel);
+    IMPLEMENT_SHADER_TYPE(, FFramesPS, TEXT("FramesShader"), TEXT("PS"), SF_Pixel);
 
     /*
     static const char sShader[] =
