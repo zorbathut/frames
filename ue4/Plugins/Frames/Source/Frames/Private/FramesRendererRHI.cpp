@@ -254,7 +254,7 @@ namespace Frames {
         rhi->m_vertexDecl = RHICreateVertexDeclaration(elements);
       });
 
-      CreateBuffers(1 << 16); // maximum size that will fit in a ushort
+      CreateBuffers(1 << 16); // maximum size that will fit in a ushort; this is currently ultra-inefficient, figure out a better way to update
     }
 
     RendererRHI::~RendererRHI() {
@@ -289,6 +289,8 @@ namespace Frames {
 	      RHICmdList.SetBlendState(TStaticBlendState<CW_RGBA, BO_Add, BF_SourceAlpha, BF_InverseSourceAlpha, BO_Add, BF_Zero, BF_One>::GetRHI());
         RHICmdList.SetDepthStencilState(TStaticDepthStencilState<false, CF_Always>::GetRHI());
         RHICmdList.SetRasterizerState(TStaticRasterizerState<>::GetRHI());
+
+        RHICmdList.SetStreamSource(0, rhi->m_vertices, sizeof(Renderer::Vertex), 0);
       });
     }
 

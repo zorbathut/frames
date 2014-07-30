@@ -62,11 +62,11 @@
 
 === UE4
 
-* Integrate with rendering subsystem
-  * symlink to pretend shaders match up
-  * just make it work
+* OpenGL subrenderer compat
 
 * Integrate with loading subsystem
+  * Texture
+  * Font
 
 * Test suite
   * Base - may be difficult - thread sync?
@@ -86,6 +86,8 @@
   * Recreate all solutions, recreate connections
     * Figure out linkages to Frames based on that
       * Debug without Game is the only one that connects to debug, everything else connects to release
+
+* terrible performance, but, welp
 
 === TWEAK
 
