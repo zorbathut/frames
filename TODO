@@ -22,6 +22,8 @@
 
 === TWEAK
 
+* One .cpp for each .h, doublecheck compiling
+
 * Copy libs to test as part of renderer, not as part of test
 
 * Verify that appropriate files are all being included
