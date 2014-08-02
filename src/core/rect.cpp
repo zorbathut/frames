@@ -17,6 +17,6 @@
     You should have received a copy of the GNU General Public License
     along with Frames.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "frames/color.h"
+#include "frames/rect.h"
 
 // File currently exists for the sole purpose of ensuring that its associated header builds cleanly.

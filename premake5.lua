@@ -188,6 +188,7 @@ solution "Frames"
   if projectInfo.platform == "win" then
     defines "NOMINMAX"  -- disable min/max macros from windows headers
     defines "WIN32_LEAN_AND_MEAN"  -- make windows.h not quite as titanically huge
+    linkoptions "/ignore:4221" -- This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library - we're okay with this because we build a handful of .cpp files just intended to test that headers can be included on their own
   end
   
   flags { "Symbols" } -- always create debug symbols
