@@ -54,6 +54,17 @@ namespace Frames {
     return rv;
   }
 
+  /*static*/ TexturePtr Texture::CreateContextual(Environment *env, int width, int height, Format format, Texture::ContextualPtr data) {
+    TexturePtr rv(new Texture);
+    rv->m_type = CONTEXTUAL;
+    rv->m_format = format;
+    rv->m_width = width;
+    rv->m_height = height;
+    rv->m_env = env;
+    rv->m_contextual = data;
+    return rv;
+  }
+
   Texture::Texture() : 
     m_type(NIL),
     m_format(FORMAT_RGBA_8),
