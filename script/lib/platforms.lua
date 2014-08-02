@@ -74,11 +74,12 @@ projects = {
     generator = "vs2013",
     build = msbuild("12.0"),
   },
-  ue4_2 = {
+  -- disabled, likely permanently
+  --[[ue4_2 = {
     generator = "vs2013",
     parameters = "--ue=4_2",
     build = uebuild("4.2"),
-  },
+  },]]
   ue4_3 = {
     generator = "vs2013",
     parameters = "--ue=4_3",

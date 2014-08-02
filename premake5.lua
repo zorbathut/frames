@@ -24,7 +24,7 @@ newoption {
   value = "version",
   description = "Choose an Unreal Engine version to target; requires vs2013 target",
   allowed = {
-    { "4_2", "Unreal Engine 4.2" },
+    --{ "4_2", "Unreal Engine 4.2" }, -- no official support atm
     { "4_3", "Unreal Engine 4.3" },
   }
 }
