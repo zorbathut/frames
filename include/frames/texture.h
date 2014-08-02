@@ -44,6 +44,14 @@ namespace Frames {
       FORMAT_COUNT,
     };
 
+    /// Generic container class used for renderer-specific information.
+    class Contextual : public Refcountable<Contextual> {
+    public:
+      Contextual() { }
+      virtual ~Contextual() { }
+    };
+    typedef Ptr<Contextual> ContextualPtr;
+
     // ---- Creation
 
     /// Creates a Texture with a given width, height, and format, with the Texture entirely responsible for allocation and deallocation.
@@ -53,12 +61,16 @@ namespace Frames {
     /** If takeOwnership is true, the Texture will automatically deallocate data using the Environment's allocator. */
     static TexturePtr CreateRawUnmanaged(Environment *env, int width, int height, Format format, unsigned char *data, int stride, bool takeOwnership = false);
 
+    /// Creates a Texture with a given width, height, and format, referencing a renderer-specific data package.
+    static TexturePtr CreateContextual(Environment *env, int width, int height, Format format, ContextualPtr data);
+
     // ---- Generic data
 
     /// Texture type.
     enum Type {
       NIL, ///< Invalid texture used as a default value.
       RAW, ///< Raw byte array containing decompressed image data in scanline order.
+      CONTEXTUAL, ///< Context-sensitive type defined by the renderer. Read your renderer documentation for details.
     };
     /// Returns the Type.
     Type TypeGet() const { return m_type; }
@@ -74,15 +86,19 @@ namespace Frames {
 
     /// Returns the raw data.
     /** Undefined results if this Texture type is not RAW. */
-    unsigned char *RawDataGet() { return m_raw_data; }
+    unsigned char *RawDataGet();
     /// Returns the raw data.
     /** Undefined results if this Texture type is not RAW. */
-    const unsigned char *RawDataGet() const { return m_raw_data; }
+    const unsigned char *RawDataGet() const;
     /// Returns the raw data's stride.
     /** Stride is the memory offset, in bytes, between rows of the texture. On densely-packed textures this will be WidthGet() * RawBPPGet(FormatGet()). It may be larger on textures with row padding.
     
     Undefined results if this Texture type is not RAW. */
-    int RawStrideGet() const { return m_raw_stride; }
+    int RawStrideGet() const;
+
+    // ---- Renderer-specific accessors
+
+    const ContextualPtr &ContextualGet() const;
 
     // ---- Helper functions
 
@@ -104,6 +120,8 @@ namespace Frames {
     unsigned char *m_raw_data;
     int m_raw_stride;
     bool m_raw_owned;
+
+    ContextualPtr m_contextual;
 
     Environment *m_env;
   };

@@ -71,4 +71,32 @@ namespace Frames {
       delete [] m_raw_data;
     }
   }
+
+  unsigned char *Texture::RawDataGet() {
+    if (m_type != RAW) {
+      m_env->LogError("Attempted to retrieve raw data from non-RAW Texture");
+    }
+    return m_raw_data;
+  }
+    
+  const unsigned char *Texture::RawDataGet() const {
+    if (m_type != RAW) {
+      m_env->LogError("Attempted to retrieve raw data from non-RAW Texture");
+    }
+    return m_raw_data;
+  }
+    
+  int Texture::RawStrideGet() const {
+    if (m_type != RAW) {
+      m_env->LogError("Attempted to retrieve raw stride from non-RAW Texture");
+    }
+    return m_raw_stride;
+  }
+
+  const Texture::ContextualPtr &Texture::ContextualGet() const {
+    if (m_type != CONTEXTUAL) {
+      m_env->LogError("Attempted to retrieve contextual data from non-CONTEXTUAL Texture");
+    }
+    return m_contextual;
+  }
 }

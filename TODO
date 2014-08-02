@@ -72,6 +72,7 @@
 
 * Test suite
   * Base - may be difficult - thread sync?
+  * Make sure to test RAW texture types
 
 * Start integration layer
 
