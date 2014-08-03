@@ -300,6 +300,12 @@ namespace Frames {
     }
 
     void RendererRHI::End() {
+      ENQUEUE_UNIQUE_RENDER_COMMAND(
+        Frames_End,
+      {
+        // DX11 doesn't seem to require this, but OpenGL demands it
+        RHICmdList.SetScissorRect(false, 0, 0, 0, 0);
+      });
     }
 
     Renderer::Vertex *RendererRHI::Request(int quads) {

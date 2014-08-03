@@ -69,8 +69,6 @@
 
 === UE4
 
-* OpenGL subrenderer compat
-
 * Integrate with loading subsystem
   * Font
 
