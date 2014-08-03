@@ -69,8 +69,11 @@
 
 === UE4
 
+* get deploy working
+
 * Integrate with loading subsystem
   * Font
+    * how do font
 
 * Test suite
   * How does this get linked in?
