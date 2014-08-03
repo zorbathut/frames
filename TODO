@@ -59,22 +59,35 @@
   * SDL/GL
 
 * Figure out how to document Delegate
+  * Rethink Delegate? It's really not all that useful right now
 
 * Official release?
+
+=== PERF
+
+* UE4 doesn't like partial locking
+  * That's okay, we can figure out semantics for complete locking
+  * On ue4 this is easy because we're buffering anyway . . . so, yeah, we'll just buffer, then pick an appropriate buffer when needed
 
 === UE4
 
 * OpenGL subrenderer compat
 
 * Integrate with loading subsystem
-  * Texture
   * Font
 
 * Test suite
+  * How does this get linked in?
+    * Gotta be part of the Frames plugin . . . but of course, if it is part of the Frames plugin, then that's a ton of unnecessary cruft
+    * Two builds - one test, one non-test? Begging for problems, might be the best we can do
   * Base - may be difficult - thread sync?
   * Make sure to test RAW texture types
 
 * Start integration layer
+  * Environment
+  * Create, frame classes
+  * Various frame types
+  * Event hooks
 
 * Some way to provide the right set of verbs to provide external APIs
 * That may be extremely difficult
