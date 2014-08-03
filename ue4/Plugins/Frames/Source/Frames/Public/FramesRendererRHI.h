@@ -31,6 +31,8 @@
 
 #include "frames/configuration.h"
 
+#include <map>
+
 class FRHICommandList;
 
 namespace Frames {
@@ -87,11 +89,13 @@ namespace Frames {
 
     private:
       void CreateBuffers(int len);
+      void FlushRequestData();
 
       struct Data : detail::Noncopyable {
         FVertexDeclarationRHIRef m_vertexDecl;
 
-        FVertexBufferRHIRef m_vertices;
+        FVertexBufferRHIParamRef GetVertexBuffer(int size);
+        std::map<int, FVertexBufferRHIRef> m_vertices;
 
         FIndexBufferRHIRef m_indices;
       };
@@ -103,7 +107,7 @@ namespace Frames {
         ~RequestData();
 
         int quads;
-        Renderer::Vertex *data;
+        std::vector<Renderer::Vertex> data;
       };
 
       RequestData *m_request;

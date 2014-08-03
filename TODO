@@ -99,8 +99,6 @@
     * Figure out linkages to Frames based on that
       * Debug without Game is the only one that connects to debug, everything else connects to release
 
-* terrible performance, but, welp
-
 * install instructions
   * shader copying
   * image importing

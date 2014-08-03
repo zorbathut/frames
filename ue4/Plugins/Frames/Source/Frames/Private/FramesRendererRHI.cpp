@@ -294,12 +294,12 @@ namespace Frames {
 	      RHICmdList.SetBlendState(TStaticBlendState<CW_RGBA, BO_Add, BF_SourceAlpha, BF_InverseSourceAlpha, BO_Add, BF_Zero, BF_One>::GetRHI());
         RHICmdList.SetDepthStencilState(TStaticDepthStencilState<false, CF_Always>::GetRHI());
         RHICmdList.SetRasterizerState(TStaticRasterizerState<>::GetRHI());
-
-        RHICmdList.SetStreamSource(0, rhi->m_vertices, sizeof(Renderer::Vertex), 0);
       });
     }
 
     void RendererRHI::End() {
+      FlushRequestData();
+
       ENQUEUE_UNIQUE_RENDER_COMMAND(
         Frames_End,
       {
@@ -314,16 +314,14 @@ namespace Frames {
         return 0;
       }
 
-      if (m_request) {
-        EnvironmentGet()->LogError("Request called with inflight request");
-        return 0;
+      if (!m_request) {
+        m_request = new RequestData;
       }
 
-      m_request = new RequestData;
-      m_request->quads = quads;
-      m_request->data = new Renderer::Vertex[quads * 4];
+      int preSize = m_request->data.size();
+      m_request->data.resize(preSize + quads * 4);
 
-      return m_request->data;
+      return m_request->data.data() + preSize;
     }
 
     void RendererRHI::Return(int quads /*= -1*/) {
@@ -333,27 +331,14 @@ namespace Frames {
         return;
       }
 
-      if (quads != -1) m_request->quads = quads;
-
-      ENQUEUE_UNIQUE_RENDER_COMMAND_TWOPARAMETER(
-        Frames_Begin,
-        Data *, rhi, m_rhi,
-        RequestData *, request, m_request,
-      {
-        {
-          void *data = RHILockVertexBuffer(rhi->m_vertices, 0, request->quads * sizeof(Vertex) * 4, RLM_WriteOnly);
-        
-          memcpy(data, request->data, request->quads * sizeof(Vertex) * 4);
-
-          RHIUnlockVertexBuffer(rhi->m_vertices);
-        }
-
-        RHICmdList.DrawIndexedPrimitive(rhi->m_indices, PT_TriangleList, 0, 0, request->quads * 4, 0, request->quads * 2, 1);
-
-        delete request;
-      });
-
-      m_request = 0;  // will be cleaned up in render thread
+      if (quads != -1) {
+        // truncate the vector based on quads
+        m_request->quads += quads;
+        m_request->data.resize(m_request->quads * 4);
+      } else {
+        // update quads based on vector
+        m_request->quads = m_request->data.size() / 4;
+      }
     }
 
     TextureBackingPtr RendererRHI::TextureCreate(int width, int height, Texture::Format mode) {
@@ -368,6 +353,8 @@ namespace Frames {
     void RendererRHI::TextureSet(const detail::TextureBackingPtr &tex) {
       TextureBackingRHI *backing = tex.Get() ? static_cast<TextureBackingRHI*>(tex.Get()) : 0;
       if (m_currentTexture != backing) {
+        FlushRequestData();
+
         m_currentTexture = backing;
         
         ENQUEUE_UNIQUE_RENDER_COMMAND_THREEPARAMETER(
@@ -399,9 +386,6 @@ namespace Frames {
         int, len, len,
       {
         int quadLen = len / 4;
-
-        FRHIResourceCreateInfo cinfo;
-        rhi->m_vertices = RHICreateVertexBuffer(len * sizeof(Vertex), BUF_Volatile, cinfo);
         
         {
           vector<unsigned short> elements(quadLen * 6);
@@ -427,7 +411,67 @@ namespace Frames {
       m_verticesQuadcount = len / 4;
     }
 
+    void RendererRHI::FlushRequestData() {
+      if (!m_request) {
+        return;
+      }
+
+      ENQUEUE_UNIQUE_RENDER_COMMAND_TWOPARAMETER(
+        Frames_Begin,
+        Data *, rhi, m_rhi,
+        RequestData *, request, m_request,
+      {
+        {
+          FVertexBufferRHIParamRef vertexBuffer = rhi->GetVertexBuffer(request->quads * 4);
+
+          void *data = RHILockVertexBuffer(vertexBuffer, 0, request->quads * sizeof(Vertex) * 4, RLM_WriteOnly);
+        
+          memcpy(data, request->data.data(), request->quads * sizeof(Vertex) * 4);
+
+          RHIUnlockVertexBuffer(vertexBuffer);
+
+          RHICmdList.SetStreamSource(0, vertexBuffer, sizeof(Renderer::Vertex), 0);
+        }
+
+        RHICmdList.DrawIndexedPrimitive(rhi->m_indices, PT_TriangleList, 0, 0, request->quads * 4, 0, request->quads * 2, 1);
+
+        delete request;
+      });
+      
+      m_request = 0; // will be cleaned up in render thread
+    }
+
+    FVertexBufferRHIParamRef RendererRHI::Data::GetVertexBuffer(int size) {
+      int targetSize = size;
+
+      // Round to next power of two
+      targetSize--;
+      targetSize |= targetSize >> 1;
+      targetSize |= targetSize >> 2;
+      targetSize |= targetSize >> 4;
+      targetSize |= targetSize >> 8;
+      targetSize |= targetSize >> 16;
+      targetSize++;
+
+      {
+        // We want to allow things that are, in general, 3*2^n also, so:
+        // divide by four, subtract, compare
+        int testSize = targetSize >> 2;
+        if (testSize >= size) {
+          targetSize = testSize;
+        }
+      }
+
+      // Create if it doesn't yet exist
+      if (!m_vertices.count(targetSize)) {
+        FRHIResourceCreateInfo cinfo;
+        m_vertices[targetSize] = RHICreateVertexBuffer(targetSize * sizeof(Vertex), BUF_Volatile, cinfo);
+      }
+
+      return m_vertices[targetSize];
+    }
+
     RendererRHI::RequestData::RequestData() : quads(0), data(0) { }
-    RendererRHI::RequestData::~RequestData() { delete [] data; }
+    RendererRHI::RequestData::~RequestData() { }
   }
 }
