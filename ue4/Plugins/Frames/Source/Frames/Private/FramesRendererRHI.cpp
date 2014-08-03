@@ -165,6 +165,11 @@ namespace Frames {
       });
     }
 
+    TextureBackingRHI::TextureBackingRHI(Environment *env, FTexture2DRHIParamRef rhi) : TextureBacking(env, rhi->GetSizeX(), rhi->GetSizeY(), Texture::FORMAT_RGBA_8) {
+      m_rhi = new Data;
+      m_rhi->m_tex = rhi;
+    }
+
     TextureBackingRHI::~TextureBackingRHI() {
       ENQUEUE_UNIQUE_RENDER_COMMAND_ONEPARAMETER(
         Frames_TextureBacking_Destructor,
@@ -347,6 +352,11 @@ namespace Frames {
 
     TextureBackingPtr RendererRHI::TextureCreate(int width, int height, Texture::Format mode) {
       return TextureBackingPtr(new TextureBackingRHI(EnvironmentGet(), width, height, mode));
+    }
+
+    TextureBackingPtr RendererRHI::TextureCreate(const Texture::ContextualPtr &contextual) {
+      UE4TextureContextual *ue4tc = static_cast<UE4TextureContextual *>(contextual.Get());
+      return TextureBackingPtr(new TextureBackingRHI(EnvironmentGet(), ue4tc->m_tex));
     }
 
     void RendererRHI::TextureSet(const detail::TextureBackingPtr &tex) {

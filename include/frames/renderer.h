@@ -97,6 +97,7 @@ namespace Frames {
       virtual void Return(int quads = -1) = 0;  // also renders, count lets you optionally specify the number of quads
 
       virtual TextureBackingPtr TextureCreate(int width, int height, Texture::Format mode) = 0;
+      virtual TextureBackingPtr TextureCreate(const Texture::ContextualPtr &contextual);  // default implementation errors and returns 0
       virtual void TextureSet(const TextureBackingPtr &tex) = 0;
 
       void ScissorPush(Rect rect);

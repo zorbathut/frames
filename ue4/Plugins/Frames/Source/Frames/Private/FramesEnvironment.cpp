@@ -27,7 +27,9 @@
 #include <frames/configuration.h>
 #include <frames/detail_format.h>
 #include <frames/environment.h>
+#include <frames/frame.h>
 #include <frames/layout.h>
+#include <frames/sprite.h>
 #include <frames/renderer_null.h>
 #include "HideWindowsPlatformTypes.h"
 
@@ -67,12 +69,41 @@ private:
   bool m_assertErrors;
 };
 
+class UE4TextureFromId : public Frames::Configuration::TextureFromId {
+  virtual Frames::TexturePtr Create(Frames::Environment *env, const std::string &id) {
+    UTexture2D *tex = LoadObject<UTexture2D>(NULL, UTF8_TO_TCHAR(id.c_str()), NULL);
+    if (!tex) {
+      return Frames::TexturePtr();
+    }
+
+    // Frames does not yet have good support for asynchronous loading, so we just force immediate loading
+    tex->WaitForStreaming();
+
+    // We really want an FTexture2DRHIRef
+    FTexture2DRHIRef ref = static_cast<FRHITexture2D *>(tex->TextureReference.TextureReferenceRHI->GetReferencedTexture());
+
+    // Wrap this up in the appropriate structures
+    Frames::detail::UE4TextureContextualPtr contextual(new Frames::detail::UE4TextureContextual);
+    contextual->m_tex = ref;
+
+    // LAUNCH
+    return Frames::Texture::CreateContextual(env, ref->GetSizeX(), ref->GetSizeY(), Frames::Texture::FORMAT_RGBA_8, contextual);
+  }
+};
+typedef Frames::Ptr<UE4TextureFromId> UE4TextureFromIdPtr;
+
+UE4TextureFromIdPtr GetUE4TextureFromId() {
+  static UE4TextureFromIdPtr ue4tfip(new UE4TextureFromId());
+  return ue4tfip;
+}
+
 UFramesEnvironment::UFramesEnvironment(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
   Frames::Configuration::Local conf;
   conf.RendererSet(Frames::Configuration::RendererRHI());
   conf.LoggerSet(Frames::Configuration::LoggerPtr(new FramesUE4Logger()));
+  conf.TextureFromIdSet(GetUE4TextureFromId());
   m_env = Frames::Environment::Create(conf);
 }
 

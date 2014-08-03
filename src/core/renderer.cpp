@@ -93,6 +93,11 @@ namespace Frames {
       }
     }
 
+    TextureBackingPtr Renderer::TextureCreate(const Texture::ContextualPtr &contextual) {
+      m_env->LogError("Attempted to create a contextual texture on a renderer that does not support contextual textures");
+      return TextureBackingPtr(0);
+    }
+
     void Renderer::ScissorPush(Rect rect) {
       if (!m_scissor.empty()) {
         // Create the intersection of scissors

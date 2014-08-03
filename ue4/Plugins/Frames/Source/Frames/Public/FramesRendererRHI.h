@@ -48,6 +48,8 @@ namespace Frames {
     class TextureBackingRHI : public TextureBacking {
     public:
       TextureBackingRHI(Environment *env, int width, int height, Texture::Format format);
+      TextureBackingRHI(Environment *env, FTexture2DRHIParamRef rhi);
+      
       ~TextureBackingRHI();
 
       virtual void Write(int sx, int sy, const TexturePtr &tex);
@@ -61,6 +63,13 @@ namespace Frames {
       Data *m_rhi;
     };
 
+    // Used for passing pre-generated textures to Frames    
+    class UE4TextureContextual : public Frames::Texture::Contextual {
+    public:
+      FTexture2DRHIRef m_tex;
+    };
+    typedef Frames::Ptr<UE4TextureContextual> UE4TextureContextualPtr;
+
     class RendererRHI : public Renderer {
     public:
       RendererRHI(Environment *env);
@@ -73,6 +82,7 @@ namespace Frames {
       virtual void Return(int quads = -1);  // also renders, count lets you optionally specify the number of quads
 
       virtual TextureBackingPtr TextureCreate(int width, int height, Texture::Format mode);
+      virtual TextureBackingPtr TextureCreate(const Texture::ContextualPtr &contextual);
       virtual void TextureSet(const TextureBackingPtr &tex);
 
     private:

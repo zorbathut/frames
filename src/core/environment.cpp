@@ -449,8 +449,20 @@ namespace Frames {
       chunk->Attach(backing, origin.first, origin.second, origin.first + tex->WidthGet(), origin.second + tex->HeightGet());
 
       return chunk;
+    } else if (tex->TypeGet() == Texture::CONTEXTUAL) {
+      if (backing) {
+        LogError("Backing provided for contextual texture, currently not supported");
+      }
+
+      backing = RendererGet()->TextureCreate(tex->ContextualGet());
+      
+      // for now, we're just assuming that this texture starts at 0,0
+      detail::TextureChunkPtr chunk = detail::TextureChunk::Create();
+      chunk->Attach(backing, 0, 0, tex->WidthGet(), tex->HeightGet());
+
+      return chunk;
     } else {
-      LogError("Unknown texture type");
+      LogError(detail::Format("Unknown texture type %d in TextureChunkFromConfig", tex->TypeGet()));
       return detail::TextureChunkPtr();
     }
   }
