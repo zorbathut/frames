@@ -30,8 +30,8 @@ VOut VS(VIn input) {
   return output;
 }
 
-float4 PS(VOut input) : SV_TARGET {
+void PS(VOut input, out float4 outColor : SV_Target0) {
   if (sampleMode == 1) input.color *= sprite.Sample(spriteSample, input.tex);
   if (sampleMode == 2) input.color.a *= sprite.Sample(spriteSample, input.tex).r;
-  return input.color;
+  outColor = input.color;
 }
