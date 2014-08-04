@@ -22,6 +22,7 @@
 #include "FramesEnvironment.h"
 #include "FramesHUDHack.h"
 #include "FramesRendererRHI.h"
+#include "FramesFont.h"
 
 #include "AllowWindowsPlatformTypes.h"
 #include <frames/configuration.h>
@@ -29,8 +30,10 @@
 #include <frames/environment.h>
 #include <frames/frame.h>
 #include <frames/layout.h>
-#include <frames/sprite.h>
 #include <frames/renderer_null.h>
+#include <frames/sprite.h>
+#include <frames/stream.h>
+#include <frames/text.h>
 #include "HideWindowsPlatformTypes.h"
 
 DEFINE_LOG_CATEGORY(FramesLog);
@@ -97,6 +100,27 @@ UE4TextureFromIdPtr GetUE4TextureFromId() {
   return ue4tfip;
 }
 
+class UE4StreamFromId : public Frames::Configuration::StreamFromId {
+  virtual Frames::StreamPtr Create(Frames::Environment *env, const std::string &id) {
+    UFramesFont *font = LoadObject<UFramesFont>(NULL, UTF8_TO_TCHAR(id.c_str()), NULL);
+    if (!font) {
+      return Frames::StreamPtr();
+    }
+
+    // UFramesFont has no streaming support, I think? it's still a bit unclear to me how this all works
+
+    std::vector<unsigned char> data(font->Data.GetData(), font->Data.GetData() +  font->Data.Num());
+
+    return Frames::StreamBuffer::Create(data);
+  }
+};
+typedef Frames::Ptr<UE4StreamFromId> UE4StreamFromIdPtr;
+
+UE4StreamFromIdPtr GetUE4StreamFromId() {
+  static UE4StreamFromIdPtr ue4sfip(new UE4StreamFromId());
+  return ue4sfip;
+}
+
 UFramesEnvironment::UFramesEnvironment(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
@@ -104,6 +128,7 @@ UFramesEnvironment::UFramesEnvironment(const class FPostConstructInitializePrope
   conf.RendererSet(Frames::Configuration::RendererRHI());
   conf.LoggerSet(Frames::Configuration::LoggerPtr(new FramesUE4Logger()));
   conf.TextureFromIdSet(GetUE4TextureFromId());
+  conf.StreamFromIdSet(GetUE4StreamFromId());
   m_env = Frames::Environment::Create(conf);
 }
 

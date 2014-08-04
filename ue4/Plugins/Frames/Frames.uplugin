@@ -15,6 +15,10 @@
       "Name" : "Frames",
       "Type" : "Runtime",
       "LoadingPhase" : "PostConfigInit"
+    },
+    {
+      "Name" : "FramesEditor",
+      "Type" : "Editor"
     }
   ]
 }
