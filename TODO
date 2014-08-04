@@ -61,12 +61,6 @@
 
 * Official release?
 
-=== PERF
-
-* UE4 doesn't like partial locking
-  * That's okay, we can figure out semantics for complete locking
-  * On ue4 this is easy because we're buffering anyway . . . so, yeah, we'll just buffer, then pick an appropriate buffer when needed
-
 === UE4
 
 * get deploy working
