@@ -17,23 +17,9 @@
     You should have received a copy of the GNU General Public License
     along with Frames.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "FramesPCH.h"
+#ifndef FRAMES_UE4_UTILITY
+#define FRAMES_UE4_UTILITY
 
-#include "FramesConfigurationLocal.h"
-#include "FramesLibrary.h"
+DECLARE_LOG_CATEGORY_EXTERN(FramesLog, Log, All);
 
-UFramesLibrary::UFramesLibrary(const class FPostConstructInitializeProperties &PCIP)
-	: Super(PCIP)
-{
-  
-}
-
-/*static*/ UFramesConfigurationLocal *UFramesLibrary::FramesConfigurationLocalCreate(UObject *WorldContextObject) {
-  return new UFramesConfigurationLocal(FPostConstructInitializeProperties());
-}
-
-/*static*/ UFramesEnvironment *UFramesLibrary::FramesEnvironmentCreate(UObject *WorldContextObject, UFramesConfigurationLocal *Configuration) {
-  UFramesEnvironment *env = new UFramesEnvironment(FPostConstructInitializeProperties());
-  env->Initialize(Configuration->m_config);
-  return env;
-}
+#endif

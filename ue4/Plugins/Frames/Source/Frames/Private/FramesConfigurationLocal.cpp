@@ -15,37 +15,30 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Frames.  If not, see <http://www.gnu.org/licenses/>.
-*/
+    along with Frames.  If not, see <http://www.gnu.org/licenses/>. */
 
-#pragma once
+#include "FramesPCH.h"
+
+#include "FramesConfigurationLocal.h"
+
+#include "FramesStringutil.h"
+#include "FramesConfigurationUE4.h"
 
 #include "AllowWindowsPlatformTypes.h"
-#include <frames/environment.h>
 #include <frames/configuration.h>
-#include <frames/renderer_null.h>
 #include "HideWindowsPlatformTypes.h"
 
-#include "Engine.h"
-
-#include "FramesEnvironment.generated.h"
-
-/**
- * Frames main environment.
- */
-UCLASS(Transient, Blueprintable, BlueprintType, NotPlaceable)
-class UFramesEnvironment : public UObject
+UFramesConfigurationLocal::UFramesConfigurationLocal(const class FPostConstructInitializeProperties& PCIP)
+  : Super(PCIP)
 {
-	GENERATED_UCLASS_BODY()
+  // default values to link up with Unreal's environment
+  m_config = Frames::Configuration::CreateUE4();
+}
 
-public:
-  UFUNCTION(BlueprintCallable, Category="Render")
-  void Render(AHUD *hud);
+void UFramesConfigurationLocal::FontDefaultIdSet(const FString &Font) {
+  m_config.FontDefaultIdSet(Frames::detail::UE4Convert(Font));
+}
 
-  // Provided for C++ users.
-  void Initialize(const Frames::Configuration::Local &config);
-  const Frames::EnvironmentPtr &EnvironmentGet();
-
-private:
-  Frames::EnvironmentPtr m_env;
-};
+FString UFramesConfigurationLocal::FontDefaultIdGet() const {
+  return Frames::detail::UE4Convert(m_config.FontDefaultIdGet());
+}

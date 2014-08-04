@@ -17,23 +17,19 @@
     You should have received a copy of the GNU General Public License
     along with Frames.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "FramesPCH.h"
+#ifndef FRAMES_UE4_STRINGUTIL
+#define FRAMES_UE4_STRINGUTIL
 
-#include "FramesConfigurationLocal.h"
-#include "FramesLibrary.h"
+namespace Frames {
+  namespace detail {
+    std::string UE4Convert(const FString &fstr) {
+      return TCHAR_TO_UTF8(*fstr);
+    }
 
-UFramesLibrary::UFramesLibrary(const class FPostConstructInitializeProperties &PCIP)
-	: Super(PCIP)
-{
-  
+    FString UE4Convert(const std::string &utfstr) {
+      return UTF8_TO_TCHAR(utfstr.c_str());
+    }
+  }
 }
 
-/*static*/ UFramesConfigurationLocal *UFramesLibrary::FramesConfigurationLocalCreate(UObject *WorldContextObject) {
-  return new UFramesConfigurationLocal(FPostConstructInitializeProperties());
-}
-
-/*static*/ UFramesEnvironment *UFramesLibrary::FramesEnvironmentCreate(UObject *WorldContextObject, UFramesConfigurationLocal *Configuration) {
-  UFramesEnvironment *env = new UFramesEnvironment(FPostConstructInitializeProperties());
-  env->Initialize(Configuration->m_config);
-  return env;
-}
+#endif

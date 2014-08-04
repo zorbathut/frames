@@ -21,31 +21,28 @@
 #pragma once
 
 #include "AllowWindowsPlatformTypes.h"
-#include <frames/environment.h>
 #include <frames/configuration.h>
-#include <frames/renderer_null.h>
 #include "HideWindowsPlatformTypes.h"
 
 #include "Engine.h"
 
-#include "FramesEnvironment.generated.h"
+#include "FramesConfigurationLocal.generated.h"
 
 /**
- * Frames main environment.
+ * Frames configuration.
  */
 UCLASS(Transient, Blueprintable, BlueprintType, NotPlaceable)
-class UFramesEnvironment : public UObject
+class UFramesConfigurationLocal : public UObject
 {
 	GENERATED_UCLASS_BODY()
 
 public:
-  UFUNCTION(BlueprintCallable, Category="Render")
-  void Render(AHUD *hud);
+  UFUNCTION(BlueprintCallable, Category="Configuration")
+  void FontDefaultIdSet(const FString &Font);
 
-  // Provided for C++ users.
-  void Initialize(const Frames::Configuration::Local &config);
-  const Frames::EnvironmentPtr &EnvironmentGet();
+  UFUNCTION(BlueprintCallable, Category="Configuration")
+  FString FontDefaultIdGet() const;
 
-private:
-  Frames::EnvironmentPtr m_env;
+  // Available for C++-side users
+  Frames::Configuration::Local m_config;
 };

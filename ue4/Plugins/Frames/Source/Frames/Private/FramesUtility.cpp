@@ -19,21 +19,6 @@
 
 #include "FramesPCH.h"
 
-#include "FramesConfigurationLocal.h"
-#include "FramesLibrary.h"
+#include "FramesUtility.h"
 
-UFramesLibrary::UFramesLibrary(const class FPostConstructInitializeProperties &PCIP)
-	: Super(PCIP)
-{
-  
-}
-
-/*static*/ UFramesConfigurationLocal *UFramesLibrary::FramesConfigurationLocalCreate(UObject *WorldContextObject) {
-  return new UFramesConfigurationLocal(FPostConstructInitializeProperties());
-}
-
-/*static*/ UFramesEnvironment *UFramesLibrary::FramesEnvironmentCreate(UObject *WorldContextObject, UFramesConfigurationLocal *Configuration) {
-  UFramesEnvironment *env = new UFramesEnvironment(FPostConstructInitializeProperties());
-  env->Initialize(Configuration->m_config);
-  return env;
-}
+DEFINE_LOG_CATEGORY(FramesLog);

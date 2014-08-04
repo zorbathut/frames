@@ -78,6 +78,8 @@
   * Various frame types
   * Event hooks
 
+* Doxygen linkup
+
 * Some way to provide the right set of verbs to provide external APIs
 * That may be extremely difficult
   * Thoughts:
@@ -97,6 +99,9 @@
   * image importing
     * sRGB
   * font importing
+
+* create FontFromId
+* tweak LoggerUE4 settings based on build
 
 === TWEAK
 

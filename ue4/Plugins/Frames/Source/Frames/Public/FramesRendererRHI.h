@@ -17,8 +17,8 @@
     You should have received a copy of the GNU General Public License
     along with Frames.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef FRAMES_RENDERER_RHI
-#define FRAMES_RENDERER_RHI
+#ifndef FRAMES_UE4_RENDERER_RHI
+#define FRAMES_UE4_RENDERER_RHI
 
 // for whatever reason, ue4.3 broke several includes, so now we need to include this even though we don't really use it
 // thanks obama

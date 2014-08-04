@@ -21,6 +21,7 @@
 #pragma once
 
 #include "FramesEnvironment.h"
+#include "FramesConfigurationLocal.h"
 
 #include "FramesLibrary.generated.h"
 
@@ -29,7 +30,9 @@ class UFramesLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_UCLASS_BODY()
 
-  /** Gets a vector parameter value from the material collection instance. Logs if ParameterName is invalid. */
+  UFUNCTION(BlueprintCallable, Category="Frames", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
+	static UFramesConfigurationLocal *FramesConfigurationLocalCreate(UObject* WorldContextObject);
+  
 	UFUNCTION(BlueprintCallable, Category="Frames", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
-	static UFramesEnvironment *FramesEnvironmentCreate(UObject* WorldContextObject);
+	static UFramesEnvironment *FramesEnvironmentCreate(UObject* WorldContextObject, UFramesConfigurationLocal *Configuration);
 };
