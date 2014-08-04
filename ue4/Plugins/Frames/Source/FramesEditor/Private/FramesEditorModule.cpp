@@ -26,30 +26,30 @@
 class FAssetTypeActions_FramesFont : public FAssetTypeActions_Base
 {
 public:
-	// IAssetTypeActions Implementation
-	virtual FText GetName() const override { return FText::FromString(TEXT("Frames Font")); }
-	virtual FColor GetTypeColor() const override { return FColor(255,0,0); }
-	virtual UClass*GetSupportedClass() const override { return UFramesFont::StaticClass(); }
-	virtual uint32 GetCategories() override { return EAssetTypeCategories::Misc; }
+  // IAssetTypeActions Implementation
+  virtual FText GetName() const override { return FText::FromString(TEXT("Frames Font")); }
+  virtual FColor GetTypeColor() const override { return FColor(255,0,0); }
+  virtual UClass*GetSupportedClass() const override { return UFramesFont::StaticClass(); }
+  virtual uint32 GetCategories() override { return EAssetTypeCategories::Misc; }
 };
 
 class FFramesEditorModule : public IModuleInterface {
 public:
-	virtual void StartupModule() override {
-		// Register asset types
-		IAssetTools &assetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
+  virtual void StartupModule() override {
+    // Register asset types
+    IAssetTools &assetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
     fontTypeActions = MakeShareable(new FAssetTypeActions_FramesFont);
     assetTools.RegisterAssetTypeActions(fontTypeActions.ToSharedRef());
-	}
+  }
 
-	virtual void ShutdownModule() override {
-		if (!FModuleManager::Get().IsModuleLoaded("AssetTools")) {
+  virtual void ShutdownModule() override {
+    if (!FModuleManager::Get().IsModuleLoaded("AssetTools")) {
       return;
     }
 
     IAssetTools &assetTools = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools").Get();
-		assetTools.UnregisterAssetTypeActions(fontTypeActions.ToSharedRef());
-	}
+    assetTools.UnregisterAssetTypeActions(fontTypeActions.ToSharedRef());
+  }
 
 private:
   TSharedPtr<IAssetTypeActions> fontTypeActions;

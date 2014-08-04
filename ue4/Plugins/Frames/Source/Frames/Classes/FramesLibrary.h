@@ -28,11 +28,11 @@
 UCLASS(MinimalAPI)
 class UFramesLibrary : public UBlueprintFunctionLibrary
 {
-	GENERATED_UCLASS_BODY()
+  GENERATED_UCLASS_BODY()
 
   UFUNCTION(BlueprintCallable, Category="Frames", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
-	static UFramesConfigurationLocal *FramesConfigurationLocalCreate(UObject* WorldContextObject);
+  static UFramesConfigurationLocal *FramesConfigurationLocalCreate(UObject* WorldContextObject);
   
-	UFUNCTION(BlueprintCallable, Category="Frames", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
-	static UFramesEnvironment *FramesEnvironmentCreate(UObject* WorldContextObject, UFramesConfigurationLocal *Configuration);
+  UFUNCTION(BlueprintCallable, Category="Frames", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
+  static UFramesEnvironment *FramesEnvironmentCreate(UObject* WorldContextObject, UFramesConfigurationLocal *Configuration);
 };

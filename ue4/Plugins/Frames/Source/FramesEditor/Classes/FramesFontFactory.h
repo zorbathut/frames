@@ -24,12 +24,12 @@
 
 UCLASS()
 class UFramesFontFactory : public UFactory {
-	GENERATED_UCLASS_BODY()
+  GENERATED_UCLASS_BODY()
 
-	// Begin UFactory Interface
+  // Begin UFactory Interface
   virtual bool ConfigureProperties() override;
   virtual UObject *FactoryCreateNew(UClass *classType, UObject *parent, FName name, EObjectFlags flags, UObject *context, FFeedbackContext *warn) override;
-	// End UFactory Interface
+  // End UFactory Interface
 
 private:
   FString m_target;

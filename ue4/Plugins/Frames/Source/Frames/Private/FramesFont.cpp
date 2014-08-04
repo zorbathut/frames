@@ -23,7 +23,7 @@
 #include "FramesFont.h"
 
 UFramesFont::UFramesFont(const FPostConstructInitializeProperties &PCIP)
-	: Super(PCIP)
+  : Super(PCIP)
 {
 
 }

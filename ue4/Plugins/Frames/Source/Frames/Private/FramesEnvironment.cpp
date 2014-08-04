@@ -24,7 +24,6 @@
 #include "FramesRendererRHI.h"
 #include "FramesFont.h"
 
-#include "AllowWindowsPlatformTypes.h"
 #include <frames/configuration.h>
 #include <frames/detail_format.h>
 #include <frames/environment.h>
@@ -34,10 +33,9 @@
 #include <frames/sprite.h>
 #include <frames/stream.h>
 #include <frames/text.h>
-#include "HideWindowsPlatformTypes.h"
 
 UFramesEnvironment::UFramesEnvironment(const class FPostConstructInitializeProperties& PCIP)
-	: Super(PCIP)
+  : Super(PCIP)
 {
 }
 

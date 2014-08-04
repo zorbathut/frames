@@ -24,9 +24,8 @@
 #include "FramesStringutil.h"
 #include "FramesConfigurationUE4.h"
 
-#include "AllowWindowsPlatformTypes.h"
 #include <frames/configuration.h>
-#include "HideWindowsPlatformTypes.h"
+#include <frames/detail_format.h>
 
 UFramesConfigurationLocal::UFramesConfigurationLocal(const class FPostConstructInitializeProperties& PCIP)
   : Super(PCIP)
@@ -35,10 +34,10 @@ UFramesConfigurationLocal::UFramesConfigurationLocal(const class FPostConstructI
   m_config = Frames::Configuration::CreateUE4();
 }
 
-void UFramesConfigurationLocal::FontDefaultIdSet(const FString &Font) {
-  m_config.FontDefaultIdSet(Frames::detail::UE4Convert(Font));
+void UFramesConfigurationLocal::FontDefaultIdSet(UFramesFont *Font) {
+  m_config.FontDefaultIdSet(Frames::detail::UE4Convert(Font->GetFullName()));
 }
 
-FString UFramesConfigurationLocal::FontDefaultIdGet() const {
-  return Frames::detail::UE4Convert(m_config.FontDefaultIdGet());
+UFramesFont *UFramesConfigurationLocal::FontDefaultIdGet() const {
+  return LoadObject<UFramesFont>(NULL, *Frames::detail::UE4Convert(m_config.FontDefaultIdGet()), NULL);
 }

@@ -23,7 +23,7 @@
 #include "FramesLibrary.h"
 
 UFramesLibrary::UFramesLibrary(const class FPostConstructInitializeProperties &PCIP)
-	: Super(PCIP)
+  : Super(PCIP)
 {
   
 }

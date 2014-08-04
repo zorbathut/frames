@@ -25,10 +25,8 @@
 #include "FramesRendererRHI.h"
 #include "FramesUtility.h"
 
-#include "AllowWindowsPlatformTypes.h"
 #include <frames/configuration.h>
 #include <frames/stream.h>
-#include "HideWindowsPlatformTypes.h"
 
 Frames::Configuration::Local Frames::Configuration::CreateUE4() {
   Frames::Configuration::Local conf;

@@ -55,50 +55,50 @@ namespace Frames {
     // I guess this is how shaders work in the crazy world of ue4
     class FFramesVS : public FGlobalShader
     {
-	    DECLARE_SHADER_TYPE(FFramesVS, Global);
+      DECLARE_SHADER_TYPE(FFramesVS, Global);
     public:
 
-	    static bool ShouldCache(EShaderPlatform Platform) { return true; }
+      static bool ShouldCache(EShaderPlatform Platform) { return true; }
 
-	    FFramesVS(const ShaderMetaType::CompiledShaderInitializerType &Initializer) :
-		    FGlobalShader(Initializer)
-	    {
-		    m_size.Bind(Initializer.ParameterMap, TEXT("size"), SPF_Mandatory);
-	    }
-	    FFramesVS() {}
+      FFramesVS(const ShaderMetaType::CompiledShaderInitializerType &Initializer) :
+        FGlobalShader(Initializer)
+      {
+        m_size.Bind(Initializer.ParameterMap, TEXT("size"), SPF_Mandatory);
+      }
+      FFramesVS() {}
 
-	    void SetParameterSize(FRHICommandList &RHICmdList, int width, int height) {
-		    SetShaderValue(RHICmdList, GetVertexShader(), m_size, FVector2D(width, height));
-	    }
+      void SetParameterSize(FRHICommandList &RHICmdList, int width, int height) {
+        SetShaderValue(RHICmdList, GetVertexShader(), m_size, FVector2D(width, height));
+      }
 
-	    virtual bool Serialize(FArchive& Ar) {
-		    bool outdated = FGlobalShader::Serialize(Ar);
-		    Ar << m_size;
+      virtual bool Serialize(FArchive& Ar) {
+        bool outdated = FGlobalShader::Serialize(Ar);
+        Ar << m_size;
 
-		    return outdated;
-	    }
+        return outdated;
+      }
 
     private:
-	    FShaderParameter m_size;
+      FShaderParameter m_size;
     };
     IMPLEMENT_SHADER_TYPE(, FFramesVS, TEXT("FramesShader"), TEXT("VS"), SF_Vertex);
 
     class FFramesPS : public FGlobalShader
     {
-	    DECLARE_SHADER_TYPE(FFramesPS, Global);
+      DECLARE_SHADER_TYPE(FFramesPS, Global);
     public:
 
-	    static bool ShouldCache(EShaderPlatform Platform) { return true; }
+      static bool ShouldCache(EShaderPlatform Platform) { return true; }
 
-	    FFramesPS(const ShaderMetaType::CompiledShaderInitializerType &Initializer) :
-		    FGlobalShader(Initializer)
-	    {
+      FFramesPS(const ShaderMetaType::CompiledShaderInitializerType &Initializer) :
+        FGlobalShader(Initializer)
+      {
         m_textureMode.Bind(Initializer.ParameterMap, TEXT("sampleMode"), SPF_Mandatory);
         m_texture.Bind(Initializer.ParameterMap, TEXT("sprite"), SPF_Mandatory);
-	    }
-	    FFramesPS() {}
+      }
+      FFramesPS() {}
 
-	    void SetParameterTexture(FRHICommandList &RHICmdList, FTexture2DRHIParamRef tex, bool alpha) {
+      void SetParameterTexture(FRHICommandList &RHICmdList, FTexture2DRHIParamRef tex, bool alpha) {
         if (tex) {
           if (alpha) {
             SetShaderValue(RHICmdList, GetPixelShader(), m_textureMode, 2);
@@ -109,18 +109,18 @@ namespace Frames {
         } else {
           SetShaderValue(RHICmdList, GetPixelShader(), m_textureMode, 0);
         }
-	    }
+      }
 
-	    virtual bool Serialize(FArchive& Ar) {
-		    bool outdated = FGlobalShader::Serialize(Ar);
-		    Ar << m_textureMode;
+      virtual bool Serialize(FArchive& Ar) {
+        bool outdated = FGlobalShader::Serialize(Ar);
+        Ar << m_textureMode;
         Ar << m_texture;
 
-		    return outdated;
-	    }
+        return outdated;
+      }
 
     private:
-	    FShaderParameter m_textureMode;
+      FShaderParameter m_textureMode;
       FShaderResourceParameter m_texture;
     };
     IMPLEMENT_SHADER_TYPE(, FFramesPS, TEXT("FramesShader"), TEXT("PS"), SF_Pixel);
@@ -282,16 +282,16 @@ namespace Frames {
         int, width, width,
         int, height, height,
       {
-      	TShaderMapRef<FFramesVS> VertexShader(GetGlobalShaderMap());
-	      TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap());
+        TShaderMapRef<FFramesVS> VertexShader(GetGlobalShaderMap());
+        TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap());
 
-	      static FGlobalBoundShaderState boundShaderState;
-	      SetGlobalBoundShaderState(RHICmdList, boundShaderState, rhi->m_vertexDecl, *VertexShader, *PixelShader);
+        static FGlobalBoundShaderState boundShaderState;
+        SetGlobalBoundShaderState(RHICmdList, boundShaderState, rhi->m_vertexDecl, *VertexShader, *PixelShader);
         
-	      VertexShader->SetParameterSize(RHICmdList, width, height);
-	      PixelShader->SetParameterTexture(RHICmdList, 0, false);
+        VertexShader->SetParameterSize(RHICmdList, width, height);
+        PixelShader->SetParameterTexture(RHICmdList, 0, false);
 
-	      RHICmdList.SetBlendState(TStaticBlendState<CW_RGBA, BO_Add, BF_SourceAlpha, BF_InverseSourceAlpha, BO_Add, BF_Zero, BF_One>::GetRHI());
+        RHICmdList.SetBlendState(TStaticBlendState<CW_RGBA, BO_Add, BF_SourceAlpha, BF_InverseSourceAlpha, BO_Add, BF_Zero, BF_One>::GetRHI());
         RHICmdList.SetDepthStencilState(TStaticDepthStencilState<false, CF_Always>::GetRHI());
         RHICmdList.SetRasterizerState(TStaticRasterizerState<>::GetRHI());
       });
@@ -402,9 +402,9 @@ namespace Frames {
           FRHIResourceCreateInfo cinfo;
           rhi->m_indices = RHICreateIndexBuffer(sizeof(unsigned short), elements.size() * sizeof(unsigned short), BUF_Static, cinfo);
 
-       		void *data = RHILockIndexBuffer(rhi->m_indices, 0, elements.size() * sizeof(unsigned short), RLM_WriteOnly);
+           void *data = RHILockIndexBuffer(rhi->m_indices, 0, elements.size() * sizeof(unsigned short), RLM_WriteOnly);
           memcpy(data, elements.data(), elements.size() * sizeof(unsigned short));
-		      RHIUnlockIndexBuffer(rhi->m_indices);
+          RHIUnlockIndexBuffer(rhi->m_indices);
         }
       });
       

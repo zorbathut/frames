@@ -27,8 +27,8 @@
  */
 UCLASS(MinimalAPI, BlueprintType)
 class UFramesFont : public UObject {
-	GENERATED_UCLASS_BODY()
+  GENERATED_UCLASS_BODY()
 
   UPROPERTY()
-	TArray<uint8> Data;
+  TArray<uint8> Data;
 };

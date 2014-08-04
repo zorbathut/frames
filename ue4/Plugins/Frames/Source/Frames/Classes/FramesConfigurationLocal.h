@@ -20,11 +20,10 @@
 
 #pragma once
 
-#include "AllowWindowsPlatformTypes.h"
 #include <frames/configuration.h>
-#include "HideWindowsPlatformTypes.h"
 
 #include "Engine.h"
+#include "FramesFont.h"
 
 #include "FramesConfigurationLocal.generated.h"
 
@@ -34,14 +33,14 @@
 UCLASS(Transient, Blueprintable, BlueprintType, NotPlaceable)
 class UFramesConfigurationLocal : public UObject
 {
-	GENERATED_UCLASS_BODY()
+  GENERATED_UCLASS_BODY()
 
 public:
   UFUNCTION(BlueprintCallable, Category="Configuration")
-  void FontDefaultIdSet(const FString &Font);
+  void FontDefaultIdSet(UFramesFont *Font);
 
   UFUNCTION(BlueprintCallable, Category="Configuration")
-  FString FontDefaultIdGet() const;
+  UFramesFont *FontDefaultIdGet() const;
 
   // Available for C++-side users
   Frames::Configuration::Local m_config;

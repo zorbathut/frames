@@ -20,11 +20,9 @@
 
 #pragma once
 
-#include "AllowWindowsPlatformTypes.h"
 #include <frames/environment.h>
 #include <frames/configuration.h>
 #include <frames/renderer_null.h>
-#include "HideWindowsPlatformTypes.h"
 
 #include "Engine.h"
 
@@ -36,7 +34,7 @@
 UCLASS(Transient, Blueprintable, BlueprintType, NotPlaceable)
 class UFramesEnvironment : public UObject
 {
-	GENERATED_UCLASS_BODY()
+  GENERATED_UCLASS_BODY()
 
 public:
   UFUNCTION(BlueprintCallable, Category="Render")
