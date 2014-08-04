@@ -19,4 +19,20 @@
 
 #include "FramesPCH.h"
 
-IMPLEMENT_MODULE(FDefaultGameModuleImpl, Frames);
+#include "FramesConfigurationUE4.h"
+
+#include <frames/configuration.h>
+
+class FFramesModule : public IModuleInterface
+{
+public:
+	virtual void StartupModule() override {
+    Frames::Configuration::Global conf;
+    conf.LoggerSet(Frames::Configuration::LoggerPtr(new Frames::Configuration::LoggerUE4(true, false)));
+    Frames::Configuration::Set(conf);
+  }
+	virtual void ShutdownModule() override {
+  }
+};
+
+IMPLEMENT_MODULE(FFramesModule, Frames)
