@@ -45,9 +45,9 @@ void UFramesEnvironment::Render(AHUD *hud) {
 }
 
 void UFramesEnvironment::LogDebug(const FString &text) const {
-  m_env->LogDebug(Frames::detail::UE4Convert(str));
+  m_env->LogDebug(Frames::detail::UE4Convert(text));
 }
  
 void UFramesEnvironment::LogError(const FString &text) const {
-  m_env->LogError(Frames::detail::UE4Convert(str));
+  m_env->LogError(Frames::detail::UE4Convert(text));
 }
