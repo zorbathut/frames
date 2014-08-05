@@ -20,19 +20,14 @@
 #include "FramesPCH.h"
 
 #include "FramesEnvironment.h"
+
+#include "FramesFont.h"
 #include "FramesHUDHack.h"
 #include "FramesRendererRHI.h"
-#include "FramesFont.h"
+#include "FramesStringutil.h"
 
 #include <frames/configuration.h>
-#include <frames/detail_format.h>
 #include <frames/environment.h>
-#include <frames/frame.h>
-#include <frames/layout.h>
-#include <frames/renderer_null.h>
-#include <frames/sprite.h>
-#include <frames/stream.h>
-#include <frames/text.h>
 
 UFramesEnvironment::UFramesEnvironment(const class FPostConstructInitializeProperties& PCIP)
   : Super(PCIP)
@@ -43,9 +38,16 @@ void UFramesEnvironment::Initialize(const Frames::Configuration::Local &conf) {
   m_env = Frames::Environment::Create(conf);
 }
 
-void UFramesEnvironment::Render(AHUD *hud)
-{
+void UFramesEnvironment::Render(AHUD *hud) {
   UCanvas *canvas = FramesHUDHack(hud);
   m_env->ResizeRoot(canvas->SizeX, canvas->SizeY);
   m_env->Render();
+}
+
+void UFramesEnvironment::LogDebug(const FString &text) const {
+  m_env->LogDebug(Frames::detail::UE4Convert(str));
+}
+ 
+void UFramesEnvironment::LogError(const FString &text) const {
+  m_env->LogError(Frames::detail::UE4Convert(str));
 }

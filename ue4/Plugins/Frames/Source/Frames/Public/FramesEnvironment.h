@@ -37,8 +37,14 @@ class UFramesEnvironment : public UObject
   GENERATED_UCLASS_BODY()
 
 public:
-  UFUNCTION(BlueprintCallable, Category="Render")
+  UFUNCTION(BlueprintCallable, Category="Frames|Rendering")
   void Render(AHUD *hud);
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Development")
+  void LogDebug(const FString &text) const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Development")
+  void LogError(const FString &text) const;
 
   // Provided for C++ users.
   void Initialize(const Frames::Configuration::Local &config);

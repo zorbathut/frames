@@ -75,7 +75,6 @@
 
 * Start integration layer
   * Environment
-    * LogError/LogDebug
     * Input*
   * Layout
     * Exists

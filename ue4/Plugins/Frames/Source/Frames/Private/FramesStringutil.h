@@ -22,11 +22,11 @@
 
 namespace Frames {
   namespace detail {
-    std::string UE4Convert(const FString &fstr) {
+    static std::string UE4Convert(const FString &fstr) {
       return TCHAR_TO_UTF8(*fstr);
     }
 
-    FString UE4Convert(const std::string &utfstr) {
+    static FString UE4Convert(const std::string &utfstr) {
       return UTF8_TO_TCHAR(utfstr.c_str());
     }
   }
