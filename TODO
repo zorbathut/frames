@@ -69,11 +69,20 @@
   * How does this get linked in?
     * Gotta be part of the Frames plugin . . . but of course, if it is part of the Frames plugin, then that's a ton of unnecessary cruft
     * Two builds - one test, one non-test? Begging for problems, might be the best we can do
+    * this can be part of the ue4_plugin project, just not part of the actual plugin
   * Base - may be difficult - thread sync?
   * Make sure to test RAW texture types
 
 * Start integration layer
   * Environment
+    * LogError/LogDebug
+    * Input*
+  * Layout
+    * Exists
+  * Environment
+    * Root
+    * Focus
+    * Probe
   * Create, frame classes
   * Various frame types
   * Event hooks
