@@ -104,7 +104,7 @@ namespace Frames {
 
     /// Gets the environment's last known mouse position.
     /** If MouseClear() has been called, this may be inaccurate. */ // TODO come up with a better system >:(
-    const Vector &Input_MouseGet() const { return m_mouse; }
+    Vector Input_MouseGet() const { return m_mouse; }
 
     /// Sets the environment's current meta key flags.
     /** This does not trigger events, merely updates the key meta state intended for event handlers. */
@@ -112,7 +112,7 @@ namespace Frames {
 
     /// Gets the environment's current meta key flags.
     /** This is intended for input handlers to check if the standard meta buttons - shift, ctrl, and alt - are pressed or not. */
-    const Input::Meta &Input_MetaGet() const { return m_lastMeta; }
+    Input::Meta Input_MetaGet() const { return m_lastMeta; }
 
     /// Informs the environment that a key has been pressed.
     /** Keypresses happen immediately and may trigger Layout::Event::KeyDown events.
