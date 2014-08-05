@@ -31,7 +31,7 @@
 Frames::Configuration::Local Frames::Configuration::CreateUE4() {
   Frames::Configuration::Local conf;
   conf.RendererSet(Frames::Configuration::RendererRHI());
-  conf.LoggerSet(Frames::Configuration::LoggerPtr(new Frames::Configuration::LoggerUE4(true, false)));
+  conf.LoggerSet(Frames::Configuration::LoggerPtr(new Frames::Configuration::LoggerUE4(!UE_BUILD_SHIPPING, false)));
   conf.TextureFromIdSet(Frames::Configuration::TextureFromIdPtr(new Frames::Configuration::TextureFromIdUE4()));
   conf.StreamFromIdSet(Frames::Configuration::StreamFromIdPtr(new Frames::Configuration::StreamFromIdUE4()));
   return conf;

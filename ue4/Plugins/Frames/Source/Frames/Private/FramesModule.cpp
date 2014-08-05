@@ -28,7 +28,7 @@ class FFramesModule : public IModuleInterface
 public:
   virtual void StartupModule() override {
     Frames::Configuration::Global conf;
-    conf.LoggerSet(Frames::Configuration::LoggerPtr(new Frames::Configuration::LoggerUE4(true, false)));
+    conf.LoggerSet(Frames::Configuration::LoggerPtr(new Frames::Configuration::LoggerUE4(!UE_BUILD_SHIPPING, false)));
     Frames::Configuration::Set(conf);
   }
 
