@@ -25,6 +25,7 @@
 #include <frames/renderer_null.h>
 
 #include "Engine.h"
+#include "FramesInput.h"
 
 #include "FramesEnvironment.generated.h"
 
@@ -37,6 +38,30 @@ class UFramesEnvironment : public UObject
   GENERATED_UCLASS_BODY()
 
 public:
+  UFUNCTION(BlueprintCallable, Category="Frames|Input")
+  void InputMouseMove(int32 X, int32 Y);
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Input")
+  void InputMouseDown(int32 Button);
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Input")
+  void InputMouseUp(int32 Button);
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Input")
+  void InputMouseWheel(int32 Delta);
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Input")
+  void InputMouseClear();
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Input")
+  FVector2D InputMouseGet() const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Input")
+  void InputMetaSet(FFramesInputMeta Meta) const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Input")
+  FFramesInputMeta InputMetaGet() const;
+
   UFUNCTION(BlueprintCallable, Category="Frames|Rendering")
   void Render(AHUD *hud);
 
