@@ -35,7 +35,7 @@ namespace Frames {
     return new Mask(parent, name);
   }
 
-  bool Mask::MouseMaskingTest(float x, float y) {
+  bool Mask::MouseMaskingTest(float x, float y) const {
     return x >= LeftGet() && y >= TopGet() && x < RightGet() && y < BottomGet();
   }
 

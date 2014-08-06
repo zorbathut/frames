@@ -45,7 +45,7 @@ namespace Frames {
     virtual ~Mask();
 
   private:
-    virtual bool MouseMaskingTest(float x, float y);
+    virtual bool MouseMaskingTest(float x, float y) const;
 
     virtual void RenderElementPreChild(detail::Renderer *renderer) const;
     virtual void RenderElementPostChild(detail::Renderer *renderer) const;

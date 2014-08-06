@@ -350,11 +350,11 @@ namespace Frames {
 
     /// Returns the children of this frame.
     /** Does not include implementation-flagged children. */
-    const ChildrenList &ChildrenGet() { return m_children_nonimplementation; }
+    const ChildrenList &ChildrenGet() const { return m_children_nonimplementation; }
 
     /// Returns the children of this frame.
     /** Includes only implementation-flagged children. */
-    const ChildrenList &ChildrenImplementationGet() { return m_children_implementation; }
+    const ChildrenList &ChildrenImplementationGet() const { return m_children_implementation; }
 
     /// Returns a child of this frame with the given name.
     /** Returns null if no such child exists. If multiple children exist with that name, no guarantee is provided about which one it picks.
@@ -511,8 +511,8 @@ namespace Frames {
 
     // Mask-related
     void MouseMaskingFullSet(bool mask) { m_fullMouseMasking = mask; }
-    bool MouseMaskingFullGet() { return m_fullMouseMasking; }
-    virtual bool MouseMaskingTest(float x, float y) { return true; }
+    bool MouseMaskingFullGet() const { return m_fullMouseMasking; }
+    virtual bool MouseMaskingTest(float x, float y) const { return true; }
 
     // Layout engine - note that this is used heavily by Frame!
     void Invalidate(Axis axis);
