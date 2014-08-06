@@ -64,6 +64,7 @@
 === UE4
 
 * get deploy working
+  * this might already be working!
 
 * Test suite
   * How does this get linked in?
@@ -74,8 +75,6 @@
   * Make sure to test RAW texture types
 
 * Start integration layer
-  * Environment
-    * Input*
   * Layout
     * Exists
   * Environment
@@ -85,6 +84,18 @@
   * Create, frame classes
   * Various frame types
   * Event hooks
+  * FGenericApplicationMessageHandler integration
+    * ShouldProcessUserInputMessages
+    * OnKeyChar convert into Type
+    * OnKeyDown/OnKeyUp (easy)
+      * FKey from those?
+    * FKey conversion
+    * OnMouseDown
+    * OnMouseUp
+    * OnMouseWheel
+    * OnMouseMove
+  * Environment
+    * InputKey/Text
 
 * Doxygen linkup
 

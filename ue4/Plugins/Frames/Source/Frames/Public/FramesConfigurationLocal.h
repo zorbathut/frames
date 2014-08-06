@@ -30,7 +30,7 @@
 /**
  * Frames configuration.
  */
-UCLASS(Transient, Blueprintable, BlueprintType, NotPlaceable)
+UCLASS(Transient, BlueprintType, NotPlaceable)
 class UFramesConfigurationLocal : public UObject
 {
   GENERATED_UCLASS_BODY()
