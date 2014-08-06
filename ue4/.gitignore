@@ -1,6 +1,7 @@
 #ue4 really really loves its temporary files
 
 /Binaries
+/Build
 /DerivedDataCache
 /Intermediate
 /Plugins/Frames/Binaries
