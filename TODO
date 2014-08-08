@@ -78,12 +78,6 @@
   * Make sure to test RAW texture types
 
 * Start integration layer
-  * Layout
-    * Exists
-  * Environment
-    * Root
-    * Focus
-    * Probe
   * Create, frame classes
   * Various frame types
   * Event hooks

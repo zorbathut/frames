@@ -24,6 +24,7 @@
 #include "FramesFont.h"
 #include "FramesInput.h"
 #include "FramesHUDHack.h"
+#include "FramesManager.h"
 #include "FramesRendererRHI.h"
 #include "FramesStringutil.h"
 
@@ -72,10 +73,30 @@ FFramesInputMeta UFramesEnvironment::InputMetaGet() const {
   return FFramesInputMeta(m_env->Input_MetaGet());
 }
 
+void UFramesEnvironment::FocusSet(UFramesLayout *layout) {
+  if (!layout->ValidCheck()) {
+    return;
+  }
+
+  m_env->FocusSet(layout->LayoutGet());
+}
+
+UFramesLayout *UFramesEnvironment::FocusGet() const {
+  return FramesManager::Get().Convert(m_env->FocusGet());
+}
+
 void UFramesEnvironment::Render(AHUD *hud) {
   UCanvas *canvas = FramesHUDHack(hud);
   m_env->ResizeRoot(canvas->SizeX, canvas->SizeY);
   m_env->Render();
+}
+
+UFramesLayout *UFramesEnvironment::RootGet() const {
+  return FramesManager::Get().Convert(m_env->RootGet());
+}
+
+UFramesLayout *UFramesEnvironment::ProbeAsMouse(float x, float y) {
+  return FramesManager::Get().Convert(m_env->ProbeAsMouse(x, y));
 }
 
 void UFramesEnvironment::LogDebug(const FString &text) const {

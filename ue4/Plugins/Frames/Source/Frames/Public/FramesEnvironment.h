@@ -26,6 +26,7 @@
 
 #include "Engine.h"
 #include "FramesInput.h"
+#include "FramesLayout.h"
 
 #include "FramesEnvironment.generated.h"
 
@@ -62,8 +63,20 @@ public:
   UFUNCTION(BlueprintCallable, Category="Frames|Input")
   FFramesInputMeta InputMetaGet() const;
 
+  UFUNCTION(BlueprintCallable, Category="Frames|Input")
+  void FocusSet(UFramesLayout *Focus);
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Input")
+  UFramesLayout *FocusGet() const;
+
   UFUNCTION(BlueprintCallable, Category="Frames|Rendering")
-  void Render(AHUD *hud);
+  void Render(AHUD *Hud);
+  
+  UFUNCTION(BlueprintCallable, Category="Frames")
+  UFramesLayout *RootGet() const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Input")
+  UFramesLayout *ProbeAsMouse(float x, float y);
 
   UFUNCTION(BlueprintCallable, Category="Frames|Development")
   void LogDebug(const FString &text) const;
