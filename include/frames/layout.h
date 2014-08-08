@@ -150,6 +150,12 @@ namespace Frames {
       /// Signals that text has been typed while a frame has the key focus.
       /** This verb is recommended for text applications, as it provides a Unicode string potentially containing multiple entered characters.*/
       FRAMES_VERB_DECLARE_BUBBLE(KeyText, (const std::string &text));
+
+      /// Signals when a frame is about to be entirely shut down.
+      /** During this event call, a frame's functions may all be called. After this event call, the frame must no longer be referenced from any source.
+      
+      Note that, until all Destroy events have been triggered, there may still be ways to access this layout. Don't take advantage of them! */
+      FRAMES_VERB_DECLARE(Destroy, ());
     FRAMES_VERB_DECLARE_END
 
   private:

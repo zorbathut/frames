@@ -67,6 +67,8 @@ namespace Frames {
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyRepeat, (Input::Key kev));
   FRAMES_VERB_DEFINE_BUBBLE(Layout::Event::KeyUp, (Input::Key kev));
 
+  FRAMES_VERB_DEFINE(Layout::Event::Destroy, ());
+
   detail::Rtti Layout::s_rtti(0); // special case, null terminator; other examples should use FRAMES_DEFINE_RTTI
   /*static*/ const char *Layout::TypeStaticGet() {
     return "Layout";
@@ -892,12 +894,21 @@ namespace Frames {
     m_visible = visible;
   }
 
+// The obliterate process is complicated and worthy of documenting.
+// If a layout is locked for whatever reason, the obliteration is deferred until later.
+// The Destroy event fires. This is the last point at which any functions may be called on this frame.
+// The next step is detaching - the obliterated frame, and all its children, have their event table cleared and all their constraints removed. Also, if any of those frames is the focus, the focus is cleared.
+// In theory, at this point, this section of the frame hierarchy should no longer be referred to. In practice, we want to be very careful, so we run the Extraction step.
+// Extraction tracks down all things that refer to this frame, or any of its children, spits out errors, and cleans them up appropriately.
+// Finally, the frame is entirely shut down and can be deleted.
   void Layout::zinternalObliterate() {
     if (m_env->ObliterateLocked()) {
       // The environment will do all the necessarily obliteration
       m_env->ObliterateQueue(this);
       return;
     }
+
+    EventTrigger(Event::Destroy);
 
     ObliterateDetach();
     ObliterateExtract();
@@ -992,7 +1003,11 @@ namespace Frames {
   }
 
   void Layout::ObliterateDetach() {
-    zinternalConstraintClearAll();  // kill my layout to unpin things
+    // clear events so they can't fire
+    m_events.clear();
+
+    // kill my layout to unpin things
+    zinternalConstraintClearAll();
 
     if (m_env->FocusGet() == this) {
       m_env->FocusSet(0);

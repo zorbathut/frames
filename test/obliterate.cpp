@@ -298,3 +298,28 @@ TEST(Obliterate, Event) {
     container.c = 0; // no way for it to realistically know that this has been obliterated; to be fixed someday with the destroyed event
   }
 }
+
+// Super-simple test to make sure that the Destroy event works
+TEST(Obliterate, Destroy) {
+  TestEnvironment env;
+  TestCompare compare;
+  
+  struct Container : Frames::detail::Noncopyable {
+    Container(TestEnvironment &tenv, TestCompare *compare) : compare(compare) {
+      env = &tenv;
+      f = Frames::Frame::Create((*env)->RootGet(), "frame");
+      f->EventAttach(Frames::Frame::Event::Destroy, Frames::Delegate<void (Frames::Handle *)>(this, &Container::Destroy));
+    }
+
+    void Destroy(Frames::Handle *handle) {
+      compare->Append("Destroy");
+    }
+
+    Frames::Frame *f;
+    TestEnvironment *env;
+
+    TestCompare *compare;
+  } container(env, &compare);
+
+  container.f->Obliterate();
+}
