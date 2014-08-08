@@ -271,7 +271,7 @@ namespace Frames {
     return ax.size_default;
   }
 
-  Layout *Layout::ProbeAsMouse(float x, float y) {
+  Layout *Layout::ProbeAsMouse(float x, float y) const {
     if (!VisibleGet()) return 0; // nope
 
     if (m_fullMouseMasking && !MouseMaskingTest(x, y)) return 0;
@@ -282,7 +282,7 @@ namespace Frames {
     }
 
     if (m_inputMode && x >= LeftGet() && y >= TopGet() && x < RightGet() && y < BottomGet()) {
-      return this;
+      return const_cast<Layout *>(this);  // this is sort of nasty, but it doesn't violate the spec and does conform to people's expectations
     }
 
     return 0;

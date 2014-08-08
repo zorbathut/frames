@@ -347,7 +347,7 @@ namespace Frames {
 
     /// Returns the layout underneath a given coordinate as if it were mouse input.
     /** This can be used to find out what frame would be hit by a mouse event at a certain coordinate. */
-    Layout *ProbeAsMouse(float x, float y);
+    Layout *ProbeAsMouse(float x, float y) const;
 
     // RetrieveHeight/RetrieveWidth/RetrievePoint/etc?
 

@@ -252,7 +252,7 @@ namespace Frames {
     }
   }
 
-  Layout *Environment::ProbeAsMouse(float x, float y) {
+  Layout *Environment::ProbeAsMouse(float x, float y) const {
     // TODO: de-invalidate
     return m_root->ProbeAsMouse(x, y);
   }

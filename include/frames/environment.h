@@ -146,11 +146,7 @@ namespace Frames {
     void FocusSet(Layout *layout);
     /// Gets the current key focus target frame.
     /** Returns null if no frame has key focus. */
-    Layout *FocusGet() { return m_focus; }
-    /// Gets the current key focus target frame.
-    /** Returns null if no frame has key focus. */
-    const Layout *FocusGet() const { return m_focus; }
-    
+    Layout *FocusGet() const { return m_focus; }
 
     // ==== Rendering
     /// Renders a tree of Frames.
@@ -171,7 +167,7 @@ namespace Frames {
 
     /// Returns the layout underneath a given coordinate as if it were mouse input.
     /** This can be used to find out what frame would be hit by a mouse event at a certain coordinate. */
-    Layout *ProbeAsMouse(float x, float y);
+    Layout *ProbeAsMouse(float x, float y) const;
 
     /// Returns the environment's Configuration.
     const Configuration::Local &ConfigurationGet() { return m_config; }
