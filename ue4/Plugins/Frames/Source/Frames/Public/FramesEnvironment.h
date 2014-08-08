@@ -37,8 +37,8 @@ UCLASS(Transient, BlueprintType, NotPlaceable)
 class UFramesEnvironment : public UObject
 {
   GENERATED_UCLASS_BODY()
+  ~UFramesEnvironment();
 
-public:
   UFUNCTION(BlueprintCallable, Category="Frames|Input")
   void InputMouseMove(int32 X, int32 Y);
 
@@ -89,5 +89,7 @@ public:
   const Frames::EnvironmentPtr &EnvironmentGet();
 
 private:
+  friend class FramesManager;
+
   Frames::EnvironmentPtr m_env;
 };

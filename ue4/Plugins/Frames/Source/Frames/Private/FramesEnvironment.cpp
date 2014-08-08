@@ -36,8 +36,14 @@ UFramesEnvironment::UFramesEnvironment(const class FPostConstructInitializePrope
 {
 }
 
+UFramesEnvironment::~UFramesEnvironment() {
+  FramesManager::Get().DestroyEnvironment(this);
+}
+
 void UFramesEnvironment::Initialize(const Frames::Configuration::Local &conf) {
   m_env = Frames::Environment::Create(conf);
+
+  FramesManager::Get().RegisterEnvironment(this, m_env.Get());
 }
 
 void UFramesEnvironment::InputMouseMove(int32 X, int32 Y) {
@@ -74,9 +80,7 @@ FFramesInputMeta UFramesEnvironment::InputMetaGet() const {
 }
 
 void UFramesEnvironment::FocusSet(UFramesLayout *layout) {
-  if (!layout->ValidCheck()) {
-    return;
-  }
+  if (!layout->ValidCheck()) return;
 
   m_env->FocusSet(layout->LayoutGet());
 }

@@ -21,6 +21,7 @@
 
 #include "FramesManager.h"
 
+#include "FramesEnvironment.h"
 #include "FramesFrame.h"
 
   // Retrieve singleton
@@ -34,37 +35,63 @@ UFramesLayout *FramesManager::Convert(Frames::Layout *layout) {
     return 0;
   }
 
-  if (!m_map.count(layout)) {
+  if (!m_mapLayout.count(layout)) {
     UFramesLayout *result = Create(layout);
-    m_map[layout] = result;
-    m_mapReverse[result] = layout;
+    m_mapLayout[layout] = result;
+    m_mapLayoutReverse[result] = layout;
     layout->EventAttach(Frames::Layout::Event::Destroy, Frames::Delegate<void (Frames::Handle *)>(this, &FramesManager::DestroyFrameCallback));
     return result;
   }
 
-  return m_map[layout];
+  return m_mapLayout[layout];
+}
+
+UFramesEnvironment *FramesManager::Convert(Frames::Environment *env) {
+  if (!env) {
+    return 0;
+  }
+
+  if (!m_mapEnvironment.count(env)) {
+    UFramesEnvironment *uenv = new UFramesEnvironment(FPostConstructInitializeProperties());
+    uenv->m_env = Frames::EnvironmentPtr(env);
+    m_mapEnvironment[env] = uenv;
+    m_mapEnvironmentReverse[uenv] = env;
+    return uenv;
+  }
+
+  return m_mapEnvironment[env];
 }
 
 FramesManager::FramesManager() { }
 FramesManager::~FramesManager() {
-  for (std::map<Frames::Layout *, UFramesLayout *>::const_iterator itr = m_map.begin(); itr != m_map.end(); ++itr) {
+  for (std::map<Frames::Layout *, UFramesLayout *>::const_iterator itr = m_mapLayout.begin(); itr != m_mapLayout.end(); ++itr) {
     itr->first->EventDetach(Frames::Layout::Event::Destroy, Frames::Delegate<void (Frames::Handle *)>(this, &FramesManager::DestroyFrameCallback));
   }
-  m_map.clear();
+  m_mapLayout.clear();
 }
 
 void FramesManager::DestroyFrameCallback(Frames::Handle *handle) {
-  UFramesLayout *ul = m_map[handle->TargetGet()];
+  UFramesLayout *ul = m_mapLayout[handle->TargetGet()];
   if (ul) {
     ul->m_layout = 0; // clear it out
   }
-  m_map.erase(handle->TargetGet());
-  m_mapReverse.erase(ul);
+  m_mapLayout.erase(handle->TargetGet());
+  m_mapLayoutReverse.erase(ul);
 }
 
 void FramesManager::DestroyLayout(UFramesLayout *ul) {
-  m_map.erase(m_mapReverse[ul]);
-  m_mapReverse.erase(ul);
+  m_mapLayout.erase(m_mapLayoutReverse[ul]);
+  m_mapLayoutReverse.erase(ul);
+}
+
+void FramesManager::DestroyEnvironment(UFramesEnvironment *uenv) {
+  m_mapEnvironment.erase(m_mapEnvironmentReverse[uenv]);
+  m_mapEnvironmentReverse.erase(uenv);
+}
+
+void FramesManager::RegisterEnvironment(UFramesEnvironment *uenv, Frames::Environment *env) {
+  m_mapEnvironment[env] = uenv;
+  m_mapEnvironmentReverse[uenv] = env;
 }
 
 /*static*/ UFramesLayout *FramesManager::Create(Frames::Layout *layout) {

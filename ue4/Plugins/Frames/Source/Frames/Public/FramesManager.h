@@ -32,8 +32,10 @@ public:
   static FramesManager &Get();
 
   UFramesLayout *Convert(Frames::Layout *layout);
+  UFramesEnvironment *Convert(Frames::Environment *env);
 
 private:
+  friend UFramesEnvironment;
   friend UFramesLayout;
 
   FramesManager();
@@ -41,10 +43,14 @@ private:
 
   void DestroyFrameCallback(Frames::Handle *handle);
   void DestroyLayout(UFramesLayout *layout);
+  void DestroyEnvironment(UFramesEnvironment *uenv);
+  void RegisterEnvironment(UFramesEnvironment *uenv, Frames::Environment *env);
 
   // we intentionally don't register this as anything the GC understands - we want for it to not contribute to garbage collection
-  std::map<Frames::Layout *, UFramesLayout *> m_map;
-  std::map<UFramesLayout *, Frames::Layout *> m_mapReverse;
+  std::map<Frames::Layout *, UFramesLayout *> m_mapLayout;
+  std::map<UFramesLayout *, Frames::Layout *> m_mapLayoutReverse;
+  std::map<Frames::Environment *, UFramesEnvironment *> m_mapEnvironment;
+  std::map<UFramesEnvironment *, Frames::Environment *> m_mapEnvironmentReverse;
 
   // actual creation of appropriate type. TODO: some sort of registry for user-defined types?
   static UFramesLayout *Create(Frames::Layout *layout);

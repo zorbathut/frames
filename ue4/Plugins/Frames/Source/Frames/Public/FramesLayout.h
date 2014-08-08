@@ -23,6 +23,9 @@
 #include <frames/configuration.h>
 #include <frames/layout.h>
 
+class UFramesFrame;
+class UFramesEnvironment;
+
 #include "Engine.h"
 
 #include "FramesLayout.generated.h"
@@ -32,6 +35,78 @@ class UFramesLayout : public UObject
 {
   GENERATED_UCLASS_BODY()
   ~UFramesLayout();
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  float BottomGet() const;
+
+  // BoundsGet (needs rect)
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Hierarchy")
+  UFramesFrame *ChildGetByName(const FString &name) const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Hierarchy")
+  UFramesFrame *ChildImplementationGetByName(const FString &name) const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Hierarchy")
+  TArray<UFramesFrame *> ChildrenGet() const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Hierarchy")
+  TArray<UFramesFrame *> ChildrenImplementationGet() const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Debug")
+  void DebugLayoutDump() const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Debug")
+  FString DebugNameGet() const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  UFramesEnvironment *EnvironmentGet() const;
+
+  // Event* (needs event infrastructure)
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  float HeightGet() const;
+
+  // InputModeGet (needs InputMode enum)
+
+  // InputModeSet (needs InputMode enum)
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  float LeftGet() const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  FString NameGet() const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Hierarchy")
+  UFramesLayout *ParentGet() const;
+
+  // PinGet (needs PinAxis/PinPoint)
+
+  // PointGet (needs axis enum)
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Input")
+  UFramesLayout *ProbeAsMouse(float X, float Y) const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  float RightGet() const;
+
+  // SizeGet (needs Axis)
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  float TopGet() const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  FString TypeGet() const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Hierarchy")
+  bool VisibleGet() const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Hierarchy")
+  void VisibleSet(bool Visibility) const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  float WidthGet() const;
+
 
   Frames::Layout *LayoutGet() const { return m_layout; }
 
