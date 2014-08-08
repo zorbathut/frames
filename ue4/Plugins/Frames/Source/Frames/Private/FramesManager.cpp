@@ -21,6 +21,8 @@
 
 #include "FramesManager.h"
 
+#include "FramesFrame.h"
+
   // Retrieve singleton
 FramesManager &FramesManager::Get() {
   static FramesManager mgr;
@@ -33,8 +35,7 @@ UFramesLayout *FramesManager::Convert(Frames::Layout *layout) {
   }
 
   if (!m_map.count(layout)) {
-    UFramesLayout *result = new UFramesLayout(FPostConstructInitializeProperties());
-    result->m_layout = layout;
+    UFramesLayout *result = Create(layout);
     m_map[layout] = result;
     m_mapReverse[result] = layout;
     layout->EventAttach(Frames::Layout::Event::Destroy, Frames::Delegate<void (Frames::Handle *)>(this, &FramesManager::DestroyFrameCallback));
@@ -64,4 +65,15 @@ void FramesManager::DestroyFrameCallback(Frames::Handle *handle) {
 void FramesManager::DestroyLayout(UFramesLayout *ul) {
   m_map.erase(m_mapReverse[ul]);
   m_mapReverse.erase(ul);
+}
+
+/*static*/ UFramesLayout *FramesManager::Create(Frames::Layout *layout) {
+  UFramesLayout *result = 0;
+  if (Frames::Cast<Frames::Frame>(layout)) {
+    result = new UFramesFrame(FPostConstructInitializeProperties());
+  } else {
+    result = new UFramesLayout(FPostConstructInitializeProperties());
+  }
+  result->m_layout = layout;
+  return result;
 }

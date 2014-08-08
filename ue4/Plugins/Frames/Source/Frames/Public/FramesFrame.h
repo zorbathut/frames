@@ -21,31 +21,13 @@
 #pragma once
 
 #include "FramesLayout.h"
-#include <frames/layout.h>
 
-#include <map>
+#include "FramesFrame.generated.h"
 
-class FramesManager
+UCLASS(Transient, BlueprintType, NotPlaceable)
+class UFramesFrame : public UFramesLayout
 {
-public:
-  // Retrieve singleton
-  static FramesManager &Get();
+  GENERATED_UCLASS_BODY()
 
-  UFramesLayout *Convert(Frames::Layout *layout);
-
-private:
-  friend UFramesLayout;
-
-  FramesManager();
-  ~FramesManager();
-
-  void DestroyFrameCallback(Frames::Handle *handle);
-  void DestroyLayout(UFramesLayout *layout);
-
-  // we intentionally don't register this as anything the GC understands - we want for it to not contribute to garbage collection
-  std::map<Frames::Layout *, UFramesLayout *> m_map;
-  std::map<UFramesLayout *, Frames::Layout *> m_mapReverse;
-
-  // actual creation of appropriate type. TODO: some sort of registry for user-defined types?
-  static UFramesLayout *Create(Frames::Layout *layout);
+  Frames::Layout *FrameGet() const { return static_cast<Frames::Layout*>(LayoutGet()); }
 };
