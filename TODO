@@ -20,6 +20,10 @@
 * The buttons on top don't behave properly
 * class list->frames->*
 
+=== DELEGATE
+
+* Rethink Delegate
+
 === TWEAK
 
 * Copy libs to test as part of renderer, not as part of test
@@ -57,7 +61,6 @@
   * SDL/GL
 
 * Figure out how to document Delegate
-  * Rethink Delegate? It's really not all that useful right now
 
 * Official release?
 
