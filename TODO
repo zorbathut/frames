@@ -80,8 +80,6 @@
   * Make sure to test RAW texture types
 
 * Start integration layer
-  * Create, frame classes
-  * Various frame types
   * Functionality
     * Layout
     * Frame

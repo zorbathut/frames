@@ -20,8 +20,11 @@
 
 #pragma once
 
-#include "FramesEnvironment.h"
 #include "FramesConfigurationLocal.h"
+#include "FramesEnvironment.h"
+#include "FramesMask.h"
+#include "FramesSprite.h"
+#include "FramesText.h"
 
 #include "FramesLibrary.generated.h"
 
@@ -35,4 +38,16 @@ class UFramesLibrary : public UBlueprintFunctionLibrary
   
   UFUNCTION(BlueprintCallable, Category="Frames", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
   static UFramesEnvironment *FramesEnvironmentCreate(UObject* WorldContextObject, UFramesConfigurationLocal *Configuration);
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Create", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
+  static UFramesFrame *FramesFrameCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name);
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Create", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
+  static UFramesMask *FramesMaskCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name);
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Create", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
+  static UFramesSprite *FramesSpriteCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name);
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Create", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
+  static UFramesText *FramesTextCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name);
 };

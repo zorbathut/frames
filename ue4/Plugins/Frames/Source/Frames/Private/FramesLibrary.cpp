@@ -19,8 +19,17 @@
 
 #include "FramesPCH.h"
 
-#include "FramesConfigurationLocal.h"
 #include "FramesLibrary.h"
+
+#include <frames/frame.h>
+#include <frames/mask.h>
+#include <frames/sprite.h>
+#include <frames/text.h>
+
+#include "FramesConfigurationLocal.h"
+#include "FramesFrame.h"
+#include "FramesManager.h"
+#include "FramesStringutil.h"
 
 UFramesLibrary::UFramesLibrary(const class FPostConstructInitializeProperties &PCIP)
   : Super(PCIP)
@@ -36,4 +45,20 @@ UFramesLibrary::UFramesLibrary(const class FPostConstructInitializeProperties &P
   UFramesEnvironment *env = new UFramesEnvironment(FPostConstructInitializeProperties());
   env->Initialize(Configuration->m_config);
   return env;
+}
+
+/*static*/ UFramesFrame *UFramesLibrary::FramesFrameCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name) {
+  return Cast<UFramesFrame>(FramesManager::Get().Convert(Frames::Frame::Create(Parent ? Parent->LayoutGet() : 0, Frames::detail::UE4Convert(Name))));
+}
+
+/*static*/ UFramesMask *UFramesLibrary::FramesMaskCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name) {
+  return Cast<UFramesMask>(FramesManager::Get().Convert(Frames::Mask::Create(Parent ? Parent->LayoutGet() : 0, Frames::detail::UE4Convert(Name))));
+}
+
+/*static*/ UFramesSprite *UFramesLibrary::FramesSpriteCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name) {
+  return Cast<UFramesSprite>(FramesManager::Get().Convert(Frames::Sprite::Create(Parent ? Parent->LayoutGet() : 0, Frames::detail::UE4Convert(Name))));
+}
+
+/*static*/ UFramesText *UFramesLibrary::FramesTextCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name) {
+  return Cast<UFramesText>(FramesManager::Get().Convert(Frames::Text::Create(Parent ? Parent->LayoutGet() : 0, Frames::detail::UE4Convert(Name))));
 }
