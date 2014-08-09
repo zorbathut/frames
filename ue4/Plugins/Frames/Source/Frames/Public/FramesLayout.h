@@ -23,12 +23,21 @@
 #include <frames/configuration.h>
 #include <frames/layout.h>
 
+#include "boost/static_assert.hpp"
+
 class UFramesFrame;
 class UFramesEnvironment;
 
 #include "Engine.h"
 
 #include "FramesLayout.generated.h"
+
+UENUM()
+enum EFramesInputMode
+{
+	FIM_NONE = 0 UMETA(DisplayName="None"),
+	FIM_ALL = 1 UMETA(DisplayName="All"),
+};
 
 UCLASS(Transient, BlueprintType, NotPlaceable)
 class UFramesLayout : public UObject
@@ -67,9 +76,11 @@ class UFramesLayout : public UObject
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
   float HeightGet() const;
 
-  // InputModeGet (needs InputMode enum)
+  UFUNCTION(BlueprintCallable, Category="Frames|Input")
+  EFramesInputMode InputModeGet() const;
 
-  // InputModeSet (needs InputMode enum)
+  UFUNCTION(BlueprintCallable, Category="Frames|Input")
+  void InputModeSet(EFramesInputMode mode);
 
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
   float LeftGet() const;

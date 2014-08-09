@@ -28,6 +28,10 @@
 #include "FramesManager.h"
 #include "FramesStringutil.h"
 
+// Can't just embed these into the enum thanks to limitations of the ue4 preprocessor
+BOOST_STATIC_ASSERT(FIM_NONE == Frames::Layout::IM_NONE);
+BOOST_STATIC_ASSERT(FIM_ALL == Frames::Layout::IM_ALL);
+
 UFramesLayout::UFramesLayout(const FPostConstructInitializeProperties &PCIP)
   : Super(PCIP)
 {
@@ -81,7 +85,7 @@ TArray<UFramesFrame *> UFramesLayout::ChildrenImplementationGet() const {
 void UFramesLayout::DebugLayoutDump() const {
   if (!ValidCheck()) return;
 
-  LayoutGet()->DebugLayoutDump();
+  return LayoutGet()->DebugLayoutDump();
 }
 
 FString UFramesLayout::DebugNameGet() const {
@@ -100,6 +104,18 @@ float UFramesLayout::HeightGet() const {
   if (!ValidCheck()) return 0;
 
   return LayoutGet()->HeightGet();
+}
+
+EFramesInputMode UFramesLayout::InputModeGet() const {
+  if (!ValidCheck()) return (EFramesInputMode)0;
+
+  return (EFramesInputMode)LayoutGet()->InputModeGet();
+}
+
+void UFramesLayout::InputModeSet(EFramesInputMode mode) {
+  if (!ValidCheck()) return;
+
+  return LayoutGet()->InputModeSet((Frames::Layout::InputMode)mode);
 }
 
 float UFramesLayout::LeftGet() const {
