@@ -1,71 +1,4 @@
 
-=== DOCS
-
-* detailed usage of all frame types
-
-* deal with removing the temporary documentation files better, even if they're open?
-
-* Clear warnings
-* Get Anchor and the like included
-
-* Deep docs
-  * need to put a thorough description of the pin API somewhere
-    * add example "code" to pinning
-
-* Final pass
-
-=== DOCS TWEAK
-
-* spellcheck
-* The buttons on top don't behave properly
-* class list->frames->*
-
-=== DELEGATE
-
-* Rethink Delegate
-
-=== TWEAK
-
-* Kill Raw
-
-* Copy libs to test as part of renderer, not as part of test
-
-* Verify that appropriate files are all being included
-* /Zl compiler option?
-* script to build deps
-
-* Font corpus cleanup
-
-=== DEPLOY
-
-* Get licensing
-* Send to small trusted group
-* Post on some forum
-* UE4 release
-
-=== TESTING
-
-* Circular parent set!
-
-* Events
-  * Modify events, re-call the same event recursively!
-
-* Frames
-  * Text is the big one here, especially everything involving editing
-
-* Coverage
-
-* Release?
-
-=== BUILDING
-
-* Simple examples
-  * SDL/GL
-
-* Figure out how to document Delegate
-
-* Official release?
-
 === UE4
 
 * get deploy working
@@ -124,6 +57,91 @@
 
 * create FontFromId
 * tweak LoggerUE4 settings based on build
+
+=== DOCS
+
+* detailed usage of all frame types
+
+* deal with removing the temporary documentation files better, even if they're open?
+
+* Clear warnings
+* Get Anchor and the like included
+
+* Deep docs
+  * need to put a thorough description of the pin API somewhere
+    * add example "code" to pinning
+
+* Come up with an official distinction between worldspace Point and relative ???
+
+* Final pass
+
+=== DOCS TWEAK
+
+* spellcheck
+* The buttons on top don't behave properly
+* class list->frames->*
+
+=== DELEGATE
+
+* Rethink Delegate
+
+=== TWEAK
+
+* Kill Raw
+
+* Copy libs to test as part of renderer, not as part of test
+
+* Verify that appropriate files are all being included
+* /Zl compiler option?
+* script to build deps
+
+* Font corpus cleanup
+
+* sparsehash for performance
+
+=== DEPLOY
+
+* Get licensing
+* Send to small trusted group
+* Post on some forum
+* UE4 release
+
+=== SCENE/CONTEXT/COORD
+
+* Don't bother with absolute offsets
+  * seriously, just kill the absolute system, it's garbage
+* On context change, all children that refer to a different context must be invalidated; we also need to invalidate anything from a not-child context that refers to us!
+  * Or do we want to store everything local in global coords, then convert at runtime?
+    * In this case we'd have to invalidate *everything* - it is unclear if this would be a significant hit to the layout system
+    * Doesn't really matter for the enduser though, all retrievals have to be in localspace anyway!
+  * Early version: Just invalidate everything
+* Make it a decorator or an actual frame type?
+
+* Rotate class?
+  * This does introduce some pain that just scaling doesn't
+
+=== TESTING
+
+* Circular parent set!
+
+* Events
+  * Modify events, re-call the same event recursively!
+
+* Frames
+  * Text is the big one here, especially everything involving editing
+
+* Coverage
+
+* Release?
+
+=== BUILDING
+
+* Simple examples
+  * SDL/GL
+
+* Figure out how to document Delegate
+
+* Official release?
 
 === TWEAK
 
