@@ -21,8 +21,8 @@
 
 #include "FramesConfigurationLocal.h"
 
-#include "FramesStringutil.h"
 #include "FramesConfigurationUE4.h"
+#include "FramesConvert.h"
 
 #include <frames/configuration.h>
 #include <frames/detail_format.h>

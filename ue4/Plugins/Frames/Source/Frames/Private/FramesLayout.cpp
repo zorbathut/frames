@@ -23,14 +23,34 @@
 #include "FramesLayout.h"
 
 #include <frames/frame.h>
+#include <frames/rect.h>
 
+#include "FramesConvert.h"
 #include "FramesFrame.h"
 #include "FramesManager.h"
-#include "FramesStringutil.h"
 
 // Can't just embed these into the enum thanks to limitations of the ue4 preprocessor
 BOOST_STATIC_ASSERT(FIM_NONE == Frames::Layout::IM_NONE);
 BOOST_STATIC_ASSERT(FIM_ALL == Frames::Layout::IM_ALL);
+
+BOOST_STATIC_ASSERT(EFA_TOPLEFT == Frames::TOPLEFT);
+BOOST_STATIC_ASSERT(EFA_TOPCENTER == Frames::TOPCENTER);
+BOOST_STATIC_ASSERT(EFA_TOPRIGHT == Frames::TOPRIGHT);
+BOOST_STATIC_ASSERT(EFA_CENTERLEFT == Frames::CENTERLEFT);
+BOOST_STATIC_ASSERT(EFA_CENTER == Frames::CENTER);
+BOOST_STATIC_ASSERT(EFA_CENTERRIGHT == Frames::CENTERRIGHT);
+BOOST_STATIC_ASSERT(EFA_BOTTOMLEFT == Frames::BOTTOMLEFT);
+BOOST_STATIC_ASSERT(EFA_BOTTOMCENTER == Frames::BOTTOMCENTER);
+BOOST_STATIC_ASSERT(EFA_BOTTOMRIGHT == Frames::BOTTOMRIGHT);
+BOOST_STATIC_ASSERT(EFA_LEFT == Frames::LEFT);
+BOOST_STATIC_ASSERT(EFA_CENTERX == Frames::CENTERX);
+BOOST_STATIC_ASSERT(EFA_RIGHT == Frames::RIGHT);
+BOOST_STATIC_ASSERT(EFA_TOP == Frames::TOP);
+BOOST_STATIC_ASSERT(EFA_CENTERY == Frames::CENTERY);
+BOOST_STATIC_ASSERT(EFA_BOTTOM == Frames::BOTTOM);
+
+BOOST_STATIC_ASSERT(EFX_X == Frames::X);
+BOOST_STATIC_ASSERT(EFX_Y == Frames::Y);
 
 UFramesLayout::UFramesLayout(const FPostConstructInitializeProperties &PCIP)
   : Super(PCIP)
@@ -46,6 +66,12 @@ float UFramesLayout::BottomGet() const {
   if (!ValidCheck()) return 0;
 
   return LayoutGet()->BottomGet();
+}
+
+FFramesRect UFramesLayout::BoundsGet() const {
+  if (!ValidCheck()) return FFramesRect(0, 0, 0, 0);
+
+  return Frames::detail::UE4Convert(LayoutGet()->BoundsGet());
 }
 
 UFramesFrame *UFramesLayout::ChildGetByName(const FString &name) const {
@@ -136,6 +162,30 @@ UFramesLayout *UFramesLayout::ParentGet() const {
   return FramesManager::Get().Convert(LayoutGet()->ParentGet());
 }
 
+float UFramesLayout::PointAxisGet(EFramesAxis Axis, float Point) const {
+  if (!ValidCheck()) return 0;
+
+  return LayoutGet()->PointGet((Frames::Axis)Axis, Point);
+}
+
+FVector2D UFramesLayout::PointGetA(EFramesAnchor Anchor) const {
+  if (!ValidCheck()) return FVector2D();
+
+  return Frames::detail::UE4Convert(LayoutGet()->PointGet((Frames::Anchor)Anchor));
+}
+
+FVector2D UFramesLayout::PointGetC(float X, float Y) const {
+  if (!ValidCheck()) return FVector2D();
+
+  return Frames::detail::UE4Convert(LayoutGet()->PointGet(Frames::Vector(X, Y)));
+}
+
+FVector2D UFramesLayout::PointGetV(FVector2D position) const {
+  if (!ValidCheck()) return FVector2D();
+
+  return Frames::detail::UE4Convert(LayoutGet()->PointGet(Frames::detail::UE4Convert(position)));
+}
+
 UFramesLayout *UFramesLayout::ProbeAsMouse(float X, float Y) const {
   if (!ValidCheck()) return 0;
 
@@ -146,6 +196,12 @@ float UFramesLayout::RightGet() const {
   if (!ValidCheck()) return 0;
 
   return LayoutGet()->RightGet();
+}
+
+float UFramesLayout::SizeGet(EFramesAxis Axis) const {
+  if (!ValidCheck()) return 0;
+
+  return LayoutGet()->SizeGet((Frames::Axis)Axis);
 }
 
 float UFramesLayout::TopGet() const {

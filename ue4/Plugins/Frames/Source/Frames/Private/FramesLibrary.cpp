@@ -27,9 +27,9 @@
 #include <frames/text.h>
 
 #include "FramesConfigurationLocal.h"
+#include "FramesConvert.h"
 #include "FramesFrame.h"
 #include "FramesManager.h"
-#include "FramesStringutil.h"
 
 UFramesLibrary::UFramesLibrary(const class FPostConstructInitializeProperties &PCIP)
   : Super(PCIP)

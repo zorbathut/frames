@@ -21,12 +21,12 @@
 
 #include "FramesEnvironment.h"
 
+#include "FramesConvert.h"
 #include "FramesFont.h"
 #include "FramesInput.h"
 #include "FramesHUDHack.h"
 #include "FramesManager.h"
 #include "FramesRendererRHI.h"
-#include "FramesStringutil.h"
 
 #include <frames/configuration.h>
 #include <frames/environment.h>

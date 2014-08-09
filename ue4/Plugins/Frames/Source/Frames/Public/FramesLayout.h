@@ -29,14 +29,42 @@ class UFramesFrame;
 class UFramesEnvironment;
 
 #include "Engine.h"
+#include "FramesRect.h"
 
 #include "FramesLayout.generated.h"
 
 UENUM()
 enum EFramesInputMode
 {
-	FIM_NONE = 0 UMETA(DisplayName="None"),
-	FIM_ALL = 1 UMETA(DisplayName="All"),
+	FIM_NONE UMETA(DisplayName="None"),
+	FIM_ALL UMETA(DisplayName="All"),
+};
+
+UENUM()
+enum EFramesAnchor
+{
+  EFA_TOPLEFT UMETA(DisplayName="TopLeft"),
+  EFA_TOPCENTER UMETA(DisplayName="TopCenter"),
+  EFA_TOPRIGHT UMETA(DisplayName="TopRight"),
+  EFA_CENTERLEFT UMETA(DisplayName="CenterLeft"),
+  EFA_CENTER UMETA(DisplayName="Center"),
+  EFA_CENTERRIGHT UMETA(DisplayName="CenterRight"),
+  EFA_BOTTOMLEFT UMETA(DisplayName="BottomLeft"),
+  EFA_BOTTOMCENTER UMETA(DisplayName="BottomCenter"),
+  EFA_BOTTOMRIGHT UMETA(DisplayName="BottomRight"),
+  EFA_LEFT UMETA(DisplayName="Left"),
+  EFA_CENTERX UMETA(DisplayName="Centerx"),
+  EFA_RIGHT UMETA(DisplayName="Right"),
+  EFA_TOP UMETA(DisplayName="Top"),
+  EFA_CENTERY UMETA(DisplayName="Centery"),
+  EFA_BOTTOM UMETA(DisplayName="Bottom"),
+};
+
+UENUM()
+enum EFramesAxis
+{
+  EFX_X UMETA(DisplayName="X"),
+  EFX_Y UMETA(DisplayName="Y"),
 };
 
 UCLASS(Transient, BlueprintType, NotPlaceable)
@@ -48,7 +76,8 @@ class UFramesLayout : public UObject
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
   float BottomGet() const;
 
-  // BoundsGet (needs rect)
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  FFramesRect BoundsGet() const;
 
   UFUNCTION(BlueprintCallable, Category="Frames|Hierarchy")
   UFramesFrame *ChildGetByName(const FString &name) const;
@@ -93,7 +122,17 @@ class UFramesLayout : public UObject
 
   // PinGet (needs PinAxis/PinPoint)
 
-  // PointGet (needs axis enum)
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  float PointAxisGet(EFramesAxis Axis, float Position) const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  FVector2D PointGetA(EFramesAnchor Anchor) const;
+  
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  FVector2D PointGetC(float X, float Y) const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  FVector2D PointGetV(FVector2D Anchor) const;
 
   UFUNCTION(BlueprintCallable, Category="Frames|Input")
   UFramesLayout *ProbeAsMouse(float X, float Y) const;
@@ -101,7 +140,8 @@ class UFramesLayout : public UObject
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
   float RightGet() const;
 
-  // SizeGet (needs Axis)
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  float SizeGet(EFramesAxis axis) const;
 
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
   float TopGet() const;
@@ -117,7 +157,6 @@ class UFramesLayout : public UObject
 
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
   float WidthGet() const;
-
 
   Frames::Layout *LayoutGet() const { return m_layout; }
 
