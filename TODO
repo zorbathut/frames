@@ -26,6 +26,8 @@
 
 === TWEAK
 
+* Kill Raw
+
 * Copy libs to test as part of renderer, not as part of test
 
 * Verify that appropriate files are all being included
@@ -80,6 +82,13 @@
 * Start integration layer
   * Create, frame classes
   * Various frame types
+  * Functionality
+    * Layout
+    * Frame
+    * Text
+    * Sprite
+    * Mask
+    * gonna ignore raw for now
   * Event hooks
   * FGenericApplicationMessageHandler integration
     * ShouldProcessUserInputMessages
