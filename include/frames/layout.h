@@ -322,6 +322,8 @@ namespace Frames {
     /// Returns the position of a point.
     Vector PointGet(Anchor anchor) const;
     /// Returns the position of a point.
+    Vector PointGet(const Vector &position) const;
+    /// Returns the position of a point.
     Vector PointGet(float x, float y) const;
 
     /// Returns the left edge's position.

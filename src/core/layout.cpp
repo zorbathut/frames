@@ -218,6 +218,10 @@ namespace Frames {
     return PointGet(detail::AnchorLookup[anchor].x, detail::AnchorLookup[anchor].y);
   }
 
+  Vector Layout::PointGet(const Vector &position) const {
+    return PointGet(position.x, position.y);
+  }
+
   Vector Layout::PointGet(float x, float y) const {
     return Vector(PointGet(X, x), PointGet(Y, y));
   }
