@@ -120,7 +120,7 @@ class UFramesLayout : public UObject
   UFUNCTION(BlueprintCallable, Category="Frames|Hierarchy")
   UFramesLayout *ParentGet() const;
 
-  // PinGet (needs PinAxis/PinPoint)
+  // PinGet (needs PinAxis/PinPoint; low-priority)
 
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
   float PointAxisGet(EFramesAxis Axis, float Position) const;
