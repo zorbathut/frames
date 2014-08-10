@@ -114,7 +114,7 @@ class UFramesLayout : public UObject
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
   float LeftGet() const;
 
-  UFUNCTION(BlueprintCallable, Category="Frames|Layout")
+  UFUNCTION(BlueprintCallable, Category="Frames|Hierarchy")
   FString NameGet() const;
 
   UFUNCTION(BlueprintCallable, Category="Frames|Hierarchy")
@@ -123,16 +123,16 @@ class UFramesLayout : public UObject
   // PinGet (needs PinAxis/PinPoint; low-priority)
 
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
-  float PointAxisGet(EFramesAxis Axis, float Position) const;
+  float PointGetAxis(EFramesAxis Axis, float Position) const;
 
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
-  FVector2D PointGetA(EFramesAnchor Anchor) const;
+  FVector2D PointGetAnchor(EFramesAnchor Anchor) const;
   
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
-  FVector2D PointGetC(float X, float Y) const;
+  FVector2D PointGetCoord(float X, float Y) const;
 
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
-  FVector2D PointGetV(FVector2D Anchor) const;
+  FVector2D PointGetVector(FVector2D Anchor) const;
 
   UFUNCTION(BlueprintCallable, Category="Frames|Input")
   UFramesLayout *ProbeAsMouse(float X, float Y) const;

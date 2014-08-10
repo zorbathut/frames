@@ -50,6 +50,14 @@ namespace Frames {
     static Frames::Rect UE4Convert(const FFramesRect &rect) {
       return Frames::Rect(UE4Convert(rect.Start), UE4Convert(rect.End));
     }
+
+    static FLinearColor UE4Convert(const Frames::Color &color) {
+      return FLinearColor(color.r, color.g, color.b, color.a);
+    }
+
+    static Frames::Color UE4Convert(const FLinearColor &color) {
+      return Frames::Color(color.R, color.G, color.B, color.A);
+    }
   }
 }
 

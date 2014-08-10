@@ -162,25 +162,25 @@ UFramesLayout *UFramesLayout::ParentGet() const {
   return FramesManager::Get().Convert(LayoutGet()->ParentGet());
 }
 
-float UFramesLayout::PointAxisGet(EFramesAxis Axis, float Point) const {
+float UFramesLayout::PointGetAxis(EFramesAxis Axis, float Point) const {
   if (!ValidCheck()) return 0;
 
   return LayoutGet()->PointGet((Frames::Axis)Axis, Point);
 }
 
-FVector2D UFramesLayout::PointGetA(EFramesAnchor Anchor) const {
+FVector2D UFramesLayout::PointGetAnchor(EFramesAnchor Anchor) const {
   if (!ValidCheck()) return FVector2D();
 
   return Frames::detail::UE4Convert(LayoutGet()->PointGet((Frames::Anchor)Anchor));
 }
 
-FVector2D UFramesLayout::PointGetC(float X, float Y) const {
+FVector2D UFramesLayout::PointGetCoord(float X, float Y) const {
   if (!ValidCheck()) return FVector2D();
 
   return Frames::detail::UE4Convert(LayoutGet()->PointGet(Frames::Vector(X, Y)));
 }
 
-FVector2D UFramesLayout::PointGetV(FVector2D position) const {
+FVector2D UFramesLayout::PointGetVector(FVector2D position) const {
   if (!ValidCheck()) return FVector2D();
 
   return Frames::detail::UE4Convert(LayoutGet()->PointGet(Frames::detail::UE4Convert(position)));
