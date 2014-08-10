@@ -558,6 +558,26 @@ namespace Frames {
     }
   }
 
+  void Layout::zinternalPinClear(float x, float y) {
+    if (!detail::IsNil(x)) {
+      zinternalPinClear(X, x);
+    }
+
+    if (!detail::IsNil(y)) {
+      zinternalPinClear(Y, y);
+    }
+  }
+
+  void Layout::zinternalPinClear(const Vector &position) {
+    if (!detail::IsNil(position.x)) {
+      zinternalPinClear(X, position.x);
+    }
+
+    if (!detail::IsNil(position.y)) {
+      zinternalPinClear(Y, position.y);
+    }
+  }
+
   void Layout::zinternalPinClearAll(Axis axis) {
     if (!(axis == X || axis == Y)) {
       FRAMES_LAYOUT_CHECK(false, "Axis is invalid");

@@ -45,6 +45,10 @@ namespace Frames {
     inline void PinClear(Axis axis, float mypt) { return zinternalPinClear(axis, mypt); }
     /// Clears a single \ref basicspinning "pin".
     inline void PinClear(Anchor anchor) { return zinternalPinClear(anchor); }
+    /// Clears a single \ref basicspinning "pin".
+    inline void PinClear(float x, float y) { return zinternalPinClear(x, y); }
+    /// Clears a single \ref basicspinning "pin".
+    inline void PinClear(const Vector &point) { return zinternalPinClear(point); }
     /// Clears all \ref basicspinning "pins" on an axis.
     inline void PinClearAll(Axis axis) { return zinternalPinClearAll(axis); }
 

@@ -461,6 +461,8 @@ namespace Frames {
     void zinternalPinSet(Axis axis, float mypt, const Layout *target, float theirpt, float offset = 0.f);
     void zinternalPinClear(Axis axis, float mypt);
     void zinternalPinClear(Anchor anchor);
+    void zinternalPinClear(float x, float y);
+    void zinternalPinClear(const Vector &position);
     void zinternalPinClearAll(Axis axis);
 
     void zinternalPinSet(Anchor myanchor, const Layout *target, Anchor theiranchor);
