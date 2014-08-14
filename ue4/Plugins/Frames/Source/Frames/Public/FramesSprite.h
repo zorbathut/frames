@@ -30,5 +30,11 @@ UCLASS(Transient, BlueprintType, NotPlaceable)
 class UFramesSprite : public UFramesFrame {
   GENERATED_UCLASS_BODY()
 
+  UFUNCTION(BlueprintCallable, Category="Frames|Sprite")
+  UTexture2D *TextureGet() const;
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Sprite")
+  void TextureSet(UTexture2D *Texture) const;
+
   Frames::Sprite *FramesSpriteGet() const { return static_cast<Frames::Sprite*>(FramesLayoutGet()); }
 };

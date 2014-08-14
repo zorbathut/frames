@@ -12,10 +12,10 @@
   * Base - may be difficult - thread sync?
   * Make sure to test RAW texture types
 
+* Dynamic texture
+* Render to texture
+
 * Start integration layer
-  * Functionality
-    * Text
-    * Sprite
   * Event hooks
   * FGenericApplicationMessageHandler integration
     * ShouldProcessUserInputMessages
@@ -51,9 +51,6 @@
   * image importing
     * sRGB
   * font importing
-
-* create FontFromId
-* tweak LoggerUE4 settings based on build
 
 === DOCS
 

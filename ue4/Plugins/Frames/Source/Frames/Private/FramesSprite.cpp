@@ -22,8 +22,22 @@
 
 #include "FramesSprite.h"
 
+#include "FramesConvert.h"
+
 UFramesSprite::UFramesSprite(const FPostConstructInitializeProperties &PCIP)
   : Super(PCIP)
 {
 
+}
+
+UTexture2D *UFramesSprite::TextureGet() const {
+  if (!ValidCheck()) return 0;
+
+  return LoadObject<UTexture2D>(NULL, *Frames::detail::UE4Convert(FramesSpriteGet()->TextureGet()), NULL);
+}
+
+void UFramesSprite::TextureSet(UTexture2D *Texture) const {
+  if (!ValidCheck()) return;
+
+  return FramesSpriteGet()->TextureSet(Frames::detail::UE4Convert(Texture->GetFullName()));
 }
