@@ -44,7 +44,7 @@ TEST(Text, Basic) {
   anchor->PinSet(Frames::BOTTOMLEFT, env->RootGet(), Frames::TOPLEFT, 20.f, 0.f);
   for (int i = 0; i < c_tests; ++i) {
     Frames::Text *tex = Frames::Text::Create(env->RootGet(), "Layer");
-    tex->SizeSet(sizes[i]);
+    tex->FontSizeSet(sizes[i]);
     tex->TextSet(text[i]);
     tex->PinSet(Frames::TOPLEFT, anchor, Frames::BOTTOMLEFT, 0.f, 5.f);
     anchor = tex;

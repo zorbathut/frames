@@ -51,9 +51,9 @@ namespace Frames {
 
     /// Sets the size of the font.
     /** This is currently in arbitrary undefined units - this will change at some point in the future. */
-    void SizeSet(float size);
+    void FontSizeSet(float size);
     /// Gets the size of the font.
-    float SizeGet() const { return m_size; }
+    float FontSizeGet() const { return m_size; }
 
     /// Sets the wordwrap flag.
     /** If wordwrap is enabled, text will wrap at the width of the text frame. If wordwrap is disabled, the text frame will be able to scroll horizontally. */

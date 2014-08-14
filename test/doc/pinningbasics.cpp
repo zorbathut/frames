@@ -143,9 +143,9 @@ TEST(Pinningbasics, Example) {
   energylabel->ColorTextSet(tdc::white);
   staminalabel->ColorTextSet(tdc::white);
 
-  healthlabel->SizeSet(20);
-  energylabel->SizeSet(20);
-  staminalabel->SizeSet(20);
+  healthlabel->FontSizeSet(20);
+  energylabel->FontSizeSet(20);
+  staminalabel->FontSizeSet(20);
 
   healthlabel->PinSet(Frames::CENTERLEFT, health, Frames::CENTERRIGHT, 20, 0);
   energylabel->PinSet(Frames::CENTERLEFT, energy, Frames::CENTERRIGHT, 20, 0);
@@ -242,7 +242,7 @@ TEST(Pinningbasics, Example) {
 
   status->ColorTextSet(tdc::white);
   status->TextSet("Poisoned!");
-  status->SizeSet(20);
+  status->FontSizeSet(20);
 
   status->PinSet(Frames::TOPCENTER, stamina, Frames::BOTTOMCENTER, 0, 20);
 

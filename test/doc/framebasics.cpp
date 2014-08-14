@@ -90,7 +90,7 @@ void LayerMake(Frames::Layout *root, float x, float y, float layer, Frames::Colo
 
   Frames::Text *text = Frames::Text::Create(frame, "text");
   text->PinSet(0, text_y, frame, 0, text_y, 3, 3 * (1 - text_y * 2));
-  text->SizeSet(12);
+  text->FontSizeSet(12);
   text->FontSet("geo_1.ttf");
   text->TextSet(Frames::detail::Format("Layer %g", layer));
 }
@@ -138,7 +138,7 @@ Frames::Frame *HierarchMake(Frames::Layout *root, Frames::Layout *parent, float 
 
   Frames::Text *text = Frames::Text::Create(frame, "text");
   text->PinSet(Frames::TOPLEFT, frame, Frames::TOPLEFT, 3, 3);
-  text->SizeSet(12);
+  text->FontSizeSet(12);
   text->FontSet("geo_1.ttf");
   text->TextSet(Frames::detail::Format("%s\nLayer %g", intex, layer));
 

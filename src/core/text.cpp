@@ -54,7 +54,7 @@ namespace Frames {
     }
   }
 
-  void Text::SizeSet(float size) {
+  void Text::FontSizeSet(float size) {
     if (m_size != size) {
       m_size = size;
 

@@ -158,10 +158,10 @@ TEST(Sizingbasics, Resize) {
   text2->TextSet("The gostak distims the doshes.");
   text3->TextSet("'Twas brillig, and the slithy toves\nDid gyre and gimble in the wabe.");
 
-  text1->SizeSet(20);
-  text2->SizeSet(30);
+  text1->FontSizeSet(20);
+  text2->FontSizeSet(30);
   text3->FontSet("geo_1.ttf");
-  text3->SizeSet(12);
+  text3->FontSizeSet(12);
 
   sprite1->PinSet(Frames::CENTERBOTTOM, env->RootGet(), Frames::CENTERBOTTOM, -120, 20);
   sprite2->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT, 10, 10);
@@ -235,12 +235,12 @@ TEST(Sizingbasics, TextResize) {
   text5->BackgroundSet(tdc::red);
   text6->BackgroundSet(tdc::red);
 
-  text1->SizeSet(16);
-  text2->SizeSet(16);
-  text3->SizeSet(16);
-  text4->SizeSet(16);
-  text5->SizeSet(16);
-  text6->SizeSet(16);
+  text1->FontSizeSet(16);
+  text2->FontSizeSet(16);
+  text3->FontSizeSet(16);
+  text4->FontSizeSet(16);
+  text5->FontSizeSet(16);
+  text6->FontSizeSet(16);
 
   text1->TextSet("West of Arkham the hills rise wild.");
   text2->TextSet("West of Arkham the hills rise wild.");

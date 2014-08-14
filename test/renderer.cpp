@@ -49,7 +49,7 @@ TEST(Renderer, DISABLED_Overflow) {
     blob += 'a' + (i % 26);
   }
   text->TextSet(blob);
-  text->SizeSet(10);
+  text->FontSizeSet(10);
   text->PinSet(Frames::TOPLEFT, env->RootGet(), Frames::TOPLEFT);
   text->PinSet(Frames::BOTTOMRIGHT, env->RootGet(), Frames::BOTTOMRIGHT);
 
