@@ -25,8 +25,7 @@
 
 #include <map>
 
-class FramesManager
-{
+class FramesManager {
 public:
   // Retrieve singleton
   static FramesManager &Get();

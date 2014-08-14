@@ -25,8 +25,7 @@
 #include "FramesInput.generated.h"
 
 USTRUCT(BlueprintType)
-struct FFramesInputMeta
-{
+struct FFramesInputMeta {
   GENERATED_USTRUCT_BODY()
 
   FFramesInputMeta() : Shift(false), Ctrl(false), Alt(false) { }

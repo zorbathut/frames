@@ -65,32 +65,32 @@ UFramesLayout::~UFramesLayout() {
 float UFramesLayout::BottomGet() const {
   if (!ValidCheck()) return 0;
 
-  return LayoutGet()->BottomGet();
+  return FramesLayoutGet()->BottomGet();
 }
 
 FFramesRect UFramesLayout::BoundsGet() const {
   if (!ValidCheck()) return FFramesRect(0, 0, 0, 0);
 
-  return Frames::detail::UE4Convert(LayoutGet()->BoundsGet());
+  return Frames::detail::UE4Convert(FramesLayoutGet()->BoundsGet());
 }
 
 UFramesFrame *UFramesLayout::ChildGetByName(const FString &name) const {
   if (!ValidCheck()) return 0;
 
-  return Cast<UFramesFrame>(FramesManager::Get().Convert(LayoutGet()->ChildGetByName(Frames::detail::UE4Convert(name))));
+  return Cast<UFramesFrame>(FramesManager::Get().Convert(FramesLayoutGet()->ChildGetByName(Frames::detail::UE4Convert(name))));
 }
 
 UFramesFrame *UFramesLayout::ChildImplementationGetByName(const FString &name) const {
   if (!ValidCheck()) return 0;
 
-  return Cast<UFramesFrame>(FramesManager::Get().Convert(LayoutGet()->ChildImplementationGetByName(Frames::detail::UE4Convert(name))));
+  return Cast<UFramesFrame>(FramesManager::Get().Convert(FramesLayoutGet()->ChildImplementationGetByName(Frames::detail::UE4Convert(name))));
 }
 
 TArray<UFramesFrame *> UFramesLayout::ChildrenGet() const {
   TArray<UFramesFrame *> rv;
   if (!ValidCheck()) return rv;
 
-  const Frames::Layout::ChildrenList &list = LayoutGet()->ChildrenGet();
+  const Frames::Layout::ChildrenList &list = FramesLayoutGet()->ChildrenGet();
   for (Frames::Layout::ChildrenList::const_iterator itr = list.begin(); itr != list.end(); ++itr) {
     rv.Push(Cast<UFramesFrame>(FramesManager::Get().Convert(*itr)));
   }
@@ -101,7 +101,7 @@ TArray<UFramesFrame *> UFramesLayout::ChildrenImplementationGet() const {
   TArray<UFramesFrame *> rv;
   if (!ValidCheck()) return rv;
 
-  const Frames::Layout::ChildrenList &list = LayoutGet()->ChildrenImplementationGet();
+  const Frames::Layout::ChildrenList &list = FramesLayoutGet()->ChildrenImplementationGet();
   for (Frames::Layout::ChildrenList::const_iterator itr = list.begin(); itr != list.end(); ++itr) {
     rv.Push(Cast<UFramesFrame>(FramesManager::Get().Convert(*itr)));
   }
@@ -111,127 +111,127 @@ TArray<UFramesFrame *> UFramesLayout::ChildrenImplementationGet() const {
 void UFramesLayout::DebugLayoutDump() const {
   if (!ValidCheck()) return;
 
-  return LayoutGet()->DebugLayoutDump();
+  return FramesLayoutGet()->DebugLayoutDump();
 }
 
 FString UFramesLayout::DebugNameGet() const {
   if (!ValidCheck()) return FString();
 
-  return Frames::detail::UE4Convert(LayoutGet()->DebugNameGet());
+  return Frames::detail::UE4Convert(FramesLayoutGet()->DebugNameGet());
 }
 
 UFramesEnvironment *UFramesLayout::EnvironmentGet() const {
   if (!ValidCheck()) return 0;
 
-  return FramesManager::Get().Convert(LayoutGet()->EnvironmentGet());
+  return FramesManager::Get().Convert(FramesLayoutGet()->EnvironmentGet());
 }
 
 float UFramesLayout::HeightGet() const {
   if (!ValidCheck()) return 0;
 
-  return LayoutGet()->HeightGet();
+  return FramesLayoutGet()->HeightGet();
 }
 
 EFramesInputMode UFramesLayout::InputModeGet() const {
   if (!ValidCheck()) return (EFramesInputMode)0;
 
-  return (EFramesInputMode)LayoutGet()->InputModeGet();
+  return (EFramesInputMode)FramesLayoutGet()->InputModeGet();
 }
 
 void UFramesLayout::InputModeSet(EFramesInputMode mode) {
   if (!ValidCheck()) return;
 
-  return LayoutGet()->InputModeSet((Frames::Layout::InputMode)mode);
+  return FramesLayoutGet()->InputModeSet((Frames::Layout::InputMode)mode);
 }
 
 float UFramesLayout::LeftGet() const {
   if (!ValidCheck()) return 0;
 
-  return LayoutGet()->LeftGet();
+  return FramesLayoutGet()->LeftGet();
 }
 
 FString UFramesLayout::NameGet() const {
   if (!ValidCheck()) return FString();
 
-  return Frames::detail::UE4Convert(LayoutGet()->NameGet());
+  return Frames::detail::UE4Convert(FramesLayoutGet()->NameGet());
 }
 
 UFramesLayout *UFramesLayout::ParentGet() const {
   if (!ValidCheck()) return 0;
 
-  return FramesManager::Get().Convert(LayoutGet()->ParentGet());
+  return FramesManager::Get().Convert(FramesLayoutGet()->ParentGet());
 }
 
 float UFramesLayout::PointGetAxis(EFramesAxis Axis, float Point) const {
   if (!ValidCheck()) return 0;
 
-  return LayoutGet()->PointGet((Frames::Axis)Axis, Point);
+  return FramesLayoutGet()->PointGet((Frames::Axis)Axis, Point);
 }
 
 FVector2D UFramesLayout::PointGetAnchor(EFramesAnchor Anchor) const {
   if (!ValidCheck()) return FVector2D();
 
-  return Frames::detail::UE4Convert(LayoutGet()->PointGet((Frames::Anchor)Anchor));
+  return Frames::detail::UE4Convert(FramesLayoutGet()->PointGet((Frames::Anchor)Anchor));
 }
 
 FVector2D UFramesLayout::PointGetCoord(float X, float Y) const {
   if (!ValidCheck()) return FVector2D();
 
-  return Frames::detail::UE4Convert(LayoutGet()->PointGet(Frames::Vector(X, Y)));
+  return Frames::detail::UE4Convert(FramesLayoutGet()->PointGet(Frames::Vector(X, Y)));
 }
 
 FVector2D UFramesLayout::PointGetVector(FVector2D position) const {
   if (!ValidCheck()) return FVector2D();
 
-  return Frames::detail::UE4Convert(LayoutGet()->PointGet(Frames::detail::UE4Convert(position)));
+  return Frames::detail::UE4Convert(FramesLayoutGet()->PointGet(Frames::detail::UE4Convert(position)));
 }
 
 UFramesLayout *UFramesLayout::ProbeAsMouse(float X, float Y) const {
   if (!ValidCheck()) return 0;
 
-  return FramesManager::Get().Convert(LayoutGet()->ProbeAsMouse(X, Y));
+  return FramesManager::Get().Convert(FramesLayoutGet()->ProbeAsMouse(X, Y));
 }
 
 float UFramesLayout::RightGet() const {
   if (!ValidCheck()) return 0;
 
-  return LayoutGet()->RightGet();
+  return FramesLayoutGet()->RightGet();
 }
 
 float UFramesLayout::SizeGet(EFramesAxis Axis) const {
   if (!ValidCheck()) return 0;
 
-  return LayoutGet()->SizeGet((Frames::Axis)Axis);
+  return FramesLayoutGet()->SizeGet((Frames::Axis)Axis);
 }
 
 float UFramesLayout::TopGet() const {
   if (!ValidCheck()) return 0;
 
-  return LayoutGet()->TopGet();
+  return FramesLayoutGet()->TopGet();
 }
 
 FString UFramesLayout::TypeGet() const {
   if (!ValidCheck()) return FString();
 
-  return LayoutGet()->TypeGet();
+  return FramesLayoutGet()->TypeGet();
 }
 
 bool UFramesLayout::VisibleGet() const {
   if (!ValidCheck()) return 0;
 
-  return LayoutGet()->VisibleGet();
+  return FramesLayoutGet()->VisibleGet();
 }
 
 void UFramesLayout::VisibleSet(bool Visibility) const {
   if (!ValidCheck()) return;
 
-  return LayoutGet()->VisibleSet(Visibility);
+  return FramesLayoutGet()->VisibleSet(Visibility);
 }
 
 float UFramesLayout::WidthGet() const {
   if (!ValidCheck()) return 0;
 
-  return LayoutGet()->WidthGet();
+  return FramesLayoutGet()->WidthGet();
 }
 
 bool UFramesLayout::ValidCheck() const {

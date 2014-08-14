@@ -25,8 +25,7 @@
 #include "FramesFrame.generated.h"
 
 UCLASS(Transient, BlueprintType, NotPlaceable)
-class UFramesFrame : public UFramesLayout
-{
+class UFramesFrame : public UFramesLayout {
   GENERATED_UCLASS_BODY()
 
   UFUNCTION(BlueprintCallable, Category="Frames|Frame")
@@ -98,5 +97,5 @@ class UFramesFrame : public UFramesLayout
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
   void WidthSet(float Size);
 
-  Frames::Frame *FrameGet() const;
+  Frames::Frame *FramesFrameGet() const;
 };

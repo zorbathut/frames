@@ -29,8 +29,7 @@ namespace Frames {
 
     /// Standard logger module for UE4.
     /** errorScreen controls whether it displays errors on the screen. errorAssert controls whether it asserts on errors. */
-    class LoggerUE4 : Frames::Configuration::Logger
-    {
+    class LoggerUE4 : Frames::Configuration::Logger {
     public:
       LoggerUE4(bool errorScreen, bool errorAssert);
 

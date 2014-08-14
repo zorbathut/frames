@@ -27,9 +27,8 @@
 #include "FramesMask.generated.h"
 
 UCLASS(Transient, BlueprintType, NotPlaceable)
-class UFramesMask : public UFramesFrame
-{
+class UFramesMask : public UFramesFrame {
   GENERATED_UCLASS_BODY()
 
-  Frames::Mask *MaskGet() const { return static_cast<Frames::Mask*>(MaskGet()); }
+  Frames::Mask *FramesMaskGet() const { return static_cast<Frames::Mask*>(FramesMaskGet()); }
 };

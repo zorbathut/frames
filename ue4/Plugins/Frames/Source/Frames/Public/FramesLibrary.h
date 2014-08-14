@@ -29,8 +29,7 @@
 #include "FramesLibrary.generated.h"
 
 UCLASS(MinimalAPI)
-class UFramesLibrary : public UBlueprintFunctionLibrary
-{
+class UFramesLibrary : public UBlueprintFunctionLibrary {
   GENERATED_UCLASS_BODY()
 
   UFUNCTION(BlueprintCallable, Category="Frames", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))

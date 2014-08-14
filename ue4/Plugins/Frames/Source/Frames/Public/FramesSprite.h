@@ -27,9 +27,8 @@
 #include "FramesSprite.generated.h"
 
 UCLASS(Transient, BlueprintType, NotPlaceable)
-class UFramesSprite : public UFramesFrame
-{
+class UFramesSprite : public UFramesFrame {
   GENERATED_UCLASS_BODY()
 
-  Frames::Sprite *SpriteGet() const { return static_cast<Frames::Sprite*>(LayoutGet()); }
+  Frames::Sprite *FramesSpriteGet() const { return static_cast<Frames::Sprite*>(FramesLayoutGet()); }
 };

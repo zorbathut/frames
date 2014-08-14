@@ -34,15 +34,13 @@ class UFramesEnvironment;
 #include "FramesLayout.generated.h"
 
 UENUM()
-enum EFramesInputMode
-{
+enum EFramesInputMode {
 	FIM_NONE UMETA(DisplayName="None"),
 	FIM_ALL UMETA(DisplayName="All"),
 };
 
 UENUM()
-enum EFramesAnchor
-{
+enum EFramesAnchor {
   EFA_TOPLEFT UMETA(DisplayName="TopLeft"),
   EFA_TOPCENTER UMETA(DisplayName="TopCenter"),
   EFA_TOPRIGHT UMETA(DisplayName="TopRight"),
@@ -61,15 +59,13 @@ enum EFramesAnchor
 };
 
 UENUM()
-enum EFramesAxis
-{
+enum EFramesAxis {
   EFX_X UMETA(DisplayName="X"),
   EFX_Y UMETA(DisplayName="Y"),
 };
 
 UCLASS(Transient, BlueprintType, NotPlaceable)
-class UFramesLayout : public UObject
-{
+class UFramesLayout : public UObject {
   GENERATED_UCLASS_BODY()
   ~UFramesLayout();
 
@@ -158,7 +154,7 @@ class UFramesLayout : public UObject
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
   float WidthGet() const;
 
-  Frames::Layout *LayoutGet() const { return m_layout; }
+  Frames::Layout *FramesLayoutGet() const { return m_layout; }
 
   // Checks to see if a layout is valid; outputs an error and returns false if it's not
   bool ValidCheck() const;

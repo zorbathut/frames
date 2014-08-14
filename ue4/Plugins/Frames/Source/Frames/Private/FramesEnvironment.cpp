@@ -82,7 +82,7 @@ FFramesInputMeta UFramesEnvironment::InputMetaGet() const {
 void UFramesEnvironment::FocusSet(UFramesLayout *layout) {
   if (!layout->ValidCheck()) return;
 
-  m_env->FocusSet(layout->LayoutGet());
+  m_env->FocusSet(layout->FramesLayoutGet());
 }
 
 UFramesLayout *UFramesEnvironment::FocusGet() const {
