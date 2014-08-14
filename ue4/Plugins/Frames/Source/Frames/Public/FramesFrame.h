@@ -77,7 +77,17 @@ class UFramesFrame : public UFramesLayout
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
   void PinClearAll(EFramesAxis Axis);
 
-  // TODO: PinSet
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout", meta=(AdvancedDisplay = "3"))
+  void PinSetAnchorAnchor(EFramesAnchor Mine, UFramesLayout *Destination, EFramesAnchor Theirs, FVector2D Offset = FVector2D(0.f, 0.f));
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout", meta=(AdvancedDisplay = "3"))
+  void PinSetAnchorVector(EFramesAnchor Mine, UFramesLayout *Destination, FVector2D Theirs, FVector2D Offset = FVector2D(0.f, 0.f));
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout", meta=(AdvancedDisplay = "3"))
+  void PinSetVectorAnchor(FVector2D Mine, UFramesLayout *Destination, EFramesAnchor Theirs, FVector2D Offset = FVector2D(0.f, 0.f));
+
+  UFUNCTION(BlueprintCallable, Category="Frames|Layout", meta=(AdvancedDisplay = "3"))
+  void PinSetVectorVector(FVector2D Mine, UFramesLayout *Destination, FVector2D Theirs, FVector2D Offset = FVector2D(0.f, 0.f));
 
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
   void SizeClear(EFramesAxis Axis);

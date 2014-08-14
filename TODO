@@ -14,11 +14,8 @@
 
 * Start integration layer
   * Functionality
-    * Frame
     * Text
     * Sprite
-    * Mask
-    * gonna ignore raw for now
   * Event hooks
   * FGenericApplicationMessageHandler integration
     * ShouldProcessUserInputMessages

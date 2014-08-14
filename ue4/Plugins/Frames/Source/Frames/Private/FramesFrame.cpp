@@ -133,6 +133,50 @@ void UFramesFrame::PinClearAll(EFramesAxis Axis) {
   return FrameGet()->PinClearAll((Frames::Axis)Axis);
 }
 
+void UFramesFrame::PinSetAnchorAnchor(EFramesAnchor Mine, UFramesLayout *Destination, EFramesAnchor Theirs, FVector2D Offset /*= FVector2D(0.f, 0.f)*/) {
+  if (!Destination) {
+    Frames::Configuration::Get().LoggerGet()->LogError("Attempted to use null Frames layout");
+    return;
+  }
+
+  if (!ValidCheck() || !Destination->ValidCheck()) return;
+
+  return FrameGet()->PinSet((Frames::Anchor)Mine, Destination->LayoutGet(), (Frames::Anchor)Theirs, Frames::detail::UE4Convert(Offset));
+}
+
+void UFramesFrame::PinSetAnchorVector(EFramesAnchor Mine, UFramesLayout *Destination, FVector2D Theirs, FVector2D Offset /*= FVector2D(0.f, 0.f)*/) {
+  if (!Destination) {
+    Frames::Configuration::Get().LoggerGet()->LogError("Attempted to use null Frames layout");
+    return;
+  }
+
+  if (!ValidCheck() || !Destination->ValidCheck()) return;
+
+  return FrameGet()->PinSet((Frames::Anchor)Mine, Destination->LayoutGet(), Frames::detail::UE4Convert(Theirs), Frames::detail::UE4Convert(Offset));
+}
+
+void UFramesFrame::PinSetVectorAnchor(FVector2D Mine, UFramesLayout *Destination, EFramesAnchor Theirs, FVector2D Offset /*= FVector2D(0.f, 0.f)*/) {
+  if (!Destination) {
+    Frames::Configuration::Get().LoggerGet()->LogError("Attempted to use null Frames layout");
+    return;
+  }
+
+  if (!ValidCheck() || !Destination->ValidCheck()) return;
+
+  return FrameGet()->PinSet(Frames::detail::UE4Convert(Mine), Destination->LayoutGet(), (Frames::Anchor)Theirs, Frames::detail::UE4Convert(Offset));
+}
+
+void UFramesFrame::PinSetVectorVector(FVector2D Mine, UFramesLayout *Destination, FVector2D Theirs, FVector2D Offset /*= FVector2D(0.f, 0.f)*/) {
+  if (!Destination) {
+    Frames::Configuration::Get().LoggerGet()->LogError("Attempted to use null Frames layout");
+    return;
+  }
+
+  if (!ValidCheck() || !Destination->ValidCheck()) return;
+
+  return FrameGet()->PinSet(Frames::detail::UE4Convert(Mine), Destination->LayoutGet(), Frames::detail::UE4Convert(Theirs), Frames::detail::UE4Convert(Offset));
+}
+
 void UFramesFrame::SizeClear(EFramesAxis Axis) {
   if (!ValidCheck()) return;
 
