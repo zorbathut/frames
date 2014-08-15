@@ -26,6 +26,7 @@ newoption {
   allowed = {
     --{ "4_2", "Unreal Engine 4.2" }, -- no official support atm
     { "4_3", "Unreal Engine 4.3" },
+    { "4_4", "Unreal Engine 4.4" },
   }
 }
 
@@ -79,6 +80,11 @@ elseif _ACTION == "vs2013" and _OPTIONS["ue"] == "4_3" then
   projectInfo.platform = "win"
   projectInfo.platformFull = "win_msvc12_"
   projectInfo.ue4_path = "C:/Program Files/Unreal Engine/4.3/"
+elseif _ACTION == "vs2013" and _OPTIONS["ue"] == "4_4" then
+  projectInfo.slug = "ue4_4"
+  projectInfo.platform = "win"
+  projectInfo.platformFull = "win_msvc12_"
+  projectInfo.ue4_path = "C:/Program Files/Unreal Engine/4.4/"
 else
   print(("Not supported: target %s with OS %s"):format(_ACTION or "", _OS or ""))
   projectInfo.slug = ""
@@ -157,7 +163,7 @@ solution "Frames"
         "deps/zlib-1.2.8/" .. projectInfo.platform .. suffix .. "/lib",
         "deps/gtest-1.7.0/" .. projectInfo.platformFull .. suffix .. "/lib",
       }
-    elseif projectInfo.slug == "ue4_2" or projectInfo.slug == "ue4_3" then
+    elseif projectInfo.slug == "ue4_2" or projectInfo.slug == "ue4_3" or projectInfo.slug == "ue4_4" then
       local ue4libsuffix = "Win" .. suffix .. "/VS2013"
       includedirs {
         "include",
@@ -182,6 +188,8 @@ solution "Frames"
         projectInfo.ue4_path .. "/Engine/Source/ThirdParty/zlib/zlib-1.2.5/Lib/Win" .. suffix,
         "deps/gtest-1.7.0/" .. projectInfo.platformFull .. suffix .. "/lib",
       }
+    else
+      assert(false, "Please set include directories before using this new target")
     end
   end
   
