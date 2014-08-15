@@ -85,7 +85,7 @@ projects = {
     parameters = "--ue=4_3",
     build = uebuild("4.3")
   },
-  ue4_3 = {
+  ue4_4 = {
     generator = "vs2013",
     parameters = "--ue=4_4",
     build = uebuild("4.4")
