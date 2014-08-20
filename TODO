@@ -104,12 +104,13 @@
 
 * Don't bother with absolute offsets
   * seriously, just kill the absolute system, it's garbage
-* On context change, all children that refer to a different context must be invalidated; we also need to invalidate anything from a not-child context that refers to us!
-  * Or do we want to store everything local in global coords, then convert at runtime?
-    * In this case we'd have to invalidate *everything* - it is unclear if this would be a significant hit to the layout system
-    * Doesn't really matter for the enduser though, all retrievals have to be in localspace anyway!
-  * Early version: Just invalidate everything
-* Make it a decorator or an actual frame type?
+* If a scene changes scale, all of its children must be invalidated
+* If a frame is re-parented to a different scene, all of its children must be invalidated
+* Let's keep a Scene pointer in every frame; easiest way for now
+* Later, we'll want to be more clever with invalidation
+
+* Absolute offsets *are* useful if we want to avoid circular dependencies :|
+  * but maybe the solution here is really just the linear solver
 
 * Rotate class?
   * This does introduce some pain that just scaling doesn't
