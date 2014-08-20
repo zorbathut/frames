@@ -28,6 +28,16 @@ local version = io.open("version", "rb"):read("*line")
 
 os.execute("rm -rf Den* script version TODO")
 
+-- create ue4 deployments
+for _, v in pairs{"ue4_3", "ue4_4"} do
+  os.execute(("mkdir -p plugin/%s"):format(v))
+  os.execute(("cp -r ue4/Plugins plugin/%s"):format(v))
+  os.execute(("mkdir -p plugin/%s/Plugins/Frames/Source/ThirdParty/FramesDeps/deps"):format(v))
+  os.execute(("mkdir -p plugin/%s/Plugins/Frames/Source/ThirdParty/FramesDeps/lib"):format(v))
+  os.execute(("mv lib/%s include plugin/%s/Plugins/Frames/Source/ThirdParty/FramesDeps/lib"):format(v))
+  os.execute(("cp -r deps/boost_1_55_0 deps/jpeg-9 plugin/%s/Plugins/Frames/Source/ThirdParty/FramesDeps/deps"):format(v))
+end
+
 os.execute(("mkdir frames-%s && mv * frames-%s"):format(version, version))
 
 -- I never used the "binary deploy" option, so I'm just pulling it

@@ -56,7 +56,16 @@ public class Frames : ModuleRules
     string PlatformString = (Target.Platform == UnrealTargetPlatform.Win64) ? "x64" : "x32";
     string PlatformStringFrames = (Target.Platform == UnrealTargetPlatform.Win64) ? "win64" : "win32";
     string DirectoryName = Path.GetDirectoryName( RulesCompiler.GetModuleFilename( this.GetType().Name ) );
-    string FramesBase = Path.Combine( DirectoryName, "..", "..", "..", "..", ".." );
+    string FramesBase;
+
+    if (File.Exists(Path.Combine(DirectoryName, "..", "ThirdParty", "FramesDeps", "lib", UESlug, "x32", "frames.lib")))
+    {
+      FramesBase = Path.Combine( DirectoryName, "..", "ThirdParty", "FramesDeps" );
+    }
+    else
+    {
+      FramesBase = Path.Combine( DirectoryName, "..", "..", "..", "..", ".." );
+    }
     
     // choose appropriate libraries
     if (Target.Configuration == UnrealTargetConfiguration.Debug || Target.Configuration == UnrealTargetConfiguration.DebugGame)
@@ -69,7 +78,6 @@ public class Frames : ModuleRules
     }
     
     PublicAdditionalLibraries.Add(Path.Combine(FramesBase, "deps", "jpeg-9", PlatformStringFrames, "lib", "jpeg.lib"));
-    PublicAdditionalLibraries.Add("d3dcompiler.lib");
     PublicDependencyModuleNames.AddRange(new string[] { "FreeType2", "UElibPNG", "zlib" });
 
     PublicIncludePaths.Add(Path.Combine(FramesBase, "include"));
