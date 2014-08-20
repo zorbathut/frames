@@ -34,7 +34,7 @@ for _, v in pairs{"ue4_3", "ue4_4"} do
   os.execute(("cp -r ue4/Plugins plugin/%s"):format(v))
   os.execute(("mkdir -p plugin/%s/Plugins/Frames/Source/ThirdParty/FramesDeps/deps"):format(v))
   os.execute(("mkdir -p plugin/%s/Plugins/Frames/Source/ThirdParty/FramesDeps/lib"):format(v))
-  os.execute(("mv lib/%s include plugin/%s/Plugins/Frames/Source/ThirdParty/FramesDeps/lib"):format(v))
+  os.execute(("mv lib/%s include plugin/%s/Plugins/Frames/Source/ThirdParty/FramesDeps/lib"):format(v, v))
   os.execute(("cp -r deps/boost_1_55_0 deps/jpeg-9 plugin/%s/Plugins/Frames/Source/ThirdParty/FramesDeps/deps"):format(v))
 end
 
