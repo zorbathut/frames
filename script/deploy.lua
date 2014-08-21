@@ -47,7 +47,7 @@ for _, v in pairs{"ue4_3", "ue4_4"} do
   os.execute(("mv lib/%s plugin/%s/Plugins/Frames/Source/ThirdParty/FramesDeps/lib"):format(v, v))
   os.execute(("cp -r deps/boost_1_55_0 deps/jpeg-9 plugin/%s/Plugins/Frames/Source/ThirdParty/FramesDeps/deps"):format(v))
   os.execute(("sed -i s/DEVELOPMENT/%s/ plugin/%s/Plugins/Frames/Frames.uplugin"):format(version, v))
-  os.execute(("sed -i 's/: 1,/: %d,/ plugin/%s/Plugins/Frames/Frames.uplugin"):format(uev, v))
+  os.execute(("sed -i 's/: 1,/: %d,/' plugin/%s/Plugins/Frames/Frames.uplugin"):format(uev, v))
 end
 
 os.execute(("mkdir frames-%s && mv * frames-%s"):format(version, version))
