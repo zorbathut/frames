@@ -7,6 +7,7 @@ var searchData=
   ['pinpoint',['PinPoint',['../structFrames_1_1Layout_1_1PinPoint.html',1,'Frames::Layout']]],
   ['ptr',['Ptr',['../classFrames_1_1Ptr.html',1,'Frames']]],
   ['ptr_3c_20clipboard_20_3e',['Ptr&lt; Clipboard &gt;',['../classFrames_1_1Ptr.html',1,'Frames']]],
+  ['ptr_3c_20contextual_20_3e',['Ptr&lt; Contextual &gt;',['../classFrames_1_1Ptr.html',1,'Frames']]],
   ['ptr_3c_20logger_20_3e',['Ptr&lt; Logger &gt;',['../classFrames_1_1Ptr.html',1,'Frames']]],
   ['ptr_3c_20pathfromid_20_3e',['Ptr&lt; PathFromId &gt;',['../classFrames_1_1Ptr.html',1,'Frames']]],
   ['ptr_3c_20performance_20_3e',['Ptr&lt; Performance &gt;',['../classFrames_1_1Ptr.html',1,'Frames']]],

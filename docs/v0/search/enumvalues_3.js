@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['metaset',['METASET',['../classFrames_1_1Input_1_1Command.html#afa243242c82f2048b71abcbeda562141a8b44218860548b01867c9b461fc77526',1,'Frames::Input::Command']]],
-  ['mouseclear',['MOUSECLEAR',['../classFrames_1_1Input_1_1Command.html#afa243242c82f2048b71abcbeda562141a9446c49d3de2d9b38a1c768f11131d50',1,'Frames::Input::Command']]],
-  ['mousedown',['MOUSEDOWN',['../classFrames_1_1Input_1_1Command.html#afa243242c82f2048b71abcbeda562141a262f184ed779bd5fdea9efcc04b609bb',1,'Frames::Input::Command']]],
-  ['mousemove',['MOUSEMOVE',['../classFrames_1_1Input_1_1Command.html#afa243242c82f2048b71abcbeda562141a1d80cc269dd8a60f22c1dc409ed3cead',1,'Frames::Input::Command']]],
-  ['mouseup',['MOUSEUP',['../classFrames_1_1Input_1_1Command.html#afa243242c82f2048b71abcbeda562141a0ee5621ec53b8ec18e5b67162c0d025c',1,'Frames::Input::Command']]],
-  ['mousewheel',['MOUSEWHEEL',['../classFrames_1_1Input_1_1Command.html#afa243242c82f2048b71abcbeda562141a6c31a73c5940d1ea70c63c5fa15888b1',1,'Frames::Input::Command']]]
+  ['keydown',['KEYDOWN',['../classFrames_1_1Input_1_1Command.html#afa243242c82f2048b71abcbeda562141ab2a485b86fa3e04855d019bdd75d9ca1',1,'Frames::Input::Command']]],
+  ['keyrepeat',['KEYREPEAT',['../classFrames_1_1Input_1_1Command.html#afa243242c82f2048b71abcbeda562141aae7cc6fadc986291688a10c85704717e',1,'Frames::Input::Command']]],
+  ['keytext',['KEYTEXT',['../classFrames_1_1Input_1_1Command.html#afa243242c82f2048b71abcbeda562141a259ee94f91ae7258a2f261d9fe7e8e9f',1,'Frames::Input::Command']]],
+  ['keyup',['KEYUP',['../classFrames_1_1Input_1_1Command.html#afa243242c82f2048b71abcbeda562141ab9655a9d45e39d60b8e62f6c89b0d737',1,'Frames::Input::Command']]]
 ];

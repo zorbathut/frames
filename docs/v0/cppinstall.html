@@ -30,6 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Frames
+   &#160;<span id="projectnumber">v0.2.2-105-g3244bf1</span>
    </div>
   </td>
  </tr>
@@ -108,9 +109,9 @@ $(document).ready(function(){initNavTree('cppinstall.html','');});
 <p>Add (YourFramesDirectory)/include to your include path. All Frames header includes are prefixed by "frames/".</p>
 <p>Frames makes extensive use of the C++ standard library, and as such, built libraries are not compatible across major Visual Studio releases. Pick the appropriate directory out of "lib" and add the following files to your linker.</p>
 <p>frames.lib is required.</p>
-<p>frames_dx11.lib lets you make use of the DirectX 11 renderer.</p>
-<p>frames_opengl.lib lets you make use of the OpenGL renderer.</p>
-<p>frames_null.lib provides a null renderer that does no actual rendering work. It can be useful for testing and debugging but should generally not be linked in production code.</p>
+<p>frames_renderer_dx11.lib lets you make use of the DirectX 11 renderer.</p>
+<p>frames_renderer_opengl.lib lets you make use of the OpenGL renderer.</p>
+<p>frames_renderer_null.lib provides a null renderer that does no actual rendering work. It can be useful for testing and debugging but should generally not be linked in production code.</p>
 <p>Consult the <a class="el" href="linking.html">LINKING</a> file for further dependencies; Frames will require several support libraries to be added. If you've rebuilt Frames to make use of your game's existing libraries, you will of course not have to link Frames's versions of those. </p><hr/>
 <h2>Cleanup</h2>
 <p>The full package can be rather large; as of this writing it's roughly 1.5 gigabytes of space uncompressed. The vast majority consists of the library files for Frames itself, and if space is an issue, you can delete any directories in "lib" that you don't plan to use. Each set of libraries is roughly 150 megabytes, mostly consisting of debug markup. </p><hr/>
@@ -124,7 +125,7 @@ $(document).ready(function(){initNavTree('cppinstall.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Jul 7 2014 20:37:18 for Frames by
+    <li class="footer">Generated on Thu Aug 21 2014 07:58:24 for Frames by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

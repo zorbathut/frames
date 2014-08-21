@@ -5,6 +5,7 @@ var searchData=
   ['refcountable',['Refcountable',['../classFrames_1_1Refcountable.html',1,'Frames']]],
   ['refcountable_3c_20characterinfo_20_3e',['Refcountable&lt; CharacterInfo &gt;',['../classFrames_1_1Refcountable.html',1,'Frames']]],
   ['refcountable_3c_20clipboard_20_3e',['Refcountable&lt; Clipboard &gt;',['../classFrames_1_1Refcountable.html',1,'Frames']]],
+  ['refcountable_3c_20contextual_20_3e',['Refcountable&lt; Contextual &gt;',['../classFrames_1_1Refcountable.html',1,'Frames']]],
   ['refcountable_3c_20environment_20_3e',['Refcountable&lt; Environment &gt;',['../classFrames_1_1Refcountable.html',1,'Frames']]],
   ['refcountable_3c_20fontinfo_20_3e',['Refcountable&lt; FontInfo &gt;',['../classFrames_1_1Refcountable.html',1,'Frames']]],
   ['refcountable_3c_20logger_20_3e',['Refcountable&lt; Logger &gt;',['../classFrames_1_1Refcountable.html',1,'Frames']]],

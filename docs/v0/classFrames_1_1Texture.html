@@ -30,6 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Frames
+   &#160;<span id="projectnumber">v0.2.2-105-g3244bf1</span>
    </div>
   </td>
  </tr>
@@ -98,6 +99,7 @@ $(document).ready(function(){initNavTree('classFrames_1_1Texture.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
@@ -121,8 +123,17 @@ Inheritance diagram for Frames::Texture:</div>
 </map>
  </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Texture_1_1Contextual.html">Contextual</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic container class used for renderer-specific information.  <a href="classFrames_1_1Texture_1_1Contextual.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:a8ce19dbab77f8845c0ec3aaaa3d56aca"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8ce19dbab77f8845c0ec3aaaa3d56aca"></a>
+typedef <a class="el" href="classFrames_1_1Ptr.html">Ptr</a>&lt; <a class="el" href="classFrames_1_1Texture_1_1Contextual.html">Contextual</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ContextualPtr</b></td></tr>
+<tr class="separator:a8ce19dbab77f8845c0ec3aaaa3d56aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8bcddbecf1586285ec84e09053eb572"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Texture.html#af8bcddbecf1586285ec84e09053eb572">Format</a> { <a class="el" href="classFrames_1_1Texture.html#af8bcddbecf1586285ec84e09053eb572abf19c06e2a56b50e1fca2d83b692d5ab">FORMAT_RGBA_8</a>, 
 <a class="el" href="classFrames_1_1Texture.html#af8bcddbecf1586285ec84e09053eb572aae5c34165b31a47746b8ed0b354cd7e3">FORMAT_RGB_8</a>, 
 <a class="el" href="classFrames_1_1Texture.html#af8bcddbecf1586285ec84e09053eb572a2c76c4004fe97aac87498b4b04bfe402">FORMAT_R_8</a>, 
@@ -131,13 +142,17 @@ Public Types</h2></td></tr>
 <tr class="memdesc:af8bcddbecf1586285ec84e09053eb572"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pixel format. Not all formats make sense with all Types.  <a href="classFrames_1_1Texture.html#af8bcddbecf1586285ec84e09053eb572">More...</a><br /></td></tr>
 <tr class="separator:af8bcddbecf1586285ec84e09053eb572"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa42e16a4b5793632f91622c8c8bf48e9"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Texture.html#aa42e16a4b5793632f91622c8c8bf48e9">Type</a> { <a class="el" href="classFrames_1_1Texture.html#aa42e16a4b5793632f91622c8c8bf48e9a9843135401edabd3a52f8f4f936d629c">NIL</a>, 
-<a class="el" href="classFrames_1_1Texture.html#aa42e16a4b5793632f91622c8c8bf48e9a7e040c0ff53ba5cd95acd3698060b7e2">RAW</a>
+<a class="el" href="classFrames_1_1Texture.html#aa42e16a4b5793632f91622c8c8bf48e9a7e040c0ff53ba5cd95acd3698060b7e2">RAW</a>, 
+<a class="el" href="classFrames_1_1Texture.html#aa42e16a4b5793632f91622c8c8bf48e9a8e0cc21bd8c49ea91f737aaa0f7249a3">CONTEXTUAL</a>
  }</td></tr>
 <tr class="memdesc:aa42e16a4b5793632f91622c8c8bf48e9"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classFrames_1_1Texture.html" title="Represents the raw data forming a graphics texture. ">Texture</a> type.  <a href="classFrames_1_1Texture.html#aa42e16a4b5793632f91622c8c8bf48e9">More...</a><br /></td></tr>
 <tr class="separator:aa42e16a4b5793632f91622c8c8bf48e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a827147bf5fd12af94451bbe11f672797"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a827147bf5fd12af94451bbe11f672797"></a>
+const <a class="el" href="classFrames_1_1Ptr.html">ContextualPtr</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ContextualGet</b> () const </td></tr>
+<tr class="separator:a827147bf5fd12af94451bbe11f672797"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b9ae08c841560fc9bc63bd6abc335cb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9b9ae08c841560fc9bc63bd6abc335cb"></a>
 <a class="el" href="classFrames_1_1Texture.html#af8bcddbecf1586285ec84e09053eb572">Format</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Texture.html#a9b9ae08c841560fc9bc63bd6abc335cb">FormatGet</a> () const </td></tr>
 <tr class="memdesc:a9b9ae08c841560fc9bc63bd6abc335cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classFrames_1_1Texture.html#af8bcddbecf1586285ec84e09053eb572">pixel format</a>. <br /></td></tr>
@@ -146,12 +161,12 @@ Public Member Functions</h2></td></tr>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Texture.html#a2cb186af740cc8b09d117b3a8dcdd7b8">HeightGet</a> () const </td></tr>
 <tr class="memdesc:a2cb186af740cc8b09d117b3a8dcdd7b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the height in pixels. <br /></td></tr>
 <tr class="separator:a2cb186af740cc8b09d117b3a8dcdd7b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a97df25e7d4ec6939cf00c039df4642"><td class="memItemLeft" align="right" valign="top">unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Texture.html#a6a97df25e7d4ec6939cf00c039df4642">RawDataGet</a> ()</td></tr>
-<tr class="memdesc:a6a97df25e7d4ec6939cf00c039df4642"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the raw data.  <a href="#a6a97df25e7d4ec6939cf00c039df4642">More...</a><br /></td></tr>
-<tr class="separator:a6a97df25e7d4ec6939cf00c039df4642"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a833e5c3e0d158bc8ef60182d5f8fd46b"><td class="memItemLeft" align="right" valign="top">const unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Texture.html#a833e5c3e0d158bc8ef60182d5f8fd46b">RawDataGet</a> () const </td></tr>
-<tr class="memdesc:a833e5c3e0d158bc8ef60182d5f8fd46b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the raw data.  <a href="#a833e5c3e0d158bc8ef60182d5f8fd46b">More...</a><br /></td></tr>
-<tr class="separator:a833e5c3e0d158bc8ef60182d5f8fd46b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36abd17a875ffa07869d8cae454eebbe"><td class="memItemLeft" align="right" valign="top">unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Texture.html#a36abd17a875ffa07869d8cae454eebbe">RawDataGet</a> ()</td></tr>
+<tr class="memdesc:a36abd17a875ffa07869d8cae454eebbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the raw data.  <a href="#a36abd17a875ffa07869d8cae454eebbe">More...</a><br /></td></tr>
+<tr class="separator:a36abd17a875ffa07869d8cae454eebbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addb93f1d10ee8970e2e8485ce105e530"><td class="memItemLeft" align="right" valign="top">const unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Texture.html#addb93f1d10ee8970e2e8485ce105e530">RawDataGet</a> () const </td></tr>
+<tr class="memdesc:addb93f1d10ee8970e2e8485ce105e530"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the raw data.  <a href="#addb93f1d10ee8970e2e8485ce105e530">More...</a><br /></td></tr>
+<tr class="separator:addb93f1d10ee8970e2e8485ce105e530"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59581f693685063165fbebfbd55363fe"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Texture.html#a59581f693685063165fbebfbd55363fe">RawStrideGet</a> () const </td></tr>
 <tr class="memdesc:a59581f693685063165fbebfbd55363fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the raw data's stride.  <a href="#a59581f693685063165fbebfbd55363fe">More...</a><br /></td></tr>
 <tr class="separator:a59581f693685063165fbebfbd55363fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -173,6 +188,10 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ae36dd8bf1ec6e31fb3b2f3f5c51a7762"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae36dd8bf1ec6e31fb3b2f3f5c51a7762"></a>
+static <a class="el" href="classFrames_1_1Ptr.html">TexturePtr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Texture.html#ae36dd8bf1ec6e31fb3b2f3f5c51a7762">CreateContextual</a> (<a class="el" href="classFrames_1_1Environment.html">Environment</a> *env, int width, int height, <a class="el" href="classFrames_1_1Texture.html#af8bcddbecf1586285ec84e09053eb572">Format</a> format, <a class="el" href="classFrames_1_1Ptr.html">ContextualPtr</a> data)</td></tr>
+<tr class="memdesc:ae36dd8bf1ec6e31fb3b2f3f5c51a7762"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classFrames_1_1Texture.html" title="Represents the raw data forming a graphics texture. ">Texture</a> with a given width, height, and format, referencing a renderer-specific data package. <br /></td></tr>
+<tr class="separator:ae36dd8bf1ec6e31fb3b2f3f5c51a7762"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae77142fb2ebaedb305c4bca5c15d0cda"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classFrames_1_1Ptr.html">TexturePtr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrames_1_1Texture.html#ae77142fb2ebaedb305c4bca5c15d0cda">CreateRawManaged</a> (<a class="el" href="classFrames_1_1Environment.html">Environment</a> *env, int width, int height, <a class="el" href="classFrames_1_1Texture.html#af8bcddbecf1586285ec84e09053eb572">Format</a> format)</td></tr>
 <tr class="memdesc:ae77142fb2ebaedb305c4bca5c15d0cda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classFrames_1_1Texture.html" title="Represents the raw data forming a graphics texture. ">Texture</a> with a given width, height, and format, with the <a class="el" href="classFrames_1_1Texture.html" title="Represents the raw data forming a graphics texture. ">Texture</a> entirely responsible for allocation and deallocation.  <a href="#ae77142fb2ebaedb305c4bca5c15d0cda">More...</a><br /></td></tr>
 <tr class="separator:ae77142fb2ebaedb305c4bca5c15d0cda"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -232,6 +251,9 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
 <tr><td class="fieldname"><a class="anchor" id="aa42e16a4b5793632f91622c8c8bf48e9a7e040c0ff53ba5cd95acd3698060b7e2"></a>RAW&#160;</td><td class="fielddoc">
 <p><a class="el" href="classFrames_1_1Raw.html" title="Used for deferring to user code for rendering. ">Raw</a> byte array containing decompressed image data in scanline order. </p>
 </td></tr>
+<tr><td class="fieldname"><a class="anchor" id="aa42e16a4b5793632f91622c8c8bf48e9a8e0cc21bd8c49ea91f737aaa0f7249a3"></a>CONTEXTUAL&#160;</td><td class="fielddoc">
+<p>Context-sensitive type defined by the renderer. Read your renderer documentation for details. </p>
+</td></tr>
 </table>
 
 </div>
@@ -282,7 +304,7 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
 </div><div class="memdoc">
 
 <p>Creates a <a class="el" href="classFrames_1_1Texture.html" title="Represents the raw data forming a graphics texture. ">Texture</a> with a given width, height, and format, with the <a class="el" href="classFrames_1_1Texture.html" title="Represents the raw data forming a graphics texture. ">Texture</a> entirely responsible for allocation and deallocation. </p>
-<p><a class="el" href="classFrames_1_1Texture.html" title="Represents the raw data forming a graphics texture. ">Texture</a> will be created containing all 0 values. Use <a class="el" href="classFrames_1_1Texture.html#a6a97df25e7d4ec6939cf00c039df4642" title="Returns the raw data. ">RawDataGet()</a> to modify the data before using this <a class="el" href="classFrames_1_1Texture.html" title="Represents the raw data forming a graphics texture. ">Texture</a>. </p>
+<p><a class="el" href="classFrames_1_1Texture.html" title="Represents the raw data forming a graphics texture. ">Texture</a> will be created containing all 0 values. Use <a class="el" href="classFrames_1_1Texture.html#a36abd17a875ffa07869d8cae454eebbe" title="Returns the raw data. ">RawDataGet()</a> to modify the data before using this <a class="el" href="classFrames_1_1Texture.html" title="Represents the raw data forming a graphics texture. ">Texture</a>. </p>
 
 </div>
 </div>
@@ -353,25 +375,17 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
 
 </div>
 </div>
-<a class="anchor" id="a6a97df25e7d4ec6939cf00c039df4642"></a>
+<a class="anchor" id="a36abd17a875ffa07869d8cae454eebbe"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned char* Frames::Texture::RawDataGet </td>
+          <td class="memname">unsigned char * Frames::Texture::RawDataGet </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Returns the raw data. </p>
@@ -379,25 +393,17 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
 
 </div>
 </div>
-<a class="anchor" id="a833e5c3e0d158bc8ef60182d5f8fd46b"></a>
+<a class="anchor" id="addb93f1d10ee8970e2e8485ce105e530"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const unsigned char* Frames::Texture::RawDataGet </td>
+          <td class="memname">const unsigned char * Frames::Texture::RawDataGet </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Returns the raw data. </p>
@@ -408,9 +414,6 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
 <a class="anchor" id="a59581f693685063165fbebfbd55363fe"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">int Frames::Texture::RawStrideGet </td>
@@ -419,11 +422,6 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Returns the raw data's stride. </p>
@@ -442,7 +440,7 @@ static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>Frames</b></li><li class="navelem"><a class="el" href="classFrames_1_1Texture.html">Texture</a></li>
-    <li class="footer">Generated on Mon Jul 7 2014 20:37:19 for Frames by
+    <li class="footer">Generated on Thu Aug 21 2014 07:58:24 for Frames by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

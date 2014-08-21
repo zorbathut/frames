@@ -13,7 +13,7 @@ var indexSectionsWithContent =
   3: "abcdegkmoprstvxy",
   4: "ct",
   5: "fit",
-  6: "fikmnr",
+  6: "cfikmnr",
   7: "c",
   8: "bcefgilmnoprs"
 };

@@ -30,6 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Frames
+   &#160;<span id="projectnumber">v0.2.2-105-g3244bf1</span>
    </div>
   </td>
  </tr>
@@ -103,7 +104,8 @@ $(document).ready(function(){initNavTree('cppsetup.html','');});
 <div class="contents">
 <div class="textblock"><hr/>
 <h2>Logging</h2>
-<p>Frames has a built-in logging system to report errors and debug information. It is strongly recommended that errors are put somewhere that developers will notice, up to and including big red text directly on the screen and/or modal dialog warnings. After reporting, Frames will attempt to recover from any errors; if the report is never seen, this can make debugging extremely confusing.</p>
+<p>Frames has a built-in logging system to report errors and debug information. It is strongly recommended that errors are put somewhere that developers will notice, up to and including big red text directly on the screen and/or modal dialog warnings. The importance of this is difficult to overstate; in development builds, given a choice between displaying Errors somewhere which may be missed versus simply crashing the game, we recommend crashing the game. After reporting, Frames will attempt to recover from any errors, usually successfully; if the report is never seen, this can make debugging extremely confusing.</p>
+<p>(Frames' eagerness to recover from errors is very helpful in release builds.)</p>
 <p>There are two locations that debug reports can come from. Each Environment has its own logging configuration, plus there's a global log for events that are not associated with an Environment. It's very easy to set these both up at the same time. Here's replacement code for the original Environment::Create() call, using fictional LOG() and PrintOnScreen() functions - reimplement MyLogger's functions as is appropriate for your project.</p>
 <div class="fragment"><div class="line"><span class="keyword">class </span>MyLogger : <span class="keyword">public</span> <a class="code" href="classFrames_1_1Configuration_1_1Logger.html">Frames::Configuration::Logger</a> {</div>
 <div class="line"><span class="keyword">public</span>:</div>
@@ -171,7 +173,7 @@ $(document).ready(function(){initNavTree('cppsetup.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Jul 7 2014 20:37:18 for Frames by
+    <li class="footer">Generated on Thu Aug 21 2014 07:58:24 for Frames by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

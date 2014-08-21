@@ -2,7 +2,7 @@ var searchData=
 [
   ['raw',['Raw',['../classFrames_1_1Raw.html#a32a2b1518bf4b002b78a6957508e0c64',1,'Frames::Raw']]],
   ['rawbppget',['RawBPPGet',['../classFrames_1_1Texture.html#a214b42ab8060ab395f02b5e0f5c6cc07',1,'Frames::Texture']]],
-  ['rawdataget',['RawDataGet',['../classFrames_1_1Texture.html#a6a97df25e7d4ec6939cf00c039df4642',1,'Frames::Texture::RawDataGet()'],['../classFrames_1_1Texture.html#a833e5c3e0d158bc8ef60182d5f8fd46b',1,'Frames::Texture::RawDataGet() const ']]],
+  ['rawdataget',['RawDataGet',['../classFrames_1_1Texture.html#a36abd17a875ffa07869d8cae454eebbe',1,'Frames::Texture::RawDataGet()'],['../classFrames_1_1Texture.html#addb93f1d10ee8970e2e8485ce105e530',1,'Frames::Texture::RawDataGet() const ']]],
   ['rawstrideget',['RawStrideGet',['../classFrames_1_1Texture.html#a59581f693685063165fbebfbd55363fe',1,'Frames::Texture']]],
   ['read',['Read',['../classFrames_1_1Stream.html#af0432303a878deb16f85134777eed45f',1,'Frames::Stream::Read()'],['../classFrames_1_1StreamFile.html#a894ac0a71385031e34413461987a3182',1,'Frames::StreamFile::Read()'],['../classFrames_1_1StreamBuffer.html#ab2ac65c5c6f0ff80d00cb42b549c5842',1,'Frames::StreamBuffer::Read()']]],
   ['rect',['Rect',['../structFrames_1_1Rect.html#a049205eac4410b5b25735affc5db85a4',1,'Frames::Rect::Rect()'],['../structFrames_1_1Rect.html#a647189ff6d0b13f007570b43d47eb35c',1,'Frames::Rect::Rect(const Vector &amp;s, const Vector &amp;e)'],['../structFrames_1_1Rect.html#ad01cf980eccf022c9ed1125a5805c6a7',1,'Frames::Rect::Rect(float sx, float sy, float ex, float ey)']]],

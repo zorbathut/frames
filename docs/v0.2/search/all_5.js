@@ -1,12 +1,14 @@
 var searchData=
 [
   ['frame',['Frame',['../basicsframe.html',1,'']]],
-  ['focusget',['FocusGet',['../classFrames_1_1Environment.html#a106c46fcf9d4183f8ca16dce02c79f7e',1,'Frames::Environment::FocusGet()'],['../classFrames_1_1Environment.html#a296cf10f4d08212256bc1c13e2721691',1,'Frames::Environment::FocusGet() const ']]],
+  ['focusget',['FocusGet',['../classFrames_1_1Environment.html#ab90d85f4430fbc642abe4c0fb003aee9',1,'Frames::Environment']]],
   ['focusset',['FocusSet',['../classFrames_1_1Environment.html#af445a41e32530b69c8fbcadc5c765b1a',1,'Frames::Environment']]],
   ['fontdefaultidget',['FontDefaultIdGet',['../classFrames_1_1Configuration_1_1Local.html#a5a886ab76990c61195cbaf46a6cd2c22',1,'Frames::Configuration::Local']]],
   ['fontdefaultidset',['FontDefaultIdSet',['../classFrames_1_1Configuration_1_1Local.html#aa317edb0dd890ea7859eee8c79e3265e',1,'Frames::Configuration::Local']]],
   ['fontget',['FontGet',['../classFrames_1_1Text.html#a293a87edca88dbfbb50f9e64ec830e5b',1,'Frames::Text']]],
   ['fontset',['FontSet',['../classFrames_1_1Text.html#ac30af0e3809574390c0cb51b7bd60c08',1,'Frames::Text']]],
+  ['fontsizeget',['FontSizeGet',['../classFrames_1_1Text.html#ae06bc0e5ebb5d6ebfea8f7c14d907ad0',1,'Frames::Text']]],
+  ['fontsizeset',['FontSizeSet',['../classFrames_1_1Text.html#a79983ed83b1881b05aaa378afcf1f3e1',1,'Frames::Text']]],
   ['format',['Format',['../classFrames_1_1Texture.html#af8bcddbecf1586285ec84e09053eb572',1,'Frames::Texture']]],
   ['format_5fr_5f8',['FORMAT_R_8',['../classFrames_1_1Texture.html#af8bcddbecf1586285ec84e09053eb572a2c76c4004fe97aac87498b4b04bfe402',1,'Frames::Texture']]],
   ['format_5frgb_5f8',['FORMAT_RGB_8',['../classFrames_1_1Texture.html#af8bcddbecf1586285ec84e09053eb572aae5c34165b31a47746b8ed0b354cd7e3',1,'Frames::Texture']]],

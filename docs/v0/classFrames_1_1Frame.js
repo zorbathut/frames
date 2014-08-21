@@ -15,6 +15,8 @@ var classFrames_1_1Frame =
     [ "ParentSet", "classFrames_1_1Frame.html#ae9e71224fdc5aec4d42ab6f3bf8ab08f", null ],
     [ "PinClear", "classFrames_1_1Frame.html#ab3cc213f34a4c0887c6986efe2aaf11e", null ],
     [ "PinClear", "classFrames_1_1Frame.html#a9dcc6e3571e2092b90d5f34bdffaf3f8", null ],
+    [ "PinClear", "classFrames_1_1Frame.html#ae70d66b77e7d1fa44e242e1ece714070", null ],
+    [ "PinClear", "classFrames_1_1Frame.html#a54755d4d42fc23c2725034c399cca6aa", null ],
     [ "PinClearAll", "classFrames_1_1Frame.html#ab632ab5740101497202f192ea832841d", null ],
     [ "PinSet", "classFrames_1_1Frame.html#a8d61c5bc36813d11b3e1b3766d95be60", null ],
     [ "PinSet", "classFrames_1_1Frame.html#a74cc31712ea6d5a55dc82d96ceb7ded8", null ],
