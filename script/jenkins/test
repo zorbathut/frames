@@ -27,9 +27,9 @@ unzip debugruntime.zip || exit 1
 rm *.zip
 set +e
 if [ "$configuration" == "release" ]; then
-  (cd test && ../bin/$target/$platform/test/test.exe $renderer)
+  (cd test && stat ../bin/$target/$platform/test/test.exe && ../bin/$target/$platform/test/test.exe $renderer)
 else
-  (cd test && ../bin/$target/$platform/test/testd.exe $renderer)
+  (cd test && stat ../bin/$target/$platform/test/testd.exe && ../bin/$target/$platform/test/testd.exe $renderer)
 fi
 RES=$?
 set -e
