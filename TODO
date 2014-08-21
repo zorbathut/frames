@@ -1,9 +1,6 @@
 
 === UE4
 
-* get deploy working
-  * this might already be working!
-
 * Test suite
   * How does this get linked in?
     * Gotta be part of the Frames plugin . . . but of course, if it is part of the Frames plugin, then that's a ton of unnecessary cruft
