@@ -25,7 +25,7 @@ unzip generate.zip
 rm *.zip
 lua script/build.lua $target $platform $configuration
 
-rm -f bin/$target/$platform/*/*.idb bin/$target/$platform/*/*.lib bin/$target/$platform/*/*.exp bin/$target/$platform/*/*.ilk lib/$target/$platform/*.ilk
+rm -f bin/$target/$platform/*/*.idb bin/$target/$platform/*/*.lib bin/$target/$platform/*/*.exp bin/$target/$platform/*/*.ilk lib/$target/$platform/*.idb lib/$target/$platform/*.ilk
 
 # test to fix some permission issues
 chmod -R u+rwX,go+rX,go-w .
