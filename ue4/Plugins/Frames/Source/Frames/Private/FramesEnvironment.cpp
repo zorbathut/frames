@@ -24,7 +24,6 @@
 #include "FramesConvert.h"
 #include "FramesFont.h"
 #include "FramesInput.h"
-#include "FramesHUDHack.h"
 #include "FramesManager.h"
 #include "FramesRendererRHI.h"
 
@@ -89,9 +88,8 @@ UFramesLayout *UFramesEnvironment::FocusGet() const {
   return FramesManager::Get().Convert(m_env->FocusGet());
 }
 
-void UFramesEnvironment::Render(AHUD *hud) {
-  UCanvas *canvas = FramesHUDHack(hud);
-  m_env->ResizeRoot(canvas->SizeX, canvas->SizeY);
+void UFramesEnvironment::Render(int32 SizeX, int32 SizeY) {
+  m_env->ResizeRoot(SizeX, SizeY);
   m_env->Render();
 }
 

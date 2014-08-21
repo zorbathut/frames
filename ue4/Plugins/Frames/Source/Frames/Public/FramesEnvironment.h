@@ -24,7 +24,6 @@
 #include <frames/configuration.h>
 #include <frames/renderer_null.h>
 
-#include "Engine.h"
 #include "FramesInput.h"
 #include "FramesLayout.h"
 
@@ -69,7 +68,7 @@ class UFramesEnvironment : public UObject {
   UFramesLayout *FocusGet() const;
 
   UFUNCTION(BlueprintCallable, Category="Frames|Rendering")
-  void Render(AHUD *Hud);
+  void Render(int32 SizeX, int32 SizeY);
   
   UFUNCTION(BlueprintCallable, Category="Frames")
   UFramesLayout *RootGet() const;

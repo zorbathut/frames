@@ -19,7 +19,6 @@
 
 #pragma once
 
+#include "Core.h"
 #include "CoreUObject.h"
-
-// Annoyingly, we can't include Engine.h here because Engine.h includes HUD.h and we need, in some files, to include HUD.h with that ghastly define hack
-// WELP
+#include "Engine.h"

@@ -22,7 +22,6 @@
 
 #include <frames/configuration.h>
 
-#include "Engine.h"
 #include "FramesFont.h"
 
 #include "FramesConfigurationLocal.generated.h"

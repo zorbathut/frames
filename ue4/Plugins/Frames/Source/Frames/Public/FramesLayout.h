@@ -28,7 +28,6 @@
 class UFramesFrame;
 class UFramesEnvironment;
 
-#include "Engine.h"
 #include "FramesRect.h"
 
 #include "FramesLayout.generated.h"
