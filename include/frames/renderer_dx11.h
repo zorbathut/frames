@@ -42,7 +42,7 @@ namespace Frames {
       TextureBackingDX11(Environment *env, int width, int height, Texture::Format format);
       ~TextureBackingDX11();
 
-      virtual void Write(int sx, int sy, const TexturePtr &tex);
+      virtual void Write(int sx, int sy, const TexturePtr &tex) FRAMES_OVERRIDE;
 
       ID3D11Texture2D *TexGet() const { return m_tex;  }
       ID3D11ShaderResourceView *ShaderResourceViewGet() const { return m_srview; }
@@ -57,14 +57,14 @@ namespace Frames {
       RendererDX11(Environment *env, ID3D11DeviceContext *context);
       ~RendererDX11();
 
-      virtual void Begin(int width, int height);
-      virtual void End();
+      virtual void Begin(int width, int height) FRAMES_OVERRIDE;
+      virtual void End() FRAMES_OVERRIDE;
 
-      virtual Vertex *Request(int quads);
-      virtual void Return(int quads = -1);  // also renders, count lets you optionally specify the number of quads
+      virtual Vertex *Request(int quads) FRAMES_OVERRIDE;
+      virtual void Return(int quads = -1) FRAMES_OVERRIDE;  // also renders, count lets you optionally specify the number of quads
 
-      virtual TextureBackingPtr TextureCreate(int width, int height, Texture::Format mode);
-      virtual void TextureSet(const TextureBackingPtr &tex);
+      virtual TextureBackingPtr TextureCreate(int width, int height, Texture::Format mode) FRAMES_OVERRIDE;
+      virtual void TextureSet(const TextureBackingPtr &tex) FRAMES_OVERRIDE;
 
       ID3D11DeviceContext *ContextGet() const { return m_context; }
       ID3D11Device *DeviceGet() const { return m_device;  }
@@ -109,7 +109,7 @@ namespace Frames {
 
       ID3D11ShaderResourceView *m_currentTexture;
 
-      virtual void ScissorSet(const Rect &rect);
+      virtual void ScissorSet(const Rect &rect) FRAMES_OVERRIDE;
     };
   }
 }

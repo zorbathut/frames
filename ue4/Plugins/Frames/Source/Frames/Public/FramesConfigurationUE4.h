@@ -33,8 +33,8 @@ namespace Frames {
     public:
       LoggerUE4(bool errorScreen, bool errorAssert);
 
-      virtual void LogError(const std::string &log);
-      virtual void LogDebug(const std::string &log);
+      virtual void LogError(const std::string &log) override;
+      virtual void LogDebug(const std::string &log) override;
 
     private:
       bool m_onScreenErrors;
@@ -45,14 +45,14 @@ namespace Frames {
     /** Reads textures from the UE4 assets. Usable only with RendererRHI. */
     class TextureFromIdUE4 : public Frames::Configuration::TextureFromId {
     public:
-      virtual Frames::TexturePtr Create(Frames::Environment *env, const std::string &id);
+      virtual Frames::TexturePtr Create(Frames::Environment *env, const std::string &id) override;
     };
 
     /// Standard stream reader module for UE4.
     /** This currently is intended only for use with fonts, and will be redesigned when a better font solution is available. */
     class StreamFromIdUE4 : public Frames::Configuration::StreamFromId {
     public:
-      virtual Frames::StreamPtr Create(Frames::Environment *env, const std::string &id);
+      virtual Frames::StreamPtr Create(Frames::Environment *env, const std::string &id) override;
     };
   }
 }

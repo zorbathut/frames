@@ -29,4 +29,12 @@
   #define FRAMES_EXPECT(expression, expected) (expression)
 #endif
 
+#if defined(_MSC_VER) && _MSC_VER == 1500
+  // not supported on msvc9
+  #define FRAMES_OVERRIDE
+#else
+  // supported; non-standard on msvc10, but at least well enough to use. standard everywhere else
+  #define FRAMES_OVERRIDE override
+#endif
+
 #endif

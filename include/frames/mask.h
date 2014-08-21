@@ -42,13 +42,13 @@ namespace Frames {
   protected:
     /// Creates a new Mask with the given parameters. "parent" must be non-null.
     Mask(Layout *parent, const std::string &name);
-    virtual ~Mask();
+    virtual ~Mask() FRAMES_OVERRIDE;
 
   private:
-    virtual bool MouseMaskingTest(float x, float y) const;
+    virtual bool MouseMaskingTest(float x, float y) const FRAMES_OVERRIDE;
 
-    virtual void RenderElementPreChild(detail::Renderer *renderer) const;
-    virtual void RenderElementPostChild(detail::Renderer *renderer) const;
+    virtual void RenderElementPreChild(detail::Renderer *renderer) const FRAMES_OVERRIDE;
+    virtual void RenderElementPostChild(detail::Renderer *renderer) const FRAMES_OVERRIDE;
   };
 }
 

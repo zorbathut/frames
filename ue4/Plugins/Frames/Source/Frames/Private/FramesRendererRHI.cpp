@@ -41,7 +41,7 @@ namespace Frames {
   namespace Configuration {
     class CfgRendererRHI : public Renderer {
     public:
-      virtual detail::Renderer *Create(Environment *env) const {
+      virtual detail::Renderer *Create(Environment *env) const override {
         return new detail::RendererRHI(env);
       }
     };

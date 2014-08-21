@@ -123,10 +123,10 @@ namespace Frames {
   protected:
     /// Creates a new Text with the given parameters. "parent" must be non-null.
     Text(Layout *parent, const std::string &name);
-    virtual ~Text();
+    virtual ~Text() FRAMES_OVERRIDE;
 
     /// Renders the Text.
-    virtual void RenderElement(detail::Renderer *renderer) const;
+    virtual void RenderElement(detail::Renderer *renderer) const FRAMES_OVERRIDE;
 
   private:
   

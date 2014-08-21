@@ -46,10 +46,10 @@ namespace Frames {
   protected:
     /// Creates a new Raw with the given parameters. "parent" must be non-null.
     Raw(Layout *parent, const std::string &name);
-    virtual ~Raw();
+    virtual ~Raw() FRAMES_OVERRIDE;
 
     /// Renders the Raw and fires the appropriate event.
-    virtual void RenderElement(detail::Renderer *renderer) const;
+    virtual void RenderElement(detail::Renderer *renderer) const FRAMES_OVERRIDE;
   };
 }
 

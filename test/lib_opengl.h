@@ -27,13 +27,13 @@ public:
   TestWindowSDL(int width, int height, int major, int minor, int profile);
   ~TestWindowSDL();
 
-  virtual void Swap();
-  virtual void HandleEvents();
+  virtual void Swap() FRAMES_OVERRIDE;
+  virtual void HandleEvents() FRAMES_OVERRIDE;
 
-  virtual Frames::Configuration::RendererPtr RendererGet();
+  virtual Frames::Configuration::RendererPtr RendererGet() FRAMES_OVERRIDE;
 
-  virtual void ClearRenderTarget();
-  virtual std::vector<unsigned char> Screenshot();
+  virtual void ClearRenderTarget() FRAMES_OVERRIDE;
+  virtual std::vector<unsigned char> Screenshot() FRAMES_OVERRIDE;
 
 private:
   SDL_Window *m_win;

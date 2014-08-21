@@ -45,7 +45,7 @@ namespace Frames {
         m_context->Release();
       }
 
-      virtual detail::Renderer *Create(Environment *env) const {
+      virtual detail::Renderer *Create(Environment *env) const FRAMES_OVERRIDE {
         return new detail::RendererDX11(env, m_context);
       }
 

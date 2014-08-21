@@ -65,11 +65,11 @@ namespace Frames {
     /// Creates a StreamFile referring to a given file.
     /** Returns NULL if the file does not exist or cannot be read. */
     static StreamFilePtr Create(const std::string &fname);
-    ~StreamFile();
+    virtual ~StreamFile() FRAMES_OVERRIDE;
 
-    virtual int64_t Read(unsigned char *target, int64_t bytes);
-    virtual bool Seek(int64_t offset);
-    virtual bool Seekable() const;
+    virtual int64_t Read(unsigned char *target, int64_t bytes) FRAMES_OVERRIDE;
+    virtual bool Seek(int64_t offset) FRAMES_OVERRIDE;
+    virtual bool Seekable() const FRAMES_OVERRIDE;
 
   private:
     StreamFile(std::FILE *file);
@@ -84,11 +84,11 @@ namespace Frames {
     /// Creates a StreamBuffer referring to given data.
     /** For simplicity, this data is copied inside the StreamBuffer. */
     static StreamBufferPtr Create(const std::vector<unsigned char> &data);
-    ~StreamBuffer();
+    virtual ~StreamBuffer() FRAMES_OVERRIDE;
 
-    virtual int64_t Read(unsigned char *target, int64_t bytes);
-    virtual bool Seek(int64_t offset);
-    virtual bool Seekable() const;
+    virtual int64_t Read(unsigned char *target, int64_t bytes) FRAMES_OVERRIDE;
+    virtual bool Seek(int64_t offset) FRAMES_OVERRIDE;
+    virtual bool Seekable() const FRAMES_OVERRIDE;
 
   private:
     StreamBuffer(const std::vector<unsigned char> &data);

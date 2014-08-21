@@ -38,13 +38,13 @@ public:
   TestWindowDX11(int width, int height, D3D_FEATURE_LEVEL fl, Mode mode);
   ~TestWindowDX11();
 
-  virtual void Swap();
-  virtual void HandleEvents();
+  virtual void Swap() FRAMES_OVERRIDE;
+  virtual void HandleEvents() FRAMES_OVERRIDE;
 
-  virtual Frames::Configuration::RendererPtr RendererGet();
+  virtual Frames::Configuration::RendererPtr RendererGet() FRAMES_OVERRIDE;
 
-  virtual void ClearRenderTarget();
-  virtual std::vector<unsigned char> Screenshot();
+  virtual void ClearRenderTarget() FRAMES_OVERRIDE;
+  virtual std::vector<unsigned char> Screenshot() FRAMES_OVERRIDE;
 
 private:
   HWND m_window;

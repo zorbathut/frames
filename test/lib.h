@@ -72,8 +72,8 @@ public:
   TestLogger();
   ~TestLogger();
 
-  virtual void LogError(const std::string &log);
-  virtual void LogDebug(const std::string &log);
+  virtual void LogError(const std::string &log) FRAMES_OVERRIDE;
+  virtual void LogDebug(const std::string &log) FRAMES_OVERRIDE;
 
   void AllowErrors();
 

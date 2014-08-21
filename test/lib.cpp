@@ -150,7 +150,7 @@ void TestLogger::AllowErrors() {
 
 class TestPathMunger : public Frames::Configuration::PathFromId {
 public:
-  virtual std::string Process(Frames::Environment *env, const std::string &id) {
+  virtual std::string Process(Frames::Environment *env, const std::string &id) FRAMES_OVERRIDE {
     if (strstr(id.c_str(), "data/")) {
       // horrible hack to deal with built-in fonts
       return std::string("c:/windows/fonts") + (id.c_str() + 4);

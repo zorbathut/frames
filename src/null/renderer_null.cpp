@@ -36,7 +36,7 @@ namespace Frames {
     public:
       CfgRendererNull() { }
 
-      virtual detail::Renderer *Create(Environment *env) const {
+      virtual detail::Renderer *Create(Environment *env) const FRAMES_OVERRIDE {
         return new detail::RendererNull(env);
       }
     };

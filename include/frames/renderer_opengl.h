@@ -44,7 +44,7 @@ namespace Frames {
 
       int GlidGet() const { return m_id; }
 
-      virtual void Write(int sx, int sy, const TexturePtr &tex);
+      virtual void Write(int sx, int sy, const TexturePtr &tex) FRAMES_OVERRIDE;
 
     private:
       GLuint m_id;
@@ -55,14 +55,14 @@ namespace Frames {
       RendererOpengl(Environment *env);
       ~RendererOpengl();
 
-      virtual void Begin(int width, int height);
-      virtual void End();
+      virtual void Begin(int width, int height) FRAMES_OVERRIDE;
+      virtual void End() FRAMES_OVERRIDE;
 
-      virtual Vertex *Request(int quads);
-      virtual void Return(int quads = -1);  // also renders, count lets you optionally specify the number of quads
+      virtual Vertex *Request(int quads) FRAMES_OVERRIDE;
+      virtual void Return(int quads = -1) FRAMES_OVERRIDE;  // also renders, count lets you optionally specify the number of quads
 
-      virtual TextureBackingPtr TextureCreate(int width, int height, Texture::Format mode);
-      virtual void TextureSet(const TextureBackingPtr &tex);
+      virtual TextureBackingPtr TextureCreate(int width, int height, Texture::Format mode) FRAMES_OVERRIDE;
+      virtual void TextureSet(const TextureBackingPtr &tex) FRAMES_OVERRIDE;
 
     private:
       void CreateBuffers(int len);
@@ -93,7 +93,7 @@ namespace Frames {
 
       GLuint m_currentTexture;
 
-      virtual void ScissorSet(const Rect &rect);
+      virtual void ScissorSet(const Rect &rect) FRAMES_OVERRIDE;
 
       GLuint CompileShader(int shaderType, const GLchar *data, const char *readabletype);
     };

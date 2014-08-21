@@ -36,7 +36,7 @@ namespace Frames {
       TextureBackingNull(Environment *env, int width, int height, Texture::Format format);
       ~TextureBackingNull();
 
-      virtual void Write(int sx, int sy, const TexturePtr &tex);
+      virtual void Write(int sx, int sy, const TexturePtr &tex) FRAMES_OVERRIDE;
     };
 
     class RendererNull : public Renderer {
@@ -44,18 +44,18 @@ namespace Frames {
       RendererNull(Environment *env);
       ~RendererNull();
 
-      virtual void Begin(int width, int height);
-      virtual void End();
+      virtual void Begin(int width, int height) FRAMES_OVERRIDE;
+      virtual void End() FRAMES_OVERRIDE;
 
-      virtual Vertex *Request(int quads);
-      virtual void Return(int quads = -1);  // also renders, count lets you optionally specify the number of quads
+      virtual Vertex *Request(int quads) FRAMES_OVERRIDE;
+      virtual void Return(int quads = -1) FRAMES_OVERRIDE;  // also renders, count lets you optionally specify the number of quads
 
-      virtual TextureBackingPtr TextureCreate(int width, int height, Texture::Format mode);
-      virtual void TextureSet(const TextureBackingPtr &tex);
+      virtual TextureBackingPtr TextureCreate(int width, int height, Texture::Format mode) FRAMES_OVERRIDE;
+      virtual void TextureSet(const TextureBackingPtr &tex) FRAMES_OVERRIDE;
 
     private:
 
-      virtual void ScissorSet(const Rect &rect);
+      virtual void ScissorSet(const Rect &rect) FRAMES_OVERRIDE;
     };
   }
 }

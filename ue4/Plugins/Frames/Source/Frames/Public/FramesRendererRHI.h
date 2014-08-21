@@ -53,7 +53,7 @@ namespace Frames {
       
       ~TextureBackingRHI();
 
-      virtual void Write(int sx, int sy, const TexturePtr &tex);
+      virtual void Write(int sx, int sy, const TexturePtr &tex) override;
 
       struct Data : detail::Noncopyable {
         FTexture2DRHIRef m_tex;
@@ -76,15 +76,15 @@ namespace Frames {
       RendererRHI(Environment *env);
       ~RendererRHI();
 
-      virtual void Begin(int width, int height);
-      virtual void End();
+      virtual void Begin(int width, int height) override;
+      virtual void End() override;
 
-      virtual Vertex *Request(int quads);
-      virtual void Return(int quads = -1);  // also renders, count lets you optionally specify the number of quads
+      virtual Vertex *Request(int quads) override;
+      virtual void Return(int quads = -1) override;  // also renders, count lets you optionally specify the number of quads
 
-      virtual TextureBackingPtr TextureCreate(int width, int height, Texture::Format mode);
-      virtual TextureBackingPtr TextureCreate(const Texture::ContextualPtr &contextual);
-      virtual void TextureSet(const TextureBackingPtr &tex);
+      virtual TextureBackingPtr TextureCreate(int width, int height, Texture::Format mode) override;
+      virtual TextureBackingPtr TextureCreate(const Texture::ContextualPtr &contextual) override;
+      virtual void TextureSet(const TextureBackingPtr &tex) override;
 
     private:
       void CreateBuffers(int len);
@@ -115,7 +115,7 @@ namespace Frames {
 
       TextureBackingRHI *m_currentTexture;
 
-      virtual void ScissorSet(const Rect &rect);
+      virtual void ScissorSet(const Rect &rect) override;
     };
   }
 }

@@ -27,13 +27,13 @@ public:
   TestWindowNull(int width, int height);
   ~TestWindowNull();
 
-  virtual void Swap();
-  virtual void HandleEvents();
+  virtual void Swap() FRAMES_OVERRIDE;
+  virtual void HandleEvents() FRAMES_OVERRIDE;
 
-  virtual Frames::Configuration::RendererPtr RendererGet();
+  virtual Frames::Configuration::RendererPtr RendererGet() FRAMES_OVERRIDE;
 
-  virtual void ClearRenderTarget();
-  virtual std::vector<unsigned char> Screenshot();
+  virtual void ClearRenderTarget() FRAMES_OVERRIDE;
+  virtual std::vector<unsigned char> Screenshot() FRAMES_OVERRIDE;
 };
 
 #endif

@@ -54,10 +54,10 @@ namespace Frames {
   protected:
     /// Creates a new Sprite with the given parameters. "parent" must be non-null.
     Sprite(Layout *parent, const std::string &name);
-    virtual ~Sprite();
+    virtual ~Sprite() FRAMES_OVERRIDE;
 
     /// Renders the Text.
-    virtual void RenderElement(detail::Renderer *renderer) const;
+    virtual void RenderElement(detail::Renderer *renderer) const FRAMES_OVERRIDE;
 
   private:
     std::string m_texture_id;

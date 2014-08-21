@@ -43,7 +43,7 @@ namespace Frames {
   namespace Configuration {
     class CfgRendererOpengl : public Renderer {
     public:
-      virtual detail::Renderer *Create(Environment *env) const {
+      virtual detail::Renderer *Create(Environment *env) const FRAMES_OVERRIDE {
         return new detail::RendererOpengl(env);
       }
     };

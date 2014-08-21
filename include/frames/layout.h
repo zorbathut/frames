@@ -52,7 +52,7 @@ namespace Frames {
   #define FRAMES_DECLARE_RTTI() \
     static ::Frames::detail::Rtti s_rtti; \
     static const ::Frames::detail::Rtti *RttiStaticGet() { return &s_rtti; } \
-    virtual const ::Frames::detail::Rtti *RttiVirtualGet() const { return &s_rtti; } \
+    virtual const ::Frames::detail::Rtti *RttiVirtualGet() const { return &s_rtti; } /* this should in theory be "override" but for base classes it may not actually override something */ \
     template <typename T> friend T *Cast(Layout *); \
     template <typename T> friend const T *Cast(const Layout *); \
     template <typename T> friend const ::Frames::detail::Rtti *::Frames::detail::InitHelper(); \
