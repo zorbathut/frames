@@ -29,11 +29,12 @@
   #define FRAMES_EXPECT(expression, expected) (expression)
 #endif
 
-#if defined(_MSC_VER) && _MSC_VER == 1500
+#if defined(_MSC_VER) && (_MSC_VER == 1500 || _MSC_VER == 1600)
   // not supported on msvc9
+  // non-standard support on msvc10; doesn't like "override" on destructors. we could jump through hoops to provide it anyway, but honestly testing it on a single compiler is enough to call it tested everywhere
   #define FRAMES_OVERRIDE
 #else
-  // supported; non-standard on msvc10, but at least well enough to use. standard everywhere else
+  // yay, modern compiler
   #define FRAMES_OVERRIDE override
 #endif
 
