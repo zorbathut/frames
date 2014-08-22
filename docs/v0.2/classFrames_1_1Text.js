@@ -7,7 +7,7 @@ var classFrames_1_1Text =
       [ "INTERACTIVE_EDIT", "classFrames_1_1Text.html#a19725f5e68811feda21dcc8d8e81ea72aef796784db2b933cabc5ad9ac4a86e6d", null ]
     ] ],
     [ "Text", "classFrames_1_1Text.html#a77e63cd63641be3a93f6e812f2d6fbef", null ],
-    [ "~Text", "classFrames_1_1Text.html#a8fc565d004acae15e6bb4b78e07733e9", null ],
+    [ "~Text", "classFrames_1_1Text.html#a328808995958ccff1ec33ad423fb3607", null ],
     [ "ColorSelectionGet", "classFrames_1_1Text.html#ac2198923f8d868b5b666e6a98e83942b", null ],
     [ "ColorSelectionSet", "classFrames_1_1Text.html#abf785f241598ec5b096261565b538abe", null ],
     [ "ColorTextGet", "classFrames_1_1Text.html#a5084f181f5a8f9d1e0a2d40e56ac15f6", null ],
@@ -22,7 +22,7 @@ var classFrames_1_1Text =
     [ "FontSizeSet", "classFrames_1_1Text.html#a79983ed83b1881b05aaa378afcf1f3e1", null ],
     [ "InteractiveGet", "classFrames_1_1Text.html#a5c0503e294dcb82f16f52805b8da27d6", null ],
     [ "InteractiveSet", "classFrames_1_1Text.html#a887f8af638814372c127de872763f6de", null ],
-    [ "RenderElement", "classFrames_1_1Text.html#a8b1e84491ded62308bd9e5425cec0737", null ],
+    [ "RenderElement", "classFrames_1_1Text.html#a6248d1f240b1a5efc1d74750441173fc", null ],
     [ "ScrollGet", "classFrames_1_1Text.html#aaedf5001ed8cc36297dabf1b3a03aca0", null ],
     [ "ScrollSet", "classFrames_1_1Text.html#afb8b90f46400a889b5ad01ed0d22b968", null ],
     [ "SelectionActiveGet", "classFrames_1_1Text.html#a0645e2a35bd84bc6b42a5e02b93a496d", null ],

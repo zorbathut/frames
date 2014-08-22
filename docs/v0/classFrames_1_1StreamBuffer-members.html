@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Frames
-   &#160;<span id="projectnumber">v0.2.2-105-g3244bf1</span>
+   &#160;<span id="projectnumber">v0.2.3-11-gd55b20b</span>
    </div>
   </td>
  </tr>
@@ -106,22 +106,22 @@ $(document).ready(function(){initNavTree('classFrames_1_1StreamBuffer.html','');
 <p>This is the complete list of members for <a class="el" href="classFrames_1_1StreamBuffer.html">Frames::StreamBuffer</a>, including all inherited members.</p>
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html#a808d441f7885b1c6b018909f14e1ab01">Create</a>(const std::vector&lt; unsigned char &gt; &amp;data)</td><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html">Frames::StreamBuffer</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html#ab2ac65c5c6f0ff80d00cb42b549c5842">Read</a>(unsigned char *target, int64_t bytes)</td><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html">Frames::StreamBuffer</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html#a63034be0a5b318d6a4062013ad6a7a6c">Read</a>(unsigned char *target, int64_t bytes) override</td><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html">Frames::StreamBuffer</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classFrames_1_1Refcountable.html#af47bb5a9bb57523065d3e4c009a7c91d">RefAdd</a>()</td><td class="entry"><a class="el" href="classFrames_1_1Refcountable.html">Frames::Refcountable&lt; Stream &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>Refcountable</b>() (defined in <a class="el" href="classFrames_1_1Refcountable.html">Frames::Refcountable&lt; Stream &gt;</a>)</td><td class="entry"><a class="el" href="classFrames_1_1Refcountable.html">Frames::Refcountable&lt; Stream &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classFrames_1_1Refcountable.html#a441a2f524a7cc1fd179750a998d71fe2">RefRelease</a>()</td><td class="entry"><a class="el" href="classFrames_1_1Refcountable.html">Frames::Refcountable&lt; Stream &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html#a5c0c0cbccdca7a0403ba8d024ecbbcbf">Seek</a>(int64_t offset)</td><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html">Frames::StreamBuffer</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html#adf7f97cef3b678aa9e8b5f2ef4ee975e">Seekable</a>() const </td><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html">Frames::StreamBuffer</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html#abdff796c8b250a729041814ab5b7f0fd">Seek</a>(int64_t offset) override</td><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html">Frames::StreamBuffer</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html#a6a9cc1edad407df0ee4d1722b596d71f">Seekable</a>() const override</td><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html">Frames::StreamBuffer</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>Stream</b>() (defined in <a class="el" href="classFrames_1_1Stream.html">Frames::Stream</a>)</td><td class="entry"><a class="el" href="classFrames_1_1Stream.html">Frames::Stream</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~Refcountable</b>() (defined in <a class="el" href="classFrames_1_1Refcountable.html">Frames::Refcountable&lt; Stream &gt;</a>)</td><td class="entry"><a class="el" href="classFrames_1_1Refcountable.html">Frames::Refcountable&lt; Stream &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>~Stream</b>() (defined in <a class="el" href="classFrames_1_1Stream.html">Frames::Stream</a>)</td><td class="entry"><a class="el" href="classFrames_1_1Stream.html">Frames::Stream</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~StreamBuffer</b>() (defined in <a class="el" href="classFrames_1_1StreamBuffer.html">Frames::StreamBuffer</a>)</td><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html">Frames::StreamBuffer</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~StreamBuffer</b>() override (defined in <a class="el" href="classFrames_1_1StreamBuffer.html">Frames::StreamBuffer</a>)</td><td class="entry"><a class="el" href="classFrames_1_1StreamBuffer.html">Frames::StreamBuffer</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Aug 21 2014 07:58:24 for Frames by
+    <li class="footer">Generated on Thu Aug 21 2014 19:33:47 for Frames by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

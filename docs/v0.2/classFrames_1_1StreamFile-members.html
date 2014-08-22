@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Frames
-   &#160;<span id="projectnumber">v0.2.2-105-g3244bf1</span>
+   &#160;<span id="projectnumber">v0.2.3-11-gd55b20b</span>
    </div>
   </td>
  </tr>
@@ -106,22 +106,22 @@ $(document).ready(function(){initNavTree('classFrames_1_1StreamFile.html','');})
 <p>This is the complete list of members for <a class="el" href="classFrames_1_1StreamFile.html">Frames::StreamFile</a>, including all inherited members.</p>
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html#abedc442f67be48d4d72b4818222045c2">Create</a>(const std::string &amp;fname)</td><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html">Frames::StreamFile</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html#a894ac0a71385031e34413461987a3182">Read</a>(unsigned char *target, int64_t bytes)</td><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html">Frames::StreamFile</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html#a2bfa7e2eb561ad6c2240c2d32f4b2093">Read</a>(unsigned char *target, int64_t bytes) override</td><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html">Frames::StreamFile</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classFrames_1_1Refcountable.html#af47bb5a9bb57523065d3e4c009a7c91d">RefAdd</a>()</td><td class="entry"><a class="el" href="classFrames_1_1Refcountable.html">Frames::Refcountable&lt; Stream &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>Refcountable</b>() (defined in <a class="el" href="classFrames_1_1Refcountable.html">Frames::Refcountable&lt; Stream &gt;</a>)</td><td class="entry"><a class="el" href="classFrames_1_1Refcountable.html">Frames::Refcountable&lt; Stream &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classFrames_1_1Refcountable.html#a441a2f524a7cc1fd179750a998d71fe2">RefRelease</a>()</td><td class="entry"><a class="el" href="classFrames_1_1Refcountable.html">Frames::Refcountable&lt; Stream &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html#adbd9953d1759736768d9af471e9c562e">Seek</a>(int64_t offset)</td><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html">Frames::StreamFile</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html#ae4ba16900c38c0d4fa7228ea44ba4627">Seekable</a>() const </td><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html">Frames::StreamFile</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html#a564b3362807d1a8eb17e78cfad86f85e">Seek</a>(int64_t offset) override</td><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html">Frames::StreamFile</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html#a0d8fd827cffd5db4cfc253c8343855b9">Seekable</a>() const override</td><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html">Frames::StreamFile</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>Stream</b>() (defined in <a class="el" href="classFrames_1_1Stream.html">Frames::Stream</a>)</td><td class="entry"><a class="el" href="classFrames_1_1Stream.html">Frames::Stream</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~Refcountable</b>() (defined in <a class="el" href="classFrames_1_1Refcountable.html">Frames::Refcountable&lt; Stream &gt;</a>)</td><td class="entry"><a class="el" href="classFrames_1_1Refcountable.html">Frames::Refcountable&lt; Stream &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>~Stream</b>() (defined in <a class="el" href="classFrames_1_1Stream.html">Frames::Stream</a>)</td><td class="entry"><a class="el" href="classFrames_1_1Stream.html">Frames::Stream</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~StreamFile</b>() (defined in <a class="el" href="classFrames_1_1StreamFile.html">Frames::StreamFile</a>)</td><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html">Frames::StreamFile</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~StreamFile</b>() override (defined in <a class="el" href="classFrames_1_1StreamFile.html">Frames::StreamFile</a>)</td><td class="entry"><a class="el" href="classFrames_1_1StreamFile.html">Frames::StreamFile</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Aug 21 2014 07:58:24 for Frames by
+    <li class="footer">Generated on Thu Aug 21 2014 19:33:47 for Frames by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.7 </li>
   </ul>

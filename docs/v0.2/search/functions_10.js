@@ -2,8 +2,8 @@ var searchData=
 [
   ['scrollget',['ScrollGet',['../classFrames_1_1Text.html#aaedf5001ed8cc36297dabf1b3a03aca0',1,'Frames::Text']]],
   ['scrollset',['ScrollSet',['../classFrames_1_1Text.html#afb8b90f46400a889b5ad01ed0d22b968',1,'Frames::Text']]],
-  ['seek',['Seek',['../classFrames_1_1Stream.html#a62eec768bb7a30eb58d21ba67345c443',1,'Frames::Stream::Seek()'],['../classFrames_1_1StreamFile.html#adbd9953d1759736768d9af471e9c562e',1,'Frames::StreamFile::Seek()'],['../classFrames_1_1StreamBuffer.html#a5c0c0cbccdca7a0403ba8d024ecbbcbf',1,'Frames::StreamBuffer::Seek()']]],
-  ['seekable',['Seekable',['../classFrames_1_1Stream.html#a959d39dfc12151cfa99b9ac1a9249dd4',1,'Frames::Stream::Seekable()'],['../classFrames_1_1StreamFile.html#ae4ba16900c38c0d4fa7228ea44ba4627',1,'Frames::StreamFile::Seekable()'],['../classFrames_1_1StreamBuffer.html#adf7f97cef3b678aa9e8b5f2ef4ee975e',1,'Frames::StreamBuffer::Seekable()']]],
+  ['seek',['Seek',['../classFrames_1_1Stream.html#a62eec768bb7a30eb58d21ba67345c443',1,'Frames::Stream::Seek()'],['../classFrames_1_1StreamFile.html#a564b3362807d1a8eb17e78cfad86f85e',1,'Frames::StreamFile::Seek()'],['../classFrames_1_1StreamBuffer.html#abdff796c8b250a729041814ab5b7f0fd',1,'Frames::StreamBuffer::Seek()']]],
+  ['seekable',['Seekable',['../classFrames_1_1Stream.html#a959d39dfc12151cfa99b9ac1a9249dd4',1,'Frames::Stream::Seekable()'],['../classFrames_1_1StreamFile.html#a0d8fd827cffd5db4cfc253c8343855b9',1,'Frames::StreamFile::Seekable()'],['../classFrames_1_1StreamBuffer.html#a6a9cc1edad407df0ee4d1722b596d71f',1,'Frames::StreamBuffer::Seekable()']]],
   ['selectionactiveget',['SelectionActiveGet',['../classFrames_1_1Text.html#a0645e2a35bd84bc6b42a5e02b93a496d',1,'Frames::Text']]],
   ['selectionbeginget',['SelectionBeginGet',['../classFrames_1_1Text.html#a314d62c978513f9318c6e4a4e29a8d5d',1,'Frames::Text']]],
   ['selectionclear',['SelectionClear',['../classFrames_1_1Text.html#a80bd18a4d6c4b2a9d2fc82051787e182',1,'Frames::Text']]],

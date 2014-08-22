@@ -1,7 +1,7 @@
 var classFrames_1_1StreamFile =
 [
-    [ "~StreamFile", "classFrames_1_1StreamFile.html#af9332cbfe0389c1f79c9b3dcba1814bc", null ],
-    [ "Read", "classFrames_1_1StreamFile.html#a894ac0a71385031e34413461987a3182", null ],
-    [ "Seek", "classFrames_1_1StreamFile.html#adbd9953d1759736768d9af471e9c562e", null ],
-    [ "Seekable", "classFrames_1_1StreamFile.html#ae4ba16900c38c0d4fa7228ea44ba4627", null ]
+    [ "~StreamFile", "classFrames_1_1StreamFile.html#a1be6de69bb2d0e42bf5416bbec0a2c40", null ],
+    [ "Read", "classFrames_1_1StreamFile.html#a2bfa7e2eb561ad6c2240c2d32f4b2093", null ],
+    [ "Seek", "classFrames_1_1StreamFile.html#a564b3362807d1a8eb17e78cfad86f85e", null ],
+    [ "Seekable", "classFrames_1_1StreamFile.html#a0d8fd827cffd5db4cfc253c8343855b9", null ]
 ];
