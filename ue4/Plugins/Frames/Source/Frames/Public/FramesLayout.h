@@ -64,7 +64,7 @@ enum EFramesAxis {
 };
 
 UCLASS(Transient, BlueprintType, NotPlaceable)
-class UFramesLayout : public UObject {
+class FRAMES_API UFramesLayout : public UObject {
   GENERATED_UCLASS_BODY()
   ~UFramesLayout();
 

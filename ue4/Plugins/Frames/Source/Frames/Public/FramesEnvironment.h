@@ -33,7 +33,7 @@
  * Frames main environment.
  */
 UCLASS(Transient, BlueprintType, NotPlaceable)
-class UFramesEnvironment : public UObject {
+class FRAMES_API UFramesEnvironment : public UObject {
   GENERATED_UCLASS_BODY()
   ~UFramesEnvironment();
 

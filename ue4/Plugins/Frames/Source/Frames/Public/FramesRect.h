@@ -23,7 +23,7 @@
 #include "FramesRect.generated.h"
 
 USTRUCT(BlueprintType)
-struct FFramesRect {
+struct FRAMES_API FFramesRect {
   GENERATED_USTRUCT_BODY()
 
   FFramesRect() { } // no initialization

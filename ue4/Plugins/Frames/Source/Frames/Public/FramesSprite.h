@@ -27,7 +27,7 @@
 #include "FramesSprite.generated.h"
 
 UCLASS(Transient, BlueprintType, NotPlaceable)
-class UFramesSprite : public UFramesFrame {
+class FRAMES_API UFramesSprite : public UFramesFrame {
   GENERATED_UCLASS_BODY()
 
   UFUNCTION(BlueprintCallable, Category="Frames|Sprite")

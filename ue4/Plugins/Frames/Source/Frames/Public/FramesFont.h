@@ -25,8 +25,8 @@
 /**
  * A font intended for use by Frames. Includes all information needed to render via Frames.
  */
-UCLASS(MinimalAPI, BlueprintType)
-class UFramesFont : public UObject {
+UCLASS(BlueprintType)
+class FRAMES_API UFramesFont : public UObject {
   GENERATED_UCLASS_BODY()
 
   UPROPERTY()

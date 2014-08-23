@@ -36,7 +36,7 @@ enum EFramesInteractivityMode {
 };
 
 UCLASS(Transient, BlueprintType, NotPlaceable)
-class UFramesText : public UFramesFrame {
+class FRAMES_API UFramesText : public UFramesFrame {
   GENERATED_UCLASS_BODY()
   
   UFUNCTION(BlueprintCallable, Category="Frames|Text")

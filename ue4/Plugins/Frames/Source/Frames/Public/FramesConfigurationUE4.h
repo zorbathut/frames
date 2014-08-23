@@ -25,11 +25,11 @@
 namespace Frames {
   namespace Configuration {
     /// Creates a Frames::Configuration::Local with configuration elements initialized to the recommended UE4-integration settings.
-    Frames::Configuration::Local CreateUE4();
+    Frames::Configuration::Local FRAMES_API CreateUE4();
 
     /// Standard logger module for UE4.
     /** errorScreen controls whether it displays errors on the screen. errorAssert controls whether it asserts on errors. */
-    class LoggerUE4 : Frames::Configuration::Logger {
+    class FRAMES_API LoggerUE4 : Frames::Configuration::Logger {
     public:
       LoggerUE4(bool errorScreen, bool errorAssert);
 
@@ -43,14 +43,14 @@ namespace Frames {
 
     /// Standard texture reader module for UE4.
     /** Reads textures from the UE4 assets. Usable only with RendererRHI. */
-    class TextureFromIdUE4 : public Frames::Configuration::TextureFromId {
+    class FRAMES_API TextureFromIdUE4 : public Frames::Configuration::TextureFromId {
     public:
       virtual Frames::TexturePtr Create(Frames::Environment *env, const std::string &id) override;
     };
 
     /// Standard stream reader module for UE4.
     /** This currently is intended only for use with fonts, and will be redesigned when a better font solution is available. */
-    class StreamFromIdUE4 : public Frames::Configuration::StreamFromId {
+    class FRAMES_API StreamFromIdUE4 : public Frames::Configuration::StreamFromId {
     public:
       virtual Frames::StreamPtr Create(Frames::Environment *env, const std::string &id) override;
     };

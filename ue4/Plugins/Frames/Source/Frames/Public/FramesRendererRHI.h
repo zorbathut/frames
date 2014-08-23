@@ -37,7 +37,7 @@ class FRHICommandList;
 namespace Frames {
   namespace Configuration {
     /// Creates a Configuration::Renderer for UE4 RHI.
-    RendererPtr RendererRHI();
+    RendererPtr FRAMES_API RendererRHI();
   }
   
   namespace detail {
@@ -46,7 +46,7 @@ namespace Frames {
     // Needed because we pass data to the renderer, and the parent class may theoretically have been torn down by then
     // We manually handle this object's lifetime, which is a pain, but so it goes.
 
-    class TextureBackingRHI : public TextureBacking {
+    class FRAMES_API TextureBackingRHI : public TextureBacking {
     public:
       TextureBackingRHI(Environment *env, int width, int height, Texture::Format format);
       TextureBackingRHI(Environment *env, FTexture2DRHIParamRef rhi);
@@ -65,13 +65,13 @@ namespace Frames {
     };
 
     // Used for passing pre-generated textures to Frames    
-    class UE4TextureContextual : public Frames::Texture::Contextual {
+    class FRAMES_API UE4TextureContextual : public Frames::Texture::Contextual {
     public:
       FTexture2DRHIRef m_tex;
     };
     typedef Frames::Ptr<UE4TextureContextual> UE4TextureContextualPtr;
 
-    class RendererRHI : public Renderer {
+    class FRAMES_API RendererRHI : public Renderer {
     public:
       RendererRHI(Environment *env);
       ~RendererRHI();

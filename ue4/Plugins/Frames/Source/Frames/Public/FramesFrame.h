@@ -25,7 +25,7 @@
 #include "FramesFrame.generated.h"
 
 UCLASS(Transient, BlueprintType, NotPlaceable)
-class UFramesFrame : public UFramesLayout {
+class FRAMES_API UFramesFrame : public UFramesLayout {
   GENERATED_UCLASS_BODY()
 
   UFUNCTION(BlueprintCallable, Category="Frames|Frame")
