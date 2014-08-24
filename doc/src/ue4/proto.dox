@@ -1,0 +1,71 @@
+/** \page ue4proto Unreal Engine 4 integration
+
+<h2>Under heavy construction</h2>
+
+The Unreal Engine 4 blueprint integration should be considered highly unfinished. It's not as clean as is intended and some features are still missing. Most notably:
+
+<ul>
+<li>Very few Configuration options available</li>
+<li>Environment Input limited to mouse events</li>
+<li>No Event support whatsoever</li>
+<li>No documentation attached to blueprint nodes</li>
+</ul>
+
+This means that, if you intend to work entirely within blueprints, Frames is currently suited only for UIs without text or mouse input, presumably updating based on game state.
+
+If you're willing to delve into C++, it's almost entirely working, with a few rough edges:
+
+<ul>
+<li>No clean interface for converting UE4 input events into Frames input events</li>
+<li>No documentation for UE4 plugin functionality</li>
+</ul>
+
+Note that Frames elements can be used both from blueprints and from C++ - if you want to do most of your layout and updating in blueprint, dropping to C++ for events, this is fully supported.
+
+That said, all functionality that exists should work. If anything doesn't work as expected, please <a href="mailto:ben@mandible.net">report this as a bug!</a>
+
+This documentation is extremely basic and incomplete - it will be fleshed out as the API stabilizes.
+
+----
+
+<h2>Installation instructions</h2>
+
+Installation is currently a bit more complicated than desired. Unfortunately, some of this is due to limitations in UE4's plugin system. We're hoping to make this easier in the future. These instructions are written assuming you're using Unreal Engine 4.4. If you're not, replace "4.4" in all paths with the version you're actually using, and the same with "4_4".
+
+First, ensure that you have a C++ project. This is needed to compile the plugin - there is currently no reliable way to avoid this. If you have a blueprint-only project, simply create a single C++ class derived from Actor. Make sure your project compiles and runs before continuing.
+
+Download the latest released package from <a href="http://www.framesui.com">our website</a>. Extract the contents of plugins/ue4_4 to your project directory, merging the contained Plugins directory with any plugins you may have installed. Don't start Unreal yet.
+
+Within Plugins/Frames is a Content/Shaders directory. FramesShader.usf from this directory must be copied to the Engine/Shaders directory <i>of your Unreal Engine installation</i>. This is nasty; it appears to be unavoidable. If you don't do this, Unreal will crash on startup. This also appears to be unavoidable. We're working on it. If you're using a default install, the target directory will be "C:\Program Files\Unreal Engine\4.4\Engine\Shaders". You can find it by looking for the file "BRDF.usf".
+
+Once you've done this, recompile your project, then start the editor. Open the "Window" menu and choose "Plugins". Click the "Installed" category on the left, then enable Frames from here. You may have to restart the editor.
+
+----
+
+<h2>Blueprint usage instructions</h2>
+
+The Blueprint API can be used in a manner very similar to the C++ API. The vast majority of functions have identical names and parameters. Call FramesConfigurationLocalCreate to create a configuration, FramesEnvironmentCreate to create an environment, and FramesFrameCreate to create an actual frame. To render, create a handler for the HUD's EventReceiveDrawHUD event, then call Render on whichever environments you want to render.
+
+The Frames UE4 integration will use Unreal Engine textures directly. Unreal Engine bakes its fonts in a way that is not useful for us, so we've created a new FramesFont type, categorized under Miscellaneous. Create one of these if you want text support.
+
+----
+
+<h2>C++ usage instructions</h2>
+
+The C++ API is highly undocumented, but also rather simple.
+
+While wrapper functions exist for everything in Blueprint, these aren't really recommended - you should probably just get the base Frame types and use those directly. Note that all the UFrames classes have a function for retrieving the underlying Frame type. Also, the UFramesManager class will convert any Frames::Layout into a UFramesLayout, which can be passed into the blueprint system and used transparently.
+
+This means that a frame intended to be used in C++ can be created in either C++ or Blueprint, and a frame intended to be used in Blueprint can also be created in either C++ or Blueprint. Choose your language as you see fit.
+
+If you're intending to create Environments in C++, you'll want to use the UE4 configuration defaults. Frames::Configuration::CreateUE4() will create a Configuration::Local set up with the recommended UE4 semantics, including logging to UE4 logs, rendering through the UE4 renderer, and loading assets via the UE4 asset manager.
+
+----
+
+<h2>Licensing</h2>
+
+If you don't want to contact the developer for a license, Frames is licensed under the GPL. This is, unfortunately, completely incompatible with Unreal Engine 4. If you'd like to distribute your game with Frames please <a href="mailto:ben@mandible.net">contact the developer</a>. If it's still 2014 we'll definitely give you a free license. Long-term we plan to use a licensing scheme similar to that of Unreal Engine itself - we will not charge any large fee up-front, and we intend to get our income entirely through revenue share.
+
+The exception to this license is the shader which you had to copy into your Unreal Engine directory. The shader is licensed under the libpng/zlib license. This is so you don't have to worry about removing it from your installation. It's small, will not harm anything, and we don't care at all if you distribute it along with any games of yours, intentionally or unintentionally, regardless of whether you've requested a Frames license.
+
+*/

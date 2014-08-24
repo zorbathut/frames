@@ -9,6 +9,7 @@
         <tab type="user" url="@ref cpphelloworld" title="Hello, World" />
         <tab type="user" url="@ref cppsetup" title="Further setup" />
       </tab>
+      <tab type="user" url="@ref ue4proto" title="Early Unreal Engine 4 integration" />
       <!-- <tab type="usergroup" url="@ref ue4intro" title="Unreal Engine 4 project integration">
         <tab type="user" url="@ref ue4install" title="Installation" />
         <tab type="user" url="@ref ue4helloworld" title="Hello, World" />
