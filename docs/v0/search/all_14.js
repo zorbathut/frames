@@ -1,8 +1,27 @@
 var searchData=
 [
-  ['widthdefaultset',['WidthDefaultSet',['../classFrames_1_1Layout.html#afa5e8e40881128ef48cd98e4bbb17453',1,'Frames::Layout']]],
-  ['widthget',['WidthGet',['../classFrames_1_1Layout.html#ad40ca5139adf7df85121ce870ee8eae4',1,'Frames::Layout::WidthGet()'],['../classFrames_1_1Texture.html#a7a85b0d2e5c25f54753591f428a83bd9',1,'Frames::Texture::WidthGet()']]],
-  ['widthset',['WidthSet',['../classFrames_1_1Frame.html#adfd2253708b2bb1f3108dfa4b877219c',1,'Frames::Frame']]],
-  ['wordwrapget',['WordwrapGet',['../classFrames_1_1Text.html#a9afd9782b9321fd902265d2a28247f2f',1,'Frames::Text']]],
-  ['wordwrapset',['WordwrapSet',['../classFrames_1_1Text.html#abbd0e8d3ce13ac247aa61e46e6ae8dc5',1,'Frames::Text']]]
+  ['valid',['valid',['../structFrames_1_1Layout_1_1PinAxis.html#aa2e9d75506f0f62d80058448fb7582a0',1,'Frames::Layout::PinAxis::valid()'],['../structFrames_1_1Layout_1_1PinPoint.html#a9e5aea7ed57cbb34c94b4d5612b338a5',1,'Frames::Layout::PinPoint::valid()']]],
+  ['vector',['Vector',['../structFrames_1_1Vector.html',1,'Frames']]],
+  ['vector',['Vector',['../structFrames_1_1Vector.html#a769e2bab407f3da47487a3ca7de8ec88',1,'Frames::Vector::Vector()'],['../structFrames_1_1Vector.html#a25add93c4a98dc0e2f13b3cd6e0b4376',1,'Frames::Vector::Vector(float x, float y)']]],
+  ['verb',['Verb',['../classFrames_1_1Verb.html',1,'Frames']]],
+  ['verb',['Verb',['../classFrames_1_1Verb.html#afc9a8ebc7d35a4a86b02792d34cc4007',1,'Frames::Verb']]],
+  ['verb_3c_20void_28_29_20_3e',['Verb&lt; void() &gt;',['../classFrames_1_1Verb.html',1,'Frames']]],
+  ['verb_3c_20void_28const_20frames_3a_3avector_20_26pt_29_20_3e',['Verb&lt; void(const Frames::Vector &amp;pt) &gt;',['../classFrames_1_1Verb.html',1,'Frames']]],
+  ['verb_3c_20void_28const_20std_3a_3astring_20_26text_29_20_3e',['Verb&lt; void(const std::string &amp;text) &gt;',['../classFrames_1_1Verb.html',1,'Frames']]],
+  ['verb_3c_20void_28input_3a_3akey_20kev_29_20_3e',['Verb&lt; void(Input::Key kev) &gt;',['../classFrames_1_1Verb.html',1,'Frames']]],
+  ['verb_3c_20void_28int_20button_29_20_3e',['Verb&lt; void(int button) &gt;',['../classFrames_1_1Verb.html',1,'Frames']]],
+  ['verb_3c_20void_28int_20delta_29_20_3e',['Verb&lt; void(int delta) &gt;',['../classFrames_1_1Verb.html',1,'Frames']]],
+  ['verbcontextget',['VerbContextGet',['../classFrames_1_1Handle.html#a0936c9ad6cd5577ab6c1ae8ecccd0cd0',1,'Frames::Handle']]],
+  ['verbgeneric',['VerbGeneric',['../classFrames_1_1VerbGeneric.html',1,'Frames']]],
+  ['verbget',['VerbGet',['../classFrames_1_1Handle.html#a525a1bb4ced18f3fef6baa48c5000c93',1,'Frames::Handle']]],
+  ['verbpackage',['VerbPackage',['../classFrames_1_1VerbPackage.html#a40315aa01f32b1fca568af7a49e19da5',1,'Frames::VerbPackage']]],
+  ['verbpackage',['VerbPackage',['../classFrames_1_1VerbPackage.html',1,'Frames']]],
+  ['verbpackage_3c_20void_28_29_20_3e',['VerbPackage&lt; void() &gt;',['../classFrames_1_1VerbPackage.html',1,'Frames']]],
+  ['verbpackage_3c_20void_28const_20frames_3a_3avector_20_26pt_29_20_3e',['VerbPackage&lt; void(const Frames::Vector &amp;pt) &gt;',['../classFrames_1_1VerbPackage.html',1,'Frames']]],
+  ['verbpackage_3c_20void_28const_20std_3a_3astring_20_26text_29_20_3e',['VerbPackage&lt; void(const std::string &amp;text) &gt;',['../classFrames_1_1VerbPackage.html',1,'Frames']]],
+  ['verbpackage_3c_20void_28input_3a_3akey_20kev_29_20_3e',['VerbPackage&lt; void(Input::Key kev) &gt;',['../classFrames_1_1VerbPackage.html',1,'Frames']]],
+  ['verbpackage_3c_20void_28int_20button_29_20_3e',['VerbPackage&lt; void(int button) &gt;',['../classFrames_1_1VerbPackage.html',1,'Frames']]],
+  ['verbpackage_3c_20void_28int_20delta_29_20_3e',['VerbPackage&lt; void(int delta) &gt;',['../classFrames_1_1VerbPackage.html',1,'Frames']]],
+  ['visibleget',['VisibleGet',['../classFrames_1_1Layout.html#a504a4ab003545e66addccb7f23aa58b7',1,'Frames::Layout']]],
+  ['visibleset',['VisibleSet',['../classFrames_1_1Layout.html#ad34527a5f8b7d58081895ff2ac5eee64',1,'Frames::Layout']]]
 ];

@@ -8,6 +8,7 @@ var NAVTREE =
         [ "Hello, World", "cpphelloworld.html", null ],
         [ "Further setup", "cppsetup.html", null ]
       ] ],
+      [ "Early Unreal Engine 4 integration", "ue4proto.html", null ],
       [ "Building", "buildingintro.html", [
         [ "From source package", "buildingsource.html", null ],
         [ "From source repository", "buildingrepo.html", null ]
