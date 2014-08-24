@@ -64,7 +64,7 @@ If you're intending to create Environments in C++, you'll want to use the UE4 co
 
 <h2>Licensing</h2>
 
-If you don't want to contact the developer for a license, Frames is licensed under the GPL. This is, unfortunately, completely incompatible with Unreal Engine 4. If you'd like to distribute your game with Frames please <a href="mailto:ben@mandible.net">contact the developer</a>. If it's still 2014 we'll definitely give you a free license. Long-term we plan to use a licensing scheme similar to that of Unreal Engine itself - we will not charge any large fee up-front, and we intend to get our income entirely through revenue share.
+Without contacting the developer, Frames is licensed under the GPL. This is, unfortunately, completely incompatible with Unreal Engine 4. If you'd like to distribute your game with Frames please <a href="mailto:ben@mandible.net">contact the developer</a>. If it's still 2014 we'll definitely give you a free license. Long-term we plan to use a licensing scheme similar to that of Unreal Engine itself - we will not charge any large fee up-front, and we intend to get our income entirely through revenue share.
 
 The exception to this license is the shader which you had to copy into your Unreal Engine directory. The shader is licensed under the libpng/zlib license. This is so you don't have to worry about removing it from your installation. It's small, will not harm anything, and we don't care at all if you distribute it along with any games of yours, intentionally or unintentionally, regardless of whether you've requested a Frames license.
 
