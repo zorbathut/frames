@@ -58,6 +58,9 @@ do
   end
 end
 
+-- Do this first so the documentation is properly tagged
+os.execute("git tag v" .. ver .. " -m \"Version " .. ver .. "\"")
+
 local major, minor, patch, suffix = ver:match("^(%d+).(%d+).(%d+)(-?.*)$")
 if suffix == "" then
   suffix = nil
@@ -109,5 +112,3 @@ end
 docto("v" .. ver);
 
 os.execute([[cd tagtemp && git add -A . && git commit -a -m "Documentation update for version v]] .. ver .. [[" && git push && cd .. && rm -rf tagtemp]])
-
-os.execute("git tag v" .. ver .. " -m \"Version " .. ver .. "\"")
