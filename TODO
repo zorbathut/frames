@@ -9,6 +9,8 @@
   * Base - may be difficult - thread sync?
   * Make sure to test RAW texture types
 
+* Blueprint test suite too
+
 * Dynamic texture
 * Render to texture
 
@@ -28,13 +30,6 @@
     * InputKey/Text
 
 * Doxygen linkup
-
-* Some way to provide the right set of verbs to provide external APIs
-* That may be extremely difficult
-  * Thoughts:
-  * Obliterate is needed - last event fired before shutdown
-    * fix up obliterate.cpp test case
-    * will have to happen after events are finished processing
 
 * Single-project integration?
   * Read all solutions from .sln file
