@@ -416,6 +416,12 @@ namespace Frames {
         return;
       }
 
+      if (!m_request->quads) {
+        delete m_request;
+        m_request = 0;
+        return;
+      }
+
       ENQUEUE_UNIQUE_RENDER_COMMAND_TWOPARAMETER(
         Frames_Begin,
         Data *, rhi, m_rhi,
@@ -460,6 +466,11 @@ namespace Frames {
         if (testSize >= size) {
           targetSize = testSize;
         }
+      }
+
+      if (targetSize <= 0) {
+        Configuration::Get().LoggerGet()->LogError("Nonpositive target size in GetVertexBuffer; recovering");
+        targetSize = 1;
       }
 
       // Create if it doesn't yet exist
