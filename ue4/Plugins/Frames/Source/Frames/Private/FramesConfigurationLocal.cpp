@@ -35,7 +35,7 @@ UFramesConfigurationLocal::UFramesConfigurationLocal(const class FPostConstructI
 }
 
 void UFramesConfigurationLocal::FontDefaultIdSet(UFramesFont *Font) {
-  m_config.FontDefaultIdSet(Frames::detail::UE4Convert(Font->GetFullName()));
+  m_config.FontDefaultIdSet(Frames::detail::UE4Convert(Font->GetPathName()));
 }
 
 UFramesFont *UFramesConfigurationLocal::FontDefaultIdGet() const {
