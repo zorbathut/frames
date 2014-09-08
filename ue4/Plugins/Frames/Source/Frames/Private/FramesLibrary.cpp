@@ -37,28 +37,28 @@ UFramesLibrary::UFramesLibrary(const class FPostConstructInitializeProperties &P
   
 }
 
-/*static*/ UFramesConfigurationLocal *UFramesLibrary::FramesConfigurationLocalCreate(UObject *WorldContextObject) {
+/*static*/ UFramesConfigurationLocal *UFramesLibrary::FramesConfigurationLocalCreate() {
   return new UFramesConfigurationLocal(FPostConstructInitializeProperties());
 }
 
-/*static*/ UFramesEnvironment *UFramesLibrary::FramesEnvironmentCreate(UObject *WorldContextObject, UFramesConfigurationLocal *Configuration) {
+/*static*/ UFramesEnvironment *UFramesLibrary::FramesEnvironmentCreate(UFramesConfigurationLocal *Configuration) {
   UFramesEnvironment *env = new UFramesEnvironment(FPostConstructInitializeProperties());
   env->Initialize(Configuration->m_config);
   return env;
 }
 
-/*static*/ UFramesFrame *UFramesLibrary::FramesFrameCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name) {
+/*static*/ UFramesFrame *UFramesLibrary::FramesFrameCreate(UFramesLayout *Parent, const FString &Name) {
   return Cast<UFramesFrame>(FramesManager::Get().Convert(Frames::Frame::Create(Parent ? Parent->FramesLayoutGet() : 0, Frames::detail::UE4Convert(Name))));
 }
 
-/*static*/ UFramesMask *UFramesLibrary::FramesMaskCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name) {
+/*static*/ UFramesMask *UFramesLibrary::FramesMaskCreate(UFramesLayout *Parent, const FString &Name) {
   return Cast<UFramesMask>(FramesManager::Get().Convert(Frames::Mask::Create(Parent ? Parent->FramesLayoutGet() : 0, Frames::detail::UE4Convert(Name))));
 }
 
-/*static*/ UFramesSprite *UFramesLibrary::FramesSpriteCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name) {
+/*static*/ UFramesSprite *UFramesLibrary::FramesSpriteCreate(UFramesLayout *Parent, const FString &Name) {
   return Cast<UFramesSprite>(FramesManager::Get().Convert(Frames::Sprite::Create(Parent ? Parent->FramesLayoutGet() : 0, Frames::detail::UE4Convert(Name))));
 }
 
-/*static*/ UFramesText *UFramesLibrary::FramesTextCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name) {
+/*static*/ UFramesText *UFramesLibrary::FramesTextCreate(UFramesLayout *Parent, const FString &Name) {
   return Cast<UFramesText>(FramesManager::Get().Convert(Frames::Text::Create(Parent ? Parent->FramesLayoutGet() : 0, Frames::detail::UE4Convert(Name))));
 }

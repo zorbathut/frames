@@ -32,21 +32,21 @@ UCLASS()
 class FRAMES_API UFramesLibrary : public UBlueprintFunctionLibrary {
   GENERATED_UCLASS_BODY()
 
-  UFUNCTION(BlueprintCallable, Category="Frames", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
-  static UFramesConfigurationLocal *FramesConfigurationLocalCreate(UObject* WorldContextObject);
+  UFUNCTION(BlueprintCallable, Category="Frames")
+  static UFramesConfigurationLocal *FramesConfigurationLocalCreate();
   
-  UFUNCTION(BlueprintCallable, Category="Frames", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
-  static UFramesEnvironment *FramesEnvironmentCreate(UObject* WorldContextObject, UFramesConfigurationLocal *Configuration);
+  UFUNCTION(BlueprintCallable, Category = "Frames")
+  static UFramesEnvironment *FramesEnvironmentCreate(UFramesConfigurationLocal *Configuration);
 
-  UFUNCTION(BlueprintCallable, Category="Frames|Creation", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
-  static UFramesFrame *FramesFrameCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name);
+  UFUNCTION(BlueprintCallable, Category = "Frames|Creation")
+  static UFramesFrame *FramesFrameCreate(UFramesLayout *Parent, const FString &Name);
 
-  UFUNCTION(BlueprintCallable, Category="Frames|Creation", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
-  static UFramesMask *FramesMaskCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name);
+  UFUNCTION(BlueprintCallable, Category = "Frames|Creation")
+  static UFramesMask *FramesMaskCreate(UFramesLayout *Parent, const FString &Name);
 
-  UFUNCTION(BlueprintCallable, Category="Frames|Creation", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
-  static UFramesSprite *FramesSpriteCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name);
+  UFUNCTION(BlueprintCallable, Category = "Frames|Creation")
+  static UFramesSprite *FramesSpriteCreate(UFramesLayout *Parent, const FString &Name);
 
-  UFUNCTION(BlueprintCallable, Category="Frames|Creation", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
-  static UFramesText *FramesTextCreate(UObject* WorldContextObject, UFramesLayout *Parent, const FString &Name);
+  UFUNCTION(BlueprintCallable, Category = "Frames|Creation")
+  static UFramesText *FramesTextCreate(UFramesLayout *Parent, const FString &Name);
 };
