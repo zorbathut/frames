@@ -463,8 +463,8 @@ namespace Frames {
         // We want to allow things that are, in general, 3*2^n also, so:
         // divide by four, subtract, compare
         int testSize = targetSize >> 2;
-        if (testSize >= size) {
-          targetSize = testSize;
+        if (targetSize - testSize >= size) {
+          targetSize = targetSize - testSize;
         }
       }
 
