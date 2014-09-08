@@ -80,13 +80,13 @@ class FRAMES_API UFramesFrame : public UFramesLayout {
   void PinSetAnchorAnchor(EFramesAnchor Mine, UFramesLayout *Destination, EFramesAnchor Theirs, FVector2D Offset = FVector2D(0.f, 0.f));
 
   UFUNCTION(BlueprintCallable, Category="Frames|Layout", meta=(AdvancedDisplay = "3"))
-  void PinSetAnchorVector(EFramesAnchor Mine, UFramesLayout *Destination, FVector2D Theirs, FVector2D Offset = FVector2D(0.f, 0.f));
+  void PinSetAnchorProportional(EFramesAnchor Mine, UFramesLayout *Destination, FVector2D Theirs, FVector2D Offset = FVector2D(0.f, 0.f));
 
   UFUNCTION(BlueprintCallable, Category="Frames|Layout", meta=(AdvancedDisplay = "3"))
-  void PinSetVectorAnchor(FVector2D Mine, UFramesLayout *Destination, EFramesAnchor Theirs, FVector2D Offset = FVector2D(0.f, 0.f));
+  void PinSetProportionalAnchor(FVector2D Mine, UFramesLayout *Destination, EFramesAnchor Theirs, FVector2D Offset = FVector2D(0.f, 0.f));
 
   UFUNCTION(BlueprintCallable, Category="Frames|Layout", meta=(AdvancedDisplay = "3"))
-  void PinSetVectorVector(FVector2D Mine, UFramesLayout *Destination, FVector2D Theirs, FVector2D Offset = FVector2D(0.f, 0.f));
+  void PinSetProportionalProportional(FVector2D Mine, UFramesLayout *Destination, FVector2D Theirs, FVector2D Offset = FVector2D(0.f, 0.f));
 
   UFUNCTION(BlueprintCallable, Category="Frames|Layout")
   void SizeClear(EFramesAxis Axis);

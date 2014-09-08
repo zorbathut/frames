@@ -144,7 +144,7 @@ void UFramesFrame::PinSetAnchorAnchor(EFramesAnchor Mine, UFramesLayout *Destina
   return FramesFrameGet()->PinSet((Frames::Anchor)Mine, Destination->FramesLayoutGet(), (Frames::Anchor)Theirs, Frames::detail::UE4Convert(Offset));
 }
 
-void UFramesFrame::PinSetAnchorVector(EFramesAnchor Mine, UFramesLayout *Destination, FVector2D Theirs, FVector2D Offset /*= FVector2D(0.f, 0.f)*/) {
+void UFramesFrame::PinSetAnchorProportional(EFramesAnchor Mine, UFramesLayout *Destination, FVector2D Theirs, FVector2D Offset /*= FVector2D(0.f, 0.f)*/) {
   if (!Destination) {
     Frames::Configuration::Get().LoggerGet()->LogError("Attempted to use null Frames layout");
     return;
@@ -155,7 +155,7 @@ void UFramesFrame::PinSetAnchorVector(EFramesAnchor Mine, UFramesLayout *Destina
   return FramesFrameGet()->PinSet((Frames::Anchor)Mine, Destination->FramesLayoutGet(), Frames::detail::UE4Convert(Theirs), Frames::detail::UE4Convert(Offset));
 }
 
-void UFramesFrame::PinSetVectorAnchor(FVector2D Mine, UFramesLayout *Destination, EFramesAnchor Theirs, FVector2D Offset /*= FVector2D(0.f, 0.f)*/) {
+void UFramesFrame::PinSetProportionalAnchor(FVector2D Mine, UFramesLayout *Destination, EFramesAnchor Theirs, FVector2D Offset /*= FVector2D(0.f, 0.f)*/) {
   if (!Destination) {
     Frames::Configuration::Get().LoggerGet()->LogError("Attempted to use null Frames layout");
     return;
@@ -166,7 +166,7 @@ void UFramesFrame::PinSetVectorAnchor(FVector2D Mine, UFramesLayout *Destination
   return FramesFrameGet()->PinSet(Frames::detail::UE4Convert(Mine), Destination->FramesLayoutGet(), (Frames::Anchor)Theirs, Frames::detail::UE4Convert(Offset));
 }
 
-void UFramesFrame::PinSetVectorVector(FVector2D Mine, UFramesLayout *Destination, FVector2D Theirs, FVector2D Offset /*= FVector2D(0.f, 0.f)*/) {
+void UFramesFrame::PinSetProportionalProportional(FVector2D Mine, UFramesLayout *Destination, FVector2D Theirs, FVector2D Offset /*= FVector2D(0.f, 0.f)*/) {
   if (!Destination) {
     Frames::Configuration::Get().LoggerGet()->LogError("Attempted to use null Frames layout");
     return;
