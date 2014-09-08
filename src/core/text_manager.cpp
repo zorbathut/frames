@@ -381,6 +381,10 @@ namespace Frames {
     }
 
     void TextLayout::Render(Renderer *renderer, const Color &color, Rect bounds, Vector offset) {
+      if (!m_parent->GetQuads()) {
+        return; // nothing to render, just abort
+      }
+
       // clamp the bounds to the pixel grid to avoid text blurring
       // probably shouldn't do this if we're using distance field rendering
       bounds.s.x = (float)(int)std::floor(bounds.s.x + 0.5f);

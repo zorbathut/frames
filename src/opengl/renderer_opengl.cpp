@@ -274,6 +274,10 @@ namespace Frames {
         m_verticesQuadpos = 0;
       }
 
+      if (quads == 0) {
+        EnvironmentGet()->LogError("Requested 0 quads");
+      }
+
       // now we have acceptable data
       Vertex *rv = (Vertex*)glMapBufferRange(GL_ARRAY_BUFFER, m_verticesQuadpos * 4 * sizeof(Vertex), quads * 4 * sizeof(Vertex), GL_MAP_UNSYNCHRONIZED_BIT | GL_MAP_WRITE_BIT);
 
