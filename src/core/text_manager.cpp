@@ -32,7 +32,7 @@ namespace Frames {
     // =======================================
     // FONTINFO
 
-    FontInfo::FontInfo(Environment *env, const StreamPtr &stream) : m_env(env), m_face_size(0) {
+    FontInfo::FontInfo(Environment *env, const StreamPtr &stream) : m_env(env), m_face_size(0), m_face(0) {
       // Hacky fallback for now: read the entire stream to a vector, then we just point to the vector. Later we'll do actual stream reading.
       if (stream) {
         while (true) {
@@ -111,7 +111,11 @@ namespace Frames {
 
     float FontInfo::GetLineHeightFirst(float size) {
       FT_Face face = GetFace(size);
-      return (face->size->metrics.ascender - face->size->metrics.descender) / 64.0f;
+      if (!face) {
+        return size;
+      } else {
+        return (face->size->metrics.ascender - face->size->metrics.descender) / 64.0f;
+      }
     }
 
     float FontInfo::GetKerning(float size, int char1, int char2) {
