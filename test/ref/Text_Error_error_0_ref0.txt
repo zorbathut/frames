@@ -1,0 +1,2 @@
+Unable to find font "badfont.ttf"
+Can't load Freetype face

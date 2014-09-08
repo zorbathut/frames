@@ -75,3 +75,15 @@ TEST(Text, Basic) {
 
   TestSnapshot(env);
 }
+
+TEST(Text, Error) {
+  TestEnvironment env;
+  env.AllowErrors(); // we'll have a bunch
+
+  Frames::Text *tex = Frames::Text::Create(env->RootGet(), "Text");
+  tex->FontSet("badfont.ttf");
+
+  tex->TextSet("Generic text here");
+
+  TestSnapshot(env); // should not crash
+}

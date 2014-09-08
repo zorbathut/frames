@@ -56,7 +56,7 @@ namespace Frames {
     }
 
     FontInfo::~FontInfo() {
-      if (FT_Done_Face(m_face)) {
+      if (m_face && FT_Done_Face(m_face)) {
         m_env->LogError("Can't close Freetype face");
       }
 
@@ -106,7 +106,11 @@ namespace Frames {
 
     float FontInfo::GetLineHeight(float size) {
       FT_Face face = GetFace(size);
-      return face->size->metrics.height / 64.0f;
+      if (!face) {
+        return size;
+      } else {
+        return face->size->metrics.height / 64.0f;
+      }
     }
 
     float FontInfo::GetLineHeightFirst(float size) {
@@ -130,13 +134,17 @@ namespace Frames {
       } else {
         FT_Face face = GetFace(size);
 
-        FT_UInt index_prev = FT_Get_Char_Index(face, char1);
-        FT_UInt index_current = FT_Get_Char_Index(face, char2);
+        float kern = 0.f;
 
-        FT_Vector delta;
-        FT_Get_Kerning(face, index_prev, index_current, FT_KERNING_DEFAULT, &delta);
+        if (face) {
+          FT_UInt index_prev = FT_Get_Char_Index(face, char1);
+          FT_UInt index_current = FT_Get_Char_Index(face, char2);
 
-        float kern = std::floor(delta.x / 64.f + 0.5f);
+          FT_Vector delta;
+          FT_Get_Kerning(face, index_prev, index_current, FT_KERNING_DEFAULT, &delta);
+
+          kern = std::floor(delta.x / 64.f + 0.5f);
+        }
 
         m_kerning[kinfo] = kern;
         return kern;
