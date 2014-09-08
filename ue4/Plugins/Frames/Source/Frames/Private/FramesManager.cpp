@@ -23,6 +23,12 @@
 
 #include "FramesEnvironment.h"
 #include "FramesFrame.h"
+#include "FramesText.h"
+#include "FramesSprite.h"
+#include "FramesMask.h"
+
+#include <frames/cast.h>
+#include <frames/mask.h>
 
   // Retrieve singleton
 FramesManager &FramesManager::Get() {
@@ -96,7 +102,13 @@ void FramesManager::RegisterEnvironment(UFramesEnvironment *uenv, Frames::Enviro
 
 /*static*/ UFramesLayout *FramesManager::Create(Frames::Layout *layout) {
   UFramesLayout *result = 0;
-  if (Frames::Cast<Frames::Frame>(layout)) {
+  if (Frames::Cast<Frames::Mask>(layout)) {
+    result = new UFramesMask(FPostConstructInitializeProperties());
+  } else if (Frames::Cast<Frames::Sprite>(layout)) {
+    result = new UFramesSprite(FPostConstructInitializeProperties());
+  } else if (Frames::Cast<Frames::Text>(layout)) {
+    result = new UFramesText(FPostConstructInitializeProperties());
+  } else if (Frames::Cast<Frames::Frame>(layout)) {
     result = new UFramesFrame(FPostConstructInitializeProperties());
   } else {
     result = new UFramesLayout(FPostConstructInitializeProperties());
