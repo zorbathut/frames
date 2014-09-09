@@ -365,7 +365,7 @@ namespace Frames {
         {
           TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap());
 
-          PixelShader->SetParameterTexture(RHICmdList, tex->m_tex, format == Texture::FORMAT_R_8);
+          PixelShader->SetParameterTexture(RHICmdList, tex ? tex->m_tex : 0, format == Texture::FORMAT_R_8);
         });
       }
     }
