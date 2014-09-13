@@ -64,6 +64,17 @@ namespace Frames {
 
   /// Retrieves coordinates for an anchor point
   Vector PointFromAnchor(Anchor anchor);
+
+  enum FontStrokeCap {
+    FONTSTROKECAP_ROUND, ///< Round end caps at the end of lines.
+    FONTSTROKECAP_SQUARE, ///< Square end caps at the end of lines.
+    FONTSTROKECAP_BUTT, ///< Flatly truncated end caps at the end of lines.
+  };
+  enum FontStrokeJoin {
+    FONTSTROKEJOIN_ROUND, ///< Round joints at line angles.
+    FONTSTROKEJOIN_BEVEL, ///< Beveled joints at line angles.
+    FONTSTROKEJOIN_MITER, ///< Mitered joints at line angles. Miter will be truncated according to the Miterlimit parameter.
+  };
 }
 
 #endif

@@ -75,6 +75,24 @@ namespace Frames {
       // this is just for the sake of a consistent sort across executions
       return lhs->m_constructionOrder < rhs->m_constructionOrder;
     }
+
+    bool operator<(const TextFormat &lhs, const TextFormat &rhs) {
+      if (lhs.size != rhs.size)
+        return lhs.size < rhs.size;
+      if (lhs.fill != rhs.fill)
+        return lhs.fill < rhs.fill;
+      if (lhs.stroke != rhs.stroke)
+        return lhs.stroke < rhs.stroke;
+      if (lhs.strokeRadius != rhs.strokeRadius)
+        return lhs.strokeRadius < rhs.strokeRadius;
+      if (lhs.strokeCap != rhs.strokeCap)
+        return lhs.strokeCap < rhs.strokeCap;
+      if (lhs.strokeJoin != rhs.strokeJoin)
+        return lhs.strokeJoin < rhs.strokeJoin;
+      if (lhs.strokeMiterLimit != rhs.strokeMiterLimit)
+        return lhs.strokeMiterLimit < rhs.strokeMiterLimit;
+      return false;
+    }
   }
 }
 

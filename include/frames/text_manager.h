@@ -27,6 +27,7 @@
 
 #include <boost/bimap.hpp>
 
+#include "frames/detail.h"
 #include "frames/color.h"
 #include "frames/noncopyable.h"
 #include "frames/ptr.h"
@@ -68,8 +69,8 @@ namespace Frames {
     public:
       FontInfo(Environment *env, const StreamPtr &stream);
 
-      TextInfoPtr GetTextInfo(float size, const std::string &text);
-      CharacterInfoPtr GetCharacterInfo(float size, int character); // character is, as usual, a UCS-4 codepoint
+      TextInfoPtr GetTextInfo(const TextFormat &format, const std::string &text);
+      CharacterInfoPtr GetCharacterInfo(const TextFormat &format, int character); // character is, as usual, a UCS-4 codepoint
 
       FT_Face GetFace(float size);
 
@@ -87,8 +88,8 @@ namespace Frames {
     private:
       ~FontInfo();
 
-      boost::bimap<std::pair<float, std::string>, TextInfo *> m_text;
-      boost::bimap<std::pair<float, int>, CharacterInfo *> m_character;
+      boost::bimap<std::pair<TextFormat, std::string>, TextInfo *> m_text;
+      boost::bimap<std::pair<TextFormat, int>, CharacterInfo *> m_character;
 
       // TODO: clear this out when no longer needed?
       struct KerningInfo {
@@ -110,13 +111,14 @@ namespace Frames {
       FT_Face m_face;
     };
 
-    // Includes info on a given (font, size, text) combo
+    // Includes info on a given (font, format, text) combo
     // Contains a list of active characters for that text as well as the text's fullwidth
+    // Handles all widths and wordwrap flags
     // Is owned by FontInfo
     class TextInfo : public Refcountable<TextInfo> {
       friend class Refcountable<TextInfo>;
     public:
-      TextInfo(FontInfoPtr parent, float size, std::string text);
+      TextInfo(FontInfoPtr parent, const TextFormat &format, std::string text);
 
       FontInfo *ParentGet() const { return m_parent.Get(); }
       TextLayoutPtr GetLayout(float width, bool wordwrap);
@@ -129,7 +131,7 @@ namespace Frames {
       float GetKerning(int index) const { return m_kerning[index]; }
       int GetQuads() const { return m_quads; }
 
-      float SizeGet() const { return m_size; }
+      const TextFormat &FormatGet() const { return m_format; }
 
       void ShutdownLayout(TextLayout *layout);
     private:
@@ -137,6 +139,7 @@ namespace Frames {
 
       FontInfoPtr m_parent;
 
+      // key is width/wordwrapflag, maps to a specific layout of glyphs
       boost::bimap<std::pair<float, bool>, TextLayout *> m_layout;
 
       std::vector<CharacterInfoPtr> m_characters;
@@ -144,15 +147,15 @@ namespace Frames {
       float m_fullWidth;
       int m_quads;
 
-      float m_size;
+      TextFormat m_format;
     };
 
-    // Includes info on a given character in a given (font, size) pair
+    // Includes info on a given character in a given (font, format) pair
     // Is owned by FontInfo
     class CharacterInfo : public Refcountable<CharacterInfo> {
       friend class Refcountable<CharacterInfo>;
     public:
-      CharacterInfo(FontInfoPtr parent, float size, int character);
+      CharacterInfo(FontInfoPtr parent, const TextFormat &format, int character);
 
       const TextureChunkPtr &TextureGet() const { return m_texture; }
 
@@ -180,7 +183,7 @@ namespace Frames {
       bool m_is_wordbreak;
     };
 
-    // Includes info on a given (font, size, text, width, wordwrap) quartet
+    // Includes info on a given (font, format, text, width, wordwrap) quartet
     // Contains rendering instructions for each character
     // Is owned by TextInfo
     class TextLayout : public Refcountable<TextLayout> {
@@ -217,7 +220,7 @@ namespace Frames {
       TextManager(Environment *env);
       ~TextManager();
 
-      TextInfoPtr GetTextInfo(const std::string &font, float size, const std::string &text);
+      TextInfoPtr GetTextInfo(const std::string &font, const TextFormat &format, const std::string &text);
 
       const FT_Library &GetFreetype() const { return m_ft; }
     private:

@@ -87,3 +87,122 @@ TEST(Text, Error) {
 
   TestSnapshot(env); // should not crash
 }
+
+void InitStrokeChunk(std::vector<Frames::Text *> *out, TestEnvironment &env, const std::string &alpha, const std::string &beta, const std::string &gamma, bool right) {
+  for (int i = 0; i < 3; ++i) {
+    Frames::Text *label = Frames::Text::Create(env->RootGet(), "label");
+    label->PinSet(Frames::BOTTOMCENTER, env->RootGet(), 0.25f + right * 0.5f, (i * 2 + 1) / 6.f, 0, -20);
+    if (i == 0) {
+      label->TextSet(alpha);
+    } else if (i == 1) {
+      label->TextSet(beta);
+    } else if (i == 2) {
+      label->TextSet(gamma);
+    }
+    label->FontSizeSet(24);
+    label->ColorTextSet(Frames::Color(1, 1, 1));
+
+    Frames::Text *target = Frames::Text::Create(env->RootGet(), "target");
+    target->PinSet(Frames::TOPCENTER, env->RootGet(), 0.25f + right * 0.5f, (i * 2 + 1) / 6.f, 0, 20);
+    target->TextSet("Zing, dwarf jocks vex lymph, Qutb.");
+    target->FontSizeSet(80);
+    target->EXPERIMENTAL_FillSet(false);
+    target->EXPERIMENTAL_StrokeSet(true);
+    target->EXPERIMENTAL_StrokeSizeSet(3.f);
+    target->ColorTextSet(Frames::Color(1, 1, 0));
+    if (right) {
+      target->FontSet("geo_1.ttf");
+    }
+
+    out->push_back(target);
+  }
+}
+
+std::vector<Frames::Text *> InitStrokeTest(TestEnvironment &env, const std::string &alpha, const std::string &beta, const std::string &gamma) {
+  std::vector<Frames::Text *> result;
+  InitStrokeChunk(&result, env, alpha, beta, gamma, false);
+  InitStrokeChunk(&result, env, alpha, beta, gamma, true);
+  return result;
+}
+
+TEST(Text, Stroke) {
+  TestEnvironment env;
+
+  std::vector<Frames::Text *> texen = InitStrokeTest(env, "Stroke", "None", "Both");
+
+  // texen[0] already good
+  texen[1]->EXPERIMENTAL_StrokeSet(false);
+  texen[2]->EXPERIMENTAL_FillSet(true);
+  // texen[3] already good
+  texen[4]->EXPERIMENTAL_StrokeSet(false);
+  texen[5]->EXPERIMENTAL_FillSet(true);
+
+  TestSnapshot(env);
+}
+
+TEST(Text, StrokeSize) {
+  TestEnvironment env;
+
+  std::vector<Frames::Text *> texen = InitStrokeTest(env, "Stroke size 0.3", "Stroke size 1.0", "Stroke size 5.0");
+
+  texen[0]->EXPERIMENTAL_StrokeSizeSet(0.3f);
+  texen[1]->EXPERIMENTAL_StrokeSizeSet(1.f);
+  texen[2]->EXPERIMENTAL_StrokeSizeSet(5.f);
+  texen[3]->EXPERIMENTAL_StrokeSizeSet(0.3f);
+  texen[4]->EXPERIMENTAL_StrokeSizeSet(1.f);
+  texen[5]->EXPERIMENTAL_StrokeSizeSet(5.f);
+
+  TestSnapshot(env);
+}
+
+TEST(Text, StrokeCap) {
+  TestEnvironment env;
+
+  std::vector<Frames::Text *> texen = InitStrokeTest(env, "Stroke cap Round", "Stroke cap Square", "Stroke cap Butt");
+
+  texen[0]->EXPERIMENTAL_StrokeCapSet(Frames::FONTSTROKECAP_ROUND);
+  texen[1]->EXPERIMENTAL_StrokeCapSet(Frames::FONTSTROKECAP_SQUARE);
+  texen[2]->EXPERIMENTAL_StrokeCapSet(Frames::FONTSTROKECAP_BUTT);
+  texen[3]->EXPERIMENTAL_StrokeCapSet(Frames::FONTSTROKECAP_ROUND);
+  texen[4]->EXPERIMENTAL_StrokeCapSet(Frames::FONTSTROKECAP_SQUARE);
+  texen[5]->EXPERIMENTAL_StrokeCapSet(Frames::FONTSTROKECAP_BUTT);
+
+  TestSnapshot(env);
+}
+
+TEST(Text, StrokeJoin) {
+  TestEnvironment env;
+
+  std::vector<Frames::Text *> texen = InitStrokeTest(env, "Stroke join Round", "Stroke join Bevel", "Stroke join Miter");
+
+  texen[0]->EXPERIMENTAL_StrokeJoinSet(Frames::FONTSTROKEJOIN_ROUND);
+  texen[1]->EXPERIMENTAL_StrokeJoinSet(Frames::FONTSTROKEJOIN_BEVEL);
+  texen[2]->EXPERIMENTAL_StrokeJoinSet(Frames::FONTSTROKEJOIN_MITER);
+  texen[3]->EXPERIMENTAL_StrokeJoinSet(Frames::FONTSTROKEJOIN_ROUND);
+  texen[4]->EXPERIMENTAL_StrokeJoinSet(Frames::FONTSTROKEJOIN_BEVEL);
+  texen[5]->EXPERIMENTAL_StrokeJoinSet(Frames::FONTSTROKEJOIN_MITER);
+
+  TestSnapshot(env);
+}
+
+TEST(Text, StrokeMiter) {
+  TestEnvironment env;
+
+  std::vector<Frames::Text *> texen = InitStrokeTest(env, "Miterlimit 0.3", "Miterlimit 1.0", "Miterlimit 5.0");
+
+  texen[0]->EXPERIMENTAL_StrokeJoinSet(Frames::FONTSTROKEJOIN_MITER);
+  texen[1]->EXPERIMENTAL_StrokeJoinSet(Frames::FONTSTROKEJOIN_MITER);
+  texen[2]->EXPERIMENTAL_StrokeJoinSet(Frames::FONTSTROKEJOIN_MITER);
+  texen[3]->EXPERIMENTAL_StrokeJoinSet(Frames::FONTSTROKEJOIN_MITER);
+  texen[4]->EXPERIMENTAL_StrokeJoinSet(Frames::FONTSTROKEJOIN_MITER);
+  texen[5]->EXPERIMENTAL_StrokeJoinSet(Frames::FONTSTROKEJOIN_MITER);
+
+  texen[0]->EXPERIMENTAL_StrokeMiterlimitSet(0.3f);
+  texen[1]->EXPERIMENTAL_StrokeMiterlimitSet(1.f);
+  texen[2]->EXPERIMENTAL_StrokeMiterlimitSet(5.f);
+  texen[3]->EXPERIMENTAL_StrokeMiterlimitSet(0.3f);
+  texen[4]->EXPERIMENTAL_StrokeMiterlimitSet(1.f);
+  texen[5]->EXPERIMENTAL_StrokeMiterlimitSet(5.f);
+
+  TestSnapshot(env);
+}

@@ -100,6 +100,28 @@ namespace Frames {
 
     struct FrameOrderSorter { bool operator()(const Frame *lhs, const Frame *rhs) const; };
     struct LayoutIdSorter { bool operator()(const Layout *lhs, const Layout *rhs) const; };
+    
+    struct TextFormat {
+      TextFormat() :
+        size(16.f),
+        strokeRadius(1.f),
+        fill(true),
+        stroke(false),
+        strokeCap(FONTSTROKECAP_ROUND),
+        strokeJoin(FONTSTROKEJOIN_ROUND),
+        strokeMiterLimit(1.f)
+      { }
+
+      float size;
+      float strokeRadius;
+      bool fill;
+      bool stroke;
+      FontStrokeCap strokeCap;
+      FontStrokeJoin strokeJoin;
+      float strokeMiterLimit;
+    };
+
+    bool operator<(const TextFormat &lhs, const TextFormat &rhs);
   };
 }
 

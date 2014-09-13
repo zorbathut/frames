@@ -27,6 +27,8 @@
 #include "frames/texture.h"
 #include "frames/texture_chunk.h"
 
+#include <ftstroke.h>
+
 namespace Frames {
   namespace detail {
     // =======================================
@@ -63,20 +65,20 @@ namespace Frames {
       m_env->TextManagerGet()->Internal_Shutdown_Font(this);
     }
 
-    TextInfoPtr FontInfo::GetTextInfo(float size, const std::string &text) {
-      if (!m_text.left.count(std::make_pair(size, text))) {
-        m_text.insert(boost::bimap<std::pair<float, std::string>, TextInfo *>::value_type(std::make_pair(size, text), new TextInfo(FontInfoPtr(this), size, text)));
+    TextInfoPtr FontInfo::GetTextInfo(const detail::TextFormat &format, const std::string &text) {
+      if (!m_text.left.count(std::make_pair(format, text))) {
+        m_text.insert(boost::bimap<std::pair<detail::TextFormat, std::string>, TextInfo *>::value_type(std::make_pair(format, text), new TextInfo(FontInfoPtr(this), format, text)));
       }
 
-      return TextInfoPtr(m_text.left.find(std::make_pair(size, text))->second);
+      return TextInfoPtr(m_text.left.find(std::make_pair(format, text))->second);
     }
 
-    CharacterInfoPtr FontInfo::GetCharacterInfo(float size, int character) {
-      if (!m_character.left.count(std::make_pair(size, character))) {
-        m_character.insert(boost::bimap<std::pair<float, int>, CharacterInfo *>::value_type(std::make_pair(size, character), new CharacterInfo(FontInfoPtr(this), size, character)));
+    CharacterInfoPtr FontInfo::GetCharacterInfo(const detail::TextFormat &format, int character) {
+      if (!m_character.left.count(std::make_pair(format, character))) {
+        m_character.insert(boost::bimap<std::pair<detail::TextFormat, int>, CharacterInfo *>::value_type(std::make_pair(format, character), new CharacterInfo(FontInfoPtr(this), format, character)));
       }
 
-      return CharacterInfoPtr(m_character.left.find(std::make_pair(size, character))->second);
+      return CharacterInfoPtr(m_character.left.find(std::make_pair(format, character))->second);
     }
 
     FT_Face FontInfo::GetFace(float size) {
@@ -160,17 +162,17 @@ namespace Frames {
     // =======================================
     // TEXTINFO
 
-    TextInfo::TextInfo(FontInfoPtr parent, float size, std::string text) : m_parent(parent), m_fullWidth(0), m_quads(0), m_size(size) {
+    TextInfo::TextInfo(FontInfoPtr parent, const detail::TextFormat &format, std::string text) : m_parent(parent), m_fullWidth(0), m_quads(0), m_format(format) {
       // TODO: Unicode!
       float linewidth = 0;
       float lastadjust = 0;
       for (int i = 0; i < (int)text.size(); ++i) {
-        m_characters.push_back(m_parent->GetCharacterInfo(size, text[i]));
+        m_characters.push_back(m_parent->GetCharacterInfo(format, text[i]));
 
         if (!i) {
           m_kerning.push_back(0.f);
         } else {
-          float kerning = m_parent->GetKerning(size, text[i - 1], text[i]);
+          float kerning = m_parent->GetKerning(format.size, text[i - 1], text[i]);
 
           m_kerning.push_back(kerning);
 
@@ -195,6 +197,11 @@ namespace Frames {
         m_quads += !!m_characters.back()->TextureGet();
       }
       m_fullWidth = std::max(m_fullWidth, linewidth + lastadjust);
+
+      // adjust for border
+      if (format.stroke) {
+        m_fullWidth += format.strokeRadius * 2;
+      }
     }
 
     TextInfo::~TextInfo() {
@@ -218,12 +225,12 @@ namespace Frames {
     // =======================================
     // CHARACTERINFO
 
-    CharacterInfo::CharacterInfo(FontInfoPtr parent, float size, int character) : m_parent(parent), m_offset_x(0), m_offset_y(0), m_advance(0), m_is_newline(false), m_is_wordbreak(false) {
+    CharacterInfo::CharacterInfo(FontInfoPtr parent, const detail::TextFormat &format, int character) : m_parent(parent), m_offset_x(0), m_offset_y(0), m_advance(0), m_is_newline(false), m_is_wordbreak(false) {
       // LET'S DO THIS THING
       m_is_newline = (character == '\n');
       m_is_wordbreak = (isspace(character) != 0);
 
-      FT_Face face = parent->GetFace(size);
+      FT_Face face = parent->GetFace(format.size);
 
       FT_UInt glyph_index = FT_Get_Char_Index(face, character);
 
@@ -235,13 +242,56 @@ namespace Frames {
       if (FT_Get_Glyph(face->glyph, &glyph))
         return;
 
+      FT_Fixed strokeAdjust = 0;
+
+      if (format.stroke) {
+        strokeAdjust = (FT_Fixed)(format.strokeRadius * 64 + 0.5);
+
+        FT_Stroker stroker;
+        FT_Stroker_New(parent->EnvironmentGet()->TextManagerGet()->GetFreetype(), &stroker);
+
+        FT_Stroker_LineCap cap = FT_STROKER_LINECAP_ROUND;
+        if (format.strokeCap == FONTSTROKECAP_ROUND) {
+          cap = FT_STROKER_LINECAP_ROUND;
+        } else if (format.strokeCap == FONTSTROKECAP_SQUARE) {
+          cap = FT_STROKER_LINECAP_SQUARE;
+        } else if (format.strokeCap == FONTSTROKECAP_BUTT) {
+          cap = FT_STROKER_LINECAP_BUTT;
+        }
+
+        FT_Stroker_LineJoin join = FT_STROKER_LINEJOIN_ROUND;
+        if (format.strokeJoin == FONTSTROKEJOIN_ROUND) {
+          join = FT_STROKER_LINEJOIN_ROUND;
+        } else if (format.strokeCap == FONTSTROKEJOIN_BEVEL) {
+          join = FT_STROKER_LINEJOIN_BEVEL;
+        } else if (format.strokeCap == FONTSTROKEJOIN_MITER) {
+          join = FT_STROKER_LINEJOIN_MITER;
+        }
+
+        FT_Stroker_Set(stroker, strokeAdjust, cap, join, (int)(format.strokeMiterLimit * 64 + 0.5));
+
+        FT_Glyph_Stroke(&glyph, stroker, true);
+
+        FT_Stroker_Done(stroker);
+      }
+
       m_advance = (float)(int)std::floor((float)face->glyph->advance.x / 64.f + 0.5f);  // this should probably be cleaned up - how *do* we want to deal with pixel subsampling?
 
       if (isspace(character))
+      {
+        FT_Done_Glyph(glyph);
         return; // we don't need bitmaps for whitespace characters
+      }
 
-      if (FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 0))
+      FT_Vector shift;
+      shift.x = -strokeAdjust;
+      shift.y = -strokeAdjust;
+      if (FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, &shift, true))
+      {
+        parent->EnvironmentGet()->LogError("Error converting glyph to bitmap");
+        FT_Done_Glyph(glyph);
         return;
+      }
 
       FT_BitmapGlyph bmp = (FT_BitmapGlyph)glyph;
 
@@ -252,7 +302,7 @@ namespace Frames {
         );
 
         m_offset_x = (float)bmp->left;
-        m_offset_y = -bmp->top + face->size->metrics.ascender / 64.f;
+        m_offset_y = -bmp->top + (face->size->metrics.ascender) / 64.f;
       }
 
       FT_Done_Glyph(glyph);
@@ -279,6 +329,12 @@ namespace Frames {
       float tx = 0;
       float ty = 0;
 
+      if (parent->FormatGet().stroke) {
+        width -= parent->FormatGet().strokeRadius;
+        tx += parent->FormatGet().strokeRadius;
+        ty += parent->FormatGet().strokeRadius;
+      }
+
       for (int i = 0; i < m_parent->GetCharacterCount(); ++i) {
         CharacterInfo *chr = m_parent->GetCharacter(i).Get();
 
@@ -292,7 +348,7 @@ namespace Frames {
           m_coordinates.push_back(Vector(tx, ty));
 
           tx = 0;
-          ty = ty + m_parent->ParentGet()->GetLineHeight(m_parent->SizeGet());
+          ty = ty + m_parent->ParentGet()->GetLineHeight(m_parent->FormatGet().size);
           ty = (float)(int)std::floor(ty + 0.5f); // again we're back to the pixel subsampling nightmare
         
           continue;
@@ -324,7 +380,7 @@ namespace Frames {
               // Do a forced line break, take this character, drop it at the beginning of the next word.
               // If the word is too long and this character is too long, then we just plop it down anyway because we don't have a realistic choice.
               tx = 0;
-              ty = ty + m_parent->ParentGet()->GetLineHeight(m_parent->SizeGet());
+              ty = ty + m_parent->ParentGet()->GetLineHeight(m_parent->FormatGet().size);
               ty = (float)(int)std::floor(ty + 0.5f);
 
               m_coordinates.push_back(Vector(tx, ty));
@@ -338,7 +394,7 @@ namespace Frames {
             // This word isn't too long, so we'll transplant the entire word to the next line. We know this will work without linewrapping because it was long enough to fit on this line.
             currentWordStartX = 0;
             tx = 0;
-            ty = ty + m_parent->ParentGet()->GetLineHeight(m_parent->SizeGet());
+            ty = ty + m_parent->ParentGet()->GetLineHeight(m_parent->FormatGet().size);
             ty = (float)(int)std::floor(ty + 0.5f);
             m_lines.push_back(currentWordStartIndex);
 
@@ -373,7 +429,11 @@ namespace Frames {
 
       m_coordinates.push_back(Vector(tx, ty)); // TODO: remove, generate when generating cursor positions? Or use an entirely separate lookup?
 
-      m_fullHeight = ty + m_parent->ParentGet()->GetLineHeightFirst(m_parent->SizeGet());
+      if (parent->FormatGet().stroke) {
+        ty += parent->FormatGet().strokeRadius;
+      }
+
+      m_fullHeight = ty + m_parent->ParentGet()->GetLineHeightFirst(m_parent->FormatGet().size);
     }
 
     TextLayout::~TextLayout() {
@@ -433,7 +493,7 @@ namespace Frames {
     int TextLayout::GetCharacterFromCoordinate(const Vector &pt) const {
       // yeah we're just going to go mad right here
       Vector lpt = detail::Clamp(pt, Vector(0, 0), Vector(m_width, m_fullHeight));
-      int line = std::min(int(lpt.y / ParentGet()->ParentGet()->GetLineHeight(ParentGet()->SizeGet())), (int)m_lines.size());
+      int line = std::min(int(lpt.y / ParentGet()->ParentGet()->GetLineHeight(ParentGet()->FormatGet().size)), (int)m_lines.size());
 
       int s = 0;
       if (line)
@@ -479,7 +539,7 @@ namespace Frames {
       }
     }
 
-    TextInfoPtr TextManager::GetTextInfo(const std::string &font, float size, const std::string &text) {
+    TextInfoPtr TextManager::GetTextInfo(const std::string &font, const TextFormat &format, const std::string &text) {
       if (!m_fonts.left.count(font)) {
         StreamPtr stream = m_env->ConfigurationGet().StreamFromIdGet()->Create(m_env, font);
         if (!stream) {
@@ -490,7 +550,7 @@ namespace Frames {
         }
       }
 
-      return m_fonts.left.find(font)->second->GetTextInfo(size, text);
+      return m_fonts.left.find(font)->second->GetTextInfo(format, text);
     }
   
     void TextManager::Internal_Shutdown_Font(FontInfo *font) {

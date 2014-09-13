@@ -23,6 +23,7 @@
 #include "frames/environment.h"
 #include "frames/rect.h"
 #include "frames/renderer.h"
+#include "frames/text_manager.h"
 
 namespace Frames {
   FRAMES_DEFINE_RTTI(Text, Frame);
@@ -55,8 +56,56 @@ namespace Frames {
   }
 
   void Text::FontSizeSet(float size) {
-    if (m_size != size) {
-      m_size = size;
+    if (m_format.size != size) {
+      m_format.size = size;
+
+      UpdateLayout();
+    }
+  }
+
+  void Text::EXPERIMENTAL_FillSet(bool fill) {
+    if (m_format.fill != fill) {
+      m_format.fill = fill;
+
+      UpdateLayout();
+    }
+  }
+
+  void Text::EXPERIMENTAL_StrokeSet(bool stroke) {
+    if (m_format.stroke != stroke) {
+      m_format.stroke = stroke;
+
+      UpdateLayout();
+    }
+  }
+
+  void Text::EXPERIMENTAL_StrokeSizeSet(float radius) {
+    if (m_format.strokeRadius != radius) {
+      m_format.strokeRadius = radius;
+
+      UpdateLayout();
+    }
+  }
+
+  void Text::EXPERIMENTAL_StrokeCapSet(FontStrokeCap cap) {
+    if (m_format.strokeCap != cap) {
+      m_format.strokeCap = cap;
+
+      UpdateLayout();
+    }
+  }
+
+  void Text::EXPERIMENTAL_StrokeJoinSet(FontStrokeJoin join) {
+    if (m_format.strokeJoin != join) {
+      m_format.strokeJoin = join;
+
+      UpdateLayout();
+    }
+  }
+    
+  void Text::EXPERIMENTAL_StrokeMiterlimitSet(float limit) {
+    if (m_format.strokeMiterLimit != limit) {
+      m_format.strokeMiterLimit = limit;
 
       UpdateLayout();
     }
@@ -168,7 +217,6 @@ namespace Frames {
 
   Text::Text(Layout *parent, const std::string &name) :
       Frame(parent, name),
-      m_size(16),
       m_wordwrap(false),
       m_color_text(1, 1, 1),
       m_color_selection(0.3f, 0.3f, 0.5f, 0.5f),
@@ -208,7 +256,9 @@ namespace Frames {
       // PROBLEM
       EnvironmentGet()->LogError("Error - attempting to render text without a valid font");
     } else {
-      detail::TextInfoPtr tinfo = EnvironmentGet()->TextManagerGet()->GetTextInfo(m_font, m_size, m_text);
+      // in theory, if we were clever, we'd canonicalize m_format here to help with searching
+
+      detail::TextInfoPtr tinfo = EnvironmentGet()->TextManagerGet()->GetTextInfo(m_font, m_format, m_text);
       WidthDefaultSet(tinfo->GetFullWidth());
 
       m_layout = tinfo->GetLayout(WidthGet(), m_wordwrap);
@@ -234,7 +284,7 @@ namespace Frames {
     }
 
     // Next, do the Y axis
-    float lineheight = m_layout->ParentGet()->ParentGet()->GetLineHeight(m_size);
+    float lineheight = m_layout->ParentGet()->ParentGet()->GetLineHeight(m_format.size);
     if (HeightGet() >= lineheight) {
       cscroll.y = detail::Clamp(cscroll.y, tpos.y + lineheight - HeightGet(), tpos.y);
     } else {
@@ -283,7 +333,7 @@ namespace Frames {
             rect.s.y += TopGet();
             rect.e.y += TopGet();
 
-            rect.e.y += m_layout->ParentGet()->ParentGet()->GetLineHeight(m_size);
+            rect.e.y += m_layout->ParentGet()->ParentGet()->GetLineHeight(m_format.size);
 
             if (detail::Renderer::WriteCroppedRect(verts + idx, rect, m_color_selection * Color(1, 1, 1, renderer->AlphaGet()), bounds)) {
               idx += 4;
@@ -307,7 +357,7 @@ namespace Frames {
           origin.x += LeftGet();
           origin.y += TopGet();
 
-          detail::Renderer::WriteCroppedTexRect(vert, Rect(origin, origin + Vector(1, m_layout->ParentGet()->ParentGet()->GetLineHeightFirst(m_size))), Rect(), Color(1, 1, 1, renderer->AlphaGet()), bounds);
+          detail::Renderer::WriteCroppedTexRect(vert, Rect(origin, origin + Vector(1, m_layout->ParentGet()->ParentGet()->GetLineHeightFirst(m_format.size))), Rect(), Color(1, 1, 1, renderer->AlphaGet()), bounds);
 
           renderer->Return();
         }
@@ -427,12 +477,12 @@ namespace Frames {
           newcursor = m_cursor + 1;
         }
       } else if (key == Input::Up) {
-        float lineheight = m_layout->ParentGet()->ParentGet()->GetLineHeight(m_size);
+        float lineheight = m_layout->ParentGet()->ParentGet()->GetLineHeight(m_format.size);
         Vector ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
         ccor.y -= lineheight / 2;
         newcursor = m_layout->GetCharacterFromCoordinate(ccor);
       } else if (key == Input::Down) {
-        float lineheight = m_layout->ParentGet()->ParentGet()->GetLineHeight(m_size);
+        float lineheight = m_layout->ParentGet()->ParentGet()->GetLineHeight(m_format.size);
         Vector ccor = m_layout->GetCoordinateFromCharacter(m_cursor);
         ccor.y += lineheight * 3 / 2; // need to bump it into the bottom line
         newcursor = m_layout->GetCharacterFromCoordinate(ccor);

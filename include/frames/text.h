@@ -20,11 +20,15 @@
 #ifndef FRAMES_TEXT
 #define FRAMES_TEXT
 
+#include "frames/detail.h"
 #include "frames/frame.h"
 
-#include "frames/text_manager.h"
-
 namespace Frames {
+  namespace detail {
+    class TextLayout;
+    typedef Ptr<TextLayout> TextLayoutPtr;
+  }
+
   /// Used to render and edit text.
   /** Text can act as a read-only text display, a selectable-but-not-editable text box, or a full editable textbox. It supports optional wordwrap. It can resize itself to fit whatever is currently contained in it.
   
@@ -53,7 +57,47 @@ namespace Frames {
     /** This is currently in arbitrary undefined units - this will change at some point in the future. */
     void FontSizeSet(float size);
     /// Gets the size of the font.
-    float FontSizeGet() const { return m_size; }
+    float FontSizeGet() const { return m_format.size; }
+
+    // Experimental, disabled for documentation
+    /// @cond EXPERIMENTAL
+    /// Sets whether the font's fill should be rendered.
+    void EXPERIMENTAL_FillSet(bool fill);
+    /// Gets whether the font's fill should be rendered.
+    bool EXPERIMENTAL_FillGet() const { return m_format.fill; }
+
+    /// Sets whether the font's stroke should be rendered.
+    /** This is currently an experimental feature. It is not yet clear how this should affect the text element's bounds - as of this writing, it will add StrokeSize units on all sides of the text for proper padding. */
+    void EXPERIMENTAL_StrokeSet(bool stroke);
+    /// Gets whether the font's stroke should be rendered.
+    bool EXPERIMENTAL_StrokeGet() const { return m_format.stroke; }
+
+    /// Sets the size of the stroke radius.
+    /** Same units as FontSize. */
+    void EXPERIMENTAL_StrokeSizeSet(float radius);
+    /// Gets the size of the stroke radius.
+    float EXPERIMENTAL_StrokeSizeGet() const { return m_format.strokeRadius; }
+
+    /// Sets the cap type of the stroke.
+    /** This controls how the stroke deals with the ends of lines. */
+    void EXPERIMENTAL_StrokeCapSet(FontStrokeCap cap);
+    /// Gets the cap type of the stroke.
+    FontStrokeCap EXPERIMENTAL_StrokeCapGet() const { return m_format.strokeCap; }
+
+    /// Sets the join type of the stroke.
+    /** This controls how the stroke deals with corners. */
+    void EXPERIMENTAL_StrokeJoinSet(FontStrokeJoin join);
+    /// Gets the join type of the stroke.
+    FontStrokeJoin EXPERIMENTAL_StrokeJoinGet() const { return m_format.strokeJoin; }
+
+    /// Sets the miter limit of the stroke.
+    /** This controls how the stroke deals with sharp corners.
+    Larger numbers will result in longer spikes at extremely sharp corners, short numbers will truncate those spikes more closely to the letter.
+    Interpreted as a multiple of StrokeSize.  */
+    void EXPERIMENTAL_StrokeMiterlimitSet(float limit);
+    /// Gets the join type of the stroke.
+    float EXPERIMENTAL_StrokeMiterlimitGet() const { return m_format.strokeMiterLimit; }
+    /// @endcond
 
     /// Sets the wordwrap flag.
     /** If wordwrap is enabled, text will wrap at the width of the text frame. If wordwrap is disabled, the text frame will be able to scroll horizontally. */
@@ -136,7 +180,7 @@ namespace Frames {
 
     std::string m_font;
     std::string m_text;
-    float m_size;
+    detail::TextFormat m_format;
     bool m_wordwrap;
     detail::TextLayoutPtr m_layout;
 

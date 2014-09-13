@@ -1,4 +1,3 @@
-
 === UE4
 
 * Test suite
@@ -43,6 +42,11 @@
   * image importing
     * sRGB
   * font importing
+
+=== STROKE
+
+* Rethink bounds
+* Deal with that weird ring issue when overexpanding periods
 
 === DOCS
 
