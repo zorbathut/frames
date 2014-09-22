@@ -76,6 +76,23 @@ TEST(Text, Basic) {
   TestSnapshot(env);
 }
 
+TEST(Text, Sizing) {
+  TestEnvironment env;
+
+  // There was a problem with this font on one platform, though for some reason it is not reproducing. Whatever; test written, leaving it in.
+  float sizes[] = {8, 12, 16, 24, 36, 48};
+  for (int i = 0; i < sizeof(sizes) / sizeof(*sizes); ++i) {
+    Frames::Text *tex = Frames::Text::Create(env->RootGet(), "Text");
+    tex->FontSet("Sansation_Bold.ttf");
+    tex->TextSet("300.0");
+    tex->FontSizeSet(sizes[i]);
+    tex->PinSet(Frames::CENTER, env->RootGet(), 0.5, (i + 0.5f) / (sizeof(sizes) / sizeof(*sizes)));
+    tex->BackgroundSet(Frames::Color(0.2f, 0.2f, 0.2f));
+  }
+
+  TestSnapshot(env);
+}
+
 TEST(Text, Error) {
   TestEnvironment env;
   env.AllowErrors(); // we'll have a bunch
