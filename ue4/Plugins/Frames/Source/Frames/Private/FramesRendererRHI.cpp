@@ -52,6 +52,33 @@ namespace Frames {
   }
 
   namespace detail {
+    // COMPATIBILITY SHIMS
+    #if ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION < 5
+      static TShaderMap<FGlobalShaderType> *GetGlobalShaderMap_Shim() {
+        return GetGlobalShaderMap();
+      };
+      static void SetGlobalBoundShaderState_Shim(FRHICommandList& RHICmdList,
+	        FGlobalBoundShaderState& BoundShaderState,
+	        FVertexDeclarationRHIParamRef VertexDeclaration,
+	        FShader* VertexShader,
+	        FShader* PixelShader,
+	        FShader* GeometryShader = nullptr) {
+        SetGlobalBoundShaderState(RHICmdList, BoundShaderState, VertexDeclaration, VertexShader, PixelShader, GeometryShader);
+      }
+    #else
+      static TShaderMap<FGlobalShaderType> *GetGlobalShaderMap_Shim() {
+        return GetGlobalShaderMap(GRHIFeatureLevel);
+      };
+      static void SetGlobalBoundShaderState_Shim(FRHICommandList& RHICmdList,
+	        FGlobalBoundShaderState& BoundShaderState,
+	        FVertexDeclarationRHIParamRef VertexDeclaration,
+	        FShader* VertexShader,
+	        FShader* PixelShader,
+	        FShader* GeometryShader = nullptr) {
+        SetGlobalBoundShaderState(RHICmdList, GRHIFeatureLevel, BoundShaderState, VertexDeclaration, VertexShader, PixelShader, GeometryShader);
+      }
+    #endif
+
     // I guess this is how shaders work in the crazy world of ue4
     class FFramesVS : public FGlobalShader
     {
@@ -274,7 +301,7 @@ namespace Frames {
     void RendererRHI::Begin(int width, int height) {
       Renderer::Begin(width, height);
 
-      m_currentTexture = 0;
+      m_currentTexture = nullptr;
 
       ENQUEUE_UNIQUE_RENDER_COMMAND_THREEPARAMETER(
         Frames_Begin,
@@ -282,11 +309,11 @@ namespace Frames {
         int, width, width,
         int, height, height,
       {
-        TShaderMapRef<FFramesVS> VertexShader(GetGlobalShaderMap());
-        TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap());
+        TShaderMapRef<FFramesVS> VertexShader(GetGlobalShaderMap_Shim());
+        TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap_Shim());
 
         static FGlobalBoundShaderState boundShaderState;
-        SetGlobalBoundShaderState(RHICmdList, boundShaderState, rhi->m_vertexDecl, *VertexShader, *PixelShader);
+        SetGlobalBoundShaderState_Shim(RHICmdList, boundShaderState, rhi->m_vertexDecl, *VertexShader, *PixelShader);
         
         VertexShader->SetParameterSize(RHICmdList, width, height);
         PixelShader->SetParameterTexture(RHICmdList, 0, false);
@@ -363,7 +390,7 @@ namespace Frames {
           TextureBackingRHI::Data *, tex, m_currentTexture ? m_currentTexture->DataGet() : 0,
           Texture::Format, format, m_currentTexture ? m_currentTexture->FormatGet() : Texture::FORMAT_R_8,  // fallback value is irrelevant
         {
-          TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap());
+          TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap_Shim());
 
           PixelShader->SetParameterTexture(RHICmdList, tex ? tex->m_tex : 0, format == Texture::FORMAT_R_8);
         });
@@ -418,7 +445,7 @@ namespace Frames {
 
       if (!m_request->quads) {
         delete m_request;
-        m_request = 0;
+        m_request = nullptr;
         return;
       }
 
@@ -444,7 +471,7 @@ namespace Frames {
         delete request;
       });
       
-      m_request = 0; // will be cleaned up in render thread
+      m_request = nullptr; // will be cleaned up in render thread
     }
 
     FVertexBufferRHIParamRef RendererRHI::Data::GetVertexBuffer(int size) {
