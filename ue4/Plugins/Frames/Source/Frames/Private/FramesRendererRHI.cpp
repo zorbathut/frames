@@ -62,7 +62,7 @@ namespace Frames {
       static TShaderMap<FGlobalShaderType> *GetGlobalShaderMap_Shim() {
         return GetGlobalShaderMap();
       };
-      static void SetGlobalBoundShaderState_Shim(FRHICommandList& RHICmdList,
+      static void SetGlobalBoundShaderState_Shim(FRHICommandListImmediate& RHICmdList,
 	        FGlobalBoundShaderState& BoundShaderState,
 	        FVertexDeclarationRHIParamRef VertexDeclaration,
 	        FShader* VertexShader,
