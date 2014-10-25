@@ -25,6 +25,7 @@
 #include "RenderingThread.h"
 #include "GlobalShader.h"
 #include "RHIStaticStates.h"
+#include "Runtime/Launch/Resources/Version.h"
 
 #include "frames/configuration.h"
 #include "frames/detail.h"
@@ -53,6 +54,10 @@ namespace Frames {
 
   namespace detail {
     // COMPATIBILITY SHIMS
+    #if !defined(ENGINE_MAJOR_VERSION) || !defined(ENGINE_MINOR_VERSION)
+      #error Cannot find UE4 version, compilation will fail.
+    #endif
+
     #if ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION < 5
       static TShaderMap<FGlobalShaderType> *GetGlobalShaderMap_Shim() {
         return GetGlobalShaderMap();
