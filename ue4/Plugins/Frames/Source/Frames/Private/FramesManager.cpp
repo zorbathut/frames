@@ -38,7 +38,7 @@ FramesManager &FramesManager::Get() {
 
 UFramesLayout *FramesManager::Convert(Frames::Layout *layout) {
   if (!layout) {
-    return 0;
+    return nullptr;
   }
 
   if (!m_mapLayout.count(layout)) {
@@ -54,7 +54,7 @@ UFramesLayout *FramesManager::Convert(Frames::Layout *layout) {
 
 UFramesEnvironment *FramesManager::Convert(Frames::Environment *env) {
   if (!env) {
-    return 0;
+    return nullptr;
   }
 
   if (!m_mapEnvironment.count(env)) {
@@ -79,7 +79,7 @@ FramesManager::~FramesManager() {
 void FramesManager::DestroyFrameCallback(Frames::Handle *handle) {
   UFramesLayout *ul = m_mapLayout[handle->TargetGet()];
   if (ul) {
-    ul->m_layout = 0; // clear it out
+    ul->m_layout = nullptr; // clear it out
   }
   m_mapLayout.erase(handle->TargetGet());
   m_mapLayoutReverse.erase(ul);
@@ -101,7 +101,7 @@ void FramesManager::RegisterEnvironment(UFramesEnvironment *uenv, Frames::Enviro
 }
 
 /*static*/ UFramesLayout *FramesManager::Create(Frames::Layout *layout) {
-  UFramesLayout *result = 0;
+  UFramesLayout *result = nullptr;
   if (Frames::Cast<Frames::Mask>(layout)) {
     result = new UFramesMask(FPostConstructInitializeProperties());
   } else if (Frames::Cast<Frames::Sprite>(layout)) {

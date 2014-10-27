@@ -75,13 +75,13 @@ FFramesRect UFramesLayout::BoundsGet() const {
 }
 
 UFramesFrame *UFramesLayout::ChildGetByName(const FString &name) const {
-  if (!ValidCheck()) return 0;
+  if (!ValidCheck()) return nullptr;
 
   return Cast<UFramesFrame>(FramesManager::Get().Convert(FramesLayoutGet()->ChildGetByName(Frames::detail::UE4Convert(name))));
 }
 
 UFramesFrame *UFramesLayout::ChildImplementationGetByName(const FString &name) const {
-  if (!ValidCheck()) return 0;
+  if (!ValidCheck()) return nullptr;
 
   return Cast<UFramesFrame>(FramesManager::Get().Convert(FramesLayoutGet()->ChildImplementationGetByName(Frames::detail::UE4Convert(name))));
 }
@@ -121,7 +121,7 @@ FString UFramesLayout::DebugNameGet() const {
 }
 
 UFramesEnvironment *UFramesLayout::EnvironmentGet() const {
-  if (!ValidCheck()) return 0;
+  if (!ValidCheck()) return nullptr;
 
   return FramesManager::Get().Convert(FramesLayoutGet()->EnvironmentGet());
 }
@@ -157,7 +157,7 @@ FString UFramesLayout::NameGet() const {
 }
 
 UFramesLayout *UFramesLayout::ParentGet() const {
-  if (!ValidCheck()) return 0;
+  if (!ValidCheck()) return nullptr;
 
   return FramesManager::Get().Convert(FramesLayoutGet()->ParentGet());
 }
@@ -187,7 +187,7 @@ FVector2D UFramesLayout::PointGetVector(FVector2D position) const {
 }
 
 UFramesLayout *UFramesLayout::ProbeAsMouse(float X, float Y) const {
-  if (!ValidCheck()) return 0;
+  if (!ValidCheck()) return nullptr;
 
   return FramesManager::Get().Convert(FramesLayoutGet()->ProbeAsMouse(X, Y));
 }
@@ -235,9 +235,15 @@ float UFramesLayout::WidthGet() const {
 }
 
 bool UFramesLayout::ValidCheck() const {
+  if (!this) {
+    // Seriously, it shouldn't, but we've got a nice single test point here, we may as well take advantage of it just for a little safety
+    Frames::Configuration::Get().LoggerGet()->LogError("Attempted to use null pointer - this should never happen!");
+    return false;
+  }
+
   if (!m_layout) {
     Frames::Configuration::Get().LoggerGet()->LogError("Attempted to use obliterated Frames layout");
   }
 
-  return m_layout != 0;
+  return m_layout != nullptr;
 }

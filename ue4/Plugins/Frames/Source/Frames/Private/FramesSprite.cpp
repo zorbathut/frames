@@ -31,7 +31,7 @@ UFramesSprite::UFramesSprite(const FPostConstructInitializeProperties &PCIP)
 }
 
 UTexture2D *UFramesSprite::TextureGet() const {
-  if (!ValidCheck()) return 0;
+  if (!ValidCheck()) return nullptr;
 
   return LoadObject<UTexture2D>(NULL, *Frames::detail::UE4Convert(FramesSpriteGet()->TextureGet()), NULL);
 }

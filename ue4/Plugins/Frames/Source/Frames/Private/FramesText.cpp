@@ -84,7 +84,7 @@ void UFramesText::CursorSet(int32 Position) {
 }
 
 UFramesFont *UFramesText::FontGet() const {
-  if (!ValidCheck()) return 0;
+  if (!ValidCheck()) return nullptr;
 
   return LoadObject<UFramesFont>(NULL, *Frames::detail::UE4Convert(FramesTextGet()->FontGet()), NULL);
 }

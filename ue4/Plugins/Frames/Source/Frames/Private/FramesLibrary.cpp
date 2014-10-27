@@ -48,17 +48,17 @@ UFramesLibrary::UFramesLibrary(const class FPostConstructInitializeProperties &P
 }
 
 /*static*/ UFramesFrame *UFramesLibrary::FramesFrameCreate(UFramesLayout *Parent, const FString &Name) {
-  return Cast<UFramesFrame>(FramesManager::Get().Convert(Frames::Frame::Create(Parent ? Parent->FramesLayoutGet() : 0, Frames::detail::UE4Convert(Name))));
+  return Cast<UFramesFrame>(FramesManager::Get().Convert(Frames::Frame::Create(Parent ? Parent->FramesLayoutGet() : nullptr, Frames::detail::UE4Convert(Name))));
 }
 
 /*static*/ UFramesMask *UFramesLibrary::FramesMaskCreate(UFramesLayout *Parent, const FString &Name) {
-  return Cast<UFramesMask>(FramesManager::Get().Convert(Frames::Mask::Create(Parent ? Parent->FramesLayoutGet() : 0, Frames::detail::UE4Convert(Name))));
+  return Cast<UFramesMask>(FramesManager::Get().Convert(Frames::Mask::Create(Parent ? Parent->FramesLayoutGet() : nullptr, Frames::detail::UE4Convert(Name))));
 }
 
 /*static*/ UFramesSprite *UFramesLibrary::FramesSpriteCreate(UFramesLayout *Parent, const FString &Name) {
-  return Cast<UFramesSprite>(FramesManager::Get().Convert(Frames::Sprite::Create(Parent ? Parent->FramesLayoutGet() : 0, Frames::detail::UE4Convert(Name))));
+  return Cast<UFramesSprite>(FramesManager::Get().Convert(Frames::Sprite::Create(Parent ? Parent->FramesLayoutGet() : nullptr, Frames::detail::UE4Convert(Name))));
 }
 
 /*static*/ UFramesText *UFramesLibrary::FramesTextCreate(UFramesLayout *Parent, const FString &Name) {
-  return Cast<UFramesText>(FramesManager::Get().Convert(Frames::Text::Create(Parent ? Parent->FramesLayoutGet() : 0, Frames::detail::UE4Convert(Name))));
+  return Cast<UFramesText>(FramesManager::Get().Convert(Frames::Text::Create(Parent ? Parent->FramesLayoutGet() : nullptr, Frames::detail::UE4Convert(Name))));
 }
