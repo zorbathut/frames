@@ -485,6 +485,8 @@ namespace Frames {
     }
 
     if (m_obliterateLockCount == 0) {
+      // WARNING: At the moment, changes to this function must be mirrored in Layout::zinternalObliterate. This solution sucks and should be fixed.
+
       // Detach all before destroying; this isn't strictly necessary for correctness, but it will prevent error spam
       for (std::set<Layout *, detail::LayoutIdSorter>::const_iterator itr = m_obliterateQueues.begin(); itr != m_obliterateQueues.end(); ++itr) {
         (*itr)->ObliterateDetach();
