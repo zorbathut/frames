@@ -56,7 +56,7 @@ namespace Frames {
     
     Handle eh(this, &event);
     
-    for (CallbackIterator itr = CallbackIterator(this, &event); !itr.Complete(); itr.Next()) {
+    for (CallbackIterator itr(this, &event); !itr.Complete(); itr.Next()) {
       itr.Setup(&eh);
       itr.Get().Call(&eh);
     }
@@ -73,7 +73,7 @@ namespace Frames {
 
     Handle eh(this, &event);
         
-    for (CallbackIterator itr = CallbackIterator(this, &event); !itr.Complete(); itr.Next()) {
+    for (CallbackIterator itr(this, &event); !itr.Complete(); itr.Next()) {
       itr.Setup(&eh);
       itr.Get().Call<P1>(&eh, p1);
     }
