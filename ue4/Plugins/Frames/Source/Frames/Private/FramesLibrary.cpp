@@ -26,23 +26,24 @@
 #include <frames/sprite.h>
 #include <frames/text.h>
 
+#include "FramesCompat.h"
 #include "FramesConfigurationLocal.h"
 #include "FramesConvert.h"
 #include "FramesFrame.h"
 #include "FramesManager.h"
 
-UFramesLibrary::UFramesLibrary(const class FPostConstructInitializeProperties &PCIP)
+UFramesLibrary::UFramesLibrary(const class FObjectInitializer &PCIP)
   : Super(PCIP)
 {
   
 }
 
 /*static*/ UFramesConfigurationLocal *UFramesLibrary::FramesConfigurationLocalCreate() {
-  return new UFramesConfigurationLocal(FPostConstructInitializeProperties());
+  return new UFramesConfigurationLocal(FObjectInitializer());
 }
 
 /*static*/ UFramesEnvironment *UFramesLibrary::FramesEnvironmentCreate(UFramesConfigurationLocal *Configuration) {
-  UFramesEnvironment *env = new UFramesEnvironment(FPostConstructInitializeProperties());
+  UFramesEnvironment *env = new UFramesEnvironment(FObjectInitializer());
   env->Initialize(Configuration->m_config);
   return env;
 }

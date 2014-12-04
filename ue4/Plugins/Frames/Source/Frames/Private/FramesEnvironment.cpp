@@ -21,6 +21,7 @@
 
 #include "FramesEnvironment.h"
 
+#include "FramesCompat.h"
 #include "FramesConvert.h"
 #include "FramesFont.h"
 #include "FramesInput.h"
@@ -30,7 +31,7 @@
 #include <frames/configuration.h>
 #include <frames/environment.h>
 
-UFramesEnvironment::UFramesEnvironment(const class FPostConstructInitializeProperties& PCIP)
+UFramesEnvironment::UFramesEnvironment(const FObjectInitializer &PCIP)
   : Super(PCIP)
 {
 }

@@ -70,7 +70,7 @@ namespace Frames {
 	        FShader* GeometryShader = nullptr) {
         SetGlobalBoundShaderState(RHICmdList, BoundShaderState, VertexDeclaration, VertexShader, PixelShader, GeometryShader);
       }
-    #else
+    #elif ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION < 6
       static TShaderMap<FGlobalShaderType> *GetGlobalShaderMap_Shim() {
         return GetGlobalShaderMap(GRHIFeatureLevel);
       };
@@ -81,6 +81,18 @@ namespace Frames {
 	        FShader* PixelShader,
 	        FShader* GeometryShader = nullptr) {
         SetGlobalBoundShaderState(RHICmdList, GRHIFeatureLevel, BoundShaderState, VertexDeclaration, VertexShader, PixelShader, GeometryShader);
+      }
+    #else
+      static TShaderMap<FGlobalShaderType> *GetGlobalShaderMap_Shim() {
+        return GetGlobalShaderMap(GMaxRHIFeatureLevel);
+      };
+      static void SetGlobalBoundShaderState_Shim(FRHICommandList& RHICmdList,
+	        FGlobalBoundShaderState& BoundShaderState,
+	        FVertexDeclarationRHIParamRef VertexDeclaration,
+	        FShader* VertexShader,
+	        FShader* PixelShader,
+	        FShader* GeometryShader = nullptr) {
+        SetGlobalBoundShaderState(RHICmdList, GMaxRHIFeatureLevel, BoundShaderState, VertexDeclaration, VertexShader, PixelShader, GeometryShader);
       }
     #endif
 

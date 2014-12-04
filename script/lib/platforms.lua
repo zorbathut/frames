@@ -95,6 +95,11 @@ projects = {
     parameters = "--ue=4_5",
     build = uebuild("4.5")
   },
+  ue4_6 = {
+    generator = "vs2013",
+    parameters = "--ue=4_6",
+    build = uebuild("4.6")
+  },
   -- disabled, possibly permanently
   --[[mingw = {
     generator = "gmake",

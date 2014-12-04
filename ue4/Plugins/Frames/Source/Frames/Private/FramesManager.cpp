@@ -21,6 +21,7 @@
 
 #include "FramesManager.h"
 
+#include "FramesCompat.h"
 #include "FramesEnvironment.h"
 #include "FramesFrame.h"
 #include "FramesText.h"
@@ -58,7 +59,7 @@ UFramesEnvironment *FramesManager::Convert(Frames::Environment *env) {
   }
 
   if (!m_mapEnvironment.count(env)) {
-    UFramesEnvironment *uenv = new UFramesEnvironment(FPostConstructInitializeProperties());
+    UFramesEnvironment *uenv = new UFramesEnvironment(FObjectInitializer());
     uenv->m_env = Frames::EnvironmentPtr(env);
     m_mapEnvironment[env] = uenv;
     m_mapEnvironmentReverse[uenv] = env;
@@ -103,15 +104,15 @@ void FramesManager::RegisterEnvironment(UFramesEnvironment *uenv, Frames::Enviro
 /*static*/ UFramesLayout *FramesManager::Create(Frames::Layout *layout) {
   UFramesLayout *result = nullptr;
   if (Frames::Cast<Frames::Mask>(layout)) {
-    result = new UFramesMask(FPostConstructInitializeProperties());
+    result = new UFramesMask(FObjectInitializer());
   } else if (Frames::Cast<Frames::Sprite>(layout)) {
-    result = new UFramesSprite(FPostConstructInitializeProperties());
+    result = new UFramesSprite(FObjectInitializer());
   } else if (Frames::Cast<Frames::Text>(layout)) {
-    result = new UFramesText(FPostConstructInitializeProperties());
+    result = new UFramesText(FObjectInitializer());
   } else if (Frames::Cast<Frames::Frame>(layout)) {
-    result = new UFramesFrame(FPostConstructInitializeProperties());
+    result = new UFramesFrame(FObjectInitializer());
   } else {
-    result = new UFramesLayout(FPostConstructInitializeProperties());
+    result = new UFramesLayout(FObjectInitializer());
   }
   result->m_layout = layout;
   return result;

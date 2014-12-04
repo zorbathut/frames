@@ -22,9 +22,10 @@
 
 #include "FramesSprite.h"
 
+#include "FramesCompat.h"
 #include "FramesConvert.h"
 
-UFramesSprite::UFramesSprite(const FPostConstructInitializeProperties &PCIP)
+UFramesSprite::UFramesSprite(const FObjectInitializer &PCIP)
   : Super(PCIP)
 {
 

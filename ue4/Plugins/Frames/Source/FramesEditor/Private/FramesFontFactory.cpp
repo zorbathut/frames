@@ -28,7 +28,11 @@
 #include "FramesFont.h"
 #include "SlateCore.h"
 
-UFramesFontFactory::UFramesFontFactory(const class FPostConstructInitializeProperties &PCIP)
+// I really don't want to make this public, so instead we use this (one weird) trick to dive through the file system
+// Consider this to be "UE4 build system package scope"
+#include "../Private/FramesCompat.h"
+
+UFramesFontFactory::UFramesFontFactory(const FObjectInitializer &PCIP)
   : Super(PCIP)
 {
   SupportedClass = UFramesFont::StaticClass();

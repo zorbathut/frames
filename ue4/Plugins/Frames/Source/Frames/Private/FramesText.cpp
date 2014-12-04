@@ -22,6 +22,7 @@
 
 #include "FramesText.h"
 
+#include "FramesCompat.h"
 #include "FramesConvert.h"
 
 BOOST_STATIC_ASSERT(EFIM_NONE == Frames::Text::INTERACTIVE_NONE);
@@ -29,7 +30,7 @@ BOOST_STATIC_ASSERT(EFIM_SELECT == Frames::Text::INTERACTIVE_SELECT);
 BOOST_STATIC_ASSERT(EFIM_CURSOR == Frames::Text::INTERACTIVE_CURSOR);
 BOOST_STATIC_ASSERT(EFIM_EDIT == Frames::Text::INTERACTIVE_EDIT);
 
-UFramesText::UFramesText(const FPostConstructInitializeProperties &PCIP)
+UFramesText::UFramesText(const FObjectInitializer &PCIP)
   : Super(PCIP)
 {
 

@@ -22,11 +22,12 @@
 
 #include "FramesFrame.h"
 
+#include "FramesCompat.h"
 #include "FramesConvert.h"
 
 #include <frames/frame.h>
 
-UFramesFrame::UFramesFrame(const FPostConstructInitializeProperties &PCIP)
+UFramesFrame::UFramesFrame(const FObjectInitializer &PCIP)
   : Super(PCIP)
 {
 

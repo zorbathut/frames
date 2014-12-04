@@ -22,7 +22,9 @@
 
 #include "FramesFont.h"
 
-UFramesFont::UFramesFont(const FPostConstructInitializeProperties &PCIP)
+#include "FramesCompat.h"
+
+UFramesFont::UFramesFont(const FObjectInitializer &PCIP)
   : Super(PCIP)
 {
 

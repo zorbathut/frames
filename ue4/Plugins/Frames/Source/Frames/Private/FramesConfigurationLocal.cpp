@@ -21,13 +21,14 @@
 
 #include "FramesConfigurationLocal.h"
 
+#include "FramesCompat.h"
 #include "FramesConfigurationUE4.h"
 #include "FramesConvert.h"
 
 #include <frames/configuration.h>
 #include <frames/detail_format.h>
 
-UFramesConfigurationLocal::UFramesConfigurationLocal(const class FPostConstructInitializeProperties& PCIP)
+UFramesConfigurationLocal::UFramesConfigurationLocal(const FObjectInitializer &PCIP)
   : Super(PCIP)
 {
   // default values to link up with Unreal's environment

@@ -25,6 +25,7 @@
 #include <frames/frame.h>
 #include <frames/rect.h>
 
+#include "FramesCompat.h"
 #include "FramesConvert.h"
 #include "FramesFrame.h"
 #include "FramesManager.h"
@@ -52,7 +53,7 @@ BOOST_STATIC_ASSERT(EFA_BOTTOM == Frames::BOTTOM);
 BOOST_STATIC_ASSERT(EFX_X == Frames::X);
 BOOST_STATIC_ASSERT(EFX_Y == Frames::Y);
 
-UFramesLayout::UFramesLayout(const FPostConstructInitializeProperties &PCIP)
+UFramesLayout::UFramesLayout(const FObjectInitializer &PCIP)
   : Super(PCIP)
 {
 

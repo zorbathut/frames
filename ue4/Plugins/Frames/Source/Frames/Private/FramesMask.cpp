@@ -22,7 +22,9 @@
 
 #include "FramesMask.h"
 
-UFramesMask::UFramesMask(const FPostConstructInitializeProperties &PCIP)
+#include "FramesCompat.h"
+
+UFramesMask::UFramesMask(const FObjectInitializer &PCIP)
   : Super(PCIP)
 {
 

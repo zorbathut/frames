@@ -24,10 +24,10 @@ newoption {
   value = "version",
   description = "Choose an Unreal Engine version to target; requires vs2013 target",
   allowed = {
-    --{ "4_2", "Unreal Engine 4.2" }, -- no official support atm
     { "4_3", "Unreal Engine 4.3" },
     { "4_4", "Unreal Engine 4.4" },
     { "4_5", "Unreal Engine 4.5" },
+    { "4_6", "Unreal Engine 4.6" },
   }
 }
 
@@ -90,7 +90,12 @@ elseif _ACTION == "vs2013" and _OPTIONS["ue"] == "4_5" then
   projectInfo.slug = "ue4_5"
   projectInfo.platform = "win"
   projectInfo.platformFull = "win_msvc12_"
-  projectInfo.ue4_path = "C:/Program Files/Unreal Engine/4.5/"
+  projectInfo.ue4_path = "C:/Program Files/Unreal Engine/4.6/"
+elseif _ACTION == "vs2013" and _OPTIONS["ue"] == "4_6" then
+  projectInfo.slug = "ue4_6"
+  projectInfo.platform = "win"
+  projectInfo.platformFull = "win_msvc12_"
+  projectInfo.ue4_path = "C:/Program Files/Unreal Engine/4.6/"
 else
   print(("Not supported: target %s with OS %s"):format(_ACTION or "", _OS or ""))
   projectInfo.slug = ""
@@ -169,7 +174,7 @@ solution "Frames"
         "deps/zlib-1.2.8/" .. projectInfo.platform .. suffix .. "/lib",
         "deps/gtest-1.7.0/" .. projectInfo.platformFull .. suffix .. "/lib",
       }
-    elseif projectInfo.slug == "ue4_2" or projectInfo.slug == "ue4_3" or projectInfo.slug == "ue4_4" or projectInfo.slug == "ue4_5" then
+    elseif projectInfo.slug:find("ue4") then
       local ue4libsuffix = "Win" .. suffix .. "/VS2013"
       includedirs {
         "include",
