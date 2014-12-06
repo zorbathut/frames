@@ -28,6 +28,8 @@
 #include <frames/configuration.h>
 #include <frames/detail_format.h>
 
+#include "Runtime/Launch/Resources/Version.h"
+
 UFramesConfigurationLocal::UFramesConfigurationLocal(const FObjectInitializer &PCIP)
   : Super(PCIP)
 {
@@ -35,7 +37,11 @@ UFramesConfigurationLocal::UFramesConfigurationLocal(const FObjectInitializer &P
 }
 
 void UFramesConfigurationLocal::Initialize(AActor *Context) {
+#if ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION < 4
+  m_config = Frames::Configuration::CreateUE4(GRHIFeatureLevel);
+#else
   m_config = Frames::Configuration::CreateUE4(Context->GetWorld()->FeatureLevel);
+#endif
 }
 
 void UFramesConfigurationLocal::FontDefaultIdSet(UFramesFont *Font) {
