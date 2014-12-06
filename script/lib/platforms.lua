@@ -54,21 +54,20 @@ local function uebuild(version)
     -- Most of the removed options are removed because we currently build against precompiled binaries
     -- If we shift to a source build we'll change this and test everything possible, but that introduces some logistical difficulties
     -- Debug (not tested)
-    -- DebugGame (x32 client, x64 editor, as "debug")
-    -- Development (x32 client, x64 editor, as "release")
+    -- DebugGame (x64 client, x64 editor, as "debug")
+    -- Development (x64 client, x64 editor, as "release")
     -- Shipping (x32 client, as "release")
     
     if configuration == "release" then
       if platform == "x64" then
         msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor %s Development %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version, ueplatform)
         table.insert(msb.verify, ("ue4/Plugins/Frames/Binaries/%s/UE4Editor-Frames.dll"):format(ueplatform))
-      end
-      
-      -- this is supposedly supported 
-      if platform == "x32" then
+        
         msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4 %s Development %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version, ueplatform)
         table.insert(msb.verify, ("ue4/Binaries/%s/plugin_ue4.lib"):format(ueplatform, ueplatform))
-        
+      end
+      
+      if platform == "x32" then
         msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4 %s Shipping %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version, ueplatform)
         table.insert(msb.verify, ("ue4/Binaries/%s/plugin_ue4-%s-Shipping.lib"):format(ueplatform, ueplatform))
       end
@@ -76,11 +75,13 @@ local function uebuild(version)
       if platform == "x64" then
         msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor %s DebugGame %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version, ueplatform)
         table.insert(msb.verify, ("ue4/Plugins/Frames/Binaries/%s/UE4Editor-Frames-%s-DebugGame.dll"):format(ueplatform, ueplatform))
+        
+        msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4 %s DebugGame %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version, ueplatform)
+        table.insert(msb.verify, ("ue4/Binaries/%s/plugin_ue4-%s-DebugGame.dll"):format(ueplatform, ueplatform))
       end
       
       if platform == "x32" then
-        msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4 %s DebugGame %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version, ueplatform)
-        table.insert(msb.verify, ("ue4/Binaries/%s/plugin_ue4-%s-DebugGame.dll"):format(ueplatform, ueplatform))
+        
       end
     else
       assert(false)
