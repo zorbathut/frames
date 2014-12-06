@@ -41,16 +41,25 @@ local function uebuild(version)
   return function (target, platform, configuration)
     local msb = msbuild("12.0")(target, platform, configuration)
     
-    -- not yet included - Development, DebugGame, Shipping
-    -- For some reason these don't include the plugin and it is not yet clear why, given that it doesn't run at all. Fix this once it's running. :V
-    if platform == "x64" and configuration == "release" then
-      msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor Win64 Development %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version)
-      table.insert(msb.verify, "ue4/Plugins/Frames/Binaries/Win64/UE4Editor-Frames.dll")
-    elseif platform == "x64" and configuration == "debug" then
-      msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor Win64 DebugGame %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version)
-      table.insert(msb.verify, "ue4/Plugins/Frames/Binaries/Win64/UE4Editor-Frames-Win64-DebugGame.dll")
-    elseif platform == "x32" and configuration == "release" then
-      -- shipping will be here
+    local ueplatform
+    if platform == "x64" then
+      ueplatform = "Win64"
+    elseif platform == "x32" then
+      ueplatform = "Win32"
+    else
+      assert(false)
+    end
+    
+    if configuration == "release" then
+      msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor %s Development %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version, ueplatform)
+      table.insert(msb.verify, ("ue4/Plugins/Frames/Binaries/%s/UE4Editor-Frames.dll"):format(ueplatform))
+      msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor %s Shipping %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version, ueplatform)
+      table.insert(msb.verify, ("ue4/Binaries/%s/plugin_ue4-%s-Shipping.lib"):format(ueplatform, ueplatform))
+    elseif configuration == "debug" then
+      msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4Editor %s DebugGame %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version, ueplatform)
+      table.insert(msb.verify, ("ue4/Plugins/Frames/Binaries/%s/UE4Editor-Frames-%s-DebugGame.dll"):format(ueplatform, ueplatform))
+    else
+      assert(false)
     end
     
     return msb
