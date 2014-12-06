@@ -31,8 +31,11 @@
 UFramesConfigurationLocal::UFramesConfigurationLocal(const FObjectInitializer &PCIP)
   : Super(PCIP)
 {
-  // default values to link up with Unreal's environment
-  m_config = Frames::Configuration::CreateUE4();
+
+}
+
+void UFramesConfigurationLocal::Initialize(AActor *Context) {
+  m_config = Frames::Configuration::CreateUE4(Context->GetWorld()->FeatureLevel);
 }
 
 void UFramesConfigurationLocal::FontDefaultIdSet(UFramesFont *Font) {

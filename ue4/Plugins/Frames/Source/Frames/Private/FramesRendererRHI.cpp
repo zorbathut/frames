@@ -42,13 +42,19 @@ namespace Frames {
   namespace Configuration {
     class CfgRendererRHI : public Renderer {
     public:
-      virtual detail::Renderer *Create(Environment *env) const override {
-        return new detail::RendererRHI(env);
+      CfgRendererRHI(ERHIFeatureLevel::Type featureLevel) : m_featureLevel(featureLevel) {
       }
+
+      virtual detail::Renderer *Create(Environment *env) const override {
+        return new detail::RendererRHI(env, m_featureLevel);
+      }
+
+    private:
+      ERHIFeatureLevel::Type m_featureLevel;
     };
 
-    Configuration::RendererPtr Configuration::RendererRHI() {
-      return Configuration::RendererPtr(new CfgRendererRHI());
+    Configuration::RendererPtr Configuration::RendererRHI(ERHIFeatureLevel::Type featureLevel) {
+      return Configuration::RendererPtr(new CfgRendererRHI(featureLevel));
     }
   }
 
@@ -282,12 +288,13 @@ namespace Frames {
       });
     }
 
-    RendererRHI::RendererRHI(Environment *env) :
+    RendererRHI::RendererRHI(Environment *env, ERHIFeatureLevel::Type featureLevel) :
       Renderer(env),
       m_rhi(0),
       m_request(0),
       m_verticesQuadcount(0),
-      m_currentTexture(0)
+      m_currentTexture(0),
+      m_featureLevel(featureLevel)
     {
       m_rhi = new Data;
 

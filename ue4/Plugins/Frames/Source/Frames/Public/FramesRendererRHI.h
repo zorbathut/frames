@@ -37,7 +37,7 @@ class FRHICommandList;
 namespace Frames {
   namespace Configuration {
     /// Creates a Configuration::Renderer for UE4 RHI.
-    RendererPtr FRAMES_API RendererRHI();
+    RendererPtr FRAMES_API RendererRHI(ERHIFeatureLevel::Type featureLevel);
   }
   
   namespace detail {
@@ -73,7 +73,7 @@ namespace Frames {
 
     class FRAMES_API RendererRHI : public Renderer {
     public:
-      RendererRHI(Environment *env);
+      RendererRHI(Environment *env, ERHIFeatureLevel::Type featureLevel);
       ~RendererRHI();
 
       virtual void Begin(int width, int height) override;
@@ -114,6 +114,8 @@ namespace Frames {
       int m_verticesQuadcount;
 
       TextureBackingRHI *m_currentTexture;
+
+      ERHIFeatureLevel::Type m_featureLevel;
 
       virtual void ScissorSet(const Rect &rect) override;
     };

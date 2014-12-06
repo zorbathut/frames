@@ -31,9 +31,13 @@
  */
 UCLASS(Transient, BlueprintType, NotPlaceable)
 class FRAMES_API UFramesConfigurationLocal : public UObject {
+public:
   GENERATED_UCLASS_BODY()
 
-public:
+  // Must be called first!
+  UFUNCTION(BlueprintCallable, Category="Configuration", Meta=(DefaultToSelf="Context"))
+  void Initialize(AActor *Context);
+
   UFUNCTION(BlueprintCallable, Category="Configuration")
   void FontDefaultIdSet(UFramesFont *Font);
 

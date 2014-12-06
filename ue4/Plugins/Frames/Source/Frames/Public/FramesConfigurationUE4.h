@@ -25,7 +25,7 @@
 namespace Frames {
   namespace Configuration {
     /// Creates a Frames::Configuration::Local with configuration elements initialized to the recommended UE4-integration settings.
-    Frames::Configuration::Local FRAMES_API CreateUE4();
+    Frames::Configuration::Local FRAMES_API CreateUE4(ERHIFeatureLevel::Type featureLevel);
 
     /// Standard logger module for UE4.
     /** errorScreen controls whether it displays errors on the screen. errorAssert controls whether it asserts on errors. */
