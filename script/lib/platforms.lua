@@ -77,7 +77,7 @@ local function uebuild(version)
         table.insert(msb.verify, ("ue4/Plugins/Frames/Binaries/%s/UE4Editor-Frames-%s-DebugGame.dll"):format(ueplatform, ueplatform))
         
         msb.cli = msb.cli .. string.format([[ "&&" "C:\Program Files\Unreal Engine\%s\Engine\Build\BatchFiles\Build.bat" plugin_ue4 %s DebugGame %%CD%%/../../ue4/plugin_ue4.uproject -rocket]], version, ueplatform)
-        table.insert(msb.verify, ("ue4/Binaries/%s/plugin_ue4-%s-DebugGame.dll"):format(ueplatform, ueplatform))
+        table.insert(msb.verify, ("ue4/Binaries/%s/plugin_ue4-%s-DebugGame.lib"):format(ueplatform, ueplatform))
       end
       
       if platform == "x32" then
