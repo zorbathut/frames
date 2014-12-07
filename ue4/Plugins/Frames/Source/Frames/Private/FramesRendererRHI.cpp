@@ -65,10 +65,11 @@ namespace Frames {
     #endif
 
     #if ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION < 5
-      static TShaderMap<FGlobalShaderType> *GetGlobalShaderMap_Shim() {
+      static TShaderMap<FGlobalShaderType> *GetGlobalShaderMap_Shim(ERHIFeatureLevel::Type featureLevel) {
         return GetGlobalShaderMap();
       };
       static void SetGlobalBoundShaderState_Shim(FRHICommandListImmediate& RHICmdList,
+          ERHIFeatureLevel::Type featureLevel,
 	        FGlobalBoundShaderState& BoundShaderState,
 	        FVertexDeclarationRHIParamRef VertexDeclaration,
 	        FShader* VertexShader,
@@ -76,29 +77,18 @@ namespace Frames {
 	        FShader* GeometryShader = nullptr) {
         SetGlobalBoundShaderState(RHICmdList, BoundShaderState, VertexDeclaration, VertexShader, PixelShader, GeometryShader);
       }
-    #elif ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION < 6
-      static TShaderMap<FGlobalShaderType> *GetGlobalShaderMap_Shim() {
-        return GetGlobalShaderMap(GRHIFeatureLevel);
-      };
-      static void SetGlobalBoundShaderState_Shim(FRHICommandList& RHICmdList,
-	        FGlobalBoundShaderState& BoundShaderState,
-	        FVertexDeclarationRHIParamRef VertexDeclaration,
-	        FShader* VertexShader,
-	        FShader* PixelShader,
-	        FShader* GeometryShader = nullptr) {
-        SetGlobalBoundShaderState(RHICmdList, GRHIFeatureLevel, BoundShaderState, VertexDeclaration, VertexShader, PixelShader, GeometryShader);
-      }
     #else
-      static TShaderMap<FGlobalShaderType> *GetGlobalShaderMap_Shim() {
-        return GetGlobalShaderMap(GMaxRHIFeatureLevel);
+      static TShaderMap<FGlobalShaderType> *GetGlobalShaderMap_Shim(ERHIFeatureLevel::Type featureLevel) {
+        return GetGlobalShaderMap(featureLevel);
       };
       static void SetGlobalBoundShaderState_Shim(FRHICommandList& RHICmdList,
+          ERHIFeatureLevel::Type featureLevel,
 	        FGlobalBoundShaderState& BoundShaderState,
 	        FVertexDeclarationRHIParamRef VertexDeclaration,
 	        FShader* VertexShader,
 	        FShader* PixelShader,
 	        FShader* GeometryShader = nullptr) {
-        SetGlobalBoundShaderState(RHICmdList, GMaxRHIFeatureLevel, BoundShaderState, VertexDeclaration, VertexShader, PixelShader, GeometryShader);
+        SetGlobalBoundShaderState(RHICmdList, featureLevel, BoundShaderState, VertexDeclaration, VertexShader, PixelShader, GeometryShader);
       }
     #endif
 
@@ -327,17 +317,18 @@ namespace Frames {
 
       m_currentTexture = nullptr;
 
-      ENQUEUE_UNIQUE_RENDER_COMMAND_THREEPARAMETER(
+      ENQUEUE_UNIQUE_RENDER_COMMAND_FOURPARAMETER(
         Frames_Begin,
         Data *, rhi, m_rhi,
         int, width, width,
         int, height, height,
+        ERHIFeatureLevel::Type, featureLevel, m_featureLevel,
       {
-        TShaderMapRef<FFramesVS> VertexShader(GetGlobalShaderMap_Shim());
-        TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap_Shim());
+        TShaderMapRef<FFramesVS> VertexShader(GetGlobalShaderMap_Shim(featureLevel));
+        TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap_Shim(featureLevel));
 
         static FGlobalBoundShaderState boundShaderState;
-        SetGlobalBoundShaderState_Shim(RHICmdList, boundShaderState, rhi->m_vertexDecl, *VertexShader, *PixelShader);
+        SetGlobalBoundShaderState_Shim(RHICmdList, featureLevel, boundShaderState, rhi->m_vertexDecl, *VertexShader, *PixelShader);
         
         VertexShader->SetParameterSize(RHICmdList, width, height);
         PixelShader->SetParameterTexture(RHICmdList, 0, false);
@@ -408,13 +399,14 @@ namespace Frames {
 
         m_currentTexture = backing;
         
-        ENQUEUE_UNIQUE_RENDER_COMMAND_THREEPARAMETER(
+        ENQUEUE_UNIQUE_RENDER_COMMAND_FOURPARAMETER(
           Frames_TextureSet,
           Data *, rhi, m_rhi,
           TextureBackingRHI::Data *, tex, m_currentTexture ? m_currentTexture->DataGet() : 0,
           Texture::Format, format, m_currentTexture ? m_currentTexture->FormatGet() : Texture::FORMAT_R_8,  // fallback value is irrelevant
+          ERHIFeatureLevel::Type, featureLevel, m_featureLevel,
         {
-          TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap_Shim());
+          TShaderMapRef<FFramesPS> PixelShader(GetGlobalShaderMap_Shim(featureLevel));
 
           PixelShader->SetParameterTexture(RHICmdList, tex ? tex->m_tex : 0, format == Texture::FORMAT_R_8);
         });
