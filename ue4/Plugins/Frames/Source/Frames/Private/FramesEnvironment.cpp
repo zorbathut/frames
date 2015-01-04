@@ -89,8 +89,19 @@ UFramesLayout *UFramesEnvironment::FocusGet() const {
   return FramesManager::Get().Convert(m_env->FocusGet());
 }
 
-void UFramesEnvironment::Render(int32 SizeX, int32 SizeY) {
-  m_env->ResizeRoot(SizeX, SizeY);
+void UFramesEnvironment::Render(UObject* WorldContextObject) {
+  UWorld *world = GEngine->GetWorldFromContextObject(WorldContextObject);
+  if (world && world->IsGameWorld())
+  {
+    if (UGameViewportClient *ViewportClient = world->GetGameViewport())
+    {
+      FVector2D viewportSize;
+      ViewportClient->GetViewportSize(viewportSize);
+      m_env->ResizeRoot(std::floor(viewportSize.X + 0.5), std::floor(viewportSize.Y + 0.5));
+      // otherwise we'll just pray
+    }
+  }
+  
   m_env->Render();
 }
 
