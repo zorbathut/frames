@@ -67,8 +67,8 @@ class FRAMES_API UFramesEnvironment : public UObject {
   UFUNCTION(BlueprintCallable, Category="Frames|Input")
   UFramesLayout *FocusGet() const;
 
-  UFUNCTION(BlueprintCallable, Category="Frames|Rendering", meta=(HidePin="WorldContextObject", DefaultToSelf="WorldContextObject"))
-  void Render(UObject* WorldContextObject);
+  UFUNCTION(BlueprintCallable, Category="Frames|Rendering")
+  void Render(AHUD* HudContext);
   
   UFUNCTION(BlueprintCallable, Category="Frames")
   UFramesLayout *RootGet() const;

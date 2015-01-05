@@ -89,19 +89,43 @@ UFramesLayout *UFramesEnvironment::FocusGet() const {
   return FramesManager::Get().Convert(m_env->FocusGet());
 }
 
-void UFramesEnvironment::Render(UObject* WorldContextObject) {
-  UWorld *world = GEngine->GetWorldFromContextObject(WorldContextObject);
-  if (world && world->IsGameWorld())
+void UFramesEnvironment::Render(AHUD* HudContext) {
+  if (HudContext)
   {
-    if (UGameViewportClient *ViewportClient = world->GetGameViewport())
+    UWorld *world = HudContext->GetWorld();
+    if (world && world->IsGameWorld())
     {
-      FVector2D viewportSize;
-      ViewportClient->GetViewportSize(viewportSize);
-      m_env->ResizeRoot(std::floor(viewportSize.X + 0.5), std::floor(viewportSize.Y + 0.5));
-      // otherwise we'll just pray
+      if (UGameViewportClient *ViewportClient = world->GetGameViewport())
+      {
+        if (APlayerController *PlayerController = HudContext->PlayerOwner)
+        {
+          if (ULocalPlayer *LocalPlayer = Cast<ULocalPlayer>(PlayerController->Player))
+          {
+            FSceneViewFamilyContext ViewFamily(FSceneViewFamily::ConstructionValues(   
+              ViewportClient->Viewport,
+              world->Scene,
+              ViewportClient->EngineShowFlags)
+              .SetRealtimeUpdate(true));
+
+            FVector outViewLocation;
+            FRotator outViewRotation;
+            FSceneView *View = LocalPlayer->CalcSceneView(&ViewFamily, outViewLocation, outViewRotation, ViewportClient->Viewport);
+
+            // figure out how to pass this in to the renderer
+            m_env->ResizeRoot(View->UnconstrainedViewRect.Width(), View->UnconstrainedViewRect.Height());
+
+            ENQUEUE_UNIQUE_RENDER_COMMAND_ONEPARAMETER(
+              Frames_EnvViewportSet,
+              FIntRect, rect, View->UnconstrainedViewRect,
+            {
+              RHICmdList.SetViewport(rect.Min.X, rect.Min.Y, 0.f, rect.Max.X, rect.Max.Y, 1.f);
+            });
+          }
+        }
+      }
     }
   }
-  
+
   m_env->Render();
 }
 
